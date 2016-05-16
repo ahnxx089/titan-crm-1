@@ -1,106 +1,58 @@
 /////////////////////////////////////////////////
 // Contact entity.
-// Inherits from Person.
+// Inherits from Person.  
 // Properties and validation methods.
 //
 // @file:   contact.js
-// @author: 
+// @authors: Dinesh Shenoy <astroshenoy@gmail.com>
+//           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 var validation = require('../common/validation')();
-var Person = require('../entities/person');
-
+var Person = require('../entities/person');  
+/* Why inherit from Person?  Because if this person's 
+    organization becomes a customer, then this person 
+    is now a contact, no longer just a lead */
+ 
 // Constructor
 //
 function Contact(partyId, partyTypeId, currencyUomId, description,
-    statusId, createdBy, createdDate, updatedDate,
-    salutation, firstName, middleName, lastName, birthDate, comments) {
+    statusId, createdBy, createdDate, updatedDate, salutation, firstName, middleName, lastName, birthDate, comments,
+    contactMechId, contactMechTypeId, infoString) {
+    
     // Call the parent constructor (Person), making sure
     // that "this" is set correctly during the call
-    Contact.call(this, partyId, partyTypeId, currencyUomId, description,
-    statusId, createdBy, createdDate, updatedDate, salutation, firstName, middleName, lastName, birthDate, comments);
-
-    // Contact-specific Properties
+    Person.call(this, partyId, partyTypeId, currencyUomId, description, 
+    statusId, createdBy, createdDate, updatedDate,
+    salutation, firstName, middleName, lastName, birthDate, comments);
     
+    // Contact-specific Properties
+    this.contactMechId = contactMechId;
+    this.contactMechTypeId = contactMechTypeId;
+    this.infoString = infoString;
 }
 
 // Inherit from Person
 //
 Contact.prototype = Object.create(Person.prototype);
-// Set the "constructor" property to refer to Person
+
+// Set the "constructor" property to refer to Contact
 Contact.prototype.constructor = Contact;
 
-// Methods
+// Methods - VALIDATIONS YET TO BE COMPLETED
 //
-Contact.prototype.validateForInsert = function () {
-    // Call Person's validation function
-    var errors = [Person.prototype.validateForInsert.call(this)];
-    
-    // the line above validates
-//    PartyTypeId(nullable),
-//    PreferredCurrencyUomId(nullable),
-//    Description(nullable),
-//    StatusId(required),
-//    CreatedBy(required),
-//    CreatedDate(required),
-//    UpdatedDate(required)
-//    salutation(nullable),
-//    fisrtName(required),
-//    middleName(nullable),
-//    lastName(required),
-//    birthDate(nullable),
-//    comments(nullable)
-    
-    // Person-specific validation code
-    var specificValidations = [
-        // true means required, false means nullable
-        // First name, last name are required
-        // Others are not
-        
-    ]; 
-    
-    // The "errors" array is "validations" array
-    // with empty string elements weeded out
-    // If all validations succeed,
-    // "errors" will have 0 elements.
+Contact.prototype.validateForInsert = function () {};
 
-    var specificValidations = [
-        // true means required, false means nullable
-        // First name, last name are required
-        // Others are not
-        
-    ]; 
-    
-    for(var i=0; i < specificValidations.length; i++) {
-        if(specificValidations[i]) {
-            errors.push(specificValidations[i]);
-        }
-    }
-    return errors;
-    
-    
-};
+Contact.prototype.validateForUpdate = function () {};
 
-Person.prototype.validateForUpdate = function () {
-    // Call Party's validation function
-    var errors = [Person.prototype.validateForUpdate.call(this)];
-    // Person-specific validation code
-    
-    var specificValidations = [
-        // true means required, false means nullable
-        // First name, last name are required
-        // Others are not
-        
-    ]; 
-    
-    for(var i=0; i < specificValidations.length; i++) {
-        if(specificValidations[i]) {
-            errors.push(specificValidations[i]);
-        }
-    }
-    return errors;
-    ];
-};
+// contact_mech_id type is int(11)
+Contact.prototype.validateContactMechId = function () {};
+
+// contact_mech_type_id is varchar(20)
+Contact.prototype.validateContactMechTypeId = function () {};
+
+// info_strng is varchar(255)
+Contact.prototype.validateInfoString = function () {};
 
 // Export the class as a module
-module.export = Contact;
+module.exports = Contact;
