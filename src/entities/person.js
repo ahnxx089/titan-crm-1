@@ -4,7 +4,7 @@
 // Properties and validation methods.
 //
 // @file:   person.js
-// @author: 
+// @author: Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
 /* jshint maxparams:20 */
@@ -17,7 +17,7 @@ var Party = require('../entities/party');
 function Person(partyId, partyTypeId, currencyUomId, description,
     statusId, createdBy, createdDate, updatedDate,
     salutation, firstName, middleName, lastName, birthDate, comments) {
-    // Call the parent constructor, making sure
+    // Call the parent constructor (Party), making sure
     // that "this" is set correctly during the call
     Party.call(this, partyId, partyTypeId, currencyUomId, description,
     statusId, createdBy, createdDate, updatedDate);
@@ -42,16 +42,101 @@ Person.prototype.constructor = Person;
 //
 Person.prototype.validateForInsert = function () {
     // Call Party's validation function
-    Party.prototype.validateForInsert.call(this);
+    var errors = [Party.prototype.validateForInsert.call(this)];
+    
+    // the line above validates
+//    PartyTypeId(nullable),
+//    PreferredCurrencyUomId(nullable),
+//    Description(nullable),
+//    StatusId(required),
+//    CreatedBy(required),
+//    CreatedDate(required),
+//    UpdatedDate(required)
+    
     // Person-specific validation code
+    var specificValidations = [
+        // true means required, false means nullable
+        // First name, last name are required
+        // Others are not
+        this.validateSalutation(false),
+        this.validateFisrtName(true),
+        this.validateMiddleName(false),
+        this.validateLastName(true),
+        this.validateBirthDate(false),
+        this.validateComments(false)
+    ]; 
+    
+    // The "errors" array is "validations" array
+    // with empty string elements weeded out
+    // If all validations succeed,
+    // "errors" will have 0 elements.
+
+    for(var i=0; i < specificValidations.length; i++) {
+        if(specificValidations[i]) {
+            errors.push(specificValidations[i]);
+        }
+    }
+    return errors;
+    
+    
+    // Person.prototype.validate
 };
 
 Person.prototype.validateForUpdate = function () {
     // Call Party's validation function
-    Party.prototype.validateForUpdate.call(this);
+    var errors = [Party.prototype.validateForUpdate.call(this)];
     // Person-specific validation code
+    var specificValidations = [
+        this.validateSalutation(false),
+        this.validateFisrtName(true),
+        this.validateMiddleName(false),
+        this.validateLastName(true),
+        this.validateBirthDate(false),
+        this.validateComments(false)
+    ];
 };
 
+// salutation is varchar(100)
+Person.prototype.validateSalutation = function(isRequired) {
+    this.salutation = validation.sanitizeInput(this.salutation);
+    var validationResult = validation.validateString(this.salutation, isRequired, 100, 'salutation');
+    return validationResult;
+};
+
+// firstName is varchar(100)
+Person.prototype.validateFisrtName = function(isRequired) {
+    this.firstName = validation.sanitizeInput(this.firstName);
+    var validationResult = validation.validateString(this.firstName, isRequired, 100, 'firstName');
+    return validationResult;
+};
+
+// middleName is varchar(100)
+Person.prototype.validateMiddleName = function(isRequired) {
+    this.middleName = validation.sanitizeInput(this.middleName);
+    var validationResult = validation.validateString(this.middleName, isRequired, 100, 'middleName');
+    return validationResult;
+};
+
+// lastName is varchar(100)
+Person.prototype.validateLastName = function(isRequired) {
+    this.lastName = validation.sanitizeInput(this.lastName);
+    var validationResult = validation.validateString(this.lastName, isRequired, 100, 'lastName');
+    return validationResult;
+};
+
+// birthDate is datetime
+Person.prototype.validateBirthDate = function(isRequired) {
+    this.birthDate = validation.sanitizeInput(this.birthDate);
+    var validationResult = validation.validateDate(this.birthDate, isRequired, 'birthDate');
+    return validationResult;
+};
+
+// comments is varchar(255)
+Person.prototype.validateComments = function(isRequired) {
+    this.comments = validation.sanitizeInput(this.comments);
+    var validationResult = validation.validateString(this.comments, isRequired, 255, 'comments');
+    return validationResult;
+};
 
 // Export the class as a module
 module.exports = Person;
