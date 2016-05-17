@@ -1,41 +1,50 @@
 /////////////////////////////////////////////////
-// Data access layer module for contacts.
+// Data access layer module for contact mechanisms.
 //
-// @file:   contactData.js
-// @author: Dinesh Shenoy <astroshenoy@gmail.com>
+// @file:    contactMechData.js
+// @authors: Anurag Bhandari <anurag@ofssam.com>
+//           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
 
-var contactData = function (knex) {
+var contactMechData = function (knex) {
 
     /**
      * Add a new contact in database
      * @param {Object} contact - The new contact entity to be added
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
-    var addContact = function (contact) {};
+    var addContactMech = function (contactMech) {};
 
     /**
      * Gets all contacts from database
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
-    var getContacts = function () {};
+    var getContactMechs = function () {};
 
     /**
      * Gets one contact by its id from database
      * @param {Number} contactId - Unique id of the contact to be fetched
      * @return {Object} promise - Fulfillment value is a raw data object
      */
-    var getContactById = function (id) {};
+    var getContactMechById = function (id) {};
 
     /**
      * Update a contact in database
      * @param {Object} contact - The contact entity that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateContact = function (contact) {
-        
+    var updateContactMech = function (contactMech) {
+        return knex('contact_mech')
+            .where({
+                party_mech_id: contactMech.contactMechId
+            })
+            .update({
+                contact_mech_type_id: contactMech.contctMechTypeId,
+                info_string: contactMech.infoString,
+                updated_date: (new Date()).toISOString()
+            });
     };
 
     /**
@@ -43,14 +52,14 @@ var contactData = function (knex) {
      * @param {Number} contactId - Unique id of the contact to be deleted
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */
-    var deleteContact = function (contactId) {};
+    var deleteContactMech = function (contactMechId) {};
 
     return {
-        addContact: addContact,
-        getContacts: getContacts,
-        getContactById: getContactById,
-        updateContact: updateContact,
-        deleteContact: deleteContact
+        addContactMech: addContactMech,
+        getContactMechs: getContactMechs,
+        getContactMechById: getContactMechById,
+        updateContactMech: updateContactMech,
+        deleteContactMech: deleteContactMech
     };
 };
 

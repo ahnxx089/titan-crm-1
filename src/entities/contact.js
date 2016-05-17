@@ -20,6 +20,8 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
     statusId, createdBy, createdDate, updatedDate, salutation, firstName, middleName, lastName, birthDate, comments,
     contactMechId, contactMechTypeId, infoString) {
     
+    //should we check partyId in case we're converting a pre-existing party into a contact?
+    
     // Call the parent constructor (Person), making sure
     // that "this" is set correctly during the call
     Person.call(this, partyId, partyTypeId, currencyUomId, description, 
@@ -27,9 +29,9 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
     salutation, firstName, middleName, lastName, birthDate, comments);
     
     // Contact-specific Properties
-    this.contactMechId = contactMechId;
-    this.contactMechTypeId = contactMechTypeId;
-    this.infoString = infoString;
+    this.contactMechs = [];
+    
+    //Create contactMechs, if applicable, and add them to array
 }
 
 // Inherit from Person
@@ -41,18 +43,27 @@ Contact.prototype.constructor = Contact;
 
 // Methods - VALIDATIONS YET TO BE COMPLETED
 //
-Contact.prototype.validateForInsert = function () {};
+Contact.prototype.validateForInsert = function () {
+    //Run parent validaton method
+    
+    //Run validation method on each contactMech
+    for (var i=0; i < this.contactMechs.length; i++){
+        this.contactMechs[i].validateForInsert();
+    }
+    
+    //Run validation methods for remaining properties
+};
 
-Contact.prototype.validateForUpdate = function () {};
-
-// contact_mech_id type is int(11)
-Contact.prototype.validateContactMechId = function () {};
-
-// contact_mech_type_id is varchar(20)
-Contact.prototype.validateContactMechTypeId = function () {};
-
-// info_strng is varchar(255)
-Contact.prototype.validateInfoString = function () {};
+Contact.prototype.validateForUpdate = function () {
+    //Run parent validaton method
+    
+    //Run validation method on each contactMech
+    for (var i=0; i < this.contactMechs.length; i++){
+        this.contactMechs[i].validateForUpdate();
+    }
+    
+    //Run validation methods for remaining properties
+};
 
 // Export the class as a module
 module.exports = Contact;
