@@ -60,3 +60,4 @@ var accountApi = function (knex) {
     };
 };
     
+module.exports = accountApi;
