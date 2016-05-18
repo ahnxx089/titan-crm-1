@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
+-- version 4.4.15.5
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2016 at 04:26 PM
--- Server version: 10.1.10-MariaDB
--- PHP Version: 5.6.19
+-- Generation Time: May 18, 2016 at 11:38 PM
+-- Server version: 5.6.30
+-- PHP Version: 5.5.35
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `contact_mech`
 --
 
-CREATE TABLE `contact_mech` (
+CREATE TABLE IF NOT EXISTS `contact_mech` (
   `contact_mech_id` int(11) NOT NULL,
   `contact_mech_type_id` varchar(20) NOT NULL,
   `info_string` varchar(255) DEFAULT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE `contact_mech` (
 -- Table structure for table `contact_mech_purpose_type`
 --
 
-CREATE TABLE `contact_mech_purpose_type` (
+CREATE TABLE IF NOT EXISTS `contact_mech_purpose_type` (
   `contact_mech_purpose_type_id` varchar(20) NOT NULL,
   `description` varchar(255) NOT NULL,
   `created_date` datetime NOT NULL,
@@ -89,7 +89,7 @@ INSERT INTO `contact_mech_purpose_type` (`contact_mech_purpose_type_id`, `descri
 -- Table structure for table `contact_mech_type`
 --
 
-CREATE TABLE `contact_mech_type` (
+CREATE TABLE IF NOT EXISTS `contact_mech_type` (
   `contact_mech_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -118,7 +118,7 @@ INSERT INTO `contact_mech_type` (`contact_mech_type_id`, `parent_type_id`, `has_
 -- Table structure for table `contact_mech_type_purpose`
 --
 
-CREATE TABLE `contact_mech_type_purpose` (
+CREATE TABLE IF NOT EXISTS `contact_mech_type_purpose` (
   `contact_mech_type_id` varchar(20) NOT NULL,
   `contact_mech_purpose_type_id` varchar(20) NOT NULL,
   `created_date` datetime NOT NULL,
@@ -163,7 +163,7 @@ INSERT INTO `contact_mech_type_purpose` (`contact_mech_type_id`, `contact_mech_p
 -- Table structure for table `data_source`
 --
 
-CREATE TABLE `data_source` (
+CREATE TABLE IF NOT EXISTS `data_source` (
   `data_source_id` varchar(20) NOT NULL,
   `data_source_type_id` varchar(20) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -195,7 +195,7 @@ INSERT INTO `data_source` (`data_source_id`, `data_source_type_id`, `description
 -- Table structure for table `data_source_type`
 --
 
-CREATE TABLE `data_source_type` (
+CREATE TABLE IF NOT EXISTS `data_source_type` (
   `data_source_type_id` varchar(20) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   `created_date` datetime NOT NULL,
@@ -216,7 +216,7 @@ INSERT INTO `data_source_type` (`data_source_type_id`, `description`, `created_d
 -- Table structure for table `enumeration`
 --
 
-CREATE TABLE `enumeration` (
+CREATE TABLE IF NOT EXISTS `enumeration` (
   `enum_id` varchar(20) NOT NULL,
   `enum_type_id` varchar(20) NOT NULL,
   `enum_code` varchar(60) DEFAULT NULL,
@@ -261,7 +261,7 @@ INSERT INTO `enumeration` (`enum_id`, `enum_type_id`, `enum_code`, `description`
 -- Table structure for table `enumeration_type`
 --
 
-CREATE TABLE `enumeration_type` (
+CREATE TABLE IF NOT EXISTS `enumeration_type` (
   `enum_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -284,7 +284,7 @@ INSERT INTO `enumeration_type` (`enum_type_id`, `parent_type_id`, `has_table`, `
 -- Table structure for table `geo`
 --
 
-CREATE TABLE `geo` (
+CREATE TABLE IF NOT EXISTS `geo` (
   `geo_id` varchar(20) NOT NULL,
   `geo_type_id` varchar(20) DEFAULT NULL,
   `geo_name` varchar(100) DEFAULT NULL,
@@ -1322,7 +1322,7 @@ INSERT INTO `geo` (`geo_id`, `geo_type_id`, `geo_name`, `geo_code`, `geo_sec_cod
 -- Table structure for table `geo_type`
 --
 
-CREATE TABLE `geo_type` (
+CREATE TABLE IF NOT EXISTS `geo_type` (
   `geo_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -1353,7 +1353,7 @@ INSERT INTO `geo_type` (`geo_type_id`, `parent_type_id`, `has_table`, `descripti
 -- Table structure for table `organization`
 --
 
-CREATE TABLE `organization` (
+CREATE TABLE IF NOT EXISTS `organization` (
   `party_id` int(11) NOT NULL,
   `organization_name` varchar(100) NOT NULL,
   `office_site_name` varchar(100) NOT NULL,
@@ -1372,7 +1372,7 @@ CREATE TABLE `organization` (
 -- Table structure for table `party`
 --
 
-CREATE TABLE `party` (
+CREATE TABLE IF NOT EXISTS `party` (
   `party_id` int(11) NOT NULL,
   `party_type_id` varchar(20) NOT NULL,
   `preferred_currency_uom_id` varchar(20) DEFAULT NULL,
@@ -1381,7 +1381,7 @@ CREATE TABLE `party` (
   `created_by` varchar(100) DEFAULT NULL,
   `created_date` datetime NOT NULL,
   `updated_date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `party`
@@ -1401,7 +1401,7 @@ INSERT INTO `party` (`party_id`, `party_type_id`, `preferred_currency_uom_id`, `
 -- Table structure for table `party_contact_mech`
 --
 
-CREATE TABLE `party_contact_mech` (
+CREATE TABLE IF NOT EXISTS `party_contact_mech` (
   `party_id` int(11) NOT NULL,
   `contact_mech_id` int(11) NOT NULL,
   `contact_mech_purpose_type_id` varchar(20) NOT NULL,
@@ -1419,7 +1419,7 @@ CREATE TABLE `party_contact_mech` (
 -- Table structure for table `party_data_source`
 --
 
-CREATE TABLE `party_data_source` (
+CREATE TABLE IF NOT EXISTS `party_data_source` (
   `party_id` int(11) NOT NULL,
   `data_source_id` varchar(20) NOT NULL,
   `from_date` datetime NOT NULL,
@@ -1433,7 +1433,7 @@ CREATE TABLE `party_data_source` (
 -- Table structure for table `party_relationship`
 --
 
-CREATE TABLE `party_relationship` (
+CREATE TABLE IF NOT EXISTS `party_relationship` (
   `party_id_from` int(11) NOT NULL,
   `party_id_to` int(11) NOT NULL,
   `role_type_id_from` varchar(20) NOT NULL,
@@ -1452,7 +1452,7 @@ CREATE TABLE `party_relationship` (
 -- Table structure for table `party_relationship_type`
 --
 
-CREATE TABLE `party_relationship_type` (
+CREATE TABLE IF NOT EXISTS `party_relationship_type` (
   `party_relationship_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -1476,7 +1476,7 @@ INSERT INTO `party_relationship_type` (`party_relationship_type_id`, `parent_typ
 -- Table structure for table `party_role`
 --
 
-CREATE TABLE `party_role` (
+CREATE TABLE IF NOT EXISTS `party_role` (
   `party_id` int(11) NOT NULL,
   `role_type_id` varchar(20) NOT NULL,
   `created_date` datetime NOT NULL,
@@ -1489,7 +1489,7 @@ CREATE TABLE `party_role` (
 -- Table structure for table `party_supplemental_data`
 --
 
-CREATE TABLE `party_supplemental_data` (
+CREATE TABLE IF NOT EXISTS `party_supplemental_data` (
   `party_id` int(11) NOT NULL,
   `parent_party_id` int(11) NOT NULL,
   `company_name` varchar(100) DEFAULT NULL,
@@ -1513,7 +1513,7 @@ CREATE TABLE `party_supplemental_data` (
 -- Table structure for table `party_type`
 --
 
-CREATE TABLE `party_type` (
+CREATE TABLE IF NOT EXISTS `party_type` (
   `party_type_id` varchar(20) NOT NULL,
   `has_table` tinyint(1) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -1535,7 +1535,7 @@ INSERT INTO `party_type` (`party_type_id`, `has_table`, `description`, `created_
 -- Table structure for table `person`
 --
 
-CREATE TABLE `person` (
+CREATE TABLE IF NOT EXISTS `person` (
   `party_id` int(11) NOT NULL,
   `salutation` varchar(100) DEFAULT NULL,
   `first_name` varchar(100) NOT NULL,
@@ -1553,7 +1553,7 @@ CREATE TABLE `person` (
 -- Table structure for table `postal_address`
 --
 
-CREATE TABLE `postal_address` (
+CREATE TABLE IF NOT EXISTS `postal_address` (
   `contact_mech_id` int(11) NOT NULL,
   `to_name` varchar(100) NOT NULL,
   `attn_name` varchar(100) NOT NULL,
@@ -1574,7 +1574,7 @@ CREATE TABLE `postal_address` (
 -- Table structure for table `role_type`
 --
 
-CREATE TABLE `role_type` (
+CREATE TABLE IF NOT EXISTS `role_type` (
   `role_type` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -1599,10 +1599,150 @@ INSERT INTO `role_type` (`role_type`, `parent_type_id`, `has_table`, `descriptio
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `security_group`
+--
+
+CREATE TABLE IF NOT EXISTS `security_group` (
+  `group_id` varchar(60) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `security_group`
+--
+
+INSERT INTO `security_group` (`group_id`, `description`, `created_date`, `updated_date`) VALUES
+('ACCOUNT_OWNER', 'Permissions granted to account owners, including view and update on the contacts of the account', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('CONTACT_OWNER', 'Permissions granted to contact owners', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('CRMSFA_CONTACT_TASKS', 'Use CRMSFA for tasks, activities, and emails only', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('CRMSFA_LOGIN_ONLY', 'For testing: Permission to login and view basic screens only.  No permission to see or modify data', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('CRMSFA_SYSTEM', 'System user privileges for automatically performed functions in CRM/SFA', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('CRMSFA_TASKS_ONLY', 'Use CRMSFA for tasks, activities, and emails only', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('FULLADMIN', 'Full Admin group, has all general permissions.', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('LEAD_OWNER', 'Permissions granted to lead owners', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('ORDERADMIN', 'Order Admin group, has all order permissions.', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('ORDERADMIN_LTD', 'Limited Order Admin group, has all limited order permissions.', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('ORDERENTRY', 'Order Entry Admin group; permissions for creating orders.', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('ORDERENTRY_ALL', 'Order entry permission for all stores.  No special role is needed.', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('ORDERPROC', 'Admin group for restricted order processing.', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('ORDERPURCH', 'Order entry with purchasing permissions', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('ORDERSUPPLIER_LTD', 'Limited Order Admin group for Supplier Agents.', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('PARTYADMIN', 'Party Admin group, has all party permissions.', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('SECURITYADMIN', 'Security Admin group, has all permissions to modify security settings in party manager.', '2016-05-18 18:37:08', '2016-05-18 18:37:08');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `security_group_permission`
+--
+
+CREATE TABLE IF NOT EXISTS `security_group_permission` (
+  `group_id` varchar(60) NOT NULL,
+  `permission_id` varchar(60) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `security_permission`
+--
+
+CREATE TABLE IF NOT EXISTS `security_permission` (
+  `permission_id` varchar(60) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `security_permission`
+--
+
+INSERT INTO `security_permission` (`permission_id`, `description`, `created_date`, `updated_date`) VALUES
+('CRMSFA_4C_CREATE', 'Create a forecast', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_4C_UPDATE', 'Update a forecast', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_4C_VIEW', 'Access to forecast function of application.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_4C_VIEWALL', 'View all forecasts', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ACCOUNTS_VIEW', 'Access to the Accounts function of the application.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ACCOUNT_CREATE', 'Create a new account.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ACCOUNT_DEACTIVATE', 'Deactivate any existing account.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ACCOUNT_REASSIGN', 'Reassign owner of an existing account.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ACCOUNT_UPDATE', 'Update any existing account.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ACCOUNT_VIEW', 'View any Account.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ACTS_VIEW', 'Access to the Activities function of the application.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ACT_ADMIN', 'View and set scope for public, private and confidential activities.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ACT_CLOSE', 'Close an existing Activity: Event or Task.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ACT_CREATE', 'Create a new Activity: Event or Task.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ACT_UPDATE', 'Update an existing Activity: Event or Task.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ACT_VIEW', 'View an Activity: Event or Task.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_CAMP_CREATE', 'Create marketing campaigns in CRMSFA.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_CAMP_UPDATE', 'Update marketing campaigns in CRMSFA and add, update or remove contact lists to them.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_CASES_VIEW', 'Access to the Cases function of the application.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_CASE_CLOSE', 'Close an existing Case.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_CASE_CREATE', 'Create a new Case.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_CASE_UPDATE', 'Update an existing Case.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_CASE_VIEW', 'View a Case.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACTS_VIEW', 'Access to the Contacts function of the application.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_CREATE', 'Create a new Contact.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_DEACTIVATE', 'Deactivate any existing Contact.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_REASSIGN', 'Reassign owner of an existing contact.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_UPDATE', 'Update any existing Contact.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_VIEW', 'View any Contact.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_INVOICE_VIEW', 'View an invoice.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_LEADS_VIEW', 'Access to the Leads function of the application.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_LEAD_CREATE', 'Create a new Lead.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_LEAD_DEACTIVATE', 'Deactivate any existing Lead.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_LEAD_DELETE', 'Delete a lead that hasn''t been converted.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_LEAD_REASSIGN', 'Reassign owner of an existing lead.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_LEAD_UPDATE', 'Update any existing Lead.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_LEAD_VIEW', 'View any Lead.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_MKTG_VIEW', 'Access to the Marketing function of the application', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_OPPS_VIEW', 'Access to the Opportunities function of the application.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_OPP_CREATE', 'Create a new Opportunity.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_OPP_DEACTIVATE', 'Deactivate any existing Opportunity.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_OPP_UPDATE', 'Update any existing Opportunity.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_OPP_VIEW', 'View any Opportunity.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ORDERS_VIEW', 'Access to the Orders function of the application.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ORDER_CREATE', 'Create a new Order.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_ORDER_VIEW', 'View any Order.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_PARTNER_CREATE', 'Create a new Partner.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_PARTNER_UPDATE', 'Update any existing Partner.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_PARTNER_VIEW', 'Access to the Partners function of the application.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_PASS_UPDATE', 'Update passwords for accounts/leads/contacts.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_PAY_UPDATE', 'Update payment methods of a party', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_PAY_VIEW', 'View payment methods of a party.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_QUOTES_VIEW', 'Access to the Quotes function of the application.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_QUOTE_CREATE', 'Create a new Quote.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_QUOTE_UPDATE', 'Update any existing Quote.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_QUOTE_VIEW', 'View any Quote.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_RETURN_ACCEPT', 'Accept returns.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_RETURN_CANCEL', 'Cancel returns.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_RETURN_COMP', 'Force complete returns.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_RETURN_CREATE', 'Create returns.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_RPT_VIEW', 'View operations in the  [Reports] tab and all of the reports inside it.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_SLT_UPDATE', 'Update shopping lists.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_SLT_VIEW', 'View shopping lists.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_SURVEY_VIEW', 'View survey results from CRMSFA.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_TEAM_ASSIGN', 'Assign new members to an account or team', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_TEAM_CALVIEW', 'See team''s calendar events', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_TEAM_CREATE', 'Create a new sales team', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_TEAM_DEACTIVATE', 'Deactivate a sales team', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_TEAM_REMOVE', 'Remove account or team member', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_TEAM_UPDATE', 'Update roles of account or team member', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_TEAM_VIEW', 'Access to the Team Management function of the application.', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('CRMSFA_VIEW', 'Access to the CRM/SFA Application', '2016-04-30 23:56:05', '2016-04-30 23:56:05');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `status_item`
 --
 
-CREATE TABLE `status_item` (
+CREATE TABLE IF NOT EXISTS `status_item` (
   `status_id` varchar(20) NOT NULL,
   `status_type_id` varchar(20) NOT NULL,
   `status_code` varchar(60) DEFAULT NULL,
@@ -1625,7 +1765,7 @@ INSERT INTO `status_item` (`status_id`, `status_type_id`, `status_code`, `descri
 -- Table structure for table `status_type`
 --
 
-CREATE TABLE `status_type` (
+CREATE TABLE IF NOT EXISTS `status_type` (
   `status_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -1645,10 +1785,26 @@ INSERT INTO `status_type` (`status_type_id`, `parent_type_id`, `has_table`, `des
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `telecom_number`
+--
+
+CREATE TABLE IF NOT EXISTS `telecom_number` (
+  `contact_mech_id` int(11) NOT NULL,
+  `country_code` varchar(10) DEFAULT NULL,
+  `area_code` varchar(10) DEFAULT NULL,
+  `contact_number` varchar(60) NOT NULL,
+  `ask_for_name` varchar(100) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `uom`
 --
 
-CREATE TABLE `uom` (
+CREATE TABLE IF NOT EXISTS `uom` (
   `uom_id` varchar(20) NOT NULL,
   `uom_type_id` varchar(20) DEFAULT NULL,
   `abbreviation` varchar(60) DEFAULT NULL,
@@ -1947,7 +2103,7 @@ INSERT INTO `uom` (`uom_id`, `uom_type_id`, `abbreviation`, `description`, `crea
 -- Table structure for table `uom_type`
 --
 
-CREATE TABLE `uom_type` (
+CREATE TABLE IF NOT EXISTS `uom_type` (
   `uom_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -1980,7 +2136,7 @@ INSERT INTO `uom_type` (`uom_type_id`, `parent_type_id`, `has_table`, `descripti
 -- Table structure for table `user_login`
 --
 
-CREATE TABLE `user_login` (
+CREATE TABLE IF NOT EXISTS `user_login` (
   `user_login_id` varchar(100) NOT NULL,
   `password` varchar(60) NOT NULL,
   `password_hint` varchar(255) DEFAULT NULL,
@@ -2175,6 +2331,25 @@ ALTER TABLE `role_type`
   ADD KEY `parent_type_id` (`parent_type_id`);
 
 --
+-- Indexes for table `security_group`
+--
+ALTER TABLE `security_group`
+  ADD PRIMARY KEY (`group_id`);
+
+--
+-- Indexes for table `security_group_permission`
+--
+ALTER TABLE `security_group_permission`
+  ADD PRIMARY KEY (`group_id`,`permission_id`),
+  ADD KEY `FOREIGN_security_group_permission_security_permission` (`permission_id`);
+
+--
+-- Indexes for table `security_permission`
+--
+ALTER TABLE `security_permission`
+  ADD PRIMARY KEY (`permission_id`);
+
+--
 -- Indexes for table `status_item`
 --
 ALTER TABLE `status_item`
@@ -2187,6 +2362,13 @@ ALTER TABLE `status_item`
 ALTER TABLE `status_type`
   ADD PRIMARY KEY (`status_type_id`),
   ADD KEY `parent_type_id` (`parent_type_id`);
+
+--
+-- Indexes for table `telecom_number`
+--
+ALTER TABLE `telecom_number`
+  ADD PRIMARY KEY (`contact_mech_id`),
+  ADD KEY `contact_mech_id` (`contact_mech_id`);
 
 --
 -- Indexes for table `uom`
@@ -2222,7 +2404,7 @@ ALTER TABLE `contact_mech`
 -- AUTO_INCREMENT for table `party`
 --
 ALTER TABLE `party`
-  MODIFY `party_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `party_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
 --
 -- Constraints for dumped tables
 --
@@ -2358,6 +2540,13 @@ ALTER TABLE `role_type`
   ADD CONSTRAINT `FOREIGN_role_type_role_type` FOREIGN KEY (`parent_type_id`) REFERENCES `role_type` (`role_type`);
 
 --
+-- Constraints for table `security_group_permission`
+--
+ALTER TABLE `security_group_permission`
+  ADD CONSTRAINT `FOREIGN_security_group_permission_security_group` FOREIGN KEY (`group_id`) REFERENCES `security_group` (`group_id`),
+  ADD CONSTRAINT `FOREIGN_security_group_permission_security_permission` FOREIGN KEY (`permission_id`) REFERENCES `security_permission` (`permission_id`);
+
+--
 -- Constraints for table `status_item`
 --
 ALTER TABLE `status_item`
@@ -2368,6 +2557,12 @@ ALTER TABLE `status_item`
 --
 ALTER TABLE `status_type`
   ADD CONSTRAINT `FOREIGN_status_type_status_type` FOREIGN KEY (`parent_type_id`) REFERENCES `status_type` (`status_type_id`);
+
+--
+-- Constraints for table `telecom_number`
+--
+ALTER TABLE `telecom_number`
+  ADD CONSTRAINT `FOREIGN_telecom_num_contact_mech` FOREIGN KEY (`contact_mech_id`) REFERENCES `contact_mech` (`contact_mech_id`);
 
 --
 -- Constraints for table `uom`
