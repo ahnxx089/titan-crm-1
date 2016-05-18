@@ -4,7 +4,7 @@
 // Properties and validation methods.
 //
 // @file:   account.js
-// @author: 
+// @author: Eric Brichetto <brichett13@gmail.com>
 /////////////////////////////////////////////////
 
 var validation = require('../common/validation')();
@@ -31,7 +31,7 @@ Account.prototype.constructor = Account;
 // Methods
 //
 Organization.prototype.validateForInsert = function () {
-    // Call Party's validation function
+    // Call Organization's validation function
     var errors = [Organization.prototype.validateForInsert.call(this)];
     // Organization-specific validation code
     // FILL THESE NAMES IN ONCE YOU KNOW THE EXACT FIELDS
@@ -51,7 +51,7 @@ Organization.prototype.validateForInsert = function () {
 };
 
 Account.prototype.validateForUpdate = function () {
-    // Call Party's validation function
+    // Call Organization's validation function
     var errors = [Organization.prototype.validateForUpdate.call(this)];
     // Person-specific validation code
     
@@ -97,5 +97,5 @@ Account.prototype.validatedummyattr4 = function(isRequired) {
     return validationResult;
 };
 
-
-
+//Export class as module
+module.exports = Account;

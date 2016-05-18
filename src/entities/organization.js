@@ -125,3 +125,4 @@ Organization.prototype.validateLogoImgURL = function(isRequired) {
 };
 
 
+module.exports = Organization;
