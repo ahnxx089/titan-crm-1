@@ -7,6 +7,13 @@
 
 var leadApi = function (knex) {
     
+    
+    // Get a reference to data layer module
+    //
+    var leadController = require('../controllers/leadController')(knex);
+    
+    // Set up a middleware to validate incoming requests
+    //
     var middleware = function (req, res, next) {
         next();
     };
@@ -20,6 +27,7 @@ var leadApi = function (knex) {
         
     };
     
+    // Lucas is taking this
     // GET /api/leads/?owner=
     var getLeadsByOwner = function (req, res) {
 
@@ -35,9 +43,26 @@ var leadApi = function (knex) {
 
     };
 
+    // Lucas is taking this
+    // @param {Object} req - 
+    // 
+    
+    /**
+     * This method in api.js is called from presentation layer, or by ARC
+     * It in turns, stripes the leadId paramenter from req, pass it to leadController
+     * @param {Object} req - The request
+     * @param {Object} res - The resource
+     * @return {Object} promise - Fulfillment value is id of new party
+    */
+
     // GET /api/leads/:id
     var getLeadById = function (req, res) {
-
+        var leadId = req.params.id;
+        leadController.getLeadById(leadId)
+            .then(function(lead) {
+                res.json(lead);
+            // maybe: res.json(person);
+            });
     };
     
     // PUT /api/leads/:id
@@ -52,13 +77,13 @@ var leadApi = function (knex) {
 
     return {
         middleware: middleware,
-        addLead: addLead,
-        getLeadsByOwner: getLeadsByOwner,
-        getLeadsByIdentity: getLeadsByIdentity,
-        getLeadsByPhoneNumber: getLeadsByPhoneNumber,
+//        addLead: addLead,
+//        getLeadsByOwner: getLeadsByOwner,
+//        getLeadsByIdentity: getLeadsByIdentity,
+//        getLeadsByPhoneNumber: getLeadsByPhoneNumber,
         getLeadById: getLeadById,
-        updateLead: updateLead,
-        deleteLead: deleteLead
+//        updateLead: updateLead,
+//        deleteLead: deleteLead
     };
 };
 

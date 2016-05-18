@@ -17,7 +17,7 @@ var validation = require('../common/validation')();
 function Lead(partyId, partyTypeId, currencyUomId, description,
                statusId, createdBy, createdDate, updatedDate, // for Party
                salutation, firstName, middleName, lastName, birthDate, comments, // for Person
-               parentPartyId, companyName, annualRevenue, numEmployees
+               parentPartyId, companyName, annualRevenue, numEmployees, ownershipEnumId
                // for party_supplemental_data. Some less useful fields are omitted. 
               ) {
 

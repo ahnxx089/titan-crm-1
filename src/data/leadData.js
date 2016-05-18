@@ -56,6 +56,7 @@ var leadData = function(knex) {
             annual_revenue: lead.annualRevenue,
             currency_uom_id: lead.preferredCurrencyUomId, // not the same? 
             num_employees: lead.numEmployees,
+            ownership_enum_id: lead.ownership_enum_id,
             
             created_date: lead.createdDate,
             updated_date: lead.updatedDate
@@ -84,7 +85,7 @@ var leadData = function(knex) {
     */
     var getLeadById = function(id) {
         return knex.select('party_id', 'salutation', 'first_name', 'middle_name', 'last_name', 'birth_date', 'comments', 'created_date', 'updated_date')
-            .from('party')
+            .from('person')
             .where({party_id: id});
     };
     
@@ -95,40 +96,28 @@ var leadData = function(knex) {
 
     
     /**
-     * Update a party in database
-     * @param {Object} party - The party entity that contains updated data
+     * Update a lead in database
+     * @param {Object} lead - The lead entity that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
     */
-    var updateParty = function(party) {
-        return knex('party')
-            .where({party_id: party.partyId})
-            .update({
-                party_type_id: party.partyTypeId,
-                preferred_currency_uom_id: party.preferredCurrencyUomId,
-                description: party.description,
-                status_id: party.statusId,
-                updated_date: (new Date()).toISOString()
-            });
+    var updateLead = function(lead) {
     };
     
     /**
-     * Delete a party from database
-     * @param {Number} partyId - Unique id of the party to be deleted
+     * Delete a lead from database
+     * @param {Number} leadId - Unique id (actually partyId) of the lead to be deleted
      * @return {Object} promise - Fulfillment value is number of rows deleted
     */
-    var deleteParty = function(partyId) {
-        return knex('party')
-            .where({party_id: partyId})
-            .del();
+    var deleteLead = function(leadId) {
     };
     
     return {
-        addParty: addParty,
-        getParties: getParties,
-        getPartyById: getPartyById,
+        addLead: addLead,
+        getLeads: getLeads,
+        getLeadById: getLeadById,
         //updateParty: updateParty,
         //deleteParty: deleteParty
     };
 };
 
-module.exports = partyData;
+module.exports = leadData;
