@@ -9,29 +9,56 @@
 /////////////////////////////////////////////////
 
 var validation = require('../common/validation')();
-var Person = require('../entities/person');  
+var Person = require('../entities/person');
 /* Why inherit from Person?  Because if this person's 
     organization becomes a customer, then this person 
     is now a contact, no longer just a lead */
- 
+var ContactMech = require('../entities/contactMech');
+
 // Constructor
 //
 function Contact(partyId, partyTypeId, currencyUomId, description,
-    statusId, createdBy, createdDate, updatedDate, salutation, firstName, middleName, lastName, birthDate, comments,
-    contactMechId, contactMechTypeId, infoString) {
-    
-    //should we check partyId in case we're converting a pre-existing party into a contact?
-    
+    statusId, createdBy, createdDate, updatedDate, salutation, firstName,
+    middleName, lastName, birthDate, comments, phoneNumber, emailAddress, toName, attentionName,
+    addressLine1, addressLine2, city, stateOrProvinceId, zipOrPostalCode, countryId) {
+
     // Call the parent constructor (Person), making sure
     // that "this" is set correctly during the call
-    Person.call(this, partyId, partyTypeId, currencyUomId, description, 
-    statusId, createdBy, createdDate, updatedDate,
-    salutation, firstName, middleName, lastName, birthDate, comments);
-    
+    Person.call(this, partyId, partyTypeId, currencyUomId, description,
+        statusId, createdBy, createdDate, updatedDate,
+        salutation, firstName, middleName, lastName, birthDate, comments);
+
     // Contact-specific Properties
     this.contactMechs = [];
-    
-    //Create contactMechs, if applicable, and add them to array
+
+    //Add an email address to contactMechs, if one is specified
+    if (emailAddress) {
+        var contactMech = new ContactMech(void, 'EMAIL_ADDRESS', emailAddress);
+        this.contactMechs.add(contactMech);
+    }
+
+    //Add a postal address to contactMechs, if one is specified
+    if (addressLine1) {
+        var contactMech = new ContactMech(void, 'POSTAL_ADDRESS', void, {
+            toName: toName,
+            attentionName: attentionName,
+            addressLine1: addressLine1,
+            addressLine2: addressLine2,
+            city: city,
+            stateOrProvince: stateOrProvince,
+            zipOrPostalCode: zipOrPostalCode,
+            country: country,
+            zipOrPostalCodeExtension: zipOrPostalCodeExtension
+        });
+        this.contactMechs.add(contactMech);
+    }
+
+    //Add a phone number to contactMechs, if one is specified
+    if (phoneNumber) {
+        var contactMech = new ContactMech(void, 'TELECOM_NUMBER', phoneNumber);
+        this.contactMechs.add(contactMech);
+    }
+
 }
 
 // Inherit from Person
@@ -45,23 +72,23 @@ Contact.prototype.constructor = Contact;
 //
 Contact.prototype.validateForInsert = function () {
     //Run parent validaton method
-    
+
     //Run validation method on each contactMech
-    for (var i=0; i < this.contactMechs.length; i++){
+    for (var i = 0; i < this.contactMechs.length; i++) {
         this.contactMechs[i].validateForInsert();
     }
-    
+
     //Run validation methods for remaining properties
 };
 
 Contact.prototype.validateForUpdate = function () {
     //Run parent validaton method
-    
+
     //Run validation method on each contactMech
-    for (var i=0; i < this.contactMechs.length; i++){
+    for (var i = 0; i < this.contactMechs.length; i++) {
         this.contactMechs[i].validateForUpdate();
     }
-    
+
     //Run validation methods for remaining properties
 };
 

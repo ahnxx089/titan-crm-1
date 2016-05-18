@@ -1,14 +1,17 @@
 /////////////////////////////////////////////////
 // Business logic module for contacts.
 //
-// @file:   contactController.js
-// @author: Anurag Bhandari <anurag@ofssam.com>
+// @file:    contactController.js
+// @authors: 
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
 
 var winston = require('winston');
 var Contact = require('../entities/contact');
+var ContactMechController = require('../controllers/contactMechController');
+var PersonController = require('../controllers/personController');
+
 
 var contactController = function(knex) {
     // Get a reference to data layer module
@@ -24,12 +27,18 @@ var contactController = function(knex) {
     // CONTROLLER METHODS
     // ==========================================
     //
+    
     /**
      * Add a new contact
      * @param {Object} contact - The new contact to be added
      * @return {Object} promise - Fulfillment value is id of new contact
     */
-    var addContact = function () {};
+    var addContact = function (contact) {
+        for (int i = 0; i < contact.contactMechs.length; i++) {
+            ContactMechController.addContactMech(contact.contactMechs[i]);
+        }
+        return PersonController.addPerson(contact);
+    };
 
     /**
      * Gets all contacts
@@ -50,14 +59,22 @@ var contactController = function(knex) {
      * @param {Object} contact - The object that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
     */
-    var updateContact = function (contactId, contact) {};
+    var updateContact = function (contactId, Contact) {
+        var promise = PersonController.updatePerson(contact)
+        for (int i = 0; i < contact.contactMechs.length; i++) {
+            promise += ContactMechController.updateContactMech(contact.contactMechs[i]);
+        }
+        return promise;
+    };
     
     /**
      * Delete a contact
      * @param {Number} contactId - Unique id of the contact to be deleted
      * @return {Object} promise - Fulfillment value is number of rows deleted
     */
-    var deleteContact = function (contactId) {};
+    var deleteContact = function (contactId) {
+        
+    };
 
     return {
         getContacts: getContacts,

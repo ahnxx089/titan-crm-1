@@ -20,22 +20,26 @@ var contactData = function (knex) {
      * Gets all contacts from database
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
-    var getContacts = function () {};
+    var getContacts = function () {
+        //A party is a contact iff role_type_id in party_roll is set to CONTACT
+    };
 
     /**
      * Gets one contact by its id from database
      * @param {Number} contactId - Unique id of the contact to be fetched
      * @return {Object} promise - Fulfillment value is a raw data object
      */
-    var getContactById = function (id) {};
+    var getContactById = function (id) {
+        //A party is a contact iff role_type_id in party_roll is set to CONTACT
+    };
 
     /**
      * Update a contact in database
      * @param {Object} contact - The contact entity that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateContact = function (contact) {
-        
+    var updateContact = function (contactId, contact) {
+        //Currently, all functionality is fulfilled by other data-layer methods
     };
 
     /**
