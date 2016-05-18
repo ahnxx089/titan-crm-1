@@ -29,12 +29,44 @@ var contactApi = function (knex) {
 
     };
 
+    // GET /api/contacts/
+    var getContacts = function (req, res) {
+
+    };
 
     // GET /api/contacts/:id
     var getContactById = function (req, res) {
 
     };
 
+    // FOR DISCUSSION:  HOW SPECIFIC TO MAKE?
+    // GET /api/contacts/:owner
+    var getContactByOwner = function (req, res) {
+
+    };
+
+    // GET /api/contacts/:<name?>
+    // FIRST NAME? LAST NAME?
+    // BILL-- let it take many variables 
+    var getContactByName = function (req, res) {
+
+    };
+
+    // GET /api/contacts/:phoneNum
+    var getContactByPhoneNum = function (req, res) {
+
+    };
+
+    // GET /api/contacts/:advanced
+    var getContactByAdvanced = function (req, res) {
+
+    };
+    
+    // GET /api/contacts/:addressinfo
+    // CITY?  COUNTRY?  STATE/PROVINCE? POSTAL CODE
+    var getContactByAddressInfo = function (req, res) {
+
+    };
     // PUT /api/contacts/:id
     var updateContact = function (req, res) {
 
