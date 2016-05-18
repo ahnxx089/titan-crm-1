@@ -94,6 +94,13 @@ Person.prototype.validateForUpdate = function () {
         this.validateBirthDate(false),
         this.validateComments(false)
     ];
+    
+    for(var i=0; i < specificValidations.length; i++) {
+        if(specificValidations[i]) {
+            errors.push(specificValidations[i]);
+        }
+    }
+    return errors;
 };
 
 // salutation is varchar(100)
