@@ -19,7 +19,7 @@ var ContactMech = require('../entities/contactMech');
 //
 function Contact(partyId, partyTypeId, currencyUomId, description,
     statusId, createdBy, createdDate, updatedDate, salutation, firstName,
-    middleName, lastName, birthDate, comments, phoneNumber, emailAddress, toName, attentionName,
+    middleName, lastName, birthDate, comments, countryCode, areaCode, contactNumber, askForName, emailAddress, toName, attentionName,
     addressLine1, addressLine2, city, stateOrProvinceId, zipOrPostalCode, countryId) {
 
     // Call the parent constructor (Person), making sure
@@ -55,7 +55,12 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
 
     //Add a phone number to contactMechs, if one is specified
     if (phoneNumber) {
-        var contactMech = new ContactMech(void, 'TELECOM_NUMBER', phoneNumber);
+        var contactMech = new ContactMech(void, 'TELECOM_NUMBER', void, {
+            countryCode: countryCode,
+            areaCode: areaCode,
+            contactNumber: contactNumber,
+            askForName: askForName
+        });
         this.contactMechs.add(contactMech);
     }
 

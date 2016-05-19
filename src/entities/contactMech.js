@@ -30,6 +30,13 @@ function ContactMech(contactMechId, contactMechTypeId, infoString, additionalPar
         this.countryGeoId: = additionalParamiters.countryGeoId;
 
         this.infoString = getPostalAddressString(additionalParamiters);
+    } else if (contactMethodType == 'TELECOM_NUMBER') {
+        this.countryCode = additionalParamiters.countryCode;
+        this.areaCode = additionalParamiters.areaCode;
+        this.contactNumber = additionalParamiters.contactNumber;
+        this.askForName = additionalParamiters.askForName;
+        
+        this.infoString = getTelcomNumberString(additionalParamiters)
     }
 }
 
@@ -37,21 +44,38 @@ var getPostalAddressString = function (paramiters) {
     var addressString = '';
     
     //add components of address to string
-    addressString += toName;
+    addressString += paramiters.toName;
     if (attnName) {
-        addressString += ' Attn: ' + attnName;
+        addressString += ' Attn: ' + paramiters.attnName;
     }
     addressString += '\n';
-    addressString += address1 + '\n';
+    addressString += paramiters.address1 + '\n';
     if (address2) {
-        addressString += address2 + '\n';
+        addressString += paramiters.address2 + '\n';
     }
-    addressString += city + ', ' + stateProvinceGeoId + ", " + zipOrPostalCode;
+    addressString += paramiters.city + ', ' + paramiters.stateProvinceGeoId + ", " + paramiters.zipOrPostalCode;
     
     return addressString;
 }
 
 
+var getTelcomNumberString = function (paramiters) {
+    var numberString = '';
+    
+    //add components of number to string
+    numberString += paramiters.contactNumber;
+    if (paramiters.areaCode) {
+        numberString = paramiters.areaCode + '-' + numberString;
+        if (countryCode) {
+            numberString = paramiters.countryCode + '-' + numberString;
+        }
+    }
+    if (paramiters.askForName) {
+        numberString += ', ask for ' + paramiters.askForName;
+    }
+    
+    return numberString;
+}
 
 // Methods - VALIDATIONS YET TO BE COMPLETED
 //
