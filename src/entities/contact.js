@@ -77,24 +77,44 @@ Contact.prototype.constructor = Contact;
 //
 Contact.prototype.validateForInsert = function () {
     //Run parent validaton method
+    var validations = Person.validateForInsert.call(this);
 
     //Run validation method on each contactMech
     for (var i = 0; i < this.contactMechs.length; i++) {
-        this.contactMechs[i].validateForInsert();
+        validation.push(this.contactMechs[i].validateForInsert());
     }
 
     //Run validation methods for remaining properties
+    
+    //Errors are non-empty validation results
+    var errors = [];
+    for(var i=0; i < validations.length; i++) {
+        if(validations[i]) {
+            errors.push(validations[i]);
+        }
+    }
+    return errors;
 };
 
 Contact.prototype.validateForUpdate = function () {
     //Run parent validaton method
+    var validations = Person.validateForUpdate.call(this);
 
     //Run validation method on each contactMech
     for (var i = 0; i < this.contactMechs.length; i++) {
-        this.contactMechs[i].validateForUpdate();
+        validation.push(this.contactMechs[i].validateForUpdate());
     }
 
     //Run validation methods for remaining properties
+    
+    //Errors are non-empty validation results
+    var errors = [];
+    for(var i=0; i < validations.length; i++) {
+        if(validations[i]) {
+            errors.push(validations[i]);
+        }
+    }
+    return errors;
 };
 
 // Export the class as a module
