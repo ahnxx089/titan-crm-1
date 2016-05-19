@@ -15,44 +15,170 @@ var contactMechData = function (knex) {
      * @param {Object} contact - The new contact entity to be added
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
-    var addContactMech = function (contactMech) {};
+    var addContactMech = function (contactMech) {
+
+        //insert into contact_mech
+        var id = knex.insert({
+                contact_mech_type_id: contactMech.contactMechTypeId,
+                info_string: contactMech.infoString,
+                created_date: (new Date()).toISOString(),
+                updated_date: (new Date()).toISOString()
+            })
+            .into('contact_mech');
+
+        //insert into telecom_number, if applicable
+        if (contactMech.contactMechTypeId == 'TELECOM_NUMBER') {
+            var id = knex.insert({
+                    contact_mech_type_id: contactMech.contactMechTypeId,
+                    country_code: contactMech.countryCode,
+                    area_code: contactMech.areaCode,
+                    contact_number: contactMech.contactNumber,
+                    ask_for_name: contactMech.askForName,
+                    created_date: (new Date()).toISOString(),
+                    updated_date: (new Date()).toISOString()
+                })
+                .into('telecom_number');
+        }
+
+        //instert into postal_address, if applicable
+        if (contactMech.contactMechTypeId == 'POSTAL_ADDRESS') {
+            var id = knex.insert({
+                    contact_mech_type_id: contactMech.contactMechTypeId,
+                    to_name: contactMech.toName,
+                    attn_name: contactMech.attnName,
+                    address1: contactMech.address1,
+                    address2: contactMech.address2,
+                    directions: contactMech.directions,
+                    city: contactMech.city,
+                    postal_code: contactMech.postalCode,
+                    country_geo_id: contactMech.countryGeoId,
+                    state_province_geo_id: contactMech.stateProvinceGeoId,
+                    created_date: (new Date()).toISOString(),
+                    updated_date: (new Date()).toISOString()
+                })
+                .into('postal_address');
+        }
+
+        return id;
+    };
 
     /**
-     * Gets all contacts from database
+     * Gets all contacts mechanisms from database
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
-    var getContactMechs = function () {};
+    var getContactMechs = function () {
+        return knex.select('contact_mech.contact_mech_id', 'contact_mech.contact_mech_type_id', 'contact_mech.info_string', 'contact_mech.created_date', 'contact_mech.updated_date', 'telecom_number.country_code', 'telecom_number.area_code', 'telecom_number.contact_number', 'telecom_number.ask_for_name', 'postal_address.to_name', 'postal_address.attn_name', 'postal_address.address1', 'postal_address.address2', 'postal_address.directions', 'postal_address.city', 'postal_address.postal_code', 'postal_address.country_geo_id', 'postal_address.state_province_geo_id')
+            .from('contact_mech')
+            .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
+            .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id');
+    };
 
     /**
-     * Gets one contact by its id from database
-     * @param {Number} contactId - Unique id of the contact to be fetched
+     * Gets one contact mechanism by its id from database
+     * @param {Number} contactMechId - Unique id of the contact to be fetched
      * @return {Object} promise - Fulfillment value is a raw data object
      */
-    var getContactMechById = function (id) {};
+    var getContactMechById = function (id) {
+        return knex.select('contact_mech.contact_mech_id', 'contact_mech.contact_mech_type_id', 'contact_mech.info_string', 'contact_mech.created_date', 'contact_mech.updated_date', 'telecom_number.country_code', 'telecom_number.area_code', 'telecom_number.contact_number', 'telecom_number.ask_for_name', 'postal_address.to_name', 'postal_address.attn_name', 'postal_address.address1', 'postal_address.address2', 'postal_address.directions', 'postal_address.city', 'postal_address.postal_code', 'postal_address.country_geo_id', 'postal_address.state_province_geo_id')
+            .from('contact_mech')
+            .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
+            .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')
+            .where({
+                contact_mech_id: id
+            });
+    };
 
     /**
      * Update a contact in database
-     * @param {Object} contact - The contact entity that contains updated data
+     * @param {Object} contactMech - The contactMech entity that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContactMech = function (contactMech) {
-        return knex('contact_mech')
+        var promise = 0;
+
+        //Update universal fields
+        promise += knex('contact_mech')
             .where({
-                party_mech_id: contactMech.contactMechId
+                contact_mech_id: contactMech.contactMechId
             })
             .update({
                 contact_mech_type_id: contactMech.contctMechTypeId,
                 info_string: contactMech.infoString,
                 updated_date: (new Date()).toISOString()
             });
+
+        //Update fields unique to TELECOM_NUMBER
+        if (contactMech.contactMechTypeId == 'TELECOM_NUMBER') {
+            promise += knex('telecom_number')
+                .where({
+                    contact_mech_id: contactMech.contactMechId
+                })
+                .update({
+                    country_code: contactMech.countryCode,
+                    area_code: contactMech.areaCode,
+                    contact_number: contactMech.contactNumber,
+                    ask_for_name: contactMech.askForName,
+                    updated_date: (new Date()).toISOString()
+                });
+        }
+
+
+        //Update fields unique to POSTAL_ADDRESS
+        if (contactMech.contactMechTypeId == 'POSTAL_ADDRESS') {
+            promise += knex('postal_address')
+                .where({
+                    contact_mech_id: contactMech.contactMechId
+                })
+                .update({
+                    to_name: contactMech.toName,
+                    attn_name: contactMech.attnName,
+                    address1: contactMech.address1,
+                    address2: contactMech.address2,
+                    directions: contactMech.directions,
+                    city: contactMech.city,
+                    postal_code: contactMech.,
+                    country_geo_id: contactMech.countryGeoId,
+                    state_province_geo_id: contactMech.stateProvinceGeoId,
+                    updated_date: (new Date()).toISOString()
+                });
+        }
+
+        return promise;
     };
 
     /**
      * Delete a contact from database
-     * @param {Number} contactId - Unique id of the contact to be deleted
+     * @param {Number} contactMechId - Unique id of the contact mechanism to be deleted
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */
-    var deleteContactMech = function (contactMechId) {};
+    var deleteContactMech = function (contactMechId) {
+        var rowsDeleted = 0;
+
+        //Not all contact mechanisms have an entry in telecom_number.  
+        //In such cases, this command will delete no rows
+        rowsDeleted += knex('telecom_number')
+            .where({
+                contact_mech_id: contactMechId
+            })
+            .del();
+
+        //Not all contact mechanisms have an entry in postal_address.  
+        //In such cases, this command will delete no rows
+        rowsDeleted += knex('postal_address')
+            .where({
+                contact_mech_id: contactMechId
+            })
+            .del();
+
+        //Every contact mechanism has an entry in contact_mech
+        rowsDeleted += knex('contact_mech')
+            .where({
+                contact_mech_id: contactMechId
+            })
+            .del();
+
+        return rowsDeleted;
+    };
 
     return {
         addContactMech: addContactMech,
