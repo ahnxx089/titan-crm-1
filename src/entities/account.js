@@ -16,7 +16,7 @@ function Organization(partyId, createdDate, updatedDate, orgName, officeSiteName
                 numEmployees, tickerSymbol, comments,  logoImgURL,
                       dummyattr1, dummyattr2, dummyattr3, dummyattr4) {
     // Call the parent constructor first
-    Organization.call(this, partyId, createdDate, updatedDate, orgName, officeSiteName, annualRevenue, numEmployees, tickerSymbol, comments, logoImgUrl);
+    Organization.call(this, partyId, createdDate, updatedDate, orgName, officeSiteName, annualRevenue, numEmployees, tickerSymbol, comments, logoImgURL);
     
     // Properties specific to Account 
     this.dummyattr1 = dummyattr1;
