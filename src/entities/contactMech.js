@@ -11,11 +11,13 @@ var validation = require('../common/validation')();
 
 // Constructor
 //
-function ContactMech(contactMechId, contactMechTypeId, infoString, additionalParamiters) {
+function ContactMech(contactMechId, contactMechTypeId, infoString, createdDate, updatedDate, additionalParamiters) {
     // Properties
     this.contactMechId = contactMechId
     this.contactMechTypeId = contactMechTypeId;
     this.infoString = infoString;
+    this.createdDate = createdDate;
+    this.updatedDate = updatedDate;
 
     if (contactMethodType == 'POSTAL_ADDRESS') {
         this.contactMechId: = additionalParamiters.contactMechId;
@@ -36,7 +38,7 @@ function ContactMech(contactMechId, contactMechTypeId, infoString, additionalPar
         this.contactNumber = additionalParamiters.contactNumber;
         this.askForName = additionalParamiters.askForName;
         
-        this.infoString = getTelcomNumberString(additionalParamiters)
+        this.infoString = getTelcomNumberString(additionalParamiters);
     }
 }
 

@@ -33,13 +33,13 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
 
     //Add an email address to contactMechs, if one is specified
     if (emailAddress) {
-        var contactMech = new ContactMech(void, 'EMAIL_ADDRESS', emailAddress);
+        var contactMech = new ContactMech(void, 'EMAIL_ADDRESS', emailAddress, createdDate, updatedDate);
         this.contactMechs.add(contactMech);
     }
 
     //Add a postal address to contactMechs, if one is specified
     if (addressLine1) {
-        var contactMech = new ContactMech(void, 'POSTAL_ADDRESS', void, {
+        var contactMech = new ContactMech(void, 'POSTAL_ADDRESS', void, createdDate, updatedDate, {
             toName: toName,
             attentionName: attentionName,
             addressLine1: addressLine1,
@@ -55,7 +55,7 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
 
     //Add a phone number to contactMechs, if one is specified
     if (phoneNumber) {
-        var contactMech = new ContactMech(void, 'TELECOM_NUMBER', void, {
+        var contactMech = new ContactMech(void, 'TELECOM_NUMBER', void, createdDate, updatedDate, {
             countryCode: countryCode,
             areaCode: areaCode,
             contactNumber: contactNumber,
