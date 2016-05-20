@@ -10,7 +10,6 @@
 var winston = require('winston');
 var Contact = require('../entities/contact');
 var ContactMechController = require('../controllers/contactMechController');
-var PersonController = require('../controllers/personController');
 
 
 var contactController = function (knex) {

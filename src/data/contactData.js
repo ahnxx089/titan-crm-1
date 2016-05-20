@@ -7,6 +7,8 @@
 
 /* jshint camelcase: false */
 
+var PersonData = require('./personData.js');
+
 var contactData = function (knex) {
 
     /* There are two scenarios for adding Contacts:
@@ -299,7 +301,20 @@ var getContactById = function (id) {
  * @return {Object} promise - Fulfillment value is number of rows updated
  */
 var updateContact = function (contact) {
+    //Update the properties shared with Person
+    var numRows = PersonData.updatePerson(contact);
 
+    //Update the unique properies of Contact
+    knex('party_role')
+        .where({
+            party_id: contact.partyId
+        })
+        .update({
+            role_type_id: 'CONTACT',
+            updated_date: (new Date()).toISOString()
+        });
+
+    //This function does *not* handle any ContactMechs associated with this Contact
 };
 
 /**
@@ -307,7 +322,12 @@ var updateContact = function (contact) {
  * @param {Number} contactId - Unique id of the contact to be deleted
  * @return {Object} promise - Fulfillment value is number of rows deleted
  */
-var deleteContact = function (contactId) {};
+var deleteContact = function (contactId) {
+    return knex('party')
+            .where({party_id: contactId})
+            .del();
+    //Does *not* delete any associated ContactMechs
+};
 
 return {
     addContact: addContact,
