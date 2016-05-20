@@ -12,17 +12,20 @@ var Organization = require('../entities/organization')();
 
 // Constructor
 //
-function Organization(partyId, createdDate, updatedDate, orgName, officeSiteName, annualRevenue,
+function Account(partyId, createdDate, updatedDate, orgName, officeSiteName, annualRevenue,
                 numEmployees, tickerSymbol, comments,  logoImgURL,
-                      dummyattr1, dummyattr2, dummyattr3, dummyattr4) {
+                      partyParentId, industryEnumId, ownershipEnumId, importantNote, primaryPostalAddressId, primaryTelecomNumberId, primaryEmailId) {
     // Call the parent constructor first
     Organization.call(this, partyId, createdDate, updatedDate, orgName, officeSiteName, annualRevenue, numEmployees, tickerSymbol, comments, logoImgURL);
     
     // Properties specific to Account 
-    this.dummyattr1 = dummyattr1;
-    this.dummyattr2 = dummyattr2;
-    this.dummyattr3 = dummyattr3;
-    this.dummyattr4 = dummyattr4;
+    this.partyParentId = partyParentId;
+    this.industryEnumId = industryEnumId;
+    this.ownershipEnumId = ownershipEnumId;
+    this.importantNote = importantNote;
+    this.primaryPostalAddressId = primaryPostalAddressId;
+    this.primaryTelecomNumberId = primaryTelecomNumberId;
+    this.primaryEmailId = primaryEmailId;
 }
 
 Account.prototype = Object.create(Organization.prototype);
@@ -30,16 +33,18 @@ Account.prototype.constructor = Account;
 
 // Methods
 //
-Organization.prototype.validateForInsert = function () {
+Account.prototype.validateForInsert = function () {
     // Call Organization's validation function
     var errors = [Organization.prototype.validateForInsert.call(this)];
-    // Organization-specific validation code
-    // FILL THESE NAMES IN ONCE YOU KNOW THE EXACT FIELDS
+    // Account-specific validation code
     var specificvalidations = [
-        this.dummyattr1 = dummyattr1(true),
-        this.dummyattr2 = dummyattr2(true),
-        this.dummyattr3 = dummyattr3(true),
-        this.dummyattr4 = dummyattr4(false)
+        this.partyParentId = partyParentId(true),
+        this.industryEnumId = industryEnumId(false),
+        this.ownershipEnumId = ownershipEnumId(false),
+        this.importantNote = importantNote(false),
+        this.primaryPostalAddressId = primaryPostalAddressId(false),
+        this.primaryTelecomNumberId = primaryTelecomNumberId(false),
+        this.primaryEmailId = primaryEmailId(false)
     ];
     
     for (var i = 0; i < validation.length; i++) {
@@ -53,13 +58,16 @@ Organization.prototype.validateForInsert = function () {
 Account.prototype.validateForUpdate = function () {
     // Call Organization's validation function
     var errors = [Organization.prototype.validateForUpdate.call(this)];
-    // Person-specific validation code
+    // Account-specific validation code
     
     var specificvalidations = [
-        this.dummyattr1 = dummyattr1(true),
-        this.dummyattr2 = dummyattr2(true),
-        this.dummyattr3 = dummyattr3(true),
-        this.dummyattr4 = dummyattr4(false)   
+        this.partyParentId = partyParentId(true),
+        this.industryEnumId = industryEnumId(false),
+        this.ownershipEnumId = ownershipEnumId(false),
+        this.importantNote = importantNote(false),
+        this.primaryPostalAddressId = primaryPostalAddressId(false),
+        this.primaryTelecomNumberId = primaryTelecomNumberId(false),
+        this.primaryEmailId = primaryEmailId(false)
     ];
     
     for (var i = 0; i < validations.length; i++) {
@@ -73,27 +81,45 @@ Account.prototype.validateForUpdate = function () {
 
 
 
-Account.prototype.validateDummyAttr1 = function(isRequired) {
-    this.dummyattr1 = validation.sanitizeInput(this.dummyattr1);
-    var validationResult = validation.validateString(this.dummyattr1, isRequired, 40, 'dummyattr1');
+Account.prototype.validatepartyParentId = function(isRequired) {
+    this.partyParentId = validation.sanitizeInput(this.partyParentId);
+    var validationResult = validation.validateString(this.partyParentId, isRequired, 40, 'partyParentId');
     return validationResult;
 };
 
-Account.prototype.validatedummyattr2 = function(isRequired) {
-    this.dummyattr2 = validation.sanitizeInput(this.dummyattr2);
-    var validationResult = validation.validateString(this.dummyattr2, isRequired, 40, 'dummyattr2');
+Account.prototype.validateindustryEnumId = function(isRequired) {
+    this.industryEnumId = validation.sanitizeInput(this.industryEnumId);
+    var validationResult = validation.validateString(this.industryEnumId, isRequired, 40, 'industryEnumId');
     return validationResult;
 };
 
-Account.prototype.validatedummyattr3 = function(isRequired) {
-    this.dummyattr3 = validation.sanitizeInput(this.dummyattr3);
-    var validationResult = validation.validateString(this.dummyattr3, isRequired, 20, 'dummyattr3');
+Account.prototype.validateownershipEnumId = function(isRequired) {
+    this.ownershipEnumId = validation.sanitizeInput(this.ownershipEnumId);
+    var validationResult = validation.validateString(this.ownershipEnumId, isRequired, 20, 'ownershipEnumId');
     return validationResult;
 };
 
-Account.prototype.validatedummyattr4 = function(isRequired) {
-    this.dummyattr4 = validation.sanitizeInput(this.dummyattr4);
-    var validationResult = validation.validateString(this.dummyattr4, isRequired, 20, 'dummyattr4');
+Account.prototype.validateimportantNote = function(isRequired) {
+    this.importantNote = validation.sanitizeInput(this.importantNote);
+    var validationResult = validation.validateString(this.importantNote, isRequired, 20, 'importantNote');
+    return validationResult;
+};
+
+Account.prototype.validatePrimaryPostalAddressId = function(isRequired) {
+    this.primaryPostalAddressId = validation.sanitizeInput(this.primaryPostalAddressId);
+    var validationResult = validation.validateString(this.primaryPostalAddressId, isRequired, 20, 'primaryPostalAddressId');
+    return validationResult;
+};
+
+Account.prototype.validatePrimaryTelecomNumberId = function(isRequired) {
+    this.primaryTelecomNumberId = validation.sanitizeInput(this.primaryTelecomNumberId);
+    var validationResult = validation.validateString(this.primaryTelecomNumberId, isRequired, 20, 'primaryTelecomNumberId');
+    return validationResult;
+};
+
+Account.prototype.validatePrimaryEmailId = function(isRequired) {
+    this.primaryEmailId = validation.sanitizeInput(this.primaryEmailId);
+    var validationResult = validation.validateString(this.primaryEmailId, isRequired, 20, 'primaryEmailId');
     return validationResult;
 };
 

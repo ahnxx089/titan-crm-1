@@ -1,9 +1,7 @@
 /////////////////////////////////////////////////
-// Account entity.
-// Inherits from Organization.
-// Properties and validation methods.
+// Data access layer for organizations.
 //
-// @file:   account.js
+// @file:   organizationData.js
 // @author: Eric Brichetto <brichett13@gmail.com>
 /////////////////////////////////////////////////
 
