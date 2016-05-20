@@ -40,7 +40,11 @@ var leadApi = function (knex) {
     
     // GET /api/leads/?phoneNumber=
     var getLeadsByPhoneNumber = function (req, res) {
-
+        var leadId = req.params.id;
+        leadContoller.getLeadByPhoneNumber(leadId)
+		      .then(function(lead) {
+		          Res.json(lead)
+        });
     };
 
     // Lucas is taking this
@@ -67,11 +71,22 @@ var leadApi = function (knex) {
     
     // PUT /api/leads/:id
     var updateLead = function (req, res) {
+       var leadId = req.params.id;
+	   var lead = req.body;
+	       leadController.updateLead(partyId, lead)
+		          .then(function(result){
+		              Res.json({updated:result});
+	});
 
     };
     
     // DELETE /api/leads/:id
     var deleteLead = function (req, res) {
+    var leadId = req.params.id;
+        leadController.deleteLead(partyId)
+		      .then(function(result){
+		          Res.json({updated:result});
+	});
 
     };
 

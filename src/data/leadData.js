@@ -101,6 +101,16 @@ var leadData = function(knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
     */
     var updateLead = function(lead) {
+    return knex('party')
+		.where({party_id: lead.partyId})
+		.update({
+			party_type_id: lead.partyTypeId,
+			preferred_currency_uom_id: lead.preferredCurrencyUomId,
+                		description: lead.description,
+                		status_id: lead.statusId,
+                		updated_date: (new Date()).toISOString()
+            });
+    };
     };
     
     /**
@@ -109,6 +119,19 @@ var leadData = function(knex) {
      * @return {Object} promise - Fulfillment value is number of rows deleted
     */
     var deleteLead = function(leadId) {
+    return knex('party')
+		.where(party_id: partyId})
+            	.del();
+    };
+    
+    return {
+        addLead: addLead,
+        getLeads: getLeads,
+        getLeadById: getLeadById,
+        updateParty: updateParty,
+        deleteParty: deleteParty
+    };
+
     };
     
     return {
