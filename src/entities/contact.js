@@ -19,7 +19,7 @@ var ContactMech = require('../entities/contactMech');
 //
 function Contact(partyId, partyTypeId, currencyUomId, description,
     statusId, createdBy, createdDate, updatedDate, salutation, firstName,
-    middleName, lastName, birthDate, comments, countryCode, areaCode, contactNumber, askForName, emailAddress, toName, attentionName,
+    middleName, lastName, birthDate, comments, title, countryCode, areaCode, contactNumber, askForName, emailAddress, toName, attentionName,
     addressLine1, addressLine2, city, stateOrProvinceId, zipOrPostalCode, countryId) {
 
     // Call the parent constructor (Person), making sure
@@ -30,6 +30,7 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
 
     // Contact-specific Properties
     this.contactMechs = [];
+    this.title = title;
 
     //Add an email address to contactMechs, if one is specified
     if (emailAddress) {

@@ -267,8 +267,8 @@ var getContacts = function () {
     //A party is a contact iff role_type_id in party_role is set to CONTACT
     return knex.select('party_id', 'party_type_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'created_date', 'updated_date')
         .from('party')
-        .innerjoin('party_role', 'party_role.party_id', 'party.party_id')
-        .innerjoin('role_type', 'role_type.role_type_id', 'party_role.role_type_id')
+        .innerJoin('party_role', 'party_role.party_id', 'party.party_id')
+        .innerJoin('role_type', 'role_type.role_type_id', 'party_role.role_type_id')
         .where('role_type.role_type_id', 'CONTACT');
     /* NOTE:  THIS SYNTAX DID NOT PASS INSPECTION WITH THE KNEX QUERY BUILDER AT:
         http://michaelavila.com/knex-querylab/ 
@@ -285,8 +285,8 @@ var getContactById = function (id) {
     //A party is a contact iff role_type_id in party_role is set to CONTACT
     return knex.select('party_id', 'party_type_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'created_date', 'updated_date')
         .from('party')
-        .innerjoin('party_role', 'party_role.party_id', 'party.party_id')
-        .innerjoin('role_type', 'role_type.role_type_id', 'party_role.role_type_id')
+        .innerJoin('party_role', 'party_role.party_id', 'party.party_id')
+        .innerJoin('role_type', 'role_type.role_type_id', 'party_role.role_type_id')
         .where('role_type.role_type_id', 'CONTACT')
         .andWhere({
             party_id: id

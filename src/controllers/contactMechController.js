@@ -22,7 +22,7 @@ var contactController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new party
     */
     var addContactMech = function (contactMech) {
-        
+        /*
         //get any extra parameters ready
         var additionalParams;
         if (contactMech.contactMechTypeId == 'POSTAL_ADDRESS') {
@@ -54,6 +54,7 @@ var contactController = function (knex) {
             null, (new Date()).toISOString(),
             additionalParams
         );
+        */
         
         // Validate the data before going ahead
         var validationErrors = contactMechEntity.validateForInsert();
@@ -82,7 +83,7 @@ var contactController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContactMech = function (contactMech) {
-        
+        /*
         //get any extra parameters ready
         var additionalParams;
         if (contactMech.contactMechTypeId == 'POSTAL_ADDRESS') {
@@ -114,12 +115,14 @@ var contactController = function (knex) {
             null, (new Date()).toISOString(),
             additionalParams
         );
+        */
         
         // Validate the data before going ahead
-        var validationErrors = contactMechEntity.validateForUpdate();
+        var validationErrors = contactMech.validateForUpdate();
+        
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
-            var promise = contactMechData.updateContactMech(partyEntity)
+            var promise = contactMechData.updateContactMech(contactMech)
                 .then(function (contactMechId) {
                     return contactMechId;
                 });
