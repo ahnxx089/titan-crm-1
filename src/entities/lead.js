@@ -10,7 +10,7 @@
 // NOT COMPLETED! Skeleton only. 
 
 var validation = require('../common/validation')();
-
+var Person = require('../entities/person')();
 // Constructor
 // Lead is a Person, which is a Party
 // Party -> Person -> Lead
@@ -22,7 +22,7 @@ function Lead(partyId, partyTypeId, currencyUomId, description,
               ) {
 
     Person.call(this, partyId, partyTypeId, currencyUomId, description,
-               statusId, createdBy, createdDate, updatedDate, 
+               statusId, createdBy, createdDate, updatedDate,
                salutation, firstName, middleName, lastName, birthDate, comments);
     
     // Lead-specific Properties
@@ -53,7 +53,7 @@ Lead.prototype.validateForInsert = function () {
     var specificValidations = [
         // true means required, false means nullable
         
-    ]; 
+    ];
     
     // The "errors" array is "validations" array
     // with empty string elements weeded out
