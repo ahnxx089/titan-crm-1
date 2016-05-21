@@ -35,8 +35,14 @@ var contactApi = function (knex) {
     };
 
     // GET /api/contacts/:id
+    //Muhammad 
     var getContactById = function (req, res) {
-
+        var contactId = req.params.id;
+        contactController.getContactById(contactId)
+            .then(function(contact) {
+                res.json(contact);
+            //Or should this be:  res.json(lead);
+        });
     };
 
     // FOR DISCUSSION:  HOW SPECIFIC TO MAKE?
