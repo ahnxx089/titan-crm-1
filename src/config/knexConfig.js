@@ -23,5 +23,5 @@ var knexConfig = function() {
     return {
         getConfig: getConfig
     };
-}
+};
 module.exports = knexConfig;

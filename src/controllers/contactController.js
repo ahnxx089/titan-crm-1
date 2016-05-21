@@ -189,6 +189,6 @@ var contactController = function (knex) {
         updateContact: updateContact,
         deleteContact: deleteContact
     };
-);
+};
 
 module.exports = contactController;

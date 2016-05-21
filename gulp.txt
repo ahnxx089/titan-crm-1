@@ -1,0 +1,159 @@
+[15:20:29] Using gulpfile ~\ofssam\titan-crm\gulpfile.js
+[15:20:29] Starting 'style'...
+
+src\api\leadApi.js
+  line 46  col 33  Missing semicolon.               (W033)
+  line 44  col 9   'leadContoller' is not defined.  (W117)
+  line 46  col 19  'Res' is not defined.            (W117)
+  line 78  col 23  'Res' is not defined.            (W117)
+  line 88  col 19  'Res' is not defined.            (W117)
+  line 76  col 38  'partyId' is not defined.        (W117)
+  line 86  col 35  'partyId' is not defined.        (W117)
+
+  ‼  7 warnings
+
+
+src\config\knexConfig.js
+  line 26  col 2  Missing semicolon.  (W033)
+
+  ‼  1 warning
+
+
+src\controllers\contactController.js
+  line 192  col 1   Unreachable ')' after 'return'.                                         (W027)
+  line 192  col 1   Expected an identifier and instead saw ')'.                             (E030)
+  line 192  col 1   Expected an assignment or function call and instead saw an expression.  (W030)
+  line 15   col 41  Unmatched '{'.                                                          (E019)
+  line 194  col 35  Unrecoverable syntax error. (100% scanned).                             (E041)
+
+  ×  3 errors
+  ‼  2 warnings
+
+
+src\controllers\leadController.js
+  line 123  col 26  'Party' is not defined.    (W117)
+  line 124  col 13  'partyId' is not defined.  (W117)
+  line 157  col 40  'partyId' is not defined.  (W117)
+
+  ‼  3 warnings
+
+
+src\controllers\userController.js
+  line 91  col 9   'getUserPermissionsById' was used before it was defined.  (W003)
+  line 99  col 77  Missing semicolon.                                        (W033)
+
+  ‼  2 warnings
+
+
+src\data\accountData.js
+  line 62  col 6  Missing semicolon.  (W033)
+
+  ‼  1 warning
+
+
+src\data\contactData.js
+  line 335  col 21  'addContact' is not defined.  (W117)
+
+  ‼  1 warning
+
+
+src\data\contactMechData.js
+  line 40   col 36  'contactId' is not defined.                 (W117)
+  line 59   col 36  'contactId' is not defined.                 (W117)
+  line 62   col 28  'contactId' is not defined.                 (W117)
+  line 109  col 9   'telecomNumberFields' is not defined.       (W117)
+  line 138  col 21  'telecomNumberFields' is not defined.       (W117)
+  line 116  col 9   'postalAddressFields' is not defined.       (W117)
+  line 144  col 29  'postalAddressFields' is not defined.       (W117)
+  line 128  col 9   'generalContactMechFields' is not defined.  (W117)
+  line 150  col 37  'generalContactMechFields' is not defined.  (W117)
+  line 136  col 34  'contactMechId' is not defined.             (W117)
+  line 142  col 42  'contactMechId' is not defined.             (W117)
+  line 148  col 50  'contactMechId' is not defined.             (W117)
+  line 152  col 67  'basicRows' is not defined.                 (W117)
+  line 182  col 67  'basicRows' is not defined.                 (W117)
+
+  ‼  14 warnings
+
+
+src\data\leadData.js
+  line 166  col 5  Unreachable 'return' after 'return'.        (W027)
+  line 172  col 6  Unrecoverable syntax error. (98% scanned).  (E041)
+
+  ×  1 error
+  ‼  1 warnings
+
+
+src\data\organizationData.js
+  line 18  col 30  Identifier 'organization_name' is not in camel case.  (W106)
+  line 19  col 29  Identifier 'office_site_name' is not in camel case.   (W106)
+  line 20  col 27  Identifier 'annual_revenue' is not in camel case.     (W106)
+  line 21  col 26  Identifier 'num_employees' is not in camel case.      (W106)
+  line 22  col 26  Identifier 'ticker_symbol' is not in camel case.      (W106)
+  line 24  col 27  Identifier 'logo_image_url' is not in camel case.     (W106)
+  line 25  col 25  Identifier 'created_date' is not in camel case.       (W106)
+  line 26  col 25  Identifier 'updated_date' is not in camel case.       (W106)
+  line 51  col 29  Identifier 'party_id' is not in camel case.           (W106)
+  line 62  col 29  Identifier 'party_id' is not in camel case.           (W106)
+  line 64  col 34  Identifier 'organization_name' is not in camel case.  (W106)
+  line 65  col 33  Identifier 'office_site_name' is not in camel case.   (W106)
+  line 66  col 31  Identifier 'annual_revenue' is not in camel case.     (W106)
+  line 67  col 30  Identifier 'num_employees' is not in camel case.      (W106)
+  line 68  col 30  Identifier 'ticker_symbol' is not in camel case.      (W106)
+  line 70  col 31  Identifier 'logo_image_url' is not in camel case.     (W106)
+  line 71  col 29  Identifier 'updated_date' is not in camel case.       (W106)
+  line 82  col 29  Identifier 'party_id' is not in camel case.           (W106)
+
+  ‼  18 warnings
+
+
+src\entities\account.js
+  line 15  col 17  This function has too many parameters. (17)  (W072)
+
+  ‼  1 warning
+
+
+src\entities\contact.js
+  line 20   col 17  This function has too many parameters. (28)  (W072)
+  line 43   col 13  'contactMech' is already defined.            (W004)
+  line 59   col 13  'contactMech' is already defined.            (W004)
+  line 94   col 13  'i' is already defined.                      (W004)
+  line 115  col 13  'i' is already defined.                      (W004)
+  line 49   col 30  'stateOrProvince' is not defined.            (W117)
+  line 51   col 22  'country' is not defined.                    (W117)
+  line 52   col 39  'zipOrPostalCodeExtension' is not defined.   (W117)
+  line 58   col 9   'phoneNumber' is not defined.                (W117)
+  line 126  col 66  'isRequired' is not defined.                 (W117)
+
+  ‼  10 warnings
+
+
+src\entities\contactMech.js
+  line 45  col 5  'getPostalAddressString' was used before it was defined.  (W003)
+  line 64  col 5  'getTelecomNumberString' was used before it was defined.  (W003)
+
+  ‼  2 warnings
+
+
+src\entities\lead.js
+  line 17  col 14  This function has too many parameters. (19)  (W072)
+  line 24  col 5   'Person' is not defined.                     (W117)
+  line 38  col 32  'Person' is not defined.                     (W117)
+  line 50  col 5   'Person' is not defined.                     (W117)
+  line 68  col 5   'Person' is not defined.                     (W117)
+
+  ‼  5 warnings
+
+
+src\entities\organization.js
+  line 52   col 37  Expected '===' and instead saw '=='.  (W116)
+  line 55   col 6   Unnecessary semicolon.                (W032)
+  line 75   col 37  Expected '===' and instead saw '=='.  (W116)
+  line 78   col 6   Unnecessary semicolon.                (W032)
+  line 100  col 29  Expected '===' and instead saw '=='.  (W116)
+  line 109  col 28  Expected '===' and instead saw '=='.  (W116)
+  line 74   col 25  'validations' is not defined.         (W117)
+
+  ‼  7 warnings
+
+[15:20:34] Finished 'style' after 4.05 s
