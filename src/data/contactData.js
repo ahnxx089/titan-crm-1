@@ -7,7 +7,7 @@
 
 /* jshint camelcase: false */
 
-var PersonData = require('./personData.js');
+//var PersonData = require('./personData.js');
 
 var contactData = function (knex) {
 
@@ -266,16 +266,15 @@ var contactData = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getContacts = function () {
-        //A party is a contact iff role_type_id in party_role is set to CONTACT
-        return knex.select('party_id', 'party_type_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'created_date', 'updated_date')
+        // A party is a contact iff role_type_id in party_role is set to CONTACT.
+        // Reach that info by joining table party to matching table party_role to 
+        // table role_type.   The SELECT statement can be amended to return more info
+        // about the contact; at present it returns minimal info to test if it works...
+        return knex.select('party.party_id', 'party.description', 'role_type.role_type', 'role_type.description')
             .from('party')
             .innerJoin('party_role', 'party_role.party_id', 'party.party_id')
-            .innerJoin('role_type', 'role_type.role_type_id', 'party_role.role_type_id')
-            .where('role_type.role_type_id', 'CONTACT');
-        /* NOTE:  THIS SYNTAX DID NOT PASS INSPECTION WITH THE KNEX QUERY BUILDER AT:
-            http://michaelavila.com/knex-querylab/ 
-            SO IT MIGHT NEED SOME FIXING, BUT THE WHERE LOGIC SHOULD BE GOOD...
-        */
+            .innerJoin('role_type', 'role_type.role_type', 'party_role.role_type_id')
+            .where('role_type.role_type', 'CONTACT');
     };
 
     /**

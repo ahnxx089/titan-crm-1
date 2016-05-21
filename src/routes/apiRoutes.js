@@ -14,23 +14,23 @@ var router = function (knex) {
     // AUTH
     // ==========================================
     // Comes before the middleware because we need it unsecured
-    apiRouter.route('/authenticate').post(function(req, res) {
+    apiRouter.route('/authenticate').post(function (req, res) {
         var authController = require('../controllers/authController')(knex);
         authController.verifyLoginCredentials(req.body.userId, req.body.password, res);
     });
-    
+
     // MIDDLEWARE
     // ==========================================
     // Makes sure all requests to our APIs are authenticated
     apiRouter.use(function (req, res, next) {
         //if(req.url !== '/authenticate') {
-            // Authenticate the request
-            var authController = require('../controllers/authController')(knex);
-            authController.authenticateRequest(req, res, next);
+        // Authenticate the request
+        var authController = require('../controllers/authController')(knex);
+        authController.authenticateRequest(req, res, next);
         //}
     });
-    
-    
+
+
     // USERS
     // ==========================================
     var userApi = require('../api/userApi')(knex);
@@ -52,6 +52,21 @@ var router = function (knex) {
         .get(partyApi.getPartyById)
         .put(partyApi.updateParty)
         .delete(partyApi.deleteParty);
+
+
+
+    // CONTACTS
+    // ==========================================
+    var contactApi = require('../api/contactApi')(knex);
+    apiRouter.route('/contacts')
+        .get(contactApi.getContacts)
+        .post(contactApi.addContact);
+    apiRouter.route('/contacts/:id')
+        .get(contactApi.getContactById)
+        .put(contactApi.updateContact)
+        .delete(contactApi.deleteContact);
+    // DINESH WILL ADD API ROUTES HERE FOR THE FUNCTIONS
+    // IN contactApi.js IN ADDITION TO THE 5 NAMED SO FAR.
 
     return apiRouter;
 };

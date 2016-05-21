@@ -120,20 +120,20 @@ Contact.prototype.validateForUpdate = function () {
     return errors;
 };
 
+/*
 // title is varchar(255) -- DOES NOT EXIST IN titan_crm DB YET, discuss...
-<<<<<<< HEAD
+<< << << < HEAD
 //Contact.prototype.validateTitle = function (isRequired) {
 //    this.title = validation.sanitizeInput(this.title);
 //    var validationResult = validation.validateString(this.title, isRequired, 255, 'title');
 //    return validationResult;
 //};
-=======
-Contact.prototype.validateTitle = function (isRequired) {
-    this.title = validation.sanitizeInput(this.title);
-    var validationResult = validation.validateString(this.title, isRequired, 255, 'title');
-    return validationResult;
-};
->>>>>>> 3d7c647bc369f22e82fc088b7e407ac59b459f87
+    === === =
+    Contact.prototype.validateTitle = function (isRequired) {
+        this.title = validation.sanitizeInput(this.title);
+        var validationResult = validation.validateString(this.title, isRequired, 255, 'title');
+        return validationResult;
+    }; >>> >>> > 3 d7c647bc369f22e82fc088b7e407ac59b459f87*/
 
 // Export the class as a module
 module.exports = Contact;

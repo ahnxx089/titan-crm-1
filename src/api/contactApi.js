@@ -31,7 +31,10 @@ var contactApi = function (knex) {
 
     // GET /api/contacts/
     var getContacts = function (req, res) {
-
+        contactController.getContacts()
+            .then(function (contacts) {
+                res.json(contacts);
+            });
     };
 
     // GET /api/contacts/:id
@@ -39,10 +42,10 @@ var contactApi = function (knex) {
     var getContactById = function (req, res) {
         var contactId = req.params.id;
         contactController.getContactById(contactId)
-            .then(function(contact) {
+            .then(function (contact) {
                 res.json(contact);
-            //Or should this be:  res.json(lead);
-        });
+                //Or should this be:  res.json(lead);
+            });
     };
 
     // FOR DISCUSSION:  HOW SPECIFIC TO MAKE?
@@ -67,7 +70,7 @@ var contactApi = function (knex) {
     var getContactByAdvanced = function (req, res) {
 
     };
-    
+
     // GET /api/contacts/:addressinfo
     // CITY?  COUNTRY?  STATE/PROVINCE? POSTAL CODE
     var getContactByAddressInfo = function (req, res) {
@@ -86,6 +89,7 @@ var contactApi = function (knex) {
     return {
         middleware: middleware,
         addContact: addContact,
+        getContacts: getContacts,
         getContactById: getContactById,
         updateContact: updateContact,
         deleteContact: deleteContact
