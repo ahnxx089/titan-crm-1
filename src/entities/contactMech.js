@@ -20,16 +20,16 @@ function ContactMech(contactMechId, contactMechTypeId, infoString, createdDate, 
     this.updatedDate = updatedDate;
 
     if (contactMethodType == 'POSTAL_ADDRESS') {
-        this.contactMechId: = additionalParameters.contactMechId;
-        this.toName: = additionalParameters.toName;
-        this.attnName: = additionalParameters.attnName;
-        this.address1: = additionalParameters.address1;
-        this.address2: = additionalParameters.address2;
-        this.directions: = additionalParameters.directions;
-        this.city: = additionalParameters.city;
-        this.zipOrPostalCode: = additionalParameters.zipOrPostalCode;
-        this.stateProvinceGeoId: = additionalParameters.stateProvinceGeoId;
-        this.countryGeoId: = additionalParameters.countryGeoId;
+        this.contactMechId = additionalParameters.contactMechId;
+        this.toName = additionalParameters.toName;
+        this.attnName = additionalParameters.attnName;
+        this.address1 = additionalParameters.address1;
+        this.address2 = additionalParameters.address2;
+        this.directions = additionalParameters.directions;
+        this.city = additionalParameters.city;
+        this.zipOrPostalCode = additionalParameters.zipOrPostalCode;
+        this.stateProvinceGeoId = additionalParameters.stateProvinceGeoId;
+        this.countryGeoId = additionalParameters.countryGeoId;
 
         this.infoString = getPostalAddressString(additionalParameters);
     } else if (contactMethodType == 'TELECOM_NUMBER') {
@@ -37,14 +37,14 @@ function ContactMech(contactMechId, contactMechTypeId, infoString, createdDate, 
         this.areaCode = additionalParameters.areaCode;
         this.contactNumber = additionalParameters.contactNumber;
         this.askForName = additionalParameters.askForName;
-        
+
         this.infoString = getTelcomNumberString(additionalParameters);
     }
 }
 
 var getPostalAddressString = function (parameters) {
     var addressString = '';
-    
+
     //add components of address to string
     addressString += parameters.toName;
     if (attnName) {
@@ -56,14 +56,14 @@ var getPostalAddressString = function (parameters) {
         addressString += parameters.address2 + '\n';
     }
     addressString += parameters.city + ', ' + parameters.stateProvinceGeoId + ", " + parameters.zipOrPostalCode;
-    
+
     return addressString;
 }
 
 
 var getTelcomNumberString = function (Parameters) {
     var numberString = '';
-    
+
     //add components of number to string
     numberString += parameters.contactNumber;
     if (parameters.areaCode) {
@@ -75,7 +75,7 @@ var getTelcomNumberString = function (Parameters) {
     if (parameters.askForName) {
         numberString += ', ask for ' + parameters.askForName;
     }
-    
+
     return numberString;
 }
 
@@ -216,7 +216,7 @@ PostAddress.prototype.validateCity = function (isRequired) {
 
 // postal_code type is varchar(20)
 PostAddress.prototype.validatePostalCode = function (isRequired) {
-this.postalCode = validation.sanitizeInput(this.postalCode);
+    this.postalCode = validation.sanitizeInput(this.postalCode);
     var validationResult = validation.validateString(this.postalCode, isRequired, 20, 'postalCode');
     return validationResult;
 };

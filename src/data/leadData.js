@@ -151,7 +151,7 @@ var leadData = function(knex) {
     */
     var deleteLead = function(leadId) {
     return knex('party')
-		.where(party_id: partyId})
+		.where({party_id: partyId})
             	.del();
     };
     
