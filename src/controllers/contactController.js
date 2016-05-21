@@ -142,7 +142,6 @@ var contactController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContact = function (contactId, Contact) {
-
         var validationErrors = contact.validateForUpdate();
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
@@ -190,6 +189,6 @@ var contactController = function (knex) {
         updateContact: updateContact,
         deleteContact: deleteContact
     };
-};
+);
 
 module.exports = contactController;
