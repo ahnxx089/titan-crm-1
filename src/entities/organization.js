@@ -48,11 +48,11 @@ Organization.prototype.validateForInsert = function () {
         this.validateLogoImgURL(false)
     ];
     
-    for (var i = 0; i < validation.length; i++) {
-        if(specificvalidations[i] == true) {
+    for (var i = 0; i < specificvalidations.length; i++) {
+        if(specificvalidations[i]) {
             errors[i].push(specificvalidations[i]);
         }
-    };
+    }
     return errors;
 };
 
@@ -71,11 +71,11 @@ Organization.prototype.validateForUpdate = function () {
         this.validateLogoImgURL(false)   
     ];
     
-    for (var i = 0; i < validations.length; i++) {
-        if(specificvalidations[i] == true) {
+    for (var i = 0; i < specificvalidations.length; i++) {
+        if(specificvalidations[i]) {
             errors.push(specificvalidations[i]);
         }
-    };
+    }
     return errors;
 };
 
@@ -97,7 +97,7 @@ Organization.prototype.validateOfficeSiteName = function(isRequired) {
 Organization.prototype.validateAnnualRevenue = function(isRequired) {
     this.annualRevenue = validation.sanitizeInput(this.annualRevenue);
     var validationResult = validation.validateInt(this.annualRevenue, isRequired, 20, 'annualRevenue');
-    if(this.annualRevenue == true && !validationResult) {
+    if(this.annualRevenue && !validationResult) {
         validationResult = validation.convertToInt(this.annualRevenue);
     }
     return validationResult;
@@ -106,7 +106,7 @@ Organization.prototype.validateAnnualRevenue = function(isRequired) {
 Organization.prototype.validateNumEmployees = function(isRequired) {
     this.numEmployees = validation.sanitizeInput(this.numEmployees);
     var validationResult = validation.validateString(this.numEmployees, isRequired, 20, 'numEmployees');
-    if(this.numEmployees == true && !validationResult) {
+    if(this.numEmployees && !validationResult) {
         validationResult = validation.convertToInt(this.numEmployees);
     }
     return validationResult;
