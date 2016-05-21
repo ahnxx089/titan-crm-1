@@ -143,27 +143,6 @@ var contactController = function (knex) {
      */
     var updateContact = function (contactId, Contact) {
 
-        var validationErrors = contact.validateForUpdate();
-        if (validationErrors.length === 0) {
-            // Pass on the entity to be added to the data layer
-            var promise = contactMechData.updateContact(contact)
-                .then(function (numRows) {
-                    for (int i = 0; i < contact.contactMechs.length; i++) {
-                        numRows += ContactMechController.updateContactMech(contact.contactMechs[i]);
-                    }
-                    return numRows;
-                })
-                .then(function (numRows) {
-                    return numRows;
-                });
-
-            promise.catch(function (error) {
-                winston.error(error);
-            });
-            return promise;
-        } else {
-            return null;
-        }
     };
 
     /**
@@ -190,6 +169,6 @@ var contactController = function (knex) {
         updateContact: updateContact,
         deleteContact: deleteContact
     };
-};
+);
 
 module.exports = contactController;

@@ -9,7 +9,7 @@
 /* jshint camelcase: false */
 
 var winston = require('winston');
-var Contact = require('../entities/contactMech');
+var Contact = require('../entities/contactMech.js');
 
 var contactController = function (knex) {
     // Get a reference to data layer module
@@ -20,7 +20,7 @@ var contactController = function (knex) {
      * Add a new contact mechanism
      * @param {Object} contactMech - The new contact mechanism to be added
      * @return {Object} promise - Fulfillment value is id of new party
-    */
+     */
     var addContactMech = function (contactMech) {
         /*
         //get any extra parameters ready
@@ -55,26 +55,35 @@ var contactController = function (knex) {
             additionalParams
         );
         */
-        
+
         // Validate the data before going ahead
-        var validationErrors = contactMechEntity.validateForInsert();
-        if(validationErrors.length === 0) {
+        var validationErrors = contactMech.validateForInsert();
+        if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
-            var promise = contactMechData.addContactMech(contactMechEntity)
-                .then(function(contactMechId) {
-                   return contactMechId; 
+            var promise = contactMechData.addContactMech(contactMech)
+                .then(function (contactMechId) {
+                    return contactMechId;
                 });
-                promise.catch(function(error) {
-                    winston.error(error);
-                });
+            promise.catch(function (error) {
+                winston.error(error);
+            });
             return promise;
-        }
-        else {
+        } else {
             return validationErrors;
         }
     };
 
-    var getContactMechsByContact = function (contact) {};
+    var getContactMechs = function () {
+
+    };
+
+    var getContactMechsByContact = function (contact) {
+
+    };
+
+    var getContactMechById = function (contactMechId) {
+
+    };
 
     /**
      * Update a contact mechanism in database
@@ -116,10 +125,10 @@ var contactController = function (knex) {
             additionalParams
         );
         */
-        
+
         // Validate the data before going ahead
         var validationErrors = contactMech.validateForUpdate();
-        
+
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
             var promise = contactMechData.updateContactMech(contactMech)
@@ -141,7 +150,7 @@ var contactController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */
     var deleteContactMech = function (contactMechId) {
-        var promise = partyData.deleteParty(partyId)
+        var promise = contactMechData.deleteContacrMech(contactMechId)
             .then(function (result) {
                 return result;
             });
@@ -153,10 +162,10 @@ var contactController = function (knex) {
     };
 
     return {
-        add: add,
-        getContactMechs: getContactMechs,
-        getContactMechById: getContactMechById,
         addContactMech: addContactMech,
+        getContactMechs: getContactMechs,
+        getContactMechsByContact: getContactMechsByContact,
+        getContactMechById: getContactMechById,
         updateContactMech: updateContactMech,
         deleteContactMech: deleteContactMech
     };
