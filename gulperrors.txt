@@ -1,0 +1,329 @@
+[11:35:58] Using gulpfile ~\Code\Web-related-code\Ofssam\Eric\titan-crm\gulpfile.js
+[11:35:58] Starting 'style'...
+
+src\api\leadApi.js
+  line 46  col 33  Missing semicolon.               (W033)
+  line 44  col 9   'leadContoller' is not defined.  (W117)
+  line 46  col 19  'Res' is not defined.            (W117)
+  line 78  col 23  'Res' is not defined.            (W117)
+  line 88  col 19  'Res' is not defined.            (W117)
+  line 76  col 38  'partyId' is not defined.        (W117)
+  line 86  col 35  'partyId' is not defined.        (W117)
+
+  ‼  7 warnings
+
+
+src\config\knexConfig.js
+  line 26  col 2  Missing semicolon.  (W033)
+
+  ‼  1 warning
+
+
+src\controllers\contactController.js
+  line 151  col 30  Expected ';' and instead saw 'i'.                                       (W116)
+  line 151  col 32  Expected an identifier and instead saw '='.                             (E030)
+  line 151  col 34  Expected ';' and instead saw '0'.                                       (W116)
+  line 151  col 35  Expected ')' and instead saw ';'.                                       (E021)
+  line 151  col 35  Expected an identifier and instead saw ';'.                             (E030)
+  line 151  col 37  Expected ')' to match '(' from line 151 and instead saw 'i'.            (E020)
+  line 151  col 39  Expected '{' and instead saw '<'.                                       (W116)
+  line 151  col 39  Expected an identifier and instead saw '<'.                             (E030)
+  line 151  col 39  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 151  col 40  Missing semicolon.                                                      (E058)
+  line 151  col 62  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 151  col 73  Missing semicolon.                                                      (E058)
+  line 151  col 73  Expected an identifier and instead saw ')'.                             (E030)
+  line 151  col 73  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 151  col 74  Missing semicolon.                                                      (E058)
+  line 48   col 37  'parties' is not defined.                                               (W117)
+  line 50   col 25  'parties' is not defined.                                               (W117)
+  line 51   col 25  'parties' is not defined.                                               (W117)
+  line 52   col 25  'parties' is not defined.                                               (W117)
+  line 53   col 25  'parties' is not defined.                                               (W117)
+  line 54   col 25  'parties' is not defined.                                               (W117)
+  line 55   col 25  'parties' is not defined.                                               (W117)
+  line 56   col 25  'parties' is not defined.                                               (W117)
+  line 57   col 25  'parties' is not defined.                                               (W117)
+  line 58   col 25  'parties' is not defined.                                               (W117)
+  line 59   col 25  'parties' is not defined.                                               (W117)
+  line 60   col 25  'parties' is not defined.                                               (W117)
+  line 61   col 25  'parties' is not defined.                                               (W117)
+  line 62   col 25  'parties' is not defined.                                               (W117)
+  line 63   col 25  'parties' is not defined.                                               (W117)
+  line 64   col 25  'parties' is not defined.                                               (W117)
+  line 65   col 25  'parties' is not defined.                                               (W117)
+  line 66   col 25  'parties' is not defined.                                               (W117)
+  line 67   col 25  'parties' is not defined.                                               (W117)
+  line 68   col 25  'parties' is not defined.                                               (W117)
+  line 69   col 25  'parties' is not defined.                                               (W117)
+  line 70   col 25  'parties' is not defined.                                               (W117)
+  line 71   col 25  'parties' is not defined.                                               (W117)
+  line 72   col 25  'parties' is not defined.                                               (W117)
+  line 73   col 25  'parties' is not defined.                                               (W117)
+  line 74   col 25  'parties' is not defined.                                               (W117)
+  line 75   col 25  'parties' is not defined.                                               (W117)
+  line 76   col 25  'parties' is not defined.                                               (W117)
+  line 77   col 25  'parties' is not defined.                                               (W117)
+  line 100  col 21  'parties' is not defined.                                               (W117)
+  line 101  col 21  'parties' is not defined.                                               (W117)
+  line 102  col 21  'parties' is not defined.                                               (W117)
+  line 103  col 21  'parties' is not defined.                                               (W117)
+  line 104  col 21  'parties' is not defined.                                               (W117)
+  line 105  col 21  'parties' is not defined.                                               (W117)
+  line 105  col 21  Too many errors. (53% scanned).                                         (E043)
+
+  ×  10 errors
+  ‼  41 warnings
+
+
+src\controllers\contactMechController.js
+  line 60   col 32  'contactMechEntity' is not defined.   (W117)
+  line 63   col 58  'contactMechEntity' is not defined.   (W117)
+  line 144  col 23  'partyData' is not defined.           (W117)
+  line 144  col 45  'partyId' is not defined.             (W117)
+  line 156  col 14  'add' is not defined.                 (W117)
+  line 157  col 26  'getContactMechs' is not defined.     (W117)
+  line 158  col 29  'getContactMechById' is not defined.  (W117)
+
+  ‼  7 warnings
+
+
+src\controllers\leadController.js
+  line 123  col 26  'Party' is not defined.    (W117)
+  line 124  col 13  'partyId' is not defined.  (W117)
+  line 157  col 40  'partyId' is not defined.  (W117)
+
+  ‼  3 warnings
+
+
+src\controllers\userController.js
+  line 91  col 9   'getUserPermissionsById' was used before it was defined.  (W003)
+  line 99  col 77  Missing semicolon.                                        (W033)
+
+  ‼  2 warnings
+
+
+src\data\accountData.js
+  line 62  col 6  Missing semicolon.  (W033)
+
+  ‼  1 warning
+
+
+src\data\contactData.js
+  line 195  col 34  Expected ')' and instead saw ';'.                                       (W116)
+  line 195  col 35  Missing semicolon.                                                      (W033)
+  line 196  col 9   Expected an identifier and instead saw ')'.                             (E030)
+  line 196  col 9   Expected an assignment or function call and instead saw an expression.  (W030)
+  line 204  col 28  Expected '}' to match '{' from line 202 and instead saw ':'.            (E020)
+  line 204  col 30  Expected ')' and instead saw 'contact'.                                 (W116)
+  line 205  col 26  Expected ')' and instead saw ':'.                                       (W116)
+  line 205  col 27  Missing semicolon.                                                      (E058)
+  line 206  col 17  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 206  col 25  Missing semicolon.                                                      (E058)
+  line 206  col 25  Expected '}' to match '{' from line 182 and instead saw ':'.            (E020)
+  line 206  col 26  Missing semicolon.                                                      (E058)
+  line 207  col 17  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 207  col 25  Missing semicolon.                                                      (E058)
+  line 207  col 25  Expected '}' to match '{' from line 12 and instead saw ':'.             (E020)
+  line 207  col 26  Missing semicolon.                                                      (E058)
+  line 208  col 17  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 208  col 27  Missing semicolon.                                                      (E058)
+  line 208  col 17  Unrecoverable syntax error. (60% scanned).                              (E041)
+
+  ×  11 errors
+  ‼  8 warnings
+
+
+src\data\contactMechData.js
+  line 30   col 45   Expected '===' and instead saw '=='.                                                                                                                                 (W116)
+  line 31   col 17   'id' is already defined.                                                                                                                                             (W004)
+  line 44   col 45   Expected '===' and instead saw '=='.                                                                                                                                 (W116)
+  line 45   col 17   'id' is already defined.                                                                                                                                             (W004)
+  line 70   col 567  Line is too long.                                                                                                                                                    (W101)
+  line 82   col 567  Line is too long.                                                                                                                                                    (W101)
+  line 111  col 45   Expected '===' and instead saw '=='.                                                                                                                                 (W116)
+  line 127  col 45   Expected '===' and instead saw '=='.                                                                                                                                 (W116)
+  line 139  col 46   Expected an identifier and instead saw ','.                                                                                                                          (E030)
+  line 140  col 21   Expected '}' to match '{' from line 132 and instead saw 'country_geo_id'.                                                                                            (E020)
+  line 140  col 35   Expected ')' and instead saw ':'.                                                                                                                                    (W116)
+  line 140  col 36   Missing semicolon.                                                                                                                                                   (E058)
+  line 141  col 21   Expected an assignment or function call and instead saw an expression.                                                                                               (W030)
+  line 141  col 42   Missing semicolon.                                                                                                                                                   (E058)
+  line 141  col 42   Expected '}' to match '{' from line 127 and instead saw ':'.                                                                                                         (E020)
+  line 142  col 21   Expected an assignment or function call and instead saw an expression.                                                                                               (W030)
+  line 142  col 33   Missing semicolon.                                                                                                                                                   (E058)
+  line 142  col 33   Expected '}' to match '{' from line 96 and instead saw ':'.                                                                                                          (E020)
+  line 142  col 36   Wrap an immediate function invocation in parens to assist the reader in understanding that the expression is the result of a function, and not the function itself.  (W062)
+  line 142  col 61   Missing semicolon.                                                                                                                                                   (W033)
+  line 143  col 18   Missing semicolon.                                                                                                                                                   (E058)
+  line 143  col 18   Expected an identifier and instead saw ')'.                                                                                                                          (E030)
+  line 143  col 18   Expected an assignment or function call and instead saw an expression.                                                                                               (W030)
+  line 143  col 19   Unrecoverable syntax error. (74% scanned).                                                                                                                           (E041)
+
+  ×  10 errors
+  ‼  14 warnings
+
+
+src\data\leadData.js
+  line 38   col 9   Unreachable 'return' after 'return'.                                    (W027)
+  line 52   col 9   Unreachable 'return' after 'return'.                                    (W027)
+  line 123  col 24  Expected ')' and instead saw ':'.                                       (W116)
+  line 123  col 25  Missing semicolon.                                                      (E058)
+  line 123  col 26  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 123  col 33  Missing semicolon.                                                      (W033)
+  line 123  col 34  Missing semicolon.                                                      (E058)
+  line 123  col 34  Expected an identifier and instead saw ')'.                             (E030)
+  line 124  col 17  Expected an operator and instead saw '.'.                               (E033)
+  line 124  col 17  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 124  col 18  Missing semicolon.                                                      (E058)
+  line 124  col 23  Unrecoverable syntax error. (84% scanned).                              (E041)
+
+  ×  6 errors
+  ‼  6 warnings
+
+
+src\data\organizationData.js
+  line 18  col 30  Identifier 'organization_name' is not in camel case.  (W106)
+  line 19  col 29  Identifier 'office_site_name' is not in camel case.   (W106)
+  line 20  col 27  Identifier 'annual_revenue' is not in camel case.     (W106)
+  line 21  col 26  Identifier 'num_employees' is not in camel case.      (W106)
+  line 22  col 26  Identifier 'ticker_symbol' is not in camel case.      (W106)
+  line 24  col 27  Identifier 'logo_image_url' is not in camel case.     (W106)
+  line 25  col 25  Identifier 'created_date' is not in camel case.       (W106)
+  line 26  col 25  Identifier 'updated_date' is not in camel case.       (W106)
+  line 51  col 29  Identifier 'party_id' is not in camel case.           (W106)
+  line 62  col 29  Identifier 'party_id' is not in camel case.           (W106)
+  line 64  col 34  Identifier 'organization_name' is not in camel case.  (W106)
+  line 65  col 33  Identifier 'office_site_name' is not in camel case.   (W106)
+  line 66  col 31  Identifier 'annual_revenue' is not in camel case.     (W106)
+  line 67  col 30  Identifier 'num_employees' is not in camel case.      (W106)
+  line 68  col 30  Identifier 'ticker_symbol' is not in camel case.      (W106)
+  line 70  col 31  Identifier 'logo_image_url' is not in camel case.     (W106)
+  line 71  col 29  Identifier 'updated_date' is not in camel case.       (W106)
+  line 82  col 29  Identifier 'party_id' is not in camel case.           (W106)
+
+  ‼  18 warnings
+
+
+src\entities\account.js
+  line 15  col 17  This function has too many parameters. (17)  (W072)
+  line 51  col 37  Expected '===' and instead saw '=='.         (W116)
+  line 54  col 6   Unnecessary semicolon.                       (W032)
+  line 74  col 37  Expected '===' and instead saw '=='.         (W116)
+  line 77  col 6   Unnecessary semicolon.                       (W032)
+  line 41  col 30  'partyParentId' is not defined.              (W117)
+  line 64  col 30  'partyParentId' is not defined.              (W117)
+  line 42  col 31  'industryEnumId' is not defined.             (W117)
+  line 65  col 31  'industryEnumId' is not defined.             (W117)
+  line 43  col 32  'ownershipEnumId' is not defined.            (W117)
+  line 66  col 32  'ownershipEnumId' is not defined.            (W117)
+  line 44  col 30  'importantNote' is not defined.              (W117)
+  line 67  col 30  'importantNote' is not defined.              (W117)
+  line 45  col 39  'primaryPostalAddressId' is not defined.     (W117)
+  line 68  col 39  'primaryPostalAddressId' is not defined.     (W117)
+  line 46  col 39  'primaryTelecomNumberId' is not defined.     (W117)
+  line 69  col 39  'primaryTelecomNumberId' is not defined.     (W117)
+  line 47  col 31  'primaryEmailId' is not defined.             (W117)
+  line 70  col 31  'primaryEmailId' is not defined.             (W117)
+  line 73  col 25  'validations' is not defined.                (W117)
+
+  ‼  20 warnings
+
+
+src\entities\contact.js
+  line 20   col 17   This function has too many parameters. (28)                                                           (W072)
+  line 37   col 47   Expected an identifier and instead saw ','.                                                           (E030)
+  line 37   col 49   Expected ')' and instead saw 'EMAIL_ADDRESS'.                                                         (W116)
+  line 37   col 66   'emailAddress' is already defined.                                                                    (W004)
+  line 37   col 80   'createdDate' is already defined.                                                                     (W004)
+  line 37   col 93   'updatedDate' is already defined.                                                                     (W004)
+  line 37   col 104  Missing semicolon.                                                                                    (E058)
+  line 37   col 104  Expected an identifier and instead saw ')'.                                                           (E030)
+  line 37   col 104  Expected an assignment or function call and instead saw an expression.                                (W030)
+  line 43   col 13   'contactMech' is already defined.                                                                     (W004)
+  line 43   col 47   Expected an identifier and instead saw ','.                                                           (E030)
+  line 43   col 49   Expected ')' and instead saw 'POSTAL_ADDRESS'.                                                        (W116)
+  line 43   col 67   Expected an identifier and instead saw 'void' (a reserved word).                                      (W024)
+  line 43   col 73   'createdDate' is already defined.                                                                     (W004)
+  line 43   col 86   'updatedDate' is already defined.                                                                     (W004)
+  line 43   col 97   'destructuring binding' is available in ES6 (use 'esversion: 6') or Mozilla JS extensions (use moz).  (W104)
+  line 44   col 21   'toName' is already defined.                                                                          (W004)
+  line 45   col 28   'attentionName' is already defined.                                                                   (W004)
+  line 46   col 27   'addressLine1' is already defined.                                                                    (W004)
+  line 47   col 27   'addressLine2' is already defined.                                                                    (W004)
+  line 48   col 19   'city' is already defined.                                                                            (W004)
+  line 50   col 30   'zipOrPostalCode' is already defined.                                                                 (W004)
+  line 53   col 10   Missing semicolon.                                                                                    (E058)
+  line 53   col 10   Expected an identifier and instead saw ')'.                                                           (E030)
+  line 53   col 10   Expected an assignment or function call and instead saw an expression.                                (W030)
+  line 59   col 13   'contactMech' is already defined.                                                                     (W004)
+  line 59   col 47   Expected an identifier and instead saw ','.                                                           (E030)
+  line 59   col 49   Expected ')' and instead saw 'TELECOM_NUMBER'.                                                        (W116)
+  line 59   col 67   Expected an identifier and instead saw 'void' (a reserved word).                                      (W024)
+  line 59   col 67   'void' is already defined.                                                                            (W004)
+  line 59   col 73   'createdDate' is already defined.                                                                     (W004)
+  line 59   col 86   'updatedDate' is already defined.                                                                     (W004)
+  line 59   col 97   'destructuring binding' is available in ES6 (use 'esversion: 6') or Mozilla JS extensions (use moz).  (W104)
+  line 60   col 26   'countryCode' is already defined.                                                                     (W004)
+  line 61   col 23   'areaCode' is already defined.                                                                        (W004)
+  line 62   col 28   'contactNumber' is already defined.                                                                   (W004)
+  line 63   col 25   'askForName' is already defined.                                                                      (W004)
+  line 64   col 10   Missing semicolon.                                                                                    (E058)
+  line 64   col 10   Expected an identifier and instead saw ')'.                                                           (E030)
+  line 64   col 10   Expected an assignment or function call and instead saw an expression.                                (W030)
+  line 94   col 13   'i' is already defined.                                                                               (W004)
+  line 115  col 13   'i' is already defined.                                                                               (W004)
+  line 58   col 9    'phoneNumber' is not defined.                                                                         (W117)
+  line 126  col 66   'isRequired' is not defined.                                                                          (W117)
+
+  ×  9 errors
+  ‼  35 warnings
+
+
+src\entities\contactMech.js
+  line 16  col 39  Missing semicolon.                                                      (W033)
+  line 22  col 29  Expected '===' and instead saw '=='.                                    (W116)
+  line 23  col 14  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 23  col 27  Missing semicolon.                                                      (E058)
+  line 23  col 27  Expected '}' to match '{' from line 22 and instead saw ':'.             (E020)
+  line 23  col 29  Expected an identifier and instead saw '='.                             (E030)
+  line 23  col 29  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 23  col 30  Missing semicolon.                                                      (E058)
+  line 23  col 52  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 24  col 14  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 24  col 20  Missing semicolon.                                                      (E058)
+  line 24  col 20  Expected '}' to match '{' from line 14 and instead saw ':'.             (E020)
+  line 24  col 22  Expected an identifier and instead saw '='.                             (E030)
+  line 24  col 22  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 24  col 23  Missing semicolon.                                                      (E058)
+  line 24  col 45  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 25  col 14  Expected an assignment or function call and instead saw an expression.  (W030)
+  line 25  col 22  Missing semicolon.                                                      (E058)
+  line 25  col 14  Unrecoverable syntax error. (10% scanned).                              (E041)
+
+  ×  10 errors
+  ‼  9 warnings
+
+
+src\entities\lead.js
+  line 17  col 14  This function has too many parameters. (19)  (W072)
+  line 24  col 5   'Person' is not defined.                     (W117)
+  line 38  col 32  'Person' is not defined.                     (W117)
+  line 50  col 5   'Person' is not defined.                     (W117)
+  line 68  col 5   'Person' is not defined.                     (W117)
+
+  ‼  5 warnings
+
+
+src\entities\organization.js
+  line 52   col 37  Expected '===' and instead saw '=='.  (W116)
+  line 55   col 6   Unnecessary semicolon.                (W032)
+  line 75   col 37  Expected '===' and instead saw '=='.  (W116)
+  line 78   col 6   Unnecessary semicolon.                (W032)
+  line 100  col 29  Expected '===' and instead saw '=='.  (W116)
+  line 109  col 28  Expected '===' and instead saw '=='.  (W116)
+  line 74   col 25  'validations' is not defined.         (W117)
+
+  ‼  7 warnings
+
+[11:36:06] Finished 'style' after 7.47 s

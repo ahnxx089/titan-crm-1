@@ -148,7 +148,7 @@ var contactController = function (knex) {
             // Pass on the entity to be added to the data layer
             var promise = contactMechData.updateContact(contact)
                 .then(function (numRows) {
-                    for (int i = 0; i < contact.contactMechs.length; i++) {
+                    for (var i = 0; i < contact.contactMechs.length; i++) {
                         numRows += ContactMechController.updateContactMech(contact.contactMechs[i]);
                     }
                     return numRows;
