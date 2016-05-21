@@ -162,9 +162,7 @@ var leadData = function(knex) {
         updateParty: updateParty,
         deleteParty: deleteParty
     };
-
-    };
-    
+        
     return {
         addLead: addLead,
         getLeads: getLeads,
