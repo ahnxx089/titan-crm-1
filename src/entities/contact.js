@@ -47,16 +47,16 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
             addressLine1: addressLine1,
             addressLine2: addressLine2,
             city: city,
-            stateOrProvinceId: stateOrProvinceId,
+            stateOrProvinceGeoId: stateOrProvinceId,
             zipOrPostalCode: zipOrPostalCode,
-            countryId: countryId
+            countryGeoId: countryId,
         });
         this.contactMechs.add(contactMech);
     }
 
     //Add a phone number to contactMechs, if one is specified
     if (contactNumber) {
-        var contactMech = new ContactMech(null, 'TELECOM_NUMBER', null, createdDate, updatedDate, {
+        contactMech = new ContactMech(null, 'TELECOM_NUMBER', null, createdDate, updatedDate, {
             countryCode: countryCode,
             areaCode: areaCode,
             contactNumber: contactNumber,
@@ -121,11 +121,19 @@ Contact.prototype.validateForUpdate = function () {
 };
 
 // title is varchar(255) -- DOES NOT EXIST IN titan_crm DB YET, discuss...
+<<<<<<< HEAD
 //Contact.prototype.validateTitle = function (isRequired) {
 //    this.title = validation.sanitizeInput(this.title);
 //    var validationResult = validation.validateString(this.title, isRequired, 255, 'title');
 //    return validationResult;
 //};
+=======
+Contact.prototype.validateTitle = function (isRequired) {
+    this.title = validation.sanitizeInput(this.title);
+    var validationResult = validation.validateString(this.title, isRequired, 255, 'title');
+    return validationResult;
+};
+>>>>>>> 3d7c647bc369f22e82fc088b7e407ac59b459f87
 
 // Export the class as a module
 module.exports = Contact;
