@@ -11,7 +11,7 @@ var validation = require('../common/validation')();
 
 // Constructor
 //
-function ContactMech(contactMechId, contactMechTypeId, infoString, createdDate, updatedDate, additionalParamiters) {
+function ContactMech(contactMechId, contactMechTypeId, infoString, createdDate, updatedDate, additionalParameters) {
     // Properties
     this.contactMechId = contactMechId
     this.contactMechTypeId = contactMechTypeId;
@@ -20,60 +20,60 @@ function ContactMech(contactMechId, contactMechTypeId, infoString, createdDate, 
     this.updatedDate = updatedDate;
 
     if (contactMethodType == 'POSTAL_ADDRESS') {
-        this.contactMechId: = additionalParamiters.contactMechId;
-        this.toName: = additionalParamiters.toName;
-        this.attnName: = additionalParamiters.attnName;
-        this.address1: = additionalParamiters.address1;
-        this.address2: = additionalParamiters.address2;
-        this.directions: = additionalParamiters.directions;
-        this.city: = additionalParamiters.city;
-        this.zipOrPostalCode: = additionalParamiters.zipOrPostalCode;
-        this.stateProvinceGeoId: = additionalParamiters.stateProvinceGeoId;
-        this.countryGeoId: = additionalParamiters.countryGeoId;
+        this.contactMechId: = additionalParameters.contactMechId;
+        this.toName: = additionalParameters.toName;
+        this.attnName: = additionalParameters.attnName;
+        this.address1: = additionalParameters.address1;
+        this.address2: = additionalParameters.address2;
+        this.directions: = additionalParameters.directions;
+        this.city: = additionalParameters.city;
+        this.zipOrPostalCode: = additionalParameters.zipOrPostalCode;
+        this.stateProvinceGeoId: = additionalParameters.stateProvinceGeoId;
+        this.countryGeoId: = additionalParameters.countryGeoId;
 
-        this.infoString = getPostalAddressString(additionalParamiters);
+        this.infoString = getPostalAddressString(additionalParameters);
     } else if (contactMethodType == 'TELECOM_NUMBER') {
-        this.countryCode = additionalParamiters.countryCode;
-        this.areaCode = additionalParamiters.areaCode;
-        this.contactNumber = additionalParamiters.contactNumber;
-        this.askForName = additionalParamiters.askForName;
+        this.countryCode = additionalParameters.countryCode;
+        this.areaCode = additionalParameters.areaCode;
+        this.contactNumber = additionalParameters.contactNumber;
+        this.askForName = additionalParameters.askForName;
         
-        this.infoString = getTelcomNumberString(additionalParamiters);
+        this.infoString = getTelcomNumberString(additionalParameters);
     }
 }
 
-var getPostalAddressString = function (paramiters) {
+var getPostalAddressString = function (parameters) {
     var addressString = '';
     
     //add components of address to string
-    addressString += paramiters.toName;
+    addressString += parameters.toName;
     if (attnName) {
-        addressString += ' Attn: ' + paramiters.attnName;
+        addressString += ' Attn: ' + parameters.attnName;
     }
     addressString += '\n';
-    addressString += paramiters.address1 + '\n';
+    addressString += parameters.address1 + '\n';
     if (address2) {
-        addressString += paramiters.address2 + '\n';
+        addressString += parameters.address2 + '\n';
     }
-    addressString += paramiters.city + ', ' + paramiters.stateProvinceGeoId + ", " + paramiters.zipOrPostalCode;
+    addressString += parameters.city + ', ' + parameters.stateProvinceGeoId + ", " + parameters.zipOrPostalCode;
     
     return addressString;
 }
 
 
-var getTelcomNumberString = function (paramiters) {
+var getTelcomNumberString = function (Parameters) {
     var numberString = '';
     
     //add components of number to string
-    numberString += paramiters.contactNumber;
-    if (paramiters.areaCode) {
-        numberString = paramiters.areaCode + '-' + numberString;
+    numberString += parameters.contactNumber;
+    if (parameters.areaCode) {
+        numberString = parameters.areaCode + '-' + numberString;
         if (countryCode) {
-            numberString = paramiters.countryCode + '-' + numberString;
+            numberString = parameters.countryCode + '-' + numberString;
         }
     }
-    if (paramiters.askForName) {
-        numberString += ', ask for ' + paramiters.askForName;
+    if (parameters.askForName) {
+        numberString += ', ask for ' + parameters.askForName;
     }
     
     return numberString;

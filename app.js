@@ -14,15 +14,7 @@ require('./src/common/logging')();
 
 // Initialize the database ORM
 //
-var knex = require('knex')({
-    client: 'mysql',
-    connection: {
-        host     : 'localhost',
-        user     : 'root',
-        password : '',
-        database : 'titan_crm'
-    }
-});
+var knex = require('./src/config/knexConfig')().getConfig();
 
 
 // Initialize the app object based on express framework 

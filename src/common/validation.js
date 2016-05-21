@@ -69,6 +69,18 @@ var validation = function () {
         }
         return '';
     };
+    
+    var validateBoolean = function (input, isRequired, label) {
+        if (isRequired && !input) {
+            return label + ' is required.';
+        }
+        if (input) {
+            if (!validator.isInt(input) && !(input === '1' || input === '0')) {
+                return label + ' must be an integer and either 1 or 0.';
+            }
+        }
+        return '';
+    };
 
 
     return {
@@ -76,7 +88,8 @@ var validation = function () {
         convertToInt: convertToInt,
         validateInt: validateInt,
         validateString: validateString,
-        validateDate: validateDate
+        validateDate: validateDate,
+        validateBoolean: validateBoolean,
     };
 
 };

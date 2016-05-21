@@ -5,16 +5,46 @@
 // @author: Anurag Bhandari <anurag@ofssam.com>
 /////////////////////////////////////////////////
 
-var express  = require('express');
+var express = require('express');
 var apiRouter = express.Router();
+var app = express();
+var jwt = require('jsonwebtoken');
 
-var router = function(knex) {
+var router = function (knex) {
+    // AUTH
+    // ==========================================
+    // Comes before the middleware because we need it unsecured
+    apiRouter.route('/authenticate').post(function(req, res) {
+        var authController = require('../controllers/authController')(knex);
+        authController.verifyLoginCredentials(req.body.userId, req.body.password, res);
+    });
+    
+    // MIDDLEWARE
+    // ==========================================
+    // Makes sure all requests to our APIs are authenticated
+    apiRouter.use(function (req, res, next) {
+        //if(req.url !== '/authenticate') {
+            // Authenticate the request
+            var authController = require('../controllers/authController')(knex);
+            authController.authenticateRequest(req, res, next);
+        //}
+    });
+    
+    
+    // USERS
+    // ==========================================
+    var userApi = require('../api/userApi')(knex);
+    apiRouter.route('/users')
+        .post(userApi.addUser);
+    apiRouter.route('/users/:id')
+        .get(userApi.getUserById)
+        .put(userApi.updateUser)
+        .delete(userApi.deleteUser);
+
+
     // PARTIES
     // ==========================================
-    // Configure router
     var partyApi = require('../api/partyApi')(knex);
-    apiRouter.use(partyApi.middleware);
-    // Define routes
     apiRouter.route('/parties')
         .get(partyApi.getParties)
         .post(partyApi.addParty);
@@ -22,7 +52,7 @@ var router = function(knex) {
         .get(partyApi.getPartyById)
         .put(partyApi.updateParty)
         .delete(partyApi.deleteParty);
-    
+
     return apiRouter;
 };
 

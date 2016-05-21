@@ -34,13 +34,13 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
 
     //Add an email address to contactMechs, if one is specified
     if (emailAddress) {
-        var contactMech = new ContactMech(void, 'EMAIL_ADDRESS', emailAddress, createdDate, updatedDate);
+        var contactMech = new ContactMech(null, 'EMAIL_ADDRESS', emailAddress, createdDate, updatedDate);
         this.contactMechs.add(contactMech);
     }
 
     //Add a postal address to contactMechs, if one is specified
     if (addressLine1) {
-        var contactMech = new ContactMech(void, 'POSTAL_ADDRESS', void, createdDate, updatedDate, {
+        var contactMech = new ContactMech(null, 'POSTAL_ADDRESS', null, createdDate, updatedDate, {
             toName: toName,
             attentionName: attentionName,
             addressLine1: addressLine1,
@@ -56,7 +56,7 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
 
     //Add a phone number to contactMechs, if one is specified
     if (phoneNumber) {
-        var contactMech = new ContactMech(void, 'TELECOM_NUMBER', void, createdDate, updatedDate, {
+        var contactMech = new ContactMech(null, 'TELECOM_NUMBER', null, createdDate, updatedDate, {
             countryCode: countryCode,
             areaCode: areaCode,
             contactNumber: contactNumber,
@@ -74,7 +74,9 @@ Contact.prototype = Object.create(Person.prototype);
 // Set the "constructor" property to refer to Contact
 Contact.prototype.constructor = Contact;
 
-// Methods - VALIDATIONS YET TO BE COMPLETED
+// Methods - After validateForInsert and validateForUpdate, validation for
+// all the other arguments to Contact is handled by party.js, person.js,
+// and contactMech.js, EXCEPT for argument "title", which is done below
 //
 Contact.prototype.validateForInsert = function () {
     //Run parent validaton method
@@ -116,6 +118,13 @@ Contact.prototype.validateForUpdate = function () {
         }
     }
     return errors;
+};
+
+// title is varchar(255) -- DOES NOT EXIST IN titan_crm DB YET, discuss...
+Contact.prototype.validateTitle = function () {
+    this.title = validation.sanitizeInput(this.title);
+    var validationResult = validation.validateString(this.title, isRequired, 255, 'title');
+    return validationResult;
 };
 
 // Export the class as a module

@@ -11,23 +11,6 @@ var partyApi = function (knex) {
     //
     var partyController = require('../controllers/partyController')(knex);
     
-    // Set up a middleware to validate incoming requests
-    //
-    var middleware = function (req, res, next) {
-        // Set timestamp properties on received data
-//        if(typeof req.data == 'object') {
-//            req.data.updated_date = (new Date()).toISOString();
-//            if(req.method == 'POST') {
-//                req.data.created_date = (new Date()).toISOString();
-//            }
-//        }
-        // Log the request
-//        winston.info(req);
-        
-        // Move on to the next route
-        next();
-    };
-    
     
     // API methods
     // ==========================================
@@ -35,7 +18,8 @@ var partyApi = function (knex) {
     // POST /api/parties
     var addParty = function (req, res) {
         var party = req.body;
-        var result = partyController.addParty(party);
+        var user = req.user;
+        var result = partyController.addParty(party, user);
         // An array in result means it's array of validation errors
         if( Object.prototype.toString.call(result) === '[object Array]' ) {
             res.json(result);
@@ -86,7 +70,6 @@ var partyApi = function (knex) {
     };
 
     return {
-        middleware: middleware,
         addParty: addParty,
         getParties: getParties,
         getPartyById: getPartyById,
