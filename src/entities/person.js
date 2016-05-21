@@ -111,7 +111,7 @@ Person.prototype.validateSalutation = function(isRequired) {
 };
 
 // firstName is varchar(100)
-Person.prototype.validateFisrtName = function(isRequired) {
+Person.prototype.validateFirstName = function(isRequired) {
     this.firstName = validation.sanitizeInput(this.firstName);
     var validationResult = validation.validateString(this.firstName, isRequired, 100, 'firstName');
     return validationResult;

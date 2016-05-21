@@ -74,7 +74,9 @@ Contact.prototype = Object.create(Person.prototype);
 // Set the "constructor" property to refer to Contact
 Contact.prototype.constructor = Contact;
 
-// Methods - VALIDATIONS YET TO BE COMPLETED
+// Methods - After validateForInsert and validateForUpdate, validation for
+// all the other arguments to Contact is handled by party.js, person.js,
+// and contactMech.js, EXCEPT for argument "title", which is done below
 //
 Contact.prototype.validateForInsert = function () {
     //Run parent validaton method
@@ -116,6 +118,13 @@ Contact.prototype.validateForUpdate = function () {
         }
     }
     return errors;
+};
+
+// title is varchar(255) -- DOES NOT EXIST IN titan_crm DB YET, discuss...
+Contact.prototype.validateTitle = function () {
+    this.title = validation.sanitizeInput(this.title);
+    var validationResult = validation.validateString(this.title, isRequired, 255, 'title');
+    return validationResult;
 };
 
 // Export the class as a module
