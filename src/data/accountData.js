@@ -59,7 +59,7 @@ var accountData = function (knex) {
     var convertToAccount = function (account) {
         //Not fully sure yet that I can do this, but will write it down here anyway for now.
         //Call all of the previous addAccount___ methods. 
-    }
+    };
     /**
      * Gets one account by its id from database
      * @param {Number} accountId - Unique id of the account to be fetched

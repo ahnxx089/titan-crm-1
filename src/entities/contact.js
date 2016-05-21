@@ -46,16 +46,16 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
             addressLine1: addressLine1,
             addressLine2: addressLine2,
             city: city,
-            stateOrProvince: stateOrProvince,
+            stateOrProvinceId: stateOrProvinceId,
             zipOrPostalCode: zipOrPostalCode,
-            country: country,
+            countryId: countryId,
             zipOrPostalCodeExtension: zipOrPostalCodeExtension
         });
         this.contactMechs.add(contactMech);
     }
 
     //Add a phone number to contactMechs, if one is specified
-    if (phoneNumber) {
+    if (contactNumber) {
         var contactMech = new ContactMech(null, 'TELECOM_NUMBER', null, createdDate, updatedDate, {
             countryCode: countryCode,
             areaCode: areaCode,

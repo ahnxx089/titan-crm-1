@@ -96,7 +96,7 @@ var userController = function (knex) {
                 for (var i = 0; i < permissions.length; i++) {
                     // TODO: add logic to push only those permissions to the array
                     // that are still valid (based on from_date and thru_date)
-                    userPermissions.push(permissions[0].permission_group_id)
+                    userPermissions.push(permissions[0].permission_group_id);
                 }
                 return userPermissions;
             });

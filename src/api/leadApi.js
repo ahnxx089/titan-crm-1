@@ -41,9 +41,9 @@ var leadApi = function (knex) {
     // GET /api/leads/?phoneNumber=
     var getLeadsByPhoneNumber = function (req, res) {
         var leadId = req.params.id;
-        leadContoller.getLeadByPhoneNumber(leadId)
+        leadController.getLeadByPhoneNumber(leadId)
 		      .then(function(lead) {
-		          Res.json(lead)
+		          res.json(lead);
         });
     };
 
@@ -75,7 +75,7 @@ var leadApi = function (knex) {
 	   var lead = req.body;
 	       leadController.updateLead(partyId, lead)
 		          .then(function(result){
-		              Res.json({updated:result});
+		              res.json({updated:result});
 	});
 
     };
@@ -85,7 +85,7 @@ var leadApi = function (knex) {
     var leadId = req.params.id;
         leadController.deleteLead(partyId)
 		      .then(function(result){
-		          Res.json({updated:result});
+		          res.json({updated:result});
 	});
 
     };
