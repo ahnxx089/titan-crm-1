@@ -73,7 +73,7 @@ var orgData = function (knex) {
      };
 
     /**
-     * Delete a organization from database
+     * Delete an organization from database
      * @param {Number} organizationId - Unique id of the organization to be deleted
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */

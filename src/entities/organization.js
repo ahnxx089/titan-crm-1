@@ -96,13 +96,19 @@ Organization.prototype.validateOfficeSiteName = function(isRequired) {
 
 Organization.prototype.validateAnnualRevenue = function(isRequired) {
     this.annualRevenue = validation.sanitizeInput(this.annualRevenue);
-    var validationResult = validation.validateString(this.annualRevenue, isRequired, 20, 'annualRevenue');
+    var validationResult = validation.validateInt(this.annualRevenue, isRequired, 20, 'annualRevenue');
+    if(this.annualRevenue == true && !validationResult) {
+        validationResult = validation.convertToInt(this.annualRevenue);
+    }
     return validationResult;
 };
 
 Organization.prototype.validateNumEmployees = function(isRequired) {
     this.numEmployees = validation.sanitizeInput(this.numEmployees);
     var validationResult = validation.validateString(this.numEmployees, isRequired, 20, 'numEmployees');
+    if(this.numEmployees == true && !validationResult) {
+        validationResult = validation.convertToInt(this.numEmployees);
+    }
     return validationResult;
 };
 
@@ -118,6 +124,7 @@ Organization.prototype.validateComments = function(isRequired) {
     return validationResult;
 };
 
+//Consider creating a new validation method for URLs in common/validation.js so that you can validate as URL here
 Organization.prototype.validateLogoImgURL = function(isRequired) {
     this.logoImgURL = validation.sanitizeInput(this.logoImgURL);
     var validationResult = validation.validateString(this.logoImgURL, isRequired, 100, 'logoImgURL');
