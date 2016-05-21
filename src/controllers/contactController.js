@@ -45,36 +45,36 @@ var contactController = function (knex) {
             .then(function (contacts) {
                 // Map the retrieved result set to corresponding entities
                 var contactEntities = [];
-                for (var i = 0; i < parties.length; i++) {
+                for (var i = 0; i < contacts.length; i++) {
                     var contact = new Contact(
-                        parties[i].party_id,
-                        parties[i].party_type_id,
-                        parties[i].currency_uom_id,
-                        parties[i].description,
-                        parties[i].status_id,
-                        parties[i].created_by,
-                        parties[i].created_date,
-                        parties[i].updated_date,
-                        parties[i].salutation,
-                        parties[i].first_name,
-                        parties[i].middle_name,
-                        parties[i].last_name,
-                        parties[i].birth_date,
-                        parties[i].comments,
-                        parties[i].title,
-                        parties[i].country_code,
-                        parties[i].area_code,
-                        parties[i].contact_number,
-                        parties[i].ask_for_name,
-                        parties[i].email_address,
-                        parties[i].to_name,
-                        parties[i].attn_name,
-                        parties[i].address1,
-                        parties[i].address2,
-                        parties[i].city,
-                        parties[i].state_province_geo_id,
-                        parties[i].zip_or_postal_code,
-                        parties[i].country_geo_id
+                        contacts[i].party_id,
+                        contacts[i].party_type_id,
+                        contacts[i].currency_uom_id,
+                        contacts[i].description,
+                        contacts[i].status_id,
+                        contacts[i].created_by,
+                        contacts[i].created_date,
+                        contacts[i].updated_date,
+                        contacts[i].salutation,
+                        contacts[i].first_name,
+                        contacts[i].middle_name,
+                        contacts[i].last_name,
+                        contacts[i].birth_date,
+                        contacts[i].comments,
+                        contacts[i].title,
+                        contacts[i].country_code,
+                        contacts[i].area_code,
+                        contacts[i].contact_number,
+                        contacts[i].ask_for_name,
+                        contacts[i].email_address,
+                        contacts[i].to_name,
+                        contacts[i].attn_name,
+                        contacts[i].address1,
+                        contacts[i].address2,
+                        contacts[i].city,
+                        contacts[i].state_province_geo_id,
+                        contacts[i].zip_or_postal_code,
+                        contacts[i].country_geo_id
                     );
                     contactEntities.push(contact);
                 }
@@ -97,34 +97,34 @@ var contactController = function (knex) {
             .then(function (contacts) {
                 // Map the retrieved result set to corresponding entity
                 var contactEntity = new Contact(
-                    parties[0].party_id,
-                    parties[0].party_type_id,
-                    parties[0].currency_uom_id,
-                    parties[0].description,
-                    parties[0].status_id,
-                    parties[0].created_by,
-                    parties[0].created_date,
-                    parties[0].updated_date,
-                    parties[0].salutation,
-                    parties[0].first_name,
-                    parties[0].middle_name,
-                    parties[0].last_name,
-                    parties[0].birth_date,
-                    parties[0].comments,
-                    parties[0].title,
-                    parties[0].country_code,
-                    parties[0].area_code,
-                    parties[0].contact_number,
-                    parties[0].ask_for_name,
-                    parties[0].email_address,
-                    parties[0].to_name,
-                    parties[0].attn_name,
-                    parties[0].address1,
-                    parties[0].address2,
-                    parties[0].city,
-                    parties[0].state_province_geo_id,
-                    parties[0].zip_or_postal_code,
-                    parties[0].country_geo_id
+                    contacts[0].party_id,
+                    contacts[0].party_type_id,
+                    contacts[0].currency_uom_id,
+                    contacts[0].description,
+                    contacts[0].status_id,
+                    contacts[0].created_by,
+                    contacts[0].created_date,
+                    contacts[0].updated_date,
+                    contacts[0].salutation,
+                    contacts[0].first_name,
+                    contacts[0].middle_name,
+                    contacts[0].last_name,
+                    contacts[0].birth_date,
+                    contacts[0].comments,
+                    contacts[0].title,
+                    contacts[0].country_code,
+                    contacts[0].area_code,
+                    contacts[0].contact_number,
+                    contacts[0].ask_for_name,
+                    contacts[0].email_address,
+                    contacts[0].to_name,
+                    contacts[0].attn_name,
+                    contacts[0].address1,
+                    contacts[0].address2,
+                    contacts[0].city,
+                    contacts[0].state_province_geo_id,
+                    contacts[0].zip_or_postal_code,
+                    contacts[0].country_geo_id
                 );
                 return contactEntity;
             });
@@ -142,7 +142,27 @@ var contactController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContact = function (contactId, Contact) {
+        var validationErrors = contact.validateForUpdate();
+        if (validationErrors.length === 0) {
+            // Pass on the entity to be added to the data layer
+            var promise = contactMechData.updateContact(contact)
+                .then(function (numRows) {
+                    for (var i = 0; i < contact.contactMechs.length; i++) {
+                        numRows += ContactMechController.updateContactMech(contact.contactMechs[i]);
+                    }
+                    return numRows;
+                })
+                .then(function (numRows) {
+                    return numRows;
+                });
 
+            promise.catch(function (error) {
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            return null;
+        }
     };
 
     /**

@@ -38,20 +38,20 @@ Account.prototype.validateForInsert = function () {
     var errors = [Organization.prototype.validateForInsert.call(this)];
     // Account-specific validation code
     var specificvalidations = [
-        this.partyParentId = partyParentId(true),
-        this.industryEnumId = industryEnumId(false),
-        this.ownershipEnumId = ownershipEnumId(false),
-        this.importantNote = importantNote(false),
-        this.primaryPostalAddressId = primaryPostalAddressId(false),
-        this.primaryTelecomNumberId = primaryTelecomNumberId(false),
-        this.primaryEmailId = primaryEmailId(false)
+        this.validatePartyParentId(true),
+        this.validateIndustryEnumId(false),
+        this.validateOwnershipEnumId(false),
+        this.validateImportantNote(false),
+        this.validatePrimaryPostalAddressId(false),
+        this.validatePrimaryTelecomNumberId(false),
+        this.validatePrimaryEmailId(false)
     ];
     
     for (var i = 0; i < validation.length; i++) {
-        if(specificvalidations[i] == true) {
+        if(specificvalidations[i]) {
             errors[i].push(specificvalidations[i]);
         }
-    };
+    }
     return errors;
 };
 
@@ -61,45 +61,45 @@ Account.prototype.validateForUpdate = function () {
     // Account-specific validation code
     
     var specificvalidations = [
-        this.partyParentId = partyParentId(true),
-        this.industryEnumId = industryEnumId(false),
-        this.ownershipEnumId = ownershipEnumId(false),
-        this.importantNote = importantNote(false),
-        this.primaryPostalAddressId = primaryPostalAddressId(false),
-        this.primaryTelecomNumberId = primaryTelecomNumberId(false),
-        this.primaryEmailId = primaryEmailId(false)
+        this.validatePartyParentId(true),
+        this.validateIndustryEnumId(false),
+        this.validateOwnershipEnumId(false),
+        this.validateImportantNote(false),
+        this.validatePrimaryPostalAddressId(false),
+        this.validatePrimaryTelecomNumberId(false),
+        this.validatePrimaryEmailId(false)
     ];
     
-    for (var i = 0; i < validations.length; i++) {
-        if(specificvalidations[i] == true) {
+    for (var i = 0; i < specificvalidations.length; i++) {
+        if(specificvalidations[i]) {
             errors.push(specificvalidations[i]);
         }
-    };
+    }
     return errors;
 };
 
 
 
 
-Account.prototype.validatepartyParentId = function(isRequired) {
+Account.prototype.validatePartyParentId = function(isRequired) {
     this.partyParentId = validation.sanitizeInput(this.partyParentId);
     var validationResult = validation.validateString(this.partyParentId, isRequired, 40, 'partyParentId');
     return validationResult;
 };
 
-Account.prototype.validateindustryEnumId = function(isRequired) {
+Account.prototype.validateIndustryEnumId = function(isRequired) {
     this.industryEnumId = validation.sanitizeInput(this.industryEnumId);
     var validationResult = validation.validateString(this.industryEnumId, isRequired, 40, 'industryEnumId');
     return validationResult;
 };
 
-Account.prototype.validateownershipEnumId = function(isRequired) {
+Account.prototype.validateOwnershipEnumId = function(isRequired) {
     this.ownershipEnumId = validation.sanitizeInput(this.ownershipEnumId);
     var validationResult = validation.validateString(this.ownershipEnumId, isRequired, 20, 'ownershipEnumId');
     return validationResult;
 };
 
-Account.prototype.validateimportantNote = function(isRequired) {
+Account.prototype.validateImportantNote = function(isRequired) {
     this.importantNote = validation.sanitizeInput(this.importantNote);
     var validationResult = validation.validateString(this.importantNote, isRequired, 20, 'importantNote');
     return validationResult;

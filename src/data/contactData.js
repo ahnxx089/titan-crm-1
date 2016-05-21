@@ -192,7 +192,7 @@ var contactData = function (knex) {
                 created_date: contact.createdDate,
                 updated_date: contact.updatedDate
             })
-            .into('contact_mech');
+            .into('contact_mech')
         );
 
         // insert into table postal_address
@@ -200,8 +200,8 @@ var contactData = function (knex) {
         // IN ORDER TO INSERT INTO postal_address TABLE?
         insertArr.push(
             knex.insert({
-                contact_mech_id: // ???????????????????
-                    to_name: contact.toName,
+                contact_mech_id: contact.contactMechId,
+                to_name: contact.toName,
                 attn_name: contact.attentionName,
                 address1: contact.addressLine1,
                 address2: contact.addressLine2,
@@ -209,11 +209,11 @@ var contactData = function (knex) {
                 city: contact.city,
                 postal_code: contact.zipOrPostalCode,
                 country_geo_id: contact.countryId,
-                state_province_geo_id: contact.stateOrProvinceId
+                state_province_geo_id: contact.stateOrProvinceId,
                 created_date: contact.createdDate,
                 updated_date: contact.updatedDate
             })
-            .into('postal_address');
+            .into('postal_address')
         );
 
         return insertArr;
@@ -239,7 +239,7 @@ var contactData = function (knex) {
                 created_date: contact.createdDate,
                 updated_date: contact.updatedDate
             })
-            .into('contact_mech');
+            .into('contact_mech')
         );
 
         // insert into table telecom_number
@@ -247,95 +247,98 @@ var contactData = function (knex) {
         // IN ORDER TO INSERT INTO telecom_number TABLE?
         insertArr.push(
             knex.insert({
-                contact_mech_id: // ???????????????????
-                    area_code: contact.areaCode,
+                contact_mech_id: contact.contactMechId,
+                area_code: contact.areaCode,
                 contact_number: contact.contactNumber,
                 ask_for_name: contact.askForName,
                 created_date: contact.createdDate,
                 updated_date: contact.updatedDate
             })
-            .into('telecom_number');
+            .into('telecom_number')
         );
 
         return insertArr;
     };
-};
 
-/**
- * Gets all contacts from database
- * @return {Object} promise - Fulfillment value is an array of raw data objects
- */
-var getContacts = function () {
-    //A party is a contact iff role_type_id in party_role is set to CONTACT
-    return knex.select('party_id', 'party_type_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'created_date', 'updated_date')
-        .from('party')
-        .innerJoin('party_role', 'party_role.party_id', 'party.party_id')
-        .innerJoin('role_type', 'role_type.role_type_id', 'party_role.role_type_id')
-        .where('role_type.role_type_id', 'CONTACT');
-    /* NOTE:  THIS SYNTAX DID NOT PASS INSPECTION WITH THE KNEX QUERY BUILDER AT:
-        http://michaelavila.com/knex-querylab/ 
-        SO IT MIGHT NEED SOME FIXING, BUT THE WHERE LOGIC SHOULD BE GOOD...
-    */
-};
 
-/**
- * Gets one contact by its id from database
- * @param {Number} contactId - Unique id of the contact to be fetched
- * @return {Object} promise - Fulfillment value is a raw data object
- */
-var getContactById = function (id) {
-    //A party is a contact iff role_type_id in party_role is set to CONTACT
-    return knex.select('party_id', 'party_type_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'created_date', 'updated_date')
-        .from('party')
-        .innerJoin('party_role', 'party_role.party_id', 'party.party_id')
-        .innerJoin('role_type', 'role_type.role_type_id', 'party_role.role_type_id')
-        .where('role_type.role_type_id', 'CONTACT')
-        .andWhere({
-            party_id: id
-        });
-};
+    /**
+     * Gets all contacts from database
+     * @return {Object} promise - Fulfillment value is an array of raw data objects
+     */
+    var getContacts = function () {
+        //A party is a contact iff role_type_id in party_role is set to CONTACT
+        return knex.select('party_id', 'party_type_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'created_date', 'updated_date')
+            .from('party')
+            .innerJoin('party_role', 'party_role.party_id', 'party.party_id')
+            .innerJoin('role_type', 'role_type.role_type_id', 'party_role.role_type_id')
+            .where('role_type.role_type_id', 'CONTACT');
+        /* NOTE:  THIS SYNTAX DID NOT PASS INSPECTION WITH THE KNEX QUERY BUILDER AT:
+            http://michaelavila.com/knex-querylab/ 
+            SO IT MIGHT NEED SOME FIXING, BUT THE WHERE LOGIC SHOULD BE GOOD...
+        */
+    };
 
-/**
- * Update a contact in database
- * @param {Object} contact - The contact entity that contains updated data
- * @return {Object} promise - Fulfillment value is number of rows updated
- */
-var updateContact = function (contact) {
-    //Update the properties shared with Person
-    var numRows = PersonData.updatePerson(contact);
+    /**
+     * Gets one contact by its id from database
+     * @param {Number} contactId - Unique id of the contact to be fetched
+     * @return {Object} promise - Fulfillment value is a raw data object
+     */
+    var getContactById = function (id) {
+        //A party is a contact iff role_type_id in party_role is set to CONTACT
+        return knex.select('party_id', 'party_type_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'created_date', 'updated_date')
+            .from('party')
+            .innerJoin('party_role', 'party_role.party_id', 'party.party_id')
+            .innerJoin('role_type', 'role_type.role_type_id', 'party_role.role_type_id')
+            .where('role_type.role_type_id', 'CONTACT')
+            .andWhere({
+                party_id: id
+            });
+    };
 
-    //Update the unique properies of Contact
-    knex('party_role')
-        .where({
-            party_id: contact.partyId
-        })
-        .update({
-            role_type_id: 'CONTACT',
-            updated_date: (new Date()).toISOString()
-        });
+    /**
+     * Update a contact in database
+     * @param {Object} contact - The contact entity that contains updated data
+     * @return {Object} promise - Fulfillment value is number of rows updated
+     */
+    var updateContact = function (contact) {
+        //Update the properties shared with Person
+        var numRows = PersonData.updatePerson(contact);
 
-    //This function does *not* handle any ContactMechs associated with this Contact
-};
+        //Update the unique properies of Contact
+        knex('party_role')
+            .where({
+                party_id: contact.partyId
+            })
+            .update({
+                role_type_id: 'CONTACT',
+                updated_date: (new Date()).toISOString()
+            });
 
-/**
- * Delete a contact from database
- * @param {Number} contactId - Unique id of the contact to be deleted
- * @return {Object} promise - Fulfillment value is number of rows deleted
- */
-var deleteContact = function (contactId) {
-    return knex('party')
-            .where({party_id: contactId})
+        //This function does *not* handle any ContactMechs associated with this Contact
+    };
+
+    /**
+     * Delete a contact from database
+     * @param {Number} contactId - Unique id of the contact to be deleted
+     * @return {Object} promise - Fulfillment value is number of rows deleted
+     */
+    var deleteContact = function (contactId) {
+        return knex('party')
+            .where({
+                party_id: contactId
+            })
             .del();
-    //Does *not* delete any associated ContactMechs
-};
+        //Does *not* delete any associated ContactMechs
+    };
 
-return {
-    addContact: addContact,
-    getContacts: getContacts,
-    getContactById: getContactById,
-    updateContact: updateContact,
-    deleteContact: deleteContact
-};
+    return {
+        addContact: addContact,
+        getContacts: getContacts,
+        getContactById: getContactById,
+        updateContact: updateContact,
+        deleteContact: deleteContact
+    };
+
 };
 
 module.exports = contactData;

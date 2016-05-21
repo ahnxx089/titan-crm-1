@@ -19,9 +19,11 @@ var leadData = function(knex) {
     var addLead = function(lead) {
         // this achieves goals mentioned on slide # 17
         
+        //NOTE TO LUCAS AND DIVINE: Below changes to this function were made by Eric to resolve errors crashing the app
+        
         // returns a promise
         // #1
-        return knex.insert({
+        knex.insert({
             party_type_id: lead.partyTypeId,
             preferred_currency_uom_id: lead.preferredCurrencyUomId,
             description: lead.description,
@@ -29,13 +31,42 @@ var leadData = function(knex) {
             created_by: lead.createdBy,
             created_date: lead.createdDate,
             updated_date: lead.updatedDate
-        })
-        .into('party');
+            })
+            .into('party')
+            .then(function() {
+                return knex.insert({
+                    party_id: lead.partyId,
+                    salutation: lead.salutation,
+                    first_name: lead.firstName,
+                    middle_name: lead.middleName,
+                    last_name: lead.lastName,
+                    birth_date: lead.birthDate,
+                    comments: lead.comments,
+                    created_date: lead.createdDate,
+                    updated_date: lead.updatedDate
+                })
+                .into('person');
+            })
+            .then(function () {
+                return knex.insert({
+                    party_id: lead.partyId,
+                    parent_party_id: lead.parentPartyId,
+                    company_name: lead.companyName,
+                    annual_revenue: lead.annualRevenue,
+                    currency_uom_id: lead.preferredCurrencyUomId, // not the same? 
+                    num_employees: lead.numEmployees,
+                    ownership_enum_id: lead.ownership_enum_id,
+
+                    created_date: lead.createdDate,
+                    updated_date: lead.updatedDate
+                })
+                .into('party_supplemental_data');
+            });
         
         
         // would this be returned as well? 
         // #2
-        return knex.insert({
+        /*return knex.insert({
             party_id: lead.partyId,
             salutation: lead.salutation,
             first_name: lead.firstName,
@@ -46,10 +77,10 @@ var leadData = function(knex) {
             created_date: lead.createdDate,
             updated_date: lead.updatedDate
         })
-        .into('person');
+        .into('person');*/
         
         // #3
-        return knex.insert({
+        /*return knex.insert({
             party_id: lead.partyId,
             parent_party_id: lead.parentPartyId,
             company_name: lead.companyName,
@@ -61,7 +92,7 @@ var leadData = function(knex) {
             created_date: lead.createdDate,
             updated_date: lead.updatedDate
         })
-        .into('party_supplemental_data');
+        .into('party_supplemental_data');*/
         
         // #4, #6, #7 are not to be implemented at this moment
         // #5: good
@@ -120,7 +151,7 @@ var leadData = function(knex) {
     */
     var deleteLead = function(leadId) {
     return knex('party')
-		.where(party_id: partyId})
+		.where({party_id: partyId})
             	.del();
     };
     
