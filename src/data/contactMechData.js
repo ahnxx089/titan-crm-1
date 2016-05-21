@@ -37,7 +37,7 @@ var contactMechData = function (knex) {
                         })
                         .into('telecom_number')
                         .then(function (value) {
-                            return contactId;
+                            return id;
                         });
                 } else if (contactMech.contactMechTypeId === 'POSTAL_ADDRESS') {
                     return knex.inster({
@@ -56,10 +56,10 @@ var contactMechData = function (knex) {
                         })
                         .into('postal_address')
                         .then(function (value) {
-                            return contactId;
+                            return id;
                         });
                 } else {
-                    return contactId;
+                    return id;
                 }
             });
     };
@@ -106,14 +106,14 @@ var contactMechData = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContactMech = function (contactMech) {
-        telecomNumberFields = {
+        var telecomNumberFields = {
             country_code: contactMech.countryCode,
             area_code: contactMech.areaCode,
             contact_number: contactMech.contactNumber,
             ask_for_name: contactMech.askForName,
             updated_date: (new Date()).toISOString()
         };
-        postalAddressFields = {
+        var postalAddressFields = {
             to_name: contactMech.toName,
             attn_name: contactMech.attnName,
             address1: contactMech.address1,
@@ -125,7 +125,7 @@ var contactMechData = function (knex) {
             state_province_geo_id: contactMech.stateProvinceGeoId,
             updated_date: (new Date()).toISOString()
         };
-        generalContactMechFields = {
+        var generalContactMechFields = {
             contact_mech_type_id: contactMech.contctMechTypeId,
             info_string: contactMech.infoString,
             updated_date: (new Date()).toISOString()
@@ -133,23 +133,23 @@ var contactMechData = function (knex) {
 
         return knex('telecom_number')
             .where({
-                contact_mech_id: contactMechId
+                contact_mech_id: contactMech.contactMechId
             })
             .update(telecomNumberFields)
             .then(function (telecomRows) {
                 return knex('postal_address')
                     .where({
-                        contact_mech_id: contactMechId
+                        contact_mech_id: contactMech.contactMechId
                     })
                     .update(postalAddressFields)
                     .then(function (postalRows) {
                         return knex('contact_mech')
                             .where({
-                                contact_mech_id: contactMechId
+                                contact_mech_id: contactMech.contactMechId
                             })
                             .update(generalContactMechFields)
                             .then(function (standardRows) {
-                                return telecomRows + postalRows + basicRows;
+                                return telecomRows + postalRows + standardRows;
                             });
                     });
             });
@@ -179,7 +179,7 @@ var contactMechData = function (knex) {
                             })
                             .del()
                             .then(function (standardRows) {
-                                return telecomRows + postalRows + basicRows;
+                                return telecomRows + postalRows + standardRows;
                             });
                     });
             });

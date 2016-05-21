@@ -50,7 +50,6 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
             stateOrProvinceGeoId: stateOrProvinceId,
             zipOrPostalCode: zipOrPostalCode,
             countryGeoId: countryId,
-            zipOrPostalCode: zipOrPostalCode
         });
         this.contactMechs.add(contactMech);
     }
