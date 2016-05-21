@@ -31,16 +31,17 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
     // Contact-specific Properties
     this.contactMechs = [];
     this.title = title;
+    var contactMech;
 
     //Add an email address to contactMechs, if one is specified
     if (emailAddress) {
-        var contactMech = new ContactMech(null, 'EMAIL_ADDRESS', emailAddress, createdDate, updatedDate);
+        contactMech = new ContactMech(null, 'EMAIL_ADDRESS', emailAddress, createdDate, updatedDate);
         this.contactMechs.add(contactMech);
     }
 
     //Add a postal address to contactMechs, if one is specified
     if (addressLine1) {
-        var contactMech = new ContactMech(null, 'POSTAL_ADDRESS', null, createdDate, updatedDate, {
+        contactMech = new ContactMech(null, 'POSTAL_ADDRESS', null, createdDate, updatedDate, {
             toName: toName,
             attentionName: attentionName,
             addressLine1: addressLine1,
@@ -48,8 +49,7 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
             city: city,
             stateOrProvinceId: stateOrProvinceId,
             zipOrPostalCode: zipOrPostalCode,
-            countryId: countryId,
-            zipOrPostalCodeExtension: zipOrPostalCodeExtension
+            countryId: countryId
         });
         this.contactMechs.add(contactMech);
     }
@@ -91,7 +91,7 @@ Contact.prototype.validateForInsert = function () {
     
     //Errors are non-empty validation results
     var errors = [];
-    for(var i=0; i < validations.length; i++) {
+    for(i=0; i < validations.length; i++) {
         if(validations[i]) {
             errors.push(validations[i]);
         }
@@ -121,11 +121,11 @@ Contact.prototype.validateForUpdate = function () {
 };
 
 // title is varchar(255) -- DOES NOT EXIST IN titan_crm DB YET, discuss...
-Contact.prototype.validateTitle = function () {
-    this.title = validation.sanitizeInput(this.title);
-    var validationResult = validation.validateString(this.title, isRequired, 255, 'title');
-    return validationResult;
-};
+//Contact.prototype.validateTitle = function (isRequired) {
+//    this.title = validation.sanitizeInput(this.title);
+//    var validationResult = validation.validateString(this.title, isRequired, 255, 'title');
+//    return validationResult;
+//};
 
 // Export the class as a module
 module.exports = Contact;

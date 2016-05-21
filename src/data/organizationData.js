@@ -5,6 +5,8 @@
 // @author: Eric Brichetto <brichett13@gmail.com>
 /////////////////////////////////////////////////
 
+/* jshint camelcase: false */
+
 var orgData = function (knex) {
     
     /**

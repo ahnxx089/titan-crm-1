@@ -16,6 +16,7 @@ var contactController = function (knex) {
     // Get a reference to data layer module
     //
     var contactData = require('../data/contactData')(knex);
+    var contactMechData = require('../data/contactMechData')(knex);
 
 
     /* ***THIS SECTION NEEDS WORK:
@@ -141,7 +142,7 @@ var contactController = function (knex) {
      * @param {Object} contact - The object that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateContact = function (contactId, Contact) {
+    var updateContact = function (contactId, contact) {
         var validationErrors = contact.validateForUpdate();
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer

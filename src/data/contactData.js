@@ -30,7 +30,7 @@ var contactData = function (knex) {
      * @param {Object} contact - The new contact entity to be added as a Party
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
-    var addParty = function (contact) {
+    var addContact = function (contact) {
         return knex.insert({
                 party_type_id: contact.partyTypeId,
                 preferred_currency_uom_id: contact.currencyUomId,

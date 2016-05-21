@@ -120,32 +120,32 @@ var leadController = function(knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
     */
     var updateLead = function (leadId, lead) {
-    var leadEntity = new Party(
-            partyId,
-            lead.partyTypeId,
-            lead.preferredCurrencyUomId,
-            lead.description,
-            lead.statusId,
-            null,
-            null,
-            (new Date()).toISOString()
-        );
-        // Validate the data before going ahead
-        var validationErrors = leadEntity.validateForUpdate();
-        if(validationErrors.length === 0) {
-            // Pass on the entity to be added to the data layer
-            var promise = leadData.updateLead(leadEntity)
-                .then(function(partyId) {
-                   return partyId; 
-                });
-                promise.catch(function(error) {
-                    winston.error(error);
-                });
-            return promise;
-        }
-        else {
-            return null;
-        }
+//        var leadEntity = new Party(
+//                partyId,
+//                lead.partyTypeId,
+//                lead.preferredCurrencyUomId,
+//                lead.description,
+//                lead.statusId,
+//                null,
+//                null,
+//                (new Date()).toISOString()
+//        );
+//        // Validate the data before going ahead
+//        var validationErrors = leadEntity.validateForUpdate();
+//        if(validationErrors.length === 0) {
+//            // Pass on the entity to be added to the data layer
+//            var promise = leadData.updateLead(leadEntity)
+//                .then(function(partyId) {
+//                   return partyId; 
+//                });
+//                promise.catch(function(error) {
+//                    winston.error(error);
+//                });
+//            return promise;
+//        }
+//        else {
+//            return null;
+//        }
     };
     
     /**
@@ -154,7 +154,7 @@ var leadController = function(knex) {
      * @return {Object} promise - Fulfillment value is number of rows deleted
     */
     var deleteLead = function (leadId) {
-    var promise = leadData.deleteParty(partyId)
+    var promise = leadData.deleteParty(leadId)
             .then(function(result) {
                 return result;
             });

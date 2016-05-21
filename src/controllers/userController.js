@@ -20,6 +20,30 @@ var userController = function (knex) {
     // ==========================================
     //
     /**
+     * Gets all security permissions for a user
+     * @param {Number} userId - Id of the user whose permissions are to be fetched
+     * @return {Object} promise - Fulfillment value is an array of permissions
+     */
+    var getUserPermissionsById = function (id) {
+        var promise = userData.getUserPermissionsById(id)
+            .then(function (permissions) {
+                // Map the retrieved result set to corresponding entity
+                var userPermissions = [];
+                for (var i = 0; i < permissions.length; i++) {
+                    // TODO: add logic to push only those permissions to the array
+                    // that are still valid (based on from_date and thru_date)
+                    userPermissions.push(permissions[0].permission_group_id);
+                }
+                return userPermissions;
+            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
+        return promise;
+    };
+    
+    /**
      * Add a new user
      * @param {Object} user - The new user to be added
      * @return {Object} promise - Fulfillment value is id of new user
@@ -81,30 +105,6 @@ var userController = function (knex) {
      */
     var deleteUser = function (userId) {
         // TODO
-    };
-
-    /**
-     * Gets all security permissions for a user
-     * @param {Number} userId - Id of the user whose permissions are to be fetched
-     * @return {Object} promise - Fulfillment value is an array of permissions
-     */
-    var getUserPermissionsById = function (id) {
-        var promise = userData.getUserPermissionsById(id)
-            .then(function (permissions) {
-                // Map the retrieved result set to corresponding entity
-                var userPermissions = [];
-                for (var i = 0; i < permissions.length; i++) {
-                    // TODO: add logic to push only those permissions to the array
-                    // that are still valid (based on from_date and thru_date)
-                    userPermissions.push(permissions[0].permission_group_id);
-                }
-                return userPermissions;
-            });
-        promise.catch(function (error) {
-            // Log the error
-            winston.error(error);
-        });
-        return promise;
     };
 
     return {
