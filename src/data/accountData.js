@@ -27,6 +27,23 @@ var accountData = function (knex) {
     var addAccountPartySupplementalData = function (account) {
         //EMPTY FOR NOW - UNCLEAR ON WHAT MUST GO HERE THAT 
         //WOULDN'T GO INTO orgData.addOrganization
+        knex.insert({
+            party_id: account.partyId,
+            parent_party_id: account.parentPartyId,
+            //Put in company name here maybe?
+            annual_revenue: account.annualRevenue,
+            currency_uom_id: account.preferredCurrencyUomId,
+            num_employees: account.numEmployees,
+            industry_enum_id: account.industryEnumId,
+            ownership_enum_id: account.ownershipEnumId,
+            ticker_symbol: account.tickerSymbol,
+            important_note: account.importantNote,
+            primary_postal_address_id: account.primaryPostalAddressId,
+            primary_telecom_number_id: account.primaryTelecomNumberId,
+            primary_email_id: account.primaryEmailId,
+            created_date: account.createdDate, //this may be incorrect and need to be changed
+            updated_date: account.updatedDate
+        }).into('party_supplemental_data');
     };
     
     var addAccountContactMech = function (account) {
@@ -38,7 +55,13 @@ var accountData = function (knex) {
         //If creating a new account, take the partyId of that account. 
         //If converting a contact/organization into a lead/account, take the partyId of the newly converted party. 
         //Then add an entry to the party_role table, using the above partyId value in the party_id column,
-        //and "account" as the value in the role_type_id column. 
+        //and "account" as the value in the role_type_id column.
+        knex.insert({
+            party_id: account.partyId,
+            role_type_id: "account",
+            created_date: account.createdDate,
+            updated_date: account.updatedDate
+        }).into('party_role');
     };
     
     var addAccountPartyRelationship = function (account) {
@@ -60,6 +83,15 @@ var accountData = function (knex) {
         //Not fully sure yet that I can do this, but will write it down here anyway for now.
         //Call all of the previous addAccount___ methods. 
     };
+    
+    /**
+     * Gets all accounts associated with an owner from database
+     * @param {Number} ownerId - This is the party_id of the owner
+     * @return {Object} promise - Fulfillment value is a raw data object
+     */
+    var getAccountsByOwner = function (ownerId) {
+        
+    };
     /**
      * Gets one account by its id from database
      * @param {Number} accountId - Unique id of the account to be fetched
@@ -68,6 +100,15 @@ var accountData = function (knex) {
     var getAccountById = function (accountId) {
         
     };
+    /**
+     * Gets one account by its phone number from database
+     * @param {Number} phoneNumber - Unique phone number of the account to be fetched
+     * @return {Object} promise - Fulfillment value is a raw data object
+     */
+    var getAccountByPhoneNumber = function (phoneNumber) {
+        
+    };
+    
     
 
     /**

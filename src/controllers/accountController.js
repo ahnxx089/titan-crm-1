@@ -117,6 +117,30 @@ var accountController = function(knex) {
             });
         return promise;
     };
+    /**
+     * Gets all accounts associated with a given owner from the database
+     * @param {Number} ownerId - Unique party_id of the owner
+     * @return {Object} promise - Fulfillment value is a raw data object
+     */
+    var getAccountsByOwner = function (ownerId) {
+        
+    };
+    /**
+     * Gets one account by its associated phone number from database
+     * @param {Number} phoneNumber - Unique phone number associated with the account to be fetched
+     * @return {Object} promise - Fulfillment value is a raw data object
+     */
+    var getAccountByPhoneNumber = function (phoneNumber) {
+        
+    };
+    /**
+     * Gets one account by <SOME ACCOUNT ATTRIBUTE OR COMBINATION OF ATTRIBUTES> from database
+     * @param {String????? Multi-property JSON Object???} identity - The identity/identities of the account to be retrieved
+     * @return {Object} promise - Fulfillment value is a raw data object
+     */
+    var getAccountByIdentity = function (identity) {
+        
+    };
     
     /**
      * Update a account in database
