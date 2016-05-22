@@ -19,11 +19,6 @@ var contactController = function (knex) {
     var contactMechData = require('../data/contactMechData')(knex);
 
 
-    /* ***THIS SECTION NEEDS WORK:
-            1.  Are these the methods we need?
-            2.  Do we need more methods?  
-            3.  Each method needs code to work. */
-    //
     // CONTROLLER METHODS
     // ==========================================
     //
@@ -62,7 +57,6 @@ var contactController = function (knex) {
                         contacts[i].last_name,
                         contacts[i].birth_date,
                         contacts[i].comments,
-                        contacts[i].title,
                         contacts[i].country_code,
                         contacts[i].area_code,
                         contacts[i].contact_number,
@@ -112,7 +106,6 @@ var contactController = function (knex) {
                     contacts[0].last_name,
                     contacts[0].birth_date,
                     contacts[0].comments,
-                    contacts[0].title,
                     contacts[0].country_code,
                     contacts[0].area_code,
                     contacts[0].contact_number,
@@ -128,6 +121,56 @@ var contactController = function (knex) {
                     contacts[0].country_geo_id
                 );
                 return contactEntity;
+            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
+        return promise;
+    };
+    
+    /**
+     * Gets all contacts for a specified owner's party_id
+     * @return {Object} promise - Fulfillment value is an array of contact entities
+     */
+    var getContactsByOwner = function (ownerId) {
+        var promise = contactData.getContactsByOwner(ownerId)
+            .then(function (contacts) {
+                // Map the retrieved result set to corresponding entities
+                var contactEntities = [];
+                for (var i = 0; i < contacts.length; i++) {
+                    var contact = new Contact(
+                        contacts[i].party_id,
+                        contacts[i].party_type_id,
+                        contacts[i].currency_uom_id,
+                        contacts[i].description,
+                        contacts[i].status_id,
+                        contacts[i].created_by,
+                        contacts[i].created_date,
+                        contacts[i].updated_date,
+                        contacts[i].salutation,
+                        contacts[i].first_name,
+                        contacts[i].middle_name,
+                        contacts[i].last_name,
+                        contacts[i].birth_date,
+                        contacts[i].comments,
+                        contacts[i].country_code,
+                        contacts[i].area_code,
+                        contacts[i].contact_number,
+                        contacts[i].ask_for_name,
+                        contacts[i].email_address,
+                        contacts[i].to_name,
+                        contacts[i].attn_name,
+                        contacts[i].address1,
+                        contacts[i].address2,
+                        contacts[i].city,
+                        contacts[i].state_province_geo_id,
+                        contacts[i].zip_or_postal_code,
+                        contacts[i].country_geo_id
+                    );
+                    contactEntities.push(contact);
+                }
+                return contactEntities;
             });
         promise.catch(function (error) {
             // Log the error
@@ -186,6 +229,7 @@ var contactController = function (knex) {
     return {
         getContacts: getContacts,
         getContactById: getContactById,
+        getContactsByOwner: getContactsByOwner,
         addContact: addContact,
         updateContact: updateContact,
         deleteContact: deleteContact

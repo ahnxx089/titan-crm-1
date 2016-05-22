@@ -18,9 +18,6 @@ var contactApi = function (knex) {
         next();
     };
 
-    // *** FOR DISCUSSION:  WHAT OTHER METHODS DO WE NEED?
-    // (compare to leads, compare to opentaps...)
-    //
     // API methods
     // ==========================================
     //
@@ -48,10 +45,13 @@ var contactApi = function (knex) {
             });
     };
 
-    // FOR DISCUSSION:  HOW SPECIFIC TO MAKE?
-    // GET /api/contacts/:owner
-    var getContactByOwner = function (req, res) {
-
+    // GET /api/contactsByOwner/:owner
+    var getContactsByOwner = function (req, res) {
+        var ownerId = req.params.owner;
+        contactController.getContactsByOwner(ownerId)
+            .then(function (contacts) {
+                res.json(contacts);
+            });
     };
 
     // GET /api/contacts/:<name?>
@@ -91,6 +91,7 @@ var contactApi = function (knex) {
         addContact: addContact,
         getContacts: getContacts,
         getContactById: getContactById,
+        getContactsByOwner: getContactsByOwner,
         updateContact: updateContact,
         deleteContact: deleteContact
     };

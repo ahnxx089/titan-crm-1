@@ -65,8 +65,8 @@ var router = function (knex) {
         .get(contactApi.getContactById)
         .put(contactApi.updateContact)
         .delete(contactApi.deleteContact);
-    // DINESH WILL ADD API ROUTES HERE FOR THE FUNCTIONS
-    // IN contactApi.js IN ADDITION TO THE 5 NAMED SO FAR.
+    apiRouter.route('/contactsByOwner/:owner')
+        .get(contactApi.getContactsByOwner);
 
     return apiRouter;
 };

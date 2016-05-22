@@ -19,7 +19,7 @@ var ContactMech = require('../entities/contactMech');
 //
 function Contact(partyId, partyTypeId, currencyUomId, description,
     statusId, createdBy, createdDate, updatedDate, salutation, firstName,
-    middleName, lastName, birthDate, comments, title, countryCode, areaCode, contactNumber, askForName, emailAddress, toName, attentionName,
+    middleName, lastName, birthDate, comments, countryCode, areaCode, contactNumber, askForName, emailAddress, toName, attentionName,
     addressLine1, addressLine2, city, stateOrProvinceId, zipOrPostalCode, countryId) {
 
     // Call the parent constructor (Person), making sure
@@ -30,7 +30,6 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
 
     // Contact-specific Properties
     this.contactMechs = [];
-    this.title = title;
     var contactMech;
 
     //Add an email address to contactMechs, if one is specified
@@ -75,8 +74,7 @@ Contact.prototype = Object.create(Person.prototype);
 Contact.prototype.constructor = Contact;
 
 // Methods - After validateForInsert and validateForUpdate, validation for
-// all the other arguments to Contact is handled by party.js, person.js,
-// and contactMech.js, EXCEPT for argument "title", which is done below
+// all the other arguments to Contact is handled by party.js
 //
 Contact.prototype.validateForInsert = function () {
     //Run parent validaton method
@@ -119,21 +117,6 @@ Contact.prototype.validateForUpdate = function () {
     }
     return errors;
 };
-
-/*
-// title is varchar(255) -- DOES NOT EXIST IN titan_crm DB YET, discuss...
-<< << << < HEAD
-//Contact.prototype.validateTitle = function (isRequired) {
-//    this.title = validation.sanitizeInput(this.title);
-//    var validationResult = validation.validateString(this.title, isRequired, 255, 'title');
-//    return validationResult;
-//};
-    === === =
-    Contact.prototype.validateTitle = function (isRequired) {
-        this.title = validation.sanitizeInput(this.title);
-        var validationResult = validation.validateString(this.title, isRequired, 255, 'title');
-        return validationResult;
-    }; >>> >>> > 3 d7c647bc369f22e82fc088b7e407ac59b459f87*/
 
 // Export the class as a module
 module.exports = Contact;

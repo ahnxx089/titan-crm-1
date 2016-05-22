@@ -266,11 +266,10 @@ var contactData = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getContacts = function () {
-        // A party is a contact iff role_type_id in party_role is set to CONTACT.
+        // A party is a contact iff role_type_id in party_role is set to 'CONTACT'.
         // Reach that info by joining table party to matching table party_role to 
-        // table role_type.   The SELECT statement can be amended to return more info
-        // about the contact; at present it returns minimal info to test if it works...
-        return knex.select('party.party_id', 'party.description', 'role_type.role_type', 'role_type.description')
+        // table role_type.   
+        return knex.select('party.party_id')
             .from('party')
             .innerJoin('party_role', 'party_role.party_id', 'party.party_id')
             .innerJoin('role_type', 'role_type.role_type', 'party_role.role_type_id')
@@ -292,6 +291,24 @@ var contactData = function (knex) {
             .andWhere({
                 party_id: id
             });
+    };
+
+    /**
+     * Gets all contacts from database for a specified owner's party_id
+     * @param {Number} ownerId - Unique party_id of the owner whose contacts to be fetched
+     * @return {Object} promise - Fulfillment value is an array of raw data objects
+     */
+    var getContactsByOwner = function (ownerId) {
+        // The ownership is all contained within the party_relationship table alone;
+        // however, the party table is joined so that column party.party_id of the
+        // contact can be passed by this function back to the controller layer.
+        return knex.select('party.party_id')
+            .from('party_relationship')
+            .innerJoin('party','party.party_id','party_relationship.party_id_from')
+            .whereIn('role_type_id_to', ['PERSON_ROLE','SALES_REP','ACCOUNT_MANAGER'])
+            .andWhere('party_relationship_type_id', 'RESPONSIBLE_FOR')
+            .andWhere('role_type_id_from', 'CONTACT')
+            .andWhere('party_id_to', ownerId);
     };
 
     /**
@@ -334,6 +351,7 @@ var contactData = function (knex) {
         addContact: addContact,
         getContacts: getContacts,
         getContactById: getContactById,
+        getContactsByOwner: getContactsByOwner,
         updateContact: updateContact,
         deleteContact: deleteContact
     };
