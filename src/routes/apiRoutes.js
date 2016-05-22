@@ -52,8 +52,18 @@ var router = function (knex) {
         .get(partyApi.getPartyById)
         .put(partyApi.updateParty)
         .delete(partyApi.deleteParty);
-
-
+    
+    // LEADS, 7 in total: 1 post, 4 gets, 1 put, 1 delete
+    var leadApi = require('../api/leadApi')(knex);
+    apiRouter.route('/leads')
+        .post(leadApi.addLead); // post only? yes!
+    apiRouter.route('/leads/:id')
+        .get(leadApi.getLeadById)
+        .post(leadApi.updateLead)
+        .delete(leadApi.deleteLead);
+//        getLeadsByOwner, getLeadsByIdentity, getLeadsByPhoneNumber are not implemented yet
+    
+    
 
     // CONTACTS
     // ==========================================
