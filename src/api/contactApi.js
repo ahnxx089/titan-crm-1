@@ -26,12 +26,50 @@ var contactApi = function (knex) {
 
     };
 
-    // GET /api/contacts/
+    // GET Methods:  there are several specific methods for
+    // getting Contacts using the route /api/contacts/ 
+    // They are handled in this function
     var getContacts = function (req, res) {
-        contactController.getContacts()
-            .then(function (contacts) {
-                res.json(contacts);
-            });
+
+        /* The if blocks test for whether the user entered a query string
+            seeking to get Contacts by Owner, by Identity or other ways
+            (besides getContactById, which is on a separate route).
+           
+            Note:  there no longer is a general getContacts()
+            function to get all contacts, that was just for initial testing.
+            Once user authorization is implemented, the only user who should
+            be able to get ALL Contacts regardless of Owner will be user:admin, 
+            and admin will use getContactsByOwner() for that... that might require
+            re-writing contactData.getContactsByOwner, but that is the
+            plan for now.
+        */
+
+        // GET /api/contacts?owner=
+        //
+        // This if block triggers if a query by owner has been made.
+        if (req.query.owner) {
+            var ownerId = req.query.owner;
+            contactController.getContactsByOwner(ownerId)
+                .then(function (contacts) {
+                    res.json(contacts);
+                });
+        }
+
+        // *** DINESH HAS NOT IMPLEMENTED YET:  getContactsByIdentity
+        //
+        // GET /api/contacts?IDENTITY=   <--- WORK OUT THIS QUERY STRING!
+        //if ( req.query.WHAT??? ) {
+        //    contactController.getContactsByIdentity()
+        //        .then(function (contacts) {
+        //            res.json(contacts);
+        //        });
+        //}
+
+        // If the request did not properly pass any of the various if tests
+        // above, it is not a valid query, make the reponse null.
+        else {
+            res.json(null);
+        }
     };
 
     // GET /api/contacts/:id
@@ -45,14 +83,16 @@ var contactApi = function (knex) {
             });
     };
 
+    /* DINESH IS ELIMINATING THIS SOON:
     // GET /api/contactsByOwner/:owner
+    // NOTE: req.query looks for a query string of ?
     var getContactsByOwner = function (req, res) {
-        var ownerId = req.params.owner;
+        var ownerId = req.query.owner;
         contactController.getContactsByOwner(ownerId)
             .then(function (contacts) {
                 res.json(contacts);
             });
-    };
+    };*/
 
     // GET /api/contacts/:<name?>
     // FIRST NAME? LAST NAME?
@@ -91,7 +131,6 @@ var contactApi = function (knex) {
         addContact: addContact,
         getContacts: getContacts,
         getContactById: getContactById,
-        getContactsByOwner: getContactsByOwner,
         updateContact: updateContact,
         deleteContact: deleteContact
     };

@@ -36,7 +36,6 @@ var accountApi = function (knex) {
             });
         }
     };
-    };
     
     // GET /api/accounts/?owner=
     var getAccountByDummyVar1 = function (req, res) {

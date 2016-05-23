@@ -89,7 +89,7 @@ Contact.prototype.validateForInsert = function () {
     
     //Errors are non-empty validation results
     var errors = [];
-    for(i=0; i < validations.length; i++) {
+    for( i = 0; i < validations.length; i++) {
         if(validations[i]) {
             errors.push(validations[i]);
         }
@@ -110,7 +110,7 @@ Contact.prototype.validateForUpdate = function () {
     
     //Errors are non-empty validation results
     var errors = [];
-    for(var i=0; i < validations.length; i++) {
+    for( i = 0; i < validations.length; i++) {
         if(validations[i]) {
             errors.push(validations[i]);
         }
