@@ -19,14 +19,9 @@ var ContactMech = require('../entities/contactMech');
 //
 function Contact(partyId, partyTypeId, currencyUomId, description,
     statusId, createdBy, createdDate, updatedDate, salutation, firstName,
-<<<<<<< HEAD
     middleName, lastName, birthDate, comments, countryCode, areaCode,
     contactNumber, askForName, emailAddress, toName, attnName,
     address1, address2, directions, city, stateProvinceGeoId, zipOrPostalCode, countryGeoId) {
-=======
-    middleName, lastName, birthDate, comments, countryCode, areaCode, contactNumber, askForName, emailAddress, toName, attentionName,
-    addressLine1, addressLine2, city, stateOrProvinceId, zipOrPostalCode, countryId) {
->>>>>>> 672621edb3fec951f7d61683e790ba2ee3c3a4e4
 
     // Call the parent constructor (Person), making sure
     // that "this" is set correctly during the call
