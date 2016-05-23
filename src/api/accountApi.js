@@ -36,12 +36,12 @@ var accountApi = function (knex) {
             });
         }
     };
+
    
-    // GET /api/accounts/:id
+    // GET /api/accounts/?identity=
     var getAccountByIdentity = function (req, res) {
         
     }
-        
     
     // GET /api/accounts/?owner=
     var getAccountsByOwner = function (req, res) {
