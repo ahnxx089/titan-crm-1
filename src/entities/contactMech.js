@@ -8,84 +8,46 @@
 
 var validation = require('../common/validation')();
 
-
 // Constructor
 //
-function ContactMech(contactMechId, contactMechTypeId, infoString, createdDate, updatedDate, additionalParameters) {
+function ContactMech(contactMechId, contactMechTypeId, infoString, createdDate,
+    updatedDate, countryCode, areaCode, contactNumber, askForName,
+    toName, attnName, address1, address2, directions, city, stateProvinceGeoId,
+    zipOrPostalCode, countryGeoId) {
+
     // Properties
     this.contactMechId = contactMechId;
     this.contactMechTypeId = contactMechTypeId;
     this.infoString = infoString;
     this.createdDate = createdDate;
     this.updatedDate = updatedDate;
+    this.countryCode = countryCode;
+    this.areaCode = areaCode;
+    this.contactNumber = contactNumber;
+    this.askForName = askForName;
+    this.toName = toName;
+    this.attnName = attnName;
+    this.address1 = address1;
+    this.address2 = address2;
+    this.directions = directions;
+    this.city = city;
+    this.zipOrPostalCode = zipOrPostalCode;
+    this.stateProvinceGeoId = stateProvinceGeoId;
+    this.countryGeoId = countryGeoId;
 
-    if (this.contactMethodType === 'POSTAL_ADDRESS') {
-        this.contactMechId = additionalParameters.contactMechId;
-        this.toName = additionalParameters.toName;
-        this.attnName = additionalParameters.attnName;
-        this.address1 = additionalParameters.address1;
-        this.address2 = additionalParameters.address2;
-        this.directions = additionalParameters.directions;
-        this.city = additionalParameters.city;
-        this.zipOrPostalCode = additionalParameters.zipOrPostalCode;
-        this.stateProvinceGeoId = additionalParameters.stateProvinceGeoId;
-        this.countryGeoId = additionalParameters.countryGeoId;
-
-        this.infoString = getPostalAddressString(additionalParameters);
-    } else if (this.contactMethodType === 'TELECOM_NUMBER') {
-        this.countryCode = additionalParameters.countryCode;
-        this.areaCode = additionalParameters.areaCode;
-        this.contactNumber = additionalParameters.contactNumber;
-        this.askForName = additionalParameters.askForName;
-
-        this.infoString = getTelecomNumberString(additionalParameters);
-    }
 }
-
-var getPostalAddressString = function (parameters) {
-    var addressString = '';
-
-    //add components of address to string
-    addressString += parameters.toName;
-    if (parameters.attnName) {
-        addressString += ' Attn: ' + parameters.attnName;
-    }
-    addressString += '\n';
-    addressString += parameters.address1 + '\n';
-    if (parameters.address2) {
-        addressString += parameters.address2 + '\n';
-    }
-    addressString += parameters.city + ', ' + parameters.stateProvinceGeoId + ', ' + parameters.zipOrPostalCode;
-
-    return addressString;
-};
-
-
-var getTelecomNumberString = function (parameters) {
-    var numberString = '';
-
-    //add components of number to string
-    numberString += parameters.contactNumber;
-    if (parameters.areaCode) {
-        numberString = parameters.areaCode + '-' + numberString;
-        if (parameters.countryCode) {
-            numberString = parameters.countryCode + '-' + numberString;
-        }
-    }
-    if (parameters.askForName) {
-        numberString += ', ask for ' + parameters.askForName;
-    }
-
-    return numberString;
-};
 
 // Methods - VALIDATIONS YET TO BE COMPLETED
 //
 ContactMech.prototype.validateForInsert = function () {
-    // Perform validations
+    
+    // Perform general validations
     var validations = [
-        //Validations applicable to all contactMechs
+            this.validateContactMechTypeId(true),
+            this.validateInfoString(true)
     ];
+
+    // Perform validations specific to postal addresses
     if (this.infoString === 'POSTAL_ADDRESS') {
         //validations only applicable to postal addresses
         validations.concat([
@@ -100,7 +62,17 @@ ContactMech.prototype.validateForInsert = function () {
             this.validateCountryGeoId(true)
         ]);
     }
-
+    
+    // Perform validations specific to telecom numbers
+    if (this.infoString === 'TELECOM_NUMBER') {
+        //validations only applicable to postal addresses
+        validations.concat([
+            this.validateCountryCode(true),
+            this.validateAreaCode(true),
+            this.validateContactNumber(true),
+            this.validateaskForName(true)
+        ]);
+    }
 
     // The "errors" array is "validations" array
     // with empty string elements weeded out
@@ -116,14 +88,18 @@ ContactMech.prototype.validateForInsert = function () {
 };
 
 ContactMech.prototype.validateForUpdate = function () {
-    // Perform validations
+    
+    // Perform general validations
     var validations = [
-        //Validations applicable to all contactMechs
+            this.contactMechId(true),
+            this.validateContactMechTypeId(true),
+            this.validateInfoString(true)
     ];
+
+    // Perform validations specific to postal addresses
     if (this.infoString === 'POSTAL_ADDRESS') {
         //validations only applicable to postal addresses
         validations.concat([
-            this.contactMechId(true),
             this.validateToName(true),
             this.validateAttnName(true),
             this.validateAddress1(true),
@@ -135,7 +111,17 @@ ContactMech.prototype.validateForUpdate = function () {
             this.validateCountryGeoId(true)
         ]);
     }
-
+    
+    // Perform validations specific to telecom numbers
+    if (this.infoString === 'TELECOM_NUMBER') {
+        //validations only applicable to postal addresses
+        validations.concat([
+            this.validateCountryCode(true),
+            this.validateAreaCode(true),
+            this.validateContactNumber(true),
+            this.validateaskForName(true)
+        ]);
+    }
 
     // The "errors" array is "validations" array
     // with empty string elements weeded out
@@ -200,10 +186,10 @@ ContactMech.prototype.validateAddress2 = function (isRequired) {
     return validationResult;
 };
 
-// direction type is varchar(255)
+// directions type is varchar(255)
 ContactMech.prototype.validateDirections = function (isRequired) {
     this.directions = validation.sanitizeInput(this.directions);
-    var validationResult = validation.validateString(this.directions, isRequired, 255, '');
+    var validationResult = validation.validateString(this.directions, isRequired, 255, 'directions');
     return validationResult;
 };
 
@@ -236,6 +222,34 @@ ContactMech.prototype.validateProvinceGeoId = function (isRequired) {
 ContactMech.prototype.validateCountryGeoId = function (isRequired) {
     this.countryGeoId = validation.sanitizeInput(this.countryGeoId);
     var validationResult = validation.validateString(this.countryGeoId, isRequired, 20, 'countryGeoId');
+    return validationResult;
+};
+
+// contry_code type is varchar(10)
+ContactMech.prototype.validateCountryCode = function (isRequired) {
+    this.countryCode = validation.sanitizeInput(this.countryCode);
+    var validationResult = validation.validateString(this.countryCode, isRequired, 10, 'countryCode');
+    return validationResult;
+};
+
+// area_code type is varchar(10)
+ContactMech.prototype.validateAreaCode = function (isRequired) {
+    this.areaCode = validation.sanitizeInput(this.areaCode);
+    var validationResult = validation.validateString(this.areaCode, isRequired, 10, 'areaCode');
+    return validationResult;
+};
+
+// contact_number type is varchar(60)
+ContactMech.prototype.validateContactNumber = function (isRequired) {
+    this.contactNumber = validation.sanitizeInput(this.contactNumber);
+    var validationResult = validation.validateString(this.contactNumber, isRequired, 60, 'contactNumber');
+    return validationResult;
+};
+
+// ask_for_name type is varchar(100)
+ContactMech.prototype.validateaskForName = function (isRequired) {
+    this.askForName = validation.sanitizeInput(this.askForName);
+    var validationResult = validation.validateString(this.askForName, isRequired, 100, 'askForName');
     return validationResult;
 };
 

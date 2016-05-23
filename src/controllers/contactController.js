@@ -2,7 +2,7 @@
 // Business logic module for contacts.
 //
 // @file:    contactController.js
-// @authors: 
+// @authors: William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
@@ -143,6 +143,8 @@ var contactController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContact = function (contactId, contact) {
+        //Convert contact to entity
+        
         var validationErrors = contact.validateForUpdate();
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
