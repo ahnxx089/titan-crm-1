@@ -143,6 +143,64 @@ var accountController = function(knex) {
     };
     
     /**
+     * Gets one account by its owner
+     * @param {Number} ownerId - Unique id of the account to be fetched
+     * @return {Object} promise - Fulfillment value is a account entity
+    */
+    var getAccountByOwner = function (ownerId) {
+        var promise = accountData.getAccountByOwner(ownerId)
+            .then(function(accounts) {
+                // Map the retrieved result set to corresponding entity
+                var accountEntity = new Account(
+                    accounts[0].party_id,
+                    accounts[0].organization_name,
+                    accounts[0].office_site_name,
+                    accounts[0].annual_revenue,
+                    accounts[0].num_employees,
+                    accounts[0].ticker_symbol,
+                    accounts[0].comments,
+                    accounts[0].logo_image_url,
+                    accounts[0].created_date,
+                    accounts[0].updated_date
+                );
+                return accountEntity;
+            });
+            promise.catch(function(error) {
+                // Log the error
+                winston.error(error);
+            });
+        return promise;
+    };
+    /**
+     * Gets one account by its phoneNumber
+     * @param {Number} partyId - Unique id of the party to be fetched
+     * @return {Object} promise - Fulfillment value is a account entity
+    */
+    var getAccountByPhoneNumber = function (partyId) {
+        var promise = accountData.getAccountByPhoneNumber(partyId)
+            .then(function(accounts) {
+                // Map the retrieved result set to corresponding entity
+                var accountEntity = new Account(
+                    accounts[0].party_id,
+                    accounts[0].organization_name,
+                    accounts[0].office_site_name,
+                    accounts[0].annual_revenue,
+                    accounts[0].num_employees,
+                    accounts[0].ticker_symbol,
+                    accounts[0].comments,
+                    accounts[0].logo_image_url,
+                    accounts[0].created_date,
+                    accounts[0].updated_date
+                );
+                return accountEntity;
+            });
+            promise.catch(function(error) {
+                // Log the error
+                winston.error(error);
+            });
+        return promise;
+    };
+    /**
      * Update a account in database
      * @param {Number} partyId - Unique id of the account to be updated
      * @param {Object} account - The object that contains updated data
