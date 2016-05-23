@@ -90,7 +90,13 @@ var accountData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getAccountsByOwner = function (ownerId) {
-        
+        return knex.select('party_id', 'parent_party_id', 'company_name', 'annual_revenue', 'currency_uom_id', 'num_employees', 'industry_enum_id', 'ownership_enum_id', 'ticker_symbol', 'important_note', 'primary_postal_address', 'primary_telecom_number_id', 'primary_email_id', 'created_date', 'updated_date', 'organization.logo_image_url')
+            .from('party_supplemental_data')
+            .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
+            .innerJoin('party_relationship', 'party_supplemental_data.party_id', 'party_relationship.party_id_from')
+            .where('party_relationship.party_id_to', ownerId)
+            .andWhere('party_relationship.role_type_id_from', 'account')
+            .andWhere('party_relationship.party_relationship_type_id', 'responsible_for');
     };
     /**
      * Gets one account by its id from database
@@ -98,7 +104,12 @@ var accountData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getAccountById = function (accountId) {
-        
+        return knex.select('party_id', 'parent_party_id', 'company_name', 'annual_revenue', 'currency_uom_id', 'num_employees', 'industry_enum_id', 'ownership_enum_id', 'ticker_symbol', 'important_note', 'primary_postal_address', 'primary_telecom_number_id', 'primary_email_id', 'created_date', 'updated_date', 'organization.logo_image_url')
+            .from('party_supplemental_data')
+            .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
+            .innerJoin('party_role', 'party_supplemental_data.party_id', 'party_role.party_id')
+            .where({party_id: accountId})
+            .andWhere('party_role.role_type_id', 'account');
     };
     /**
      * Gets one account by its phone number from database
@@ -106,6 +117,13 @@ var accountData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getAccountByPhoneNumber = function (phoneNumber) {
+        //TELECOM_NUMBER is the value of the contactmechtypeId where we want to join table entries
+        //Is there really a telecom_number table in our titan_crm database? contactData mentions that there 
+        //is, but I haven't seen one anywhere...
+        /*return knex.select('party_id', 'parent_party_id', 'company_name', 'annual_revenue', 'currency_uom_id', 'num_employees', 'industry_enum_id', 'ownership_enum_id', 'ticker_symbol', 'important_note', 'primary_postal_address', 'primary_telecom_number_id', 'primary_email_id', 'created_date', 'updated_date', 'organization.logo_image_url')
+        .from('party_supplemental_data')
+        .innerJoin('contact_mech', 'party_supplemental_data.primary_telecom_number_id', 'contact_mech.contact_mech_id')
+        .where({contact_mech.info_string: phoneNumber});*/
         
     };
     
