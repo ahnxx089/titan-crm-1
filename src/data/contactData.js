@@ -318,7 +318,7 @@ var contactData = function (knex) {
      */
     var updateContact = function (contact) {
         //Update the properties shared with Person
-        var numRows = PersonData.updatePerson(contact);
+        //var numRows = PersonData.updatePerson(contact);
 
         //Update the unique properies of Contact
         knex('party_role')
