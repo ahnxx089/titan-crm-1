@@ -19,9 +19,14 @@ var ContactMech = require('../entities/contactMech');
 //
 function Contact(partyId, partyTypeId, currencyUomId, description,
     statusId, createdBy, createdDate, updatedDate, salutation, firstName,
+<<<<<<< HEAD
     middleName, lastName, birthDate, comments, countryCode, areaCode,
     contactNumber, askForName, emailAddress, toName, attnName,
     address1, address2, directions, city, stateProvinceGeoId, zipOrPostalCode, countryGeoId) {
+=======
+    middleName, lastName, birthDate, comments, countryCode, areaCode, contactNumber, askForName, emailAddress, toName, attentionName,
+    addressLine1, addressLine2, city, stateOrProvinceId, zipOrPostalCode, countryId) {
+>>>>>>> 672621edb3fec951f7d61683e790ba2ee3c3a4e4
 
     // Call the parent constructor (Person), making sure
     // that "this" is set correctly during the call
@@ -63,8 +68,7 @@ Contact.prototype = Object.create(Person.prototype);
 Contact.prototype.constructor = Contact;
 
 // Methods - After validateForInsert and validateForUpdate, validation for
-// all the other arguments to Contact is handled by party.js, person.js,
-// and contactMech.js, EXCEPT for argument "title", which is done below
+// all the other arguments to Contact is handled by party.js
 //
 Contact.prototype.validateForInsert = function () {
     //Run parent validaton method
@@ -79,7 +83,8 @@ Contact.prototype.validateForInsert = function () {
 
     //Errors are non-empty validation results
     var errors = [];
-    for (i = 0; i < validations.length; i++) {
+    
+    for ( i = 0; i < validations.length; i++) {
         if (validations[i]) {
             errors.push(validations[i]);
         }
@@ -100,8 +105,9 @@ Contact.prototype.validateForUpdate = function () {
 
     //Errors are non-empty validation results
     var errors = [];
-    for (i = 0; i < validations.length; i++) {
-        if (validations[i]) {
+
+    for( i = 0; i < validations.length; i++) {
+        if(validations[i]) {
             errors.push(validations[i]);
         }
     }

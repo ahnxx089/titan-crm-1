@@ -8,7 +8,7 @@
 
 /* jshint camelcase: false */
 
-var PersonData = require('./personData.js');
+//var PersonData = require('./personData.js');
 
 var contactData = function (knex) {
 
@@ -267,16 +267,14 @@ var contactData = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getContacts = function () {
-        //A party is a contact iff role_type_id in party_role is set to CONTACT
-        return knex.select('party_id', 'party_type_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'created_date', 'updated_date')
+        // A party is a contact iff role_type_id in party_role is set to 'CONTACT'.
+        // Reach that info by joining table party to matching table party_role to 
+        // table role_type.   
+        return knex.select('party.party_id')
             .from('party')
             .innerJoin('party_role', 'party_role.party_id', 'party.party_id')
-            .innerJoin('role_type', 'role_type.role_type_id', 'party_role.role_type_id')
-            .where('role_type.role_type_id', 'CONTACT');
-        /* NOTE:  THIS SYNTAX DID NOT PASS INSPECTION WITH THE KNEX QUERY BUILDER AT:
-            http://michaelavila.com/knex-querylab/ 
-            SO IT MIGHT NEED SOME FIXING, BUT THE WHERE LOGIC SHOULD BE GOOD...
-        */
+            .innerJoin('role_type', 'role_type.role_type', 'party_role.role_type_id')
+            .where('role_type.role_type', 'CONTACT');
     };
 
     /**
@@ -297,13 +295,31 @@ var contactData = function (knex) {
     };
 
     /**
+     * Gets all contacts from database for a specified owner's party_id
+     * @param {Number} ownerId - Unique party_id of the owner whose contacts to be fetched
+     * @return {Object} promise - Fulfillment value is an array of raw data objects
+     */
+    var getContactsByOwner = function (ownerId) {
+        // The ownership is all contained within the party_relationship table alone;
+        // however, the party table is joined so that column party.party_id of the
+        // contact can be passed by this function back to the controller layer.
+        return knex.select('party.party_id')
+            .from('party_relationship')
+            .innerJoin('party','party.party_id','party_relationship.party_id_from')
+            .whereIn('role_type_id_to', ['PERSON_ROLE','SALES_REP','ACCOUNT_MANAGER'])
+            .andWhere('party_relationship_type_id', 'RESPONSIBLE_FOR')
+            .andWhere('role_type_id_from', 'CONTACT')
+            .andWhere('party_id_to', ownerId);
+    };
+
+    /**
      * Update a contact in database
      * @param {Object} contact - The contact entity that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContact = function (contact) {
         //Update the properties shared with Person
-        var numRows = PersonData.updatePerson(contact);
+        //var numRows = PersonData.updatePerson(contact);
 
         //Update the unique properies of Contact
         knex('party_role')
@@ -336,6 +352,7 @@ var contactData = function (knex) {
         addContact: addContact,
         getContacts: getContacts,
         getContactById: getContactById,
+        getContactsByOwner: getContactsByOwner,
         updateContact: updateContact,
         deleteContact: deleteContact
     };

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2016 at 04:10 AM
+-- Generation Time: May 22, 2016 at 06:36 AM
 -- Server version: 5.6.30
 -- PHP Version: 5.5.35
 
@@ -19,6 +19,150 @@ SET time_zone = "+00:00";
 --
 -- Database: `titan_crm`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `case_`
+--
+
+CREATE TABLE IF NOT EXISTS `case_` (
+  `case_id` int(11) NOT NULL,
+  `case_type_id` varchar(20) NOT NULL,
+  `case_category_id` varchar(20) NOT NULL,
+  `status_id` varchar(20) NOT NULL,
+  `from_party_id` int(11) DEFAULT NULL,
+  `priority` decimal(20,0) DEFAULT NULL,
+  `case_date` datetime DEFAULT NULL,
+  `response_required_date` datetime DEFAULT NULL,
+  `case_name` varchar(100) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `resolution_id` varchar(20) DEFAULT NULL,
+  `created_by` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `case_category`
+--
+
+CREATE TABLE IF NOT EXISTS `case_category` (
+  `case_category_id` varchar(20) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `case_category`
+--
+
+INSERT INTO `case_category` (`case_category_id`, `description`, `created_date`, `updated_date`) VALUES
+('CRCAT_COMPLEX', 'Complex functionality', '2016-05-22 03:22:07', '2016-05-22 03:22:07'),
+('CRCAT_EXISTING_PROB', 'Existing problem', '2016-05-22 03:22:07', '2016-05-22 03:22:07'),
+('CRCAT_INST_NOTCLEAR', 'Instructions not clear', '2016-05-22 03:22:07', '2016-05-22 03:22:07'),
+('CRCAT_NEW_PROB', 'New problem', '2016-05-22 03:22:07', '2016-05-22 03:22:07'),
+('CRCAT_NOTRAIN', 'User didn''t attend training', '2016-05-22 03:22:07', '2016-05-22 03:22:07');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `case_note`
+--
+
+CREATE TABLE IF NOT EXISTS `case_note` (
+  `case_id` int(11) NOT NULL,
+  `note_id` int(11) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `case_resolution`
+--
+
+CREATE TABLE IF NOT EXISTS `case_resolution` (
+  `case_resolution_id` varchar(20) NOT NULL,
+  `case_type_id` varchar(20) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `case_resolution`
+--
+
+INSERT INTO `case_resolution` (`case_resolution_id`, `case_type_id`, `description`, `created_date`, `updated_date`) VALUES
+('DUPLICATE', 'RF_FEATURE', 'Duplicate', '2016-04-30 23:54:33', '2016-04-30 23:54:33'),
+('FIXED', 'RF_BUGFIX', 'Fixed', '2016-04-30 23:54:33', '2016-04-30 23:54:33'),
+('IMPLEMENTED', 'RF_FEATURE', 'Implemented', '2016-04-30 23:54:33', '2016-04-30 23:54:33'),
+('REJECTED', 'RF_FEATURE', 'Rejected', '2016-04-30 23:54:33', '2016-04-30 23:54:33'),
+('WONTFIX', 'RF_BUGFIX', 'Won''t Fix', '2016-04-30 23:54:33', '2016-04-30 23:54:33'),
+('WORKS', 'RF_BUGFIX', 'Works For Me', '2016-04-30 23:54:33', '2016-04-30 23:54:33');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `case_role`
+--
+
+CREATE TABLE IF NOT EXISTS `case_role` (
+  `case_id` int(11) NOT NULL,
+  `party_id` int(11) NOT NULL,
+  `role_type_id` varchar(20) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `case_status`
+--
+
+CREATE TABLE IF NOT EXISTS `case_status` (
+  `case_status_id` int(11) NOT NULL,
+  `case_id` int(11) NOT NULL,
+  `status_id` varchar(20) NOT NULL,
+  `status_datetime` datetime DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `case_type`
+--
+
+CREATE TABLE IF NOT EXISTS `case_type` (
+  `case_type_id` varchar(20) NOT NULL,
+  `parent_type_id` varchar(20) DEFAULT NULL,
+  `has_table` tinyint(1) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `case_type`
+--
+
+INSERT INTO `case_type` (`case_type_id`, `parent_type_id`, `has_table`, `description`, `created_date`, `updated_date`) VALUES
+('RF_BUGFIX', NULL, 0, 'Request For Bug Fix', '2016-05-22 03:17:12', '2016-05-22 03:17:12'),
+('RF_CATALOG', NULL, 0, 'Request For Catalog', '2016-05-22 03:17:12', '2016-05-22 03:17:12'),
+('RF_FEATURE', NULL, 0, 'Request For Feature', '2016-05-22 03:17:12', '2016-05-22 03:17:12'),
+('RF_INFO', NULL, 0, 'Request For Information', '2016-05-22 03:17:12', '2016-05-22 03:17:12'),
+('RF_PROPOSAL', NULL, 0, 'Request For Proposal', '2016-05-22 03:17:12', '2016-05-22 03:17:12'),
+('RF_PUR_QUOTE', NULL, 0, 'Request For Purchase Quote', '2016-05-22 03:17:12', '2016-05-22 03:17:12'),
+('RF_QUOTE', NULL, 0, 'Request For Quote', '2016-05-22 03:17:12', '2016-05-22 03:17:12'),
+('RF_SUPPORT', NULL, 0, 'Request For Support', '2016-05-22 03:17:12', '2016-05-22 03:17:12');
 
 -- --------------------------------------------------------
 
@@ -1350,6 +1494,22 @@ INSERT INTO `geo_type` (`geo_type_id`, `parent_type_id`, `has_table`, `descripti
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `node_data`
+--
+
+CREATE TABLE IF NOT EXISTS `node_data` (
+  `note_id` int(11) NOT NULL,
+  `note_name` varchar(100) DEFAULT NULL,
+  `note_info` longtext,
+  `note_date_time` datetime DEFAULT NULL,
+  `note_party` int(11) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `organization`
 --
 
@@ -1599,8 +1759,8 @@ INSERT INTO `role_type` (`role_type`, `parent_type_id`, `has_table`, `descriptio
 ('ACCOUNT_MANAGER', 'SALES_REP', 0, 'Account Manager', '2016-05-10 11:44:46', '2016-05-10 11:44:46'),
 ('CONTACT', NULL, 0, 'Contact', '2016-05-10 11:42:32', '2016-05-10 11:42:32'),
 ('CUSTOMER', NULL, 0, 'Customer', '2016-05-10 11:42:32', '2016-05-10 11:42:32'),
+('LEAD', NULL, 0, 'Lead or prospect', '2016-05-10 11:42:32', '2016-05-10 11:42:32'),
 ('PERSON_ROLE', NULL, 0, 'Person', '2016-05-10 11:42:32', '2016-05-10 11:42:32'),
-('PROSPECT', NULL, 0, 'Prospect', '2016-05-10 11:42:32', '2016-05-10 11:42:32'),
 ('SALES_REP', 'PERSON_ROLE', 0, 'Sales Representative', '2016-05-10 11:43:45', '2016-05-10 11:43:45');
 
 -- --------------------------------------------------------
@@ -2053,6 +2213,14 @@ CREATE TABLE IF NOT EXISTS `status_item` (
 --
 
 INSERT INTO `status_item` (`status_id`, `status_type_id`, `status_code`, `description`, `created_date`, `updated_date`) VALUES
+('CASE_ACCEPTED', 'CASE_STATUS', 'ACCEPTED', 'Accepted', '2016-04-30 23:54:37', '2016-04-30 23:54:37'),
+('CASE_CANCELLED', 'CASE_STATUS', 'CANCELLED', 'Cancelled', '2016-04-30 23:54:37', '2016-04-30 23:54:37'),
+('CASE_COMPLETED', 'CASE_STATUS', 'COMPLETED', 'Completed', '2016-04-30 23:54:37', '2016-04-30 23:54:37'),
+('CASE_REJECTED', 'CASE_STATUS', 'REJECTED', 'Rejected', '2016-04-30 23:54:37', '2016-04-30 23:54:37'),
+('CASE_REOPENED', 'CASE_STATUS', 'REOPENED', 'Reopened', '2016-04-30 23:56:03', '2016-04-30 23:56:03'),
+('CASE_REVIEWED', 'CASE_STATUS', 'REVIEWED', 'Reviewed', '2016-04-30 23:54:37', '2016-04-30 23:54:37'),
+('CASE_SUBMITTED', 'CASE_STATUS', 'SUBMITTED', 'Submitted', '2016-04-30 23:54:37', '2016-04-30 23:54:37'),
+('PARTY_DISABLED', 'PARTY_STATUS', 'DISABLED', 'Disabled', '2016-05-22 05:14:55', '2016-05-22 05:14:55'),
 ('PARTY_ENABLED', 'PARTY_STATUS', 'ENABLED', 'Enabled', '2016-05-10 13:08:11', '2016-05-10 13:08:11'),
 ('PTYLEAD_CONVERTED', 'PARTY_LEAD_STATUS', 'CONVERTED', 'Party Lead Converted', '2016-05-10 13:08:11', '2016-05-10 13:08:11');
 
@@ -2076,6 +2244,7 @@ CREATE TABLE IF NOT EXISTS `status_type` (
 --
 
 INSERT INTO `status_type` (`status_type_id`, `parent_type_id`, `has_table`, `description`, `created_date`, `updated_date`) VALUES
+('CASE_STATUS', NULL, 0, 'Case Status', '2016-05-22 05:13:48', '2016-05-22 05:13:48'),
 ('PARTY_LEAD_STATUS', 'PARTY_STATUS', 0, 'Status codes for parties which are leads (role = PROSPECT)', '2016-05-10 12:59:38', '2016-05-10 12:59:38'),
 ('PARTY_STATUS', NULL, 0, 'Party Status', '2016-05-10 12:59:07', '2016-05-10 12:59:07');
 
@@ -2478,6 +2647,63 @@ INSERT INTO `user_login_security_group` (`user_login_id`, `permission_group_id`,
 --
 
 --
+-- Indexes for table `case_`
+--
+ALTER TABLE `case_`
+  ADD PRIMARY KEY (`case_id`),
+  ADD KEY `case_type_id` (`case_type_id`),
+  ADD KEY `case_category_id` (`case_category_id`),
+  ADD KEY `status_id` (`status_id`),
+  ADD KEY `from_party_id` (`from_party_id`),
+  ADD KEY `created_by` (`created_by`),
+  ADD KEY `resolution_id` (`resolution_id`);
+
+--
+-- Indexes for table `case_category`
+--
+ALTER TABLE `case_category`
+  ADD PRIMARY KEY (`case_category_id`);
+
+--
+-- Indexes for table `case_note`
+--
+ALTER TABLE `case_note`
+  ADD PRIMARY KEY (`case_id`,`note_id`),
+  ADD KEY `case_id` (`case_id`),
+  ADD KEY `note_id` (`note_id`);
+
+--
+-- Indexes for table `case_resolution`
+--
+ALTER TABLE `case_resolution`
+  ADD PRIMARY KEY (`case_resolution_id`),
+  ADD KEY `case_type_id` (`case_type_id`);
+
+--
+-- Indexes for table `case_role`
+--
+ALTER TABLE `case_role`
+  ADD PRIMARY KEY (`case_id`,`party_id`,`role_type_id`),
+  ADD KEY `case_id` (`case_id`),
+  ADD KEY `party_id` (`party_id`),
+  ADD KEY `role_type_id` (`role_type_id`);
+
+--
+-- Indexes for table `case_status`
+--
+ALTER TABLE `case_status`
+  ADD PRIMARY KEY (`case_status_id`),
+  ADD KEY `case_id` (`case_id`),
+  ADD KEY `status_id` (`status_id`);
+
+--
+-- Indexes for table `case_type`
+--
+ALTER TABLE `case_type`
+  ADD PRIMARY KEY (`case_type_id`),
+  ADD KEY `parent_type_id` (`parent_type_id`);
+
+--
 -- Indexes for table `contact_mech`
 --
 ALTER TABLE `contact_mech`
@@ -2547,6 +2773,13 @@ ALTER TABLE `geo_type`
   ADD KEY `parent_type_id` (`parent_type_id`);
 
 --
+-- Indexes for table `node_data`
+--
+ALTER TABLE `node_data`
+  ADD PRIMARY KEY (`note_id`),
+  ADD KEY `note_party` (`note_party`);
+
+--
 -- Indexes for table `organization`
 --
 ALTER TABLE `organization`
@@ -2560,7 +2793,8 @@ ALTER TABLE `party`
   ADD PRIMARY KEY (`party_id`),
   ADD KEY `party_type_id` (`party_type_id`),
   ADD KEY `created_by` (`created_by`),
-  ADD KEY `preferred_currency_uom_id` (`preferred_currency_uom_id`);
+  ADD KEY `preferred_currency_uom_id` (`preferred_currency_uom_id`),
+  ADD KEY `status_id` (`status_id`);
 
 --
 -- Indexes for table `party_contact_mech`
@@ -2722,10 +2956,25 @@ ALTER TABLE `user_login_security_group`
 --
 
 --
+-- AUTO_INCREMENT for table `case_`
+--
+ALTER TABLE `case_`
+  MODIFY `case_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `case_status`
+--
+ALTER TABLE `case_status`
+  MODIFY `case_status_id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `contact_mech`
 --
 ALTER TABLE `contact_mech`
   MODIFY `contact_mech_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `node_data`
+--
+ALTER TABLE `node_data`
+  MODIFY `note_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `party`
 --
@@ -2734,6 +2983,51 @@ ALTER TABLE `party`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `case_`
+--
+ALTER TABLE `case_`
+  ADD CONSTRAINT `FOREIGN_case_case_category` FOREIGN KEY (`case_category_id`) REFERENCES `case_category` (`case_category_id`),
+  ADD CONSTRAINT `FOREIGN_case_case_resolution` FOREIGN KEY (`resolution_id`) REFERENCES `case_resolution` (`case_resolution_id`),
+  ADD CONSTRAINT `FOREIGN_case_case_type` FOREIGN KEY (`case_type_id`) REFERENCES `case_type` (`case_type_id`),
+  ADD CONSTRAINT `FOREIGN_case_party` FOREIGN KEY (`from_party_id`) REFERENCES `party` (`party_id`),
+  ADD CONSTRAINT `FOREIGN_case_status_item` FOREIGN KEY (`status_id`) REFERENCES `status_item` (`status_id`),
+  ADD CONSTRAINT `FOREIGN_case_user_login` FOREIGN KEY (`created_by`) REFERENCES `user_login` (`user_login_id`);
+
+--
+-- Constraints for table `case_note`
+--
+ALTER TABLE `case_note`
+  ADD CONSTRAINT `FOREIGN_case_note_case` FOREIGN KEY (`case_id`) REFERENCES `case_` (`case_id`),
+  ADD CONSTRAINT `FOREIGN_case_note_note_data` FOREIGN KEY (`note_id`) REFERENCES `node_data` (`note_id`);
+
+--
+-- Constraints for table `case_resolution`
+--
+ALTER TABLE `case_resolution`
+  ADD CONSTRAINT `FOREIGN_case_resolution_case_type` FOREIGN KEY (`case_type_id`) REFERENCES `case_type` (`case_type_id`);
+
+--
+-- Constraints for table `case_role`
+--
+ALTER TABLE `case_role`
+  ADD CONSTRAINT `FOREIGN_case_role_case` FOREIGN KEY (`case_id`) REFERENCES `case_` (`case_id`),
+  ADD CONSTRAINT `FOREIGN_case_role_party` FOREIGN KEY (`party_id`) REFERENCES `party` (`party_id`),
+  ADD CONSTRAINT `FOREIGN_case_role_party_role` FOREIGN KEY (`role_type_id`) REFERENCES `party_role` (`role_type_id`);
+
+--
+-- Constraints for table `case_status`
+--
+ALTER TABLE `case_status`
+  ADD CONSTRAINT `FOREIGN_case_status_case` FOREIGN KEY (`case_id`) REFERENCES `case_` (`case_id`),
+  ADD CONSTRAINT `FOREIGN_case_status_status_item` FOREIGN KEY (`status_id`) REFERENCES `status_item` (`status_id`);
+
+--
+-- Constraints for table `case_type`
+--
+ALTER TABLE `case_type`
+  ADD CONSTRAINT `FOREIGN_case_type_case_type` FOREIGN KEY (`parent_type_id`) REFERENCES `case_type` (`case_type_id`);
 
 --
 -- Constraints for table `contact_mech_type`
@@ -2780,6 +3074,12 @@ ALTER TABLE `geo_type`
   ADD CONSTRAINT `FOREIGN_geo_type_geo_type` FOREIGN KEY (`parent_type_id`) REFERENCES `geo_type` (`geo_type_id`);
 
 --
+-- Constraints for table `node_data`
+--
+ALTER TABLE `node_data`
+  ADD CONSTRAINT `FOREIGN_note_data_party` FOREIGN KEY (`note_party`) REFERENCES `party` (`party_id`);
+
+--
 -- Constraints for table `organization`
 --
 ALTER TABLE `organization`
@@ -2790,6 +3090,7 @@ ALTER TABLE `organization`
 --
 ALTER TABLE `party`
   ADD CONSTRAINT `FOREIGN_party_party_type` FOREIGN KEY (`party_type_id`) REFERENCES `party_type` (`party_type_id`),
+  ADD CONSTRAINT `FOREIGN_party_status_item` FOREIGN KEY (`status_id`) REFERENCES `status_item` (`status_id`),
   ADD CONSTRAINT `FOREIGN_party_uom` FOREIGN KEY (`preferred_currency_uom_id`) REFERENCES `uom` (`uom_id`),
   ADD CONSTRAINT `FOREIGN_party_user_login` FOREIGN KEY (`created_by`) REFERENCES `user_login` (`user_login_id`);
 

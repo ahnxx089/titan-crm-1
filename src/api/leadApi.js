@@ -47,10 +47,6 @@ var leadApi = function (knex) {
         });
     };
 
-    // Lucas is taking this
-    // @param {Object} req - 
-    // 
-    
     /**
      * This method in api.js is called from presentation layer, or by ARC
      * It in turns, stripes the leadId paramenter from req, pass it to leadController
@@ -65,7 +61,6 @@ var leadApi = function (knex) {
         leadController.getLeadById(leadId)
             .then(function(lead) {
                 res.json(lead);
-            // maybe: res.json(person);
             });
     };
     
