@@ -120,10 +120,7 @@ var accountData = function (knex) {
         //TELECOM_NUMBER is the value of the contactmechtypeId where we want to join table entries
         //Is there really a telecom_number table in our titan_crm database? contactData mentions that there 
         //is, but I haven't seen one anywhere...
-        /*return knex.select('party_id', 'parent_party_id', 'company_name', 'annual_revenue', 'currency_uom_id', 'num_employees', 'industry_enum_id', 'ownership_enum_id', 'ticker_symbol', 'important_note', 'primary_postal_address', 'primary_telecom_number_id', 'primary_email_id', 'created_date', 'updated_date', 'organization.logo_image_url')
-        .from('party_supplemental_data')
-        .innerJoin('contact_mech', 'party_supplemental_data.primary_telecom_number_id', 'contact_mech.contact_mech_id')
-        .where({contact_mech.info_string: phoneNumber});*/
+        
         
     };
     
