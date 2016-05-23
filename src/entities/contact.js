@@ -3,7 +3,7 @@
 // Inherits from Person.  
 // Properties and validation methods.
 //
-// @file:   contact.js
+// @file:    contact.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
 //           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
@@ -19,8 +19,9 @@ var ContactMech = require('../entities/contactMech');
 //
 function Contact(partyId, partyTypeId, currencyUomId, description,
     statusId, createdBy, createdDate, updatedDate, salutation, firstName,
-    middleName, lastName, birthDate, comments, countryCode, areaCode, contactNumber, askForName, emailAddress, toName, attentionName,
-    addressLine1, addressLine2, city, stateOrProvinceId, zipOrPostalCode, countryId) {
+    middleName, lastName, birthDate, comments, countryCode, areaCode,
+    contactNumber, askForName, emailAddress, toName, attnName,
+    address1, address2, directions, city, stateProvinceGeoId, zipOrPostalCode, countryGeoId) {
 
     // Call the parent constructor (Person), making sure
     // that "this" is set correctly during the call
@@ -34,36 +35,24 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
 
     //Add an email address to contactMechs, if one is specified
     if (emailAddress) {
-        contactMech = new ContactMech(null, 'EMAIL_ADDRESS', emailAddress, createdDate, updatedDate);
-        this.contactMechs.add(contactMech);
-    }
-
-    //Add a postal address to contactMechs, if one is specified
-    if (addressLine1) {
-        contactMech = new ContactMech(null, 'POSTAL_ADDRESS', null, createdDate, updatedDate, {
-            toName: toName,
-            attentionName: attentionName,
-            addressLine1: addressLine1,
-            addressLine2: addressLine2,
-            city: city,
-            stateOrProvinceGeoId: stateOrProvinceId,
-            zipOrPostalCode: zipOrPostalCode,
-            countryGeoId: countryId,
-        });
-        this.contactMechs.add(contactMech);
+        contactMech = new ContactMech(null, 'EMAIL_ADDRESS', emailAddress, null, null);
+        this.contactMechs.push(contactMech);
     }
 
     //Add a phone number to contactMechs, if one is specified
     if (contactNumber) {
-        contactMech = new ContactMech(null, 'TELECOM_NUMBER', null, createdDate, updatedDate, {
-            countryCode: countryCode,
-            areaCode: areaCode,
-            contactNumber: contactNumber,
-            askForName: askForName
-        });
-        this.contactMechs.add(contactMech);
+        contactMech = new ContactMech(null, 'TELECOM_NUMBER', null, null, null,
+            countryCode, areaCode, contactNumber, askForName);
+        this.contactMechs.push(contactMech);
     }
 
+    //Add a postal address to contactMechs, if one is specified
+    if (address1) {
+        contactMech = new ContactMech(null, 'POSTAL_ADDRESS', null, null, null, null, null, null, null,
+            toName, attnName, address1, address2, directions, city, stateProvinceGeoId,
+            zipOrPostalCode, countryGeoId);
+        this.contactMechs.push(contactMech);
+    }
 }
 
 // Inherit from Person
@@ -86,11 +75,12 @@ Contact.prototype.validateForInsert = function () {
     }
 
     //Run validation methods for remaining properties
-    
+
     //Errors are non-empty validation results
     var errors = [];
-    for( i = 0; i < validations.length; i++) {
-        if(validations[i]) {
+    
+    for ( i = 0; i < validations.length; i++) {
+        if (validations[i]) {
             errors.push(validations[i]);
         }
     }
@@ -107,9 +97,10 @@ Contact.prototype.validateForUpdate = function () {
     }
 
     //Run validation methods for remaining properties
-    
+
     //Errors are non-empty validation results
     var errors = [];
+
     for( i = 0; i < validations.length; i++) {
         if(validations[i]) {
             errors.push(validations[i]);

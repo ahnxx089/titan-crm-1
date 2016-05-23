@@ -2,66 +2,69 @@
 // Data access layer module for contact mechanisms.
 //
 // @file:    contactMechData.js
-// @authors: Anurag Bhandari <anurag@ofssam.com>
-//           William T. Berg <william.thomas.berg@gmail.com>
+// @authors: William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
 
 var contactMechData = function (knex) {
 
+
     /**
      * Add a new contact in database
      * @param {Object} contact - The new contact entity to be added
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
-    var addContactMech = function (contactMech) {
-
+    var addContactMechToGeneralTable = function (contactMech) {
         return knex.insert({
                 contact_mech_type_id: contactMech.contactMechTypeId,
                 info_string: contactMech.infoString,
                 created_date: (new Date()).toISOString(),
                 updated_date: (new Date()).toISOString()
             })
-            .into('contact_mech')
-            .then(function (id) {
-                if (contactMech.contactMechTypeId === 'TELECOM_NUMBER') {
-                    return knex.inster({
-                            contact_mech_id: id,
-                            country_code: contactMech.countryCode,
-                            area_code: contactMech.areaCode,
-                            contact_number: contactMech.contactNumber,
-                            ask_for_name: contactMech.askForName,
-                            created_date: (new Date()).toISOString(),
-                            updated_date: (new Date()).toISOString()
-                        })
-                        .into('telecom_number')
-                        .then(function (value) {
-                            return id;
-                        });
-                } else if (contactMech.contactMechTypeId === 'POSTAL_ADDRESS') {
-                    return knex.inster({
-                            contact_mech_id: id,
-                            to_name: contactMech.toName,
-                            attn_name: contactMech.attnName,
-                            address1: contactMech.address1,
-                            address2: contactMech.address2,
-                            directions: contactMech.directions,
-                            city: contactMech.city,
-                            postal_code: contactMech.postalCode,
-                            country_geo_id: contactMech.countryGeoId,
-                            state_province_geo_id: contactMech.stateProvinceGeoId,
-                            created_date: (new Date()).toISOString(),
-                            updated_date: (new Date()).toISOString()
-                        })
-                        .into('postal_address')
-                        .then(function (value) {
-                            return id;
-                        });
-                } else {
-                    return id;
-                }
-            });
+            .into('contact_mech');
+    };
+
+    /**
+     * Add a new contact in database
+     * @param {Object} contact - The new contact entity to be added
+     * @return {Object} promise - Fulfillment value is id of row inserted
+     */
+    var addContactMechToPostalTable = function (contactMech) {
+        return knex.inster({
+                contact_mech_id: contactMech.contactMechId,
+                to_name: contactMech.toName,
+                attn_name: contactMech.attnName,
+                address1: contactMech.address1,
+                address2: contactMech.address2,
+                directions: contactMech.directions,
+                city: contactMech.city,
+                postal_code: contactMech.postalCode,
+                country_geo_id: contactMech.countryGeoId,
+                state_province_geo_id: contactMech.stateProvinceGeoId,
+                created_date: (new Date()).toISOString(),
+                updated_date: (new Date()).toISOString()
+            })
+            .into('postal_address');
+    };
+
+
+    /**
+     * Add a new contact in database
+     * @param {Object} contact - The new contact entity to be added
+     * @return {Object} promise - Fulfillment value is id of row inserted
+     */
+    var addContactMechToTelecomTable = function (contactMech) {
+        return knex.inster({
+                contact_mech_id: contactMech.contactMechId,
+                country_code: contactMech.countryCode,
+                area_code: contactMech.areaCode,
+                contact_number: contactMech.contactNumber,
+                ask_for_name: contactMech.askForName,
+                created_date: (new Date()).toISOString(),
+                updated_date: (new Date()).toISOString()
+            })
+            .into('telecom_number');
     };
 
     /**
@@ -186,7 +189,9 @@ var contactMechData = function (knex) {
     };
 
     return {
-        addContactMech: addContactMech,
+        addContactMechToGeneralTable: addContactMechToGeneralTable,
+        addContactMechToTelecomTable: addContactMechToTelecomTable,
+        addContactMechToPostalTable: addContactMechToPostalTable,
         getContactMechs: getContactMechs,
         getContactMechById: getContactMechById,
         updateContactMech: updateContactMech,

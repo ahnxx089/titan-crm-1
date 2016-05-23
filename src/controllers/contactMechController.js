@@ -2,14 +2,13 @@
 // Business logic module for contactMechs.
 //
 // @file:    contactMechController.js
-// @authors: Anurag Bhandari <anurag@ofssam.com>
-//           William T. Berg <william.thomas.berg@gmail.com>
+// @authors: William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
 
 var winston = require('winston');
-var Contact = require('../entities/contactMech.js');
+var ContactMech = require('../entities/contactMech.js');
 
 var contactController = function (knex) {
     // Get a reference to data layer module
@@ -22,48 +21,59 @@ var contactController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new party
      */
     var addContactMech = function (contactMech) {
-        /*
-        //get any extra parameters ready
-        var additionalParams;
-        if (contactMech.contactMechTypeId == 'POSTAL_ADDRESS') {
-            additionaParams = {
-                toName: contactMech.toName,
-                attentionName: contactMech.attentionName,
-                addressLine1: contactMech.addressLine1,
-                addressLine2: contactMech.addressLine2,
-                city: contactMech.city,
-                stateOrProvince: contactMech.stateOrProvince,
-                zipOrPostalCode: contactMech.zipOrPostalCode,
-                country: contactMech.country,
-                zipOrPostalCodeExtension: contactMech.zipOrPostalCodeExtension
-            }
-        } else if (contactMech.contactMechTypeId == 'TELECOM_NUMBER') {
-            additionaParams = {
-                countryCode: contactMech.countryCode,
-                areaCode: contactMech.areaCode,
-                contactNumber: contactMech.contactNumber,
-                askForName: contactMech.askForName
-            }
-        }
 
         // Convert the received object into an entity
-        var contactMechEntity = new contactMech(
-            contactMechId,
+        var contactMechEntity = new ContactMech(
+            contactMech.contactMechId,
             contactMech.contactMechTypeId,
             contactMech.infoString,
-            null, (new Date()).toISOString(),
-            additionalParams
+            contactMech.createdDate,
+            contactMech.updatedDate,
+            contactMech.countryCode,
+            contactMech.areaCode,
+            contactMech.contactNumber,
+            contactMech.askForName,
+            contactMech.toName,
+            contactMech.attnName,
+            contactMech.address1,
+            contactMech.address2,
+            contactMech.directions,
+            contactMech.city,
+            contactMech.stateProvinceGeoId,
+            contactMech.zipOrPostalCode,
+            contactMech.countryGeoId
         );
-        */
 
         // Validate the data before going ahead
-        var validationErrors = contactMech.validateForInsert();
+        var validationErrors = contactMechEntity.validateForInsert();
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
-            var promise = contactMechData.addContactMech(contactMech)
-                .then(function (contactMechId) {
-                    return contactMechId;
-                });
+            var promise;
+
+            if (this.contactMechTypeId === 'TELECOM_NUMBER') {
+                promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
+                    .then(function (contactMechId) {
+                        contactMechEntity.contactMechId = contactMechId;
+                        return contactMechData.addContactMechToTelecomTable(contactMechEntity)
+                            .then(function (input) {
+                                return contactMechId;
+                            });
+                    });
+            } else if (this.contactMechTypeId === 'POSTAL_ADDRESS') {
+                promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
+                    .then(function (contactMechId) {
+                        return contactMechData.addContactMechToPostalTable(contactMechEntity)
+                            .then(function (input) {
+                                return contactMechId;
+                            });
+                    });
+            } else {
+                promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
+                    .then(function (contactMechId) {
+                        return contactMechId;
+                    });
+            }
+
             promise.catch(function (error) {
                 winston.error(error);
             });
@@ -74,15 +84,77 @@ var contactController = function (knex) {
     };
 
     var getContactMechs = function () {
+        var promise = contactMechData.getContactMechs()
+            .then(function (contactMechs) {
+                // Map the retrieved result set to corresponding entities
+                var contactMechEntities = [];
+                for (var i = 0; i < contactMechs.length; i++) {
+                    var contactMech = new ContactMech(
+                        contactMechs[i].contactMechId,
+                        contactMechs[i].contactMechTypeId,
+                        contactMechs[i].infoString,
+                        contactMechs[i].createdDate,
+                        contactMechs[i].updatedDate,
+                        contactMechs[i].countryCode,
+                        contactMechs[i].areaCode,
+                        contactMechs[i].contactNumber,
+                        contactMechs[i].askForName,
+                        contactMechs[i].toName,
+                        contactMechs[i].attnName,
+                        contactMechs[i].address1,
+                        contactMechs[i].address2,
+                        contactMechs[i].directions,
+                        contactMechs[i].city,
+                        contactMechs[i].stateProvinceGeoId,
+                        contactMechs[i].zipOrPostalCode,
+                        contactMechs[i].countryGeoId
+                    );
 
-    };
-
-    var getContactMechsByContact = function (contact) {
-
+                    contactMechEntities.push(contactMech);
+                }
+                return contactMechEntities;
+            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
+        return promise;
     };
 
     var getContactMechById = function (contactMechId) {
-
+        var promise = contactMechData.getContactMechById(contactMechId)
+            .then(function (contactMech) {
+                // Map the retrieved result set to corresponding entity
+                var contactMechEntity;
+                if (contactMech.length > 0) {
+                    contactMechEntity = new ContactMech(
+                        contactMech[0].contactMechId,
+                        contactMech[0].contactMechTypeId,
+                        contactMech[0].infoString,
+                        contactMech[0].createdDate,
+                        contactMech[0].updatedDate,
+                        contactMech[0].countryCode,
+                        contactMech[0].areaCode,
+                        contactMech[0].contactNumber,
+                        contactMech[0].askForName,
+                        contactMech[0].toName,
+                        contactMech[0].attnName,
+                        contactMech[0].address1,
+                        contactMech[0].address2,
+                        contactMech[0].directions,
+                        contactMech[0].city,
+                        contactMech[0].stateProvinceGeoId,
+                        contactMech[0].zipOrPostalCode,
+                        contactMech[0].countryGeoId
+                    );
+                }
+                return contactMechEntity;
+            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
+        return promise;
     };
 
     /**
@@ -91,47 +163,34 @@ var contactController = function (knex) {
      * @param {Object} contact - The object that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateContactMech = function (contactMech) {
-        /*
-        //get any extra parameters ready
-        var additionalParams;
-        if (contactMech.contactMechTypeId == 'POSTAL_ADDRESS') {
-            additionaParams = {
-                toName: contactMech.toName,
-                attentionName: contactMech.attentionName,
-                addressLine1: contactMech.addressLine1,
-                addressLine2: contactMech.addressLine2,
-                city: contactMech.city,
-                stateOrProvince: contactMech.stateOrProvince,
-                zipOrPostalCode: contactMech.zipOrPostalCode,
-                country: contactMech.country,
-                zipOrPostalCodeExtension: contactMech.zipOrPostalCodeExtension
-            }
-        } else if (contactMech.contactMechTypeId == 'TELECOM_NUMBER') {
-            additionaParams = {
-                countryCode: contactMech.countryCode,
-                areaCode: contactMech.areaCode,
-                contactNumber: contactMech.contactNumber,
-                askForName: contactMech.askForName
-            }
-        }
-
-        // Convert the received object into an entity
-        var contactMechEntity = new contactMech(
-            contactMechId,
+    var updateContactMech = function (contactId, contactMech) {
+        var contactMechEntity = new ContactMech(
+            contactMech.contactMechId,
             contactMech.contactMechTypeId,
             contactMech.infoString,
-            null, (new Date()).toISOString(),
-            additionalParams
+            contactMech.createdDate,
+            contactMech.updatedDate,
+            contactMech.countryCode,
+            contactMech.areaCode,
+            contactMech.contactNumber,
+            contactMech.askForName,
+            contactMech.toName,
+            contactMech.attnName,
+            contactMech.address1,
+            contactMech.address2,
+            contactMech.directions,
+            contactMech.city,
+            contactMech.stateProvinceGeoId,
+            contactMech.zipOrPostalCode,
+            contactMech.countryGeoId
         );
-        */
 
         // Validate the data before going ahead
-        var validationErrors = contactMech.validateForUpdate();
+        var validationErrors = contactMechEntity.validateForUpdate();
 
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
-            var promise = contactMechData.updateContactMech(contactMech)
+            var promise = contactMechData.updateContactMech(contactMechEntity)
                 .then(function (contactMechId) {
                     return contactMechId;
                 });
@@ -164,7 +223,6 @@ var contactController = function (knex) {
     return {
         addContactMech: addContactMech,
         getContactMechs: getContactMechs,
-        getContactMechsByContact: getContactMechsByContact,
         getContactMechById: getContactMechById,
         updateContactMech: updateContactMech,
         deleteContactMech: deleteContactMech

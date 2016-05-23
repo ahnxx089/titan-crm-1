@@ -10,7 +10,7 @@
 // NOT COMPLETED! Skeleton only. 
 
 var validation = require('../common/validation')();
-var Person = require('../entities/person')();
+var Person = require('../entities/person');
 // Constructor
 // Lead is a Person, which is a Party
 // Party -> Person -> Lead
@@ -36,6 +36,7 @@ function Lead(partyId, partyTypeId, currencyUomId, description,
 // Inherit from Person (and automatically implictly from Party, maybe?)
 //
 Lead.prototype = Object.create(Person.prototype);
+
 // Set the "constructor" property to refer to Person
 Lead.prototype.constructor = Lead;
 
@@ -71,6 +72,5 @@ Lead.prototype.validateForUpdate = function () {
     ];
 };
 
-// Do we need this? 
 // Export the class as a module
 module.exports = Lead;

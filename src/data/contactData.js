@@ -1,8 +1,9 @@
 /////////////////////////////////////////////////
 // Data access layer module for contacts.
 //
-// @file:   contactData.js
-// @author: Dinesh Shenoy <astroshenoy@gmail.com>
+// @file:    contactData.js
+// @authors: Dinesh Shenoy <astroshenoy@gmail.com>
+//           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
