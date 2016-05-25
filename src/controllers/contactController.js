@@ -28,7 +28,7 @@ var contactController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new contact
      */
     var addContact = function (contact) {
-
+        
     };
 
     /**
@@ -39,36 +39,42 @@ var contactController = function (knex) {
     var getContactById = function (contactId) {
         var promise = contactData.getContactById(contactId)
             .then(function (contacts) {
-                // Map the retrieved result set to corresponding entity
-                var contactEntity = new Contact(
-                    contacts[0].party_id,
-                    contacts[0].party_type_id,
-                    contacts[0].currency_uom_id,
-                    contacts[0].description,
-                    contacts[0].status_id,
-                    contacts[0].created_by,
-                    contacts[0].created_date,
-                    contacts[0].updated_date,
-                    contacts[0].salutation,
-                    contacts[0].first_name,
-                    contacts[0].middle_name,
-                    contacts[0].last_name,
-                    contacts[0].birth_date,
-                    contacts[0].comments,
-                    contacts[0].country_code,
-                    contacts[0].area_code,
-                    contacts[0].contact_number,
-                    contacts[0].ask_for_name,
-                    contacts[0].email_address,
-                    contacts[0].to_name,
-                    contacts[0].attn_name,
-                    contacts[0].address1,
-                    contacts[0].address2,
-                    contacts[0].city,
-                    contacts[0].state_province_geo_id,
-                    contacts[0].zip_or_postal_code,
-                    contacts[0].country_geo_id
-                );
+                var contactEntity;
+                if (contacts.length > 0) {
+                    // Map the retrieved result set to corresponding entity
+                    contactEntity = new Contact(
+                        contacts[0].party_id,
+                        contacts[0].party_type_id,
+                        contacts[0].currency_uom_id,
+                        contacts[0].description,
+                        contacts[0].status_id,
+                        contacts[0].created_by,
+                        contacts[0].created_date,
+                        contacts[0].updated_date,
+                        contacts[0].salutation,
+                        contacts[0].first_name,
+                        contacts[0].middle_name,
+                        contacts[0].last_name,
+                        contacts[0].birth_date,
+                        contacts[0].comments,
+                        contacts[0].country_code,
+                        contacts[0].area_code,
+                        contacts[0].contact_number,
+                        contacts[0].ask_for_name,
+                        contacts[0].email_address,
+                        contacts[0].to_name,
+                        contacts[0].attn_name,
+                        contacts[0].address1,
+                        contacts[0].address2,
+                        contacts[0].city,
+                        contacts[0].state_province_geo_id,
+                        contacts[0].zip_or_postal_code,
+                        contacts[0].country_geo_id
+                    );
+                } else {
+                    contactEntity = new Contact();
+                };
+
                 return contactEntity;
             });
         promise.catch(function (error) {
