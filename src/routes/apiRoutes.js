@@ -55,8 +55,8 @@ var router = function (knex) {
     
     // LEADS, 7 in total: 1 post, 4 gets, 1 put, 1 delete
     var leadApi = require('../api/leadApi')(knex);
-    apiRouter.route('/leads')
-        .post(leadApi.addLead); // post only! NOT implemented yet
+//    apiRouter.route('/leads')
+//        .post(leadApi.addLead); // post only! NOT implemented yet
     apiRouter.route('/leads/:id')
         .get(leadApi.getLeadById);
         //.post(leadApi.updateLead)
