@@ -6,6 +6,8 @@
 // @author: Anurag Bhandari <anurag@ofssam.com>
 /////////////////////////////////////////////////
 
+/* jshint camelcase: false */
+
 var validator = require('validator');
 
 var validation = function () {
@@ -26,6 +28,10 @@ var validation = function () {
     var convertToInt = function (str) {
         return validator.toInt(str);
     };
+    
+    var convertToFloat = function (str) {
+        return validator.toFloat(str);
+    };
 
 
     // VALIDATION METHODS
@@ -38,6 +44,18 @@ var validation = function () {
         if (input) {
             if (!validator.isInt(input)) {
                 return label + ' must be an integer.';
+            }
+        }
+        return '';
+    };
+    
+    var validateFloat = function (input, isRequired, label) {
+        if (isRequired && !input) {
+            return label + ' is required.';
+        }
+        if (input) {
+            if (!validator.isFloat(input)) {
+                return label + ' must be a floating point number.';
             }
         }
         return '';
@@ -57,18 +75,6 @@ var validation = function () {
         }
         return '';
     };
-
-    var validateDate = function (input, isRequired, label) {
-        if (isRequired && !input) {
-            return label + ' is required.';
-        }
-        if (input) {
-            if (!validator.isDate(input)) {
-                return label + ' must be a valid date.';
-            }
-        }
-        return '';
-    };
     
     var validateBoolean = function (input, isRequired, label) {
         if (isRequired && !input) {
@@ -82,14 +88,54 @@ var validation = function () {
         return '';
     };
 
+    var validateDate = function (input, isRequired, label) {
+        if (isRequired && !input) {
+            return label + ' is required.';
+        }
+        if (input) {
+            if (!validator.isDate(input)) {
+                return label + ' must be a valid date.';
+            }
+        }
+        return '';
+    };
+    
+    var validateEmail = function (input, isRequired, label) {
+        if (isRequired && !input) {
+            return label + ' is required.';
+        }
+        if (input) {
+            if (!validator.isEmail(input, { allow_display_name: true })) {
+                return label + ' must be a valid email.';
+            }
+        }
+        return '';
+    };
+    
+    var validateUrl = function (input, isRequired, label) {
+        if (isRequired && !input) {
+            return label + ' is required.';
+        }
+        if (input) {
+            if (!validator.isURL(input)) {
+                return label + ' must be a valid URL.';
+            }
+        }
+        return '';
+    };
+
 
     return {
         sanitizeInput: sanitizeInput,
         convertToInt: convertToInt,
+        convertToFloat: convertToFloat,
         validateInt: validateInt,
+        validateFloat: validateFloat,
         validateString: validateString,
-        validateDate: validateDate,
         validateBoolean: validateBoolean,
+        validateDate: validateDate,
+        validateEmail: validateEmail,
+        validateUrl: validateUrl
     };
 
 };
