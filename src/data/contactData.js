@@ -19,233 +19,34 @@ var contactData = function (knex) {
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
     var addContact = function (contact) {
-        return knex.insert({
+        return knex('party')
+            .returning('party_id')
+            .insert({
                 party_type_id: contact.partyTypeId,
-                preferred_currency_uom_id: contact.currencyUomId,
+                preferred_currency_uom_id: contact.preferredCurrencyUomId,
                 description: contact.description,
                 status_id: contact.statusId,
                 created_by: contact.createdBy,
                 created_date: contact.createdDate,
                 updated_date: contact.updatedDate
             })
-            .into('party');
-        /* CAN/MUST KNEX BE GIVEN AN ADDITIONAL OPTION HERE TO DEAL WITH 
-            THE CASE OF A LEAD BEING CONVERTED TO A CONTACT, SINCE A LEAD 
-            ALREADY HAS A PARTY_ID? */
-    };
-
-    /**
-     * Add a new person in the database for this contact (SCENARIO 1 ABOVE)
-     *
-     * @param {Object} contact - The new contact entity to be added as a Person
-     * @return {Object} promise - Fulfillment value is id of row inserted
-     */
-    var addPerson = function (contact) {
-        return knex.insert({
-                party_id: contact.partyId,
-                salutation: contact.salutation,
-                first_name: contact.firstName,
-                middle_name: contact.middleName,
-                last_name: contact.lastName,
-                birth_date: contact.birthDate,
-                comments: contact.comments,
-                created_date: contact.createdDate,
-                updated_date: contact.updatedDate
-            })
-            .into('person');
-        /* CAN/MUST KNEX BE GIVEN AN ADDITIONAL OPTION HERE TO DEAL WITH 
-            THE CASE OF A LEAD BEING CONVERTED TO A CONTACT, SINCE A LEAD 
-            ALREADY EXISTS IN THE PERSON TABLE WITH A PARTY_ID? */
-    };
-
-    /**
-     * Add Contact's partyId to party_role table.  The value for role_type_id
-     * is 'CONTACT' (compare opentaps db tables party_role and role_type)
-     *
-     * @param {Object} contact - The new contact entity with info to add
-     * @return {Object} promise - Fulfillment value is id of row inserted
-     */
-    var addPartyRole = function (contact) {
-        return knex.insert({
-                party_id: contact.partyId,
-                role_type_id: 'CONTACT',
-                created_date: contact.createdDate,
-                updated_date: contact.updatedDate
-            })
-            .into('party_role');
-    };
-
-    /**
-     * @param {Object} contact - The new contact entity with info to add
-     * @return {Object} promise - Fulfillment value is id of row inserted
-     */
-    var addPartyRelationship = function (contact) {
-        /* EMPTY FOR NOW-- compare to opentaps db table party_relationship,
-            looks like adding a contact will require adding to this table,
-            but I am not yet clear what to add and why.  If adding to this table
-            also requires adding to table party_relationship_type, maybe
-            it can be taken care of in here too?  Moving on for now . . . 
-        */
-    };
-
-    /** Many entries into table party_supplemental_data will be null for 
-     *  a Contact that was not a Lead previously.  Presumably the Lead module
-     *  or Account module may add company info to this party in future? 
-     *  That will probably be accomplished when we implement a "Convert Lead"
-     *  feature as available in opentaps.
-     *
-     * @param {Object} contact - The new contact entity with info to add
-     * @return {Object} promise - Fulfillment value is id of row inserted
-     */
-    var addPartySupplementalData = function (contact) {
-        return knex.insert({
-                party_id: contact.partyId,
-                parent_party_id: null,
-                company_name: null,
-                annual_revenue: null,
-                currency_uom_id: contact.CurrencyUomId,
-                num_employees: null,
-                industry_enum_id: null,
-                ownership_enum_id: null,
-                ticker_symbol: null,
-                important_note: null,
-                primary_postal_address_id: null,
-                primary_telecom_number_id: null,
-                primary_email_id: null,
-                created_date: contact.createdDate,
-                updated_date: contact.updatedDate
-            })
-            .into('party_supplemental_data');
-    };
-
-    /* No addContactMech function:  Rather than make an addContactMech function, 
-        below are functions called addEmailAddress, addPostalAddress and 
-        addTelecomNumber.  This is done because a Contact can have one or more
-        types of contact mechanisms.  Following the opentaps db table contact_mech
-        structure, a Contact will get one or more unique contact_mech_id values in 
-        the contact_mech table if the Contact object comes in with one or more non-null
-        values for attributes emailAddress, addressLine1, contactNumber, etc.  
-        
-        We have no separate additional table of email addresses; instead in table
-        contact_mech the column contact_mech_type_id is set to 'EMAIL_ADDRESS'
-        and column info_string is set to the email address (as in opentaps).
-        
-        For postal addresses and telecom numbers, the contact_mech_type_id is set 
-        to their respective types and the unique contact_mech_id is also used
-        in their tables.
-        
-        QUESTION:  Do I need to do the necessary inserts to the matching table
-        party_contact_mech that will allow a Contact's unique party_id to be
-        matched to its one or more contact_mech_id's?  Or are matching tables
-        somehow generated automatically?
-    */
-
-    /** Add this Contact's email address to table contact_mech.  
-     *  String 'EMAIL_ADDRESS' is hardwired for column contact_mech_type_id,
-     *  that is how opentaps does it. 
-     *  
-     *  AUTO-GENERATION OF contact_mech_id:  The controller layer should pass in
-     *  null, so that contact_mech_id is autogenerated . . . 
-     * 
-     * @param {Object} contact - The new contact entity with info to add
-     * @return {Object} promise - Fulfillment value is id of row inserted
-     */
-    var addEmailAddress = function (contact) {
-        return knex.insert({
-                contact_mech_type_id: 'EMAIL_ADDRESS',
-                info_string: contact.emailAddress,
-                created_date: contact.createdDate,
-                updated_date: contact.updatedDate
-            })
-            .into('contact_mech');
-    };
-
-    /** Add this Contact's postal address to BOTH table contact_mech AND
-     *  table postal_address.  Table postal_address needs the contact_mech_id
-     *  value auto-generated by inserting 'POSTAL_ADDRESS' to table contact_mech.
-     *
-     * @param {Object} contact - The new contact entity with info to add
-     * @return {Object} promise - Fulfillment value is id of row inserted
-     */
-    var addPostalAddress = function (contact) {
-
-        // declare empty array to push two knex inserts onto; return below
-        var insertArr = [];
-
-        // insert into table contact_mech, generating a contact_mech_id
-        insertArr.push(
-            knex.insert({
-                contact_mech_type_id: 'POSTAL_ADDRESS',
-                info_string: null,
-                created_date: contact.createdDate,
-                updated_date: contact.updatedDate
-            })
-            .into('contact_mech')
-        );
-
-        // insert into table postal_address
-        // QUESTION:  HOW TO KNOW WHAT contact_mech_id WAS JUST ASSIGNED
-        // IN ORDER TO INSERT INTO postal_address TABLE?
-        insertArr.push(
-            knex.insert({
-                contact_mech_id: contact.contactMechId,
-                to_name: contact.toName,
-                attn_name: contact.attentionName,
-                address1: contact.addressLine1,
-                address2: contact.addressLine2,
-                directions: null,
-                city: contact.city,
-                postal_code: contact.zipOrPostalCode,
-                country_geo_id: contact.countryId,
-                state_province_geo_id: contact.stateOrProvinceId,
-                created_date: contact.createdDate,
-                updated_date: contact.updatedDate
-            })
-            .into('postal_address')
-        );
-
-        return insertArr;
-    };
-
-    /** Add this Contact's postal address to BOTH table contact_mech AND
-     *  table telecom_number.  Table telecom_number needs the contact_mech_id
-     *  value auto-generated by inserting 'TELECOM_NUMBER' to table contact_mech.
-     *
-     * @param {Object} contact - The new contact entity with info to add
-     * @return {Object} promise - Fulfillment value is id of row inserted
-     */
-    var addTelecomNumber = function (contact) {
-
-        // declare empty array to push two knex inserts onto; return below
-        var insertArr = [];
-
-        // insert into table contact_mech, generating a contact_mech_id
-        insertArr.push(
-            knex.insert({
-                contact_mech_type_id: 'TELECOM_NUMBER',
-                info_string: null,
-                created_date: contact.createdDate,
-                updated_date: contact.updatedDate
-            })
-            .into('contact_mech')
-        );
-
-        // insert into table telecom_number
-        // QUESTION:  HOW TO KNOW WHAT contact_mech_id WAS JUST ASSIGNED
-        // IN ORDER TO INSERT INTO telecom_number TABLE?
-        insertArr.push(
-            knex.insert({
-                contact_mech_id: contact.contactMechId,
-                area_code: contact.areaCode,
-                contact_number: contact.contactNumber,
-                ask_for_name: contact.askForName,
-                created_date: contact.createdDate,
-                updated_date: contact.updatedDate
-            })
-            .into('telecom_number')
-        );
-
-        return insertArr;
+            .then(function (party_id) {
+                return knex('person').insert({
+                    party_id: party_id,
+                    salutation: contact.salutation,
+                    first_name: contact.firstName,
+                    middle_name: contact.middleName,
+                    last_name: contact.lastName,
+                    birth_date: contact.birthDate,
+                    comments: contact.comments,
+                    created_date: contact.createdDate,
+                    updated_date: contact.updatedDate
+                });
+            });
+            // ADDITIONAL WORK TO BE DONE HERE TO EXPAND KNEX STATEMENT TO DO THE MANY MORE INSERTS
+            // INTO SUB-TABLES, OR FIGURE OUT SOME OTHER WAY.  JUST REMEMBER THAT I GET ONE RETURN
+            // STATEMENT-- addContact GETS ONE return knex(...).().() OR WHATEVER.   BUT AT LEAST FIRST
+            // TEST AND CONFIRM THAT THIS contactData.js DOES AT LEAST WHAT addPerson DOES.
     };
 
     /**

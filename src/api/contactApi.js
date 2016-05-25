@@ -22,9 +22,25 @@ var contactApi = function (knex) {
     // API methods
     // ==========================================
     //
-    // POST /api/  -- IN DEVELOPMENT
+    // POST /api/contacts
     var addContact = function (req, res) {
-
+        var contact = req.body;
+        var user = req.user;
+        var result = contactController.addContact(contact, user);
+        //console.log('\ncontactApi.addContact:  controller returned result = ', result);
+        // An array in result means it's array of validation errors
+        if (Object.prototype.toString.call(result) === '[object Array]') {
+            res.json(result);
+        }
+        // An object in result means it's a promise
+        // (which is returned only if validation succeeds)
+        else {
+            result.then(function (partyId) {
+                res.json({
+                    partyId: partyId
+                });
+            });
+        }
     };
 
     // GET /api/contacts

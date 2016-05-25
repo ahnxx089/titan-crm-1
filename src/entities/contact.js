@@ -24,7 +24,6 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
     Person.call(this, partyId, partyTypeId, currencyUomId, description,
         statusId, createdBy, createdDate, updatedDate,
         salutation, firstName, middleName, lastName, birthDate, comments);
-
 }
 
 // Inherit from Person
@@ -38,8 +37,9 @@ Contact.prototype.constructor = Contact;
 //
 Contact.prototype.validateForInsert = function () {
     //Run parent validaton method
-    var validations = Person.prototype.validateForInsert.call(this);
-
+    var errors = Person.prototype.validateForInsert.call(this);
+    console.log('\nin Contact.prototype.validateForInsert, errors = ', errors);
+    
     //Run validation methods for remaining properties
     //
     // true means required, false means nullable
@@ -58,11 +58,13 @@ Contact.prototype.validateForInsert = function () {
             this.validateZipOrPostalCode(true),
             this.validateCountryId(true)
     ];
+    console.log('\nin Contact.prototype.validateForInsert, contactSpecificValidations = ', contactSpecificValidations);
+
+    
     //Errors are non-empty validation results
-    var errors = [];
-    for (var i = 0; i < validations.length; i++) {
-        if (validations[i]) {
-            errors.push(validations[i]);
+    for (var i = 0; i < contactSpecificValidations.length; i++) {
+        if (contactSpecificValidations[i]) {
+            errors.push(contactSpecificValidations[i]);
         }
     }
     return errors;
@@ -70,7 +72,7 @@ Contact.prototype.validateForInsert = function () {
 
 Contact.prototype.validateForUpdate = function () {
     //Run parent validaton method
-    var validations = Person.prototype.validateForUpdate.call(this);
+    var errors = Person.prototype.validateForUpdate.call(this);
 
     //Run validation methods for remaining properties
     //
@@ -91,11 +93,9 @@ Contact.prototype.validateForUpdate = function () {
             this.validateCountryId(true)
     ];
     //Errors are non-empty validation results
-    var errors = [];
-
-    for (var i = 0; i < validations.length; i++) {
-        if (validations[i]) {
-            errors.push(validations[i]);
+    for (var i = 0; i < contactSpecificValidations.length; i++) {
+        if (contactSpecificValidations[i]) {
+            errors.push(contactSpecificValidations[i]);
         }
     }
     return errors;
@@ -195,7 +195,6 @@ Contact.prototype.validateCountryId = function (isRequired) {
     var validationResult = validation.validateString(this.countryId, isRequired, 20, 'countryId');
     return validationResult;
 };
-
 
 // Export the class as a module
 module.exports = Contact;

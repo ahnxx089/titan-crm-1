@@ -66,11 +66,6 @@ Person.prototype.validateForInsert = function () {
         this.validateComments(false)
     ]; 
     
-    // The "errors" array is "validations" array
-    // with empty string elements weeded out
-    // If all validations succeed,
-    // "errors" will have 0 elements.
-
     for(var i=0; i < specificValidations.length; i++) {
         if(specificValidations[i]) {
             errors.push(specificValidations[i]);
