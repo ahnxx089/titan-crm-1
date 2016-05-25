@@ -8,9 +8,25 @@
 /* jshint camelcase: false */
 
 // NOT COMPLETED! 
+// WARNING!
+// updateLead, deleteLead ARE NOT FULLY IMPLEMENTED! 
+// addLead, getLeadById, getLeadsByOwner are tested and functional. 
+// getLeads may need revision. It is not used now. Don't remove yet. 
 
 var leadData = function (knex) {
 
+    
+    // DATA METHODS
+    /**
+     * Methods in XXXdata.js are called from Controller layer,
+     * They accept lead entities from controllers, and insert them into database.
+     * They also query the database based on the creteria from controllers, and giving back (queried) columns to controllers. 
+    */
+    // ==========================================
+    //
+    
+    
+    // Lucas's taking this
     /**
      * Add a new lead in database
      * @param {Object} lead - The new lead entity to be added
@@ -18,12 +34,17 @@ var leadData = function (knex) {
      */
     var addLead = function (lead) {
         // this achieves goals mentioned on slide # 17
+        // #1, 2, 3, 5: good
+        // #4, 6, 7 are not implemented at this moment
+
 
         //NOTE TO LUCAS AND DIVINE: Below changes to this function were made by Eric to resolve errors crashing the app
+        // Thank you from Lucas. 
 
         return knex('party')
             .returning('party_id')
             .insert({
+                // ok to put dummy data here
                 party_type_id: lead.partyTypeId,
                 preferred_currency_uom_id: lead.preferredCurrencyUomId,
                 description: lead.description,
@@ -46,7 +67,7 @@ var leadData = function (knex) {
                         created_date: lead.createdDate,
                         updated_date: lead.updatedDate
                     })
-            .then(function (party_id) {
+            .then(function (party_id) { // maybe change the param to res? not tested yet
                 return knex('party_supplemental_data')
                     .insert({
                         party_id: res[0],
@@ -61,73 +82,57 @@ var leadData = function (knex) {
             });
         });
 
-
-        // would this be returned as well? 
-        // #2
-        /*return knex.insert({
-            party_id: lead.partyId,
-            salutation: lead.salutation,
-            first_name: lead.firstName,
-            middle_name: lead.middleName,
-            last_name: lead.lastName,
-            birth_date: lead.birthDate,
-            comments: lead.comments,
-            created_date: lead.createdDate,
-            updated_date: lead.updatedDate
-        })
-        .into('person');*/
-
-        // #3
-        /*return knex.insert({
-            party_id: lead.partyId,
-            parent_party_id: lead.parentPartyId,
-            company_name: lead.companyName,
-            annual_revenue: lead.annualRevenue,
-            currency_uom_id: lead.preferredCurrencyUomId, // not the same? 
-            num_employees: lead.numEmployees,
-            ownership_enum_id: lead.ownership_enum_id,
-            
-            created_date: lead.createdDate,
-            updated_date: lead.updatedDate
-        })
-        .into('party_supplemental_data');*/
-
-        // #4, #6, #7 are not to be implemented at this moment
-        // #5: good
-
-
     };
 
+    // Lucas's taking this
     /**
-     * Gets all parties from database
+     * Gets all leads from database
      * @return {Object} promise - Fulfillment value is an array of raw data objects
+     * THIS FUNCTION IS OBSOLETE. Need revision or removal. 
      */
     var getLeads = function () {
         return knex.select('party_id', 'salutation', 'first_name', 'middle_name', 'last_name', 'birth_date', 'comments', 'created_date', 'updated_date')
             .from('person');
-
     };
 
+    // Lucas's taking this
     /**
-     * Gets one party by its id from database
+     * Gets one lead by its id from database
      * @param {Number} partyId - Unique id of the party (grandparent of lead) to be fetched
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getLeadById = function (id) {
-//        return knex.select('party_id', 'salutation', 'first_name', 'middle_name', 'last_name', 'birth_date', 'comments', 'created_date', 'updated_date')
+//        return knex.select('party_id', 'salutation', 'first_name', 'middle_name', 
+//                           'last_name', 'birth_date', 'comments', 'created_date', 'updated_date')
 //            .from('person')
 //            .where({
 //                party_id: id
 //            });
         
-        return knex.from('person').innerJoin('party', 'person.party_id', 'party.party_id').innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id').where('person.party_id', id);
+        return knex.from('person')
+            .innerJoin('party', 'person.party_id', 'party.party_id')
+            .innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id')
+            .where('person.party_id', id);
     };
 
+    
+    // Lucas's taking this
+    /**
+     * Gets leads by its owner (the one by whom they are created) from database
+     * @param {Number} ownerId - Unique id of the owner of leads
+     * @return {Object} promise - Fulfillment value is a raw data object
+     */
+    var getLeadsByOwner = function (ownerId) {
+        return knex.from('person')
+            .innerJoin('party', 'person.party_id', 'party.party_id')
+            .innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id')
+            .where('party.created_by', ownerId);
+    };
 
+    
+    
     // WARNING
-    // updateLead, deleteLead ARE NOT IMPLEMENTED! 
-    // updateParty, deleteParty should be deleted later! 
-
+    // updateLead, deleteLead ARE NOT FULLY IMPLEMENTED! See beginning for more detail. 
 
     /**
      * Update a lead in database
@@ -148,6 +153,10 @@ var leadData = function (knex) {
             });
     };
 
+    
+    // Divine: Follow my example of adding leads. 
+    // You need to delete the leads from Party_supplemental_data, Person and serveral other tables, 
+    // before deleting (the rest of) that lead in Party table
     /**
      * Delete a lead from database
      * @param {Number} leadId - Unique id (actually partyId) of the lead to be deleted
@@ -163,6 +172,7 @@ var leadData = function (knex) {
 
     return {
         addLead: addLead,
+        getLeadsByOwner: getLeadsByOwner,
 //        getLeads: getLeads,
         getLeadById: getLeadById,
 //        updateLead: updateLead,
