@@ -36,9 +36,15 @@ var accountApi = function (knex) {
             });
         }
     };
+
+   
+    // GET /api/accounts/?identity=
+    var getAccountByIdentity = function (req, res) {
+        
+    }
     
     // GET /api/accounts/?owner=
-    var getAccountByDummyVar1 = function (req, res) {
+    var getAccountsByOwner = function (req, res) {
         var ownerId = req.params.owner;
         accountController.getAccountByOwner(ownerId)
             .then(function (accounts) {
@@ -46,8 +52,8 @@ var accountApi = function (knex) {
             });
     };
     
-    // GET /api/
-    var getAccountByDummyVar2 = function (req, res) {
+    // GET /api/accounts
+    var getAccounts = function (req, res) {
         accountController.getAccounts()
             .then(function (accounts) {
                 res.json(accounts);
@@ -55,7 +61,7 @@ var accountApi = function (knex) {
     };
     
     // GET /api/accounts/?phoneNumber=
-    var getAccountByDummyVar3 = function (req, res) {
+    var getAccountByPhoneNumber = function (req, res) {
         var partyId = req.params.id;
         accountController.getAccountByPhoneNumber(partyId)
 		      .then(function(accounts) {
@@ -101,5 +107,7 @@ var accountApi = function (knex) {
         deleteAccount: deleteAccount
     };
 };
+
+//Discussion with Dinesh indicates that we may want to heavily consider placing conditions into our getAccounts method so that we centralize all requests to get accounts by different attributes under the one getAccounts method. This would help avoid the proliferation of different API method URLs. 
     
 module.exports = accountApi;
