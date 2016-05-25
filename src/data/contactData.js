@@ -12,21 +12,8 @@
 
 var contactData = function (knex) {
 
-    /* There are two scenarios for adding Contacts:
-        (1) A Contact might be a new Party/Person in the database (for example,
-            we already have an Account and they assign one of their employees
-            to be our new contact for processing their orders.)  Therefore 
-            contactData gets functions addParty() and addPerson() below.
-        (2) A Contact might already be a Party/Person in our database because
-            they started as a Lead and have just been converted to a Contact
-            due to their Organization becoming an Account.  In this case adding 
-            the new Contact should NOT involve adding a new Party/Person.
-            HOW SHOULD THIS SECOND CASE BE HANDLED?  SEE COMMENTS BELOW AT THE END
-            OF FUNCTIONS addParty() AND addPerson(), IS THERE A WAY TO DO IT WITH KNEX?
-    */
-
     /**
-     * Add a new party in the database for this contact (SCENARIO 1 ABOVE)
+     * Add a new party in the database -- IN DEVELOPMENT
      *
      * @param {Object} contact - The new contact entity to be added as a Party
      * @return {Object} promise - Fulfillment value is id of row inserted
@@ -261,22 +248,6 @@ var contactData = function (knex) {
         return insertArr;
     };
 
-
-    /**
-     * Gets all contacts from database
-     * @return {Object} promise - Fulfillment value is an array of raw data objects
-     */
-    var getContacts = function () {
-        // A party is a contact iff role_type_id in party_role is set to 'CONTACT'.
-        // Reach that info by joining table party to matching table party_role to 
-        // table role_type.   
-        return knex.select('party.party_id')
-            .from('party')
-            .innerJoin('party_role', 'party_role.party_id', 'party.party_id')
-            .innerJoin('role_type', 'role_type.role_type', 'party_role.role_type_id')
-            .where('role_type.role_type', 'CONTACT');
-    };
-
     /**
      * Gets one contact by its id from database
      * @param {Number} contactId - Unique id of the contact to be fetched
@@ -295,8 +266,8 @@ var contactData = function (knex) {
     };
 
     /**
-     * Gets all contacts from database for a specified owner's party_id
-     * @param {Number} ownerId - Unique party_id of the owner whose contacts to be fetched
+     * Gets all contacts from database for the user/owner making this GET request
+     * @param {Number} ownerId - Unique party_id of the user/owner whose contacts to be fetched
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getContactsByOwner = function (ownerId) {
@@ -305,8 +276,8 @@ var contactData = function (knex) {
         // contact can be passed by this function back to the controller layer.
         return knex.select('party.party_id')
             .from('party_relationship')
-            .innerJoin('party','party.party_id','party_relationship.party_id_from')
-            .whereIn('role_type_id_to', ['PERSON_ROLE','SALES_REP','ACCOUNT_MANAGER'])
+            .innerJoin('party', 'party.party_id', 'party_relationship.party_id_from')
+            .whereIn('role_type_id_to', ['PERSON_ROLE', 'SALES_REP', 'ACCOUNT_MANAGER'])
             .andWhere('party_relationship_type_id', 'RESPONSIBLE_FOR')
             .andWhere('role_type_id_from', 'CONTACT')
             .andWhere('party_id_to', ownerId);
@@ -350,7 +321,6 @@ var contactData = function (knex) {
 
     return {
         addContact: addContact,
-        getContacts: getContacts,
         getContactById: getContactById,
         getContactsByOwner: getContactsByOwner,
         updateContact: updateContact,

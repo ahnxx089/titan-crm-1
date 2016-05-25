@@ -22,35 +22,53 @@ var contactApi = function (knex) {
     // API methods
     // ==========================================
     //
-    // POST /api/
+    // POST /api/  -- IN DEVELOPMENT
     var addContact = function (req, res) {
 
     };
 
-    // GET Methods:  there are several specific methods for
-    // getting Contacts using the route /api/contacts/ 
-    // They are handled in this function
+    // GET /api/contacts
+    // 
+    // Methods:  there are two specific methods for getting Contacts using 
+    // this route /api/contacts/ 
+    // They are handled in this "meta" function called getContacts()
+    // with IF blocks that test whether the user entered a query string
+    // seeking to get Contacts by Owner, by Identity or other ways
+    // (besides getContactById, which is on a separate route).
     var getContacts = function (req, res) {
 
-        /* The if blocks test for whether the user entered a query string
-            seeking to get Contacts by Owner, by Identity or other ways
-            (besides getContactById, which is on a separate route).
-           
-            Note:  there no longer is a general getContacts()
-            function to get all contacts, that was just for initial testing.
-            Once user authorization is implemented, the only user who should
-            be able to get ALL Contacts regardless of Owner will be user:admin, 
-            and admin will use getContactsByOwner() for that... that might require
-            re-writing contactData.getContactsByOwner, but that is the
-            plan for now.
-        */
+        // DINESH'S DIAGNOSTICS (COMMENTED OUT, PLEASE DO NOT DELETE FOR NOW)
+        // Shows req.user.securityPermissions contains this user's one or more security permissions.
+        //console.log('\nin contactApi.getContacts: req.user.userID = ', req.user.userId);
+        //console.log('in contactApi.getContacts: req.user.partyID = ', req.user.partyId);
+        //console.log('in contactApi.getContacts: req.user.securityPermissions = ', req.user.securityPermissions);
 
-        // GET /api/contacts?owner=
+        // GET /api/contacts?owner
         //
-        // This if block triggers if a query by owner has been made.
-        if (req.query.owner) {
-            var ownerId = req.query.owner;
-            contactController.getContactsByOwner(ownerId)
+        // getContactsByOwner:  an IF block triggers it if a query by owner has been made
+        // 
+        // REMINDER:  We do not use the query string to identify the owner/user who is making
+        // this request.  See:  http://www.ofssam.com/forums/showthread.php?tid=37
+        // With an api route of: /api/contacts?owner the result is req.query = { owner: '' }.
+        // It is fine that property 'owner' is an empty string; what matters is that 
+        // req.query HAS a property 'owner'.  It gets that property when route is /api/contacts?owner
+        // That is how the IF block triggers.
+        //
+        // For a user with valid token, at this point req.user.securityPermissions = 
+        // [ 'FULLADMIN' ] or [ 'CONTACT_OWNER' ] or [ 'PARTY_ADMIN' ] (all of which are
+        // security permissions that the owner of a Contact might have.)  
+        // By contrast and for reasons I cannot explain or figure out, a user with a valid
+        // token but whose security permission is, e.g., LEAD_OWNER and does not have 
+        // contact owner permission, req.user.securityPermission comes in as an empty array.
+        // And yes, that is for a user whose entry in the party_role table has them listed
+        // as a LEAD_OWNER.  Why would their security permission not make it in even to
+        // the API layer?  I do not know. For getContactsByOwner, I deal with 
+        // req.user.securityPermissions being an empty array in the controller layer.        
+        //
+        if (req.query.hasOwnProperty('owner')) {
+            var ownerId = req.user.partyId;
+            var userSecurityPerm = req.user.securityPermissions;
+            contactController.getContactsByOwner(ownerId, userSecurityPerm)
                 .then(function (contacts) {
                     res.json(contacts);
                 });
@@ -58,12 +76,19 @@ var contactApi = function (knex) {
 
         // *** DINESH HAS NOT IMPLEMENTED YET:  getContactsByIdentity
         //
-        // GET /api/contacts?IDENTITY=   <--- WORK OUT THIS QUERY STRING!
+        // GET /api/contacts?identity
         //if ( req.query.WHAT??? ) {
         //    contactController.getContactsByIdentity()
         //        .then(function (contacts) {
         //            res.json(contacts);
         //        });
+        //}
+
+        // GET /api/contacts?phoneNum
+        //if (INSERT LOGIC HERE){
+        //     var getContactByPhoneNum = function (req, res) {
+        //
+        //    };  
         //}
 
         // If the request did not properly pass any of the various if tests
@@ -84,39 +109,6 @@ var contactApi = function (knex) {
             });
     };
 
-    /* DINESH IS ELIMINATING THIS SOON:
-    // GET /api/contactsByOwner/:owner
-    // NOTE: req.query looks for a query string of ?
-    var getContactsByOwner = function (req, res) {
-        var ownerId = req.query.owner;
-        contactController.getContactsByOwner(ownerId)
-            .then(function (contacts) {
-                res.json(contacts);
-            });
-    };*/
-
-    // GET /api/contacts/:<name?>
-    // FIRST NAME? LAST NAME?
-    // BILL-- let it take many variables 
-    var getContactByName = function (req, res) {
-
-    };
-
-    // GET /api/contacts/:phoneNum
-    var getContactByPhoneNum = function (req, res) {
-
-    };
-
-    // GET /api/contacts/:advanced
-    var getContactByAdvanced = function (req, res) {
-
-    };
-
-    // GET /api/contacts/:addressinfo
-    // CITY?  COUNTRY?  STATE/PROVINCE? POSTAL CODE
-    var getContactByAddressInfo = function (req, res) {
-
-    };
     // PUT /api/contacts/:id
     var updateContact = function (req, res) {
         var contactId = req.params.id;

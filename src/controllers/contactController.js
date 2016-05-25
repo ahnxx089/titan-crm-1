@@ -23,66 +23,13 @@ var contactController = function (knex) {
     //
 
     /**
-     * Add a new contact
+     * Add a new contact  -- IN DEVELOPMENT
      * @param {Object} contact - The new contact to be added
      * @return {Object} promise - Fulfillment value is id of new contact
      */
     var addContact = function (contact) {
 
     };
-
-
-    /**
-     * Gets all contacts --DEACTIVAVTED, THIS WAS FOR INITIAL TESTING, DON'T 
-     * DELETE IT FOR NOW, PLEASE . . . WHEN MOST FUNCTIONALITY IS WORKING, 
-     * WE CAN DELETE IT FOR GOOD...
-     * @return {Object} promise - Fulfillment value is an array of contact entities
-     */
-    //var getContacts = function () {
-    //    var promise = contactData.getContacts()
-    //        .then(function (contacts) {
-    //            // Map the retrieved result set to corresponding entities
-    //            var contactEntities = [];
-    //            for (var i = 0; i < contacts.length; i++) {
-    //                var contact = new Contact(
-    //                    contacts[i].party_id,
-    //                    contacts[i].party_type_id,
-    //                    contacts[i].currency_uom_id,
-    //                    contacts[i].description,
-    //                    contacts[i].status_id,
-    //                    contacts[i].created_by,
-    //                    contacts[i].created_date,
-    //                    contacts[i].updated_date,
-    //                    contacts[i].salutation,
-    //                    contacts[i].first_name,
-    //                    contacts[i].middle_name,
-    //                    contacts[i].last_name,
-    //                    contacts[i].birth_date,
-    //                    contacts[i].comments,
-    //                    contacts[i].country_code,
-    //                    contacts[i].area_code,
-    //                    contacts[i].contact_number,
-    //                    contacts[i].ask_for_name,
-    //                    contacts[i].email_address,
-    //                    contacts[i].to_name,
-    //                    contacts[i].attn_name,
-    //                    contacts[i].address1,
-    //                    contacts[i].address2,
-    //                    contacts[i].city,
-    //                    contacts[i].state_province_geo_id,
-    //                    contacts[i].zip_or_postal_code,
-    //                    contacts[i].country_geo_id
-    //                );
-    //                contactEntities.push(contact);
-    //            }
-    //            return contactEntities;
-    //        });
-    //    promise.catch(function (error) {
-    //        // Log the error
-    //        winston.error(error);
-    //    });
-    //    return promise;
-    //};
 
     /**
      * Gets one contact by its id
@@ -132,53 +79,108 @@ var contactController = function (knex) {
     };
 
     /**
-     * Gets all contacts for a specified owner's party_id
+     * Gets contacts owned by the user/owner
      * @return {Object} promise - Fulfillment value is an array of contact entities
      */
-    var getContactsByOwner = function (ownerId) {
-        var promise = contactData.getContactsByOwner(ownerId)
-            .then(function (contacts) {
-                // Map the retrieved result set to corresponding entities
-                var contactEntities = [];
-                for (var i = 0; i < contacts.length; i++) {
-                    var contact = new Contact(
-                        contacts[i].party_id,
-                        contacts[i].party_type_id,
-                        contacts[i].currency_uom_id,
-                        contacts[i].description,
-                        contacts[i].status_id,
-                        contacts[i].created_by,
-                        contacts[i].created_date,
-                        contacts[i].updated_date,
-                        contacts[i].salutation,
-                        contacts[i].first_name,
-                        contacts[i].middle_name,
-                        contacts[i].last_name,
-                        contacts[i].birth_date,
-                        contacts[i].comments,
-                        contacts[i].country_code,
-                        contacts[i].area_code,
-                        contacts[i].contact_number,
-                        contacts[i].ask_for_name,
-                        contacts[i].email_address,
-                        contacts[i].to_name,
-                        contacts[i].attn_name,
-                        contacts[i].address1,
-                        contacts[i].address2,
-                        contacts[i].city,
-                        contacts[i].state_province_geo_id,
-                        contacts[i].zip_or_postal_code,
-                        contacts[i].country_geo_id
-                    );
-                    contactEntities.push(contact);
+    var getContactsByOwner = function (ownerId, userSecurityPerm) {
+
+        // SECURITY PERMISSIONS ARE MOSTLY IMPLEMENTED HERE:  
+        //  1. For a user with permission to own a Contact, it proceeds to data layer and upon
+        //      return it returns up to Api layer a function.
+        //  2. But for a user without permission to own a Contact (e.g., only a Lead Owner),
+        //      it does not yet return a function that the Api layer knows what to do with ...
+        //      still need to work that out...
+
+        // DIAGNOSTICS -- UNCOMMENT TO SEE WHAT THE INCOMING ARGUMENTS CONTAIN
+        //console.log('\nin contactController.getContactsByOwner: ownerId = ', ownerId);
+        //console.log('in contactController.getContactsByOwner: userSecurityPerm = ', userSecurityPerm);
+
+        // Check security permissions of user against accepted permissions for this function
+        // Start by assuming this user does not have permission, until proven otherwise.
+        var hasPermission = false;
+
+        // Per comments above in API layer, for unknown reasons a user with valid token
+        // such as a LEAD_OWNER at the Api layer ITSELF comes in with userSecurityPerm empty!
+        // That does not make sense-- a LEAD_OWNER for whom I've created a token should at least
+        // be able to pass into this function their permission as [ 'LEAD_OWNER' ] instead of
+        // it coming in as an empty array [ ].  I have added NO logic in the Api layer to
+        // screen for permission; the whole point is to implement it here in the controller layer.
+        // I can't explain it.  For now I must check to see if there even is a permission in
+        // userSecurityPerm; if yes, then it proceeds to loop through userSecurityPerm for any one 
+        // of the correct permissions for owning a Contact to allow this user's request to pass to 
+        // the data layer.
+        if (userSecurityPerm.length > 0) {
+
+            // loop over userSecurityPerm in case user has more than one permission 
+            for (var i = 0; i < userSecurityPerm.length; i++) {
+                if (userSecurityPerm[i] === 'FULLADMIN') {
+                    hasPermission = true;
                 }
-                return contactEntities;
+                if (userSecurityPerm[i] === 'PARTYADMIN') {
+                    hasPermission = true;
+                }
+                if (userSecurityPerm[i] === 'CONTACT_OWNER') {
+                    hasPermission = true;
+                }
+            }
+        }
+        if (hasPermission) {
+
+            // user has permission, proceed to the data layer
+            var promise = contactData.getContactsByOwner(ownerId)
+                .then(function (contacts) {
+
+                    // Map the retrieved result set to corresponding entities
+                    var contactEntities = [];
+                    for (var i = 0; i < contacts.length; i++) {
+                        var contact = new Contact(
+                            contacts[i].party_id,
+                            contacts[i].party_type_id,
+                            contacts[i].currency_uom_id,
+                            contacts[i].description,
+                            contacts[i].status_id,
+                            contacts[i].created_by,
+                            contacts[i].created_date,
+                            contacts[i].updated_date,
+                            contacts[i].salutation,
+                            contacts[i].first_name,
+                            contacts[i].middle_name,
+                            contacts[i].last_name,
+                            contacts[i].birth_date,
+                            contacts[i].comments,
+                            contacts[i].country_code,
+                            contacts[i].area_code,
+                            contacts[i].contact_number,
+                            contacts[i].ask_for_name,
+                            contacts[i].info_string,
+                            contacts[i].to_name,
+                            contacts[i].attn_name,
+                            contacts[i].address1,
+                            contacts[i].address2,
+                            contacts[i].city,
+                            contacts[i].state_province_geo_id,
+                            contacts[i].postal_code,
+                            contacts[i].country_geo_id
+                        );
+                        contactEntities.push(contact);
+                    }
+                    return contactEntities;
+                });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
             });
-        promise.catch(function (error) {
-            // Log the error
-            winston.error(error);
-        });
-        return promise;
+            return promise;
+        } else {
+            /* TO BE FINISHED:  FOR USER WHO DO NOT HAVE PERMISSION, MUST COME UP WITH SOME KIND 
+                OF FUNCTION AS AN ALTERNATIVE TO contactData.getContactsByOwner AND RETURN
+                SOMETHING SIMILAR TO "promise" AT THE END OF THE PRECEDING IF BLOCK.  UP TO NOW
+                MY ATTEMPTS IN HERE HAVE NOT RETURNED A PROPER FUNCTION TO THE API LAYER, WHICH THEN
+                THROWS A 500: Internal Server Error.  THAT IS THE API LAYER SAYING THAT WHAT 
+                contactController.getContactsByOwner HERE IS RETURNING TO IT IS NOT A FUNCTION, SO IT
+                CANNOT .then() TO SEND A JSON OBJECT BACK UP OUT OF THE API TO ARC AS THE RESPONSE.
+            */
+        }
     };
 
     /**
@@ -189,7 +191,7 @@ var contactController = function (knex) {
      */
     var updateContact = function (contactId, contact) {
         //Convert contact to entity
-        
+
         var validationErrors = contact.validateForUpdate();
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
