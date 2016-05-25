@@ -7,7 +7,10 @@
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
-// NOT COMPLETED! Need work on validateForUpdate, and validateAnnualRevenue.
+// NOT COMPLETED! 
+// Anurag: statusId is a foreign key that is not reflected in the design document. Consider update. 
+// Need work on validateForUpdate, and validateAnnualRevenue.
+// Need more fields.
 
 var validation = require('../common/validation')();
 var Person = require('../entities/person');
@@ -27,15 +30,15 @@ function Lead(partyId, /*PK, SHARED #1 */
                // Use SHARED #1,6,7
                // for Person
                
-               
                parentPartyId, companyName, annualRevenue, numEmployees
                // Use SHARED #1,3,6,7
-               // for party_supplemental_data. Some less useful fields are omitted. 
+               // for party_supplemental_data. Some less useful or interesting fields are omitted. 
               ) {
 
     Person.call(this, partyId, partyTypeId, currencyUomId, description,
                statusId, createdBy, createdDate, updatedDate,
-               salutation, firstName, middleName, lastName, birthDate, comments);
+               salutation, firstName, middleName, lastName, birthDate, comments
+               );
     
     // Lead-specific Properties
     this.parentPartyId = parentPartyId;
