@@ -42,7 +42,7 @@ var contactController = function (knex) {
             contact.middleName,
             contact.lastName,
             contact.birthDate,
-            contact.comments, 
+            contact.comments,
             contact.countryCode,
             contact.areaCode,
             contact.contactNumber,
@@ -59,7 +59,7 @@ var contactController = function (knex) {
         );
         console.log('\ncontactController.addContact:  typeof contactEntity = ', typeof contactEntity);
         console.log('\ncontactController.addContact:  contactEntity = ', contactEntity);
-        
+
         // Validate the data before going ahead
         var validationErrors = contactEntity.validateForInsert();
         console.log('\ncontactController.addContact: validationErrors = ', validationErrors);
@@ -76,6 +76,7 @@ var contactController = function (knex) {
         } else {
             return validationErrors;
         }
+    };
 
     /**
      * Gets one contact by its id
@@ -119,7 +120,7 @@ var contactController = function (knex) {
                     );
                 } else {
                     contactEntity = new Contact();
-                };
+                }
 
                 return contactEntity;
             });
