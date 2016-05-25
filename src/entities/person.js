@@ -42,7 +42,7 @@ Person.prototype.constructor = Person;
 //
 Person.prototype.validateForInsert = function () {
     // Call Party's validation function
-    var errors = [Party.prototype.validateForInsert.call(this)];
+    var errors = Party.prototype.validateForInsert.call(this);
     
     // the line above validates
 //    PartyTypeId(nullable),
@@ -59,7 +59,7 @@ Person.prototype.validateForInsert = function () {
         // First name, last name are required
         // Others are not
         this.validateSalutation(false),
-        this.validateFisrtName(true),
+        this.validateFirstName(true),
         this.validateMiddleName(false),
         this.validateLastName(true),
         this.validateBirthDate(false),
@@ -84,11 +84,11 @@ Person.prototype.validateForInsert = function () {
 
 Person.prototype.validateForUpdate = function () {
     // Call Party's validation function
-    var errors = [Party.prototype.validateForUpdate.call(this)];
+    var errors = Party.prototype.validateForUpdate.call(this);
     // Person-specific validation code
     var specificValidations = [
         this.validateSalutation(false),
-        this.validateFisrtName(true),
+        this.validateFirstName(true),
         this.validateMiddleName(false),
         this.validateLastName(true),
         this.validateBirthDate(false),
