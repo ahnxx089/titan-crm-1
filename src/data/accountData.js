@@ -5,6 +5,8 @@
 // @author: Eric Brichetto <brichett13@gmail.com>
 /////////////////////////////////////////////////
 
+/* jshint camelcase: false */
+
 /* TODO: add a method or two for copying a lead's party_supplemental_data values into 
 the newly created entry in that table, then deleting the account-related fields in the new entry. 
 This is referring to #4 on slide 18.
@@ -24,26 +26,26 @@ var accountData = function (knex) {
         orgData.addOrganization(account);
     };
     
-    var addAccountPartySupplementalData = function (account) {
+    var addAccountPartySupplementalData = function (account, ) {
         //EMPTY FOR NOW - UNCLEAR ON WHAT MUST GO HERE THAT 
         //WOULDN'T GO INTO orgData.addOrganization
-        knex.insert({
-            party_id: account.partyId,
-            parent_party_id: account.parentPartyId,
-            //Put in company name here maybe?
-            annual_revenue: account.annualRevenue,
-            currency_uom_id: account.preferredCurrencyUomId,
-            num_employees: account.numEmployees,
-            industry_enum_id: account.industryEnumId,
-            ownership_enum_id: account.ownershipEnumId,
-            ticker_symbol: account.tickerSymbol,
-            important_note: account.importantNote,
-            primary_postal_address_id: account.primaryPostalAddressId,
-            primary_telecom_number_id: account.primaryTelecomNumberId,
-            primary_email_id: account.primaryEmailId,
-            created_date: account.createdDate, //this may be incorrect and need to be changed
-            updated_date: account.updatedDate
-        }).into('party_supplemental_data');
+        return knex.insert({
+                party_id: account.partyId,
+                parent_party_id: account.parentPartyId,
+                //Put in company name here maybe?
+                annual_revenue: account.annualRevenue,
+                currency_uom_id: account.preferredCurrencyUomId,
+                num_employees: account.numEmployees,
+                industry_enum_id: account.industryEnumId,
+                ownership_enum_id: account.ownershipEnumId,
+                ticker_symbol: account.tickerSymbol,
+                important_note: account.importantNote,
+                primary_postal_address_id: account.primaryPostalAddressId,
+                primary_telecom_number_id: account.primaryTelecomNumberId,
+                primary_email_id: account.primaryEmailId,
+                created_date: account.createdDate, //this may be incorrect and need to be changed
+                updated_date: account.updatedDate
+            }).into('party_supplemental_data');
     };
     
     var addAccountContactMech = function (account) {
@@ -58,13 +60,13 @@ var accountData = function (knex) {
         //and "account" as the value in the role_type_id column.
         knex.insert({
             party_id: account.partyId,
-            role_type_id: "account",
+            role_type_id: 'ACCOUNT',
             created_date: account.createdDate,
             updated_date: account.updatedDate
         }).into('party_role');
     };
     
-    var addAccountPartyRelationship = function (account) {
+    var addAccountPartyRelationship = function (account, contact, user) {
         //Check if the user is creating a new account from scratch, or converting a lead 
         //at an organization  into a contact (and thus converting the organization into an account). 
         
@@ -72,16 +74,58 @@ var accountData = function (knex) {
         //Role_Type_Id_To should then be set to "account_manager". From_Date should be set to the same value 
         //as Created_Date. Party_Id_To may be set to "admin" or the partyId of the user who made the change, 
         //if we want to create this functionality. This last bit is optional.
-        
+        if(contact || user) {
+            knex.insert({
+                    party_id_from: account.partyId,
+                    party_id_to: user.partyId,
+                    role_type_id_from: 'ACCOUNT',
+                    role_type_id_to: 'ACCOUNT_MANAGER',
+                    from_date: account.createdDate,
+                    thru_date: null, 
+                    status_id: null, 
+                    relationship_name: null, 
+                    security_group_id: 'ACCOUNT_OWNER',
+                    priority_type_id: null,
+                    party_relationship_type_id: 'CONTACT_REL_INV',
+                    created_date: account.createdDate,
+                    updated_date: account.updatedDate
+                }).into('party_relationship');
+            });
+        }
         //If it is the second case, then the value of Role_Type_Id_From should be set to "contact". 
         //Role_Type_Id_To should then be set to "account". From_Date should be set to the datetime when the 
         //organization was converted. Party_Id_To should then be set to the new partyId of the account
         //(which should have been created by addAccountParty above). 
+        else {
+            knex.insert({
+                party_id_from: contact.partyId,
+                party_id_to: account.partyId,
+                role_type_id_from: 'CONTACT',
+                role_type_id_to: 'ACCOUNT', 
+                from_date: account.createdDate,
+                thru_date: null, 
+                status_id: null, 
+                relationship_name: null, 
+                security_group_id: null,
+                priority_type_id: null,
+                party_relationship_type_id: 'CONTACT_REL_INV',
+                created_date: account.createdDate,
+                updated_date: account.updatedDate
+            }).into('party_relationship');
+        }
     };
+
     
-    var convertToAccount = function (account) {
+    var addAccount = function (account, contact, user) {
         //Not fully sure yet that I can do this, but will write it down here anyway for now.
         //Call all of the previous addAccount___ methods. 
+        addAccountParty(account);
+        addAccountOrg(account);
+        addAccountPartySupplementalData(account); //I STRONGLY SUSPECT THAT THIS SHOULD BE CONTACT OR LEAD
+        //Deleting account-related fields from the contact/lead's p_s_d entry would happen here
+        addAccountContactMech(account); //this may not be fully functional
+        addAccountPartyRole(account);
+        addAccountPartyRelationship(account, contact, user);
     };
     
     /**
@@ -90,7 +134,10 @@ var accountData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getAccountsByOwner = function (ownerId) {
-        return knex.select('party_id', 'parent_party_id', 'company_name', 'annual_revenue', 'currency_uom_id', 'num_employees', 'industry_enum_id', 'ownership_enum_id', 'ticker_symbol', 'important_note', 'primary_postal_address', 'primary_telecom_number_id', 'primary_email_id', 'created_date', 'updated_date', 'organization.logo_image_url')
+        return knex.select('party_id', 'parent_party_id', 'company_name', 'annual_revenue',
+        'currency_uom_id', 'num_employees', 'industry_enum_id', 'ownership_enum_id', 'ticker_symbol',
+        'important_note', 'primary_postal_address', 'primary_telecom_number_id', 'primary_email_id',
+        'created_date', 'updated_date', 'organization.logo_image_url')
             .from('party_supplemental_data')
             .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
             .innerJoin('party_relationship', 'party_supplemental_data.party_id', 'party_relationship.party_id_from')
@@ -104,7 +151,10 @@ var accountData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getAccountById = function (accountId) {
-        return knex.select('party_id', 'parent_party_id', 'company_name', 'annual_revenue', 'currency_uom_id', 'num_employees', 'industry_enum_id', 'ownership_enum_id', 'ticker_symbol', 'important_note', 'primary_postal_address', 'primary_telecom_number_id', 'primary_email_id', 'created_date', 'updated_date', 'organization.logo_image_url')
+        return knex.select('party_id', 'parent_party_id', 'company_name', 'annual_revenue',
+        'currency_uom_id', 'num_employees', 'industry_enum_id', 'ownership_enum_id', 'ticker_symbol',
+        'important_note', 'primary_postal_address', 'primary_telecom_number_id', 'primary_email_id',
+        'created_date', 'updated_date', 'organization.logo_image_url')
             .from('party_supplemental_data')
             .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
             .innerJoin('party_role', 'party_supplemental_data.party_id', 'party_role.party_id')

@@ -17,9 +17,6 @@ var accountApi = function (knex) {
     // API methods
     // ==========================================
     //
-    //Still having difficulty locating the actual data table for accounts.
-    /*The dummy attributes (and real but incorrect attribute, where appropriate) in the 
-    //below method names should be replaced with the correct attributes once those are identified.*/
     // POST /api/accounts
     var addAccount = function (req, res) {
         var account = req.body;
@@ -99,15 +96,17 @@ var accountApi = function (knex) {
 
     return {
         addAccount: addAccount,
-        getAccountByDummyVar1: getAccountByDummyVar1,
-        getAccountByDummyVar2: getAccountByDummyVar2,
-        getAccountByDummyVar3: getAccountByDummyVar3,
+        getAccountsByOwner: getAccountsByOwner,
+        getAccounts: getAccounts,
+        getAccountByPhoneNumber: getAccountByPhoneNumber,
         getAccountById: getAccountById,
         updateAccount: updateAccount,
         deleteAccount: deleteAccount
     };
 };
 
-//Discussion with Dinesh indicates that we may want to heavily consider placing conditions into our getAccounts method so that we centralize all requests to get accounts by different attributes under the one getAccounts method. This would help avoid the proliferation of different API method URLs. 
+//Discussion with Dinesh indicates that we may want to heavily consider placing conditions into our
+//getAccounts method so that we centralize all requests to get accounts by different attributes 
+//under the one getAccounts method. This would help avoid the proliferation of different API method URLs. 
     
 module.exports = accountApi;

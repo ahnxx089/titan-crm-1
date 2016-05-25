@@ -8,6 +8,9 @@
 /* jshint camelcase: false */
 
 // NOT COMPLETED! 
+// addLead, getLeadsByOwner, getLeadById are tested and functional. 
+// getLeads is not finished, not used. Lucas will look at it later. 
+// deleteLead and updateLead are wrong. 
 
 var winston = require('winston');
 var Lead = require('../entities/lead');
@@ -16,19 +19,33 @@ var leadController = function(knex) {
     // Get a reference to data layer module
     //
     var leadData = require('../data/leadData')(knex);
-
     
     
     // CONTROLLER METHODS
-    // ==========================================
     //
     /**
-     * Add a new lead entity
-     * @param {Object} lead - The new lead to be added
+     * Methods in XXXcontroller.js are called from API layer.
+     * They take care of assembling lead entities using params given from API layer. 
+     * They pass the finished entity to leadData where they are inserted. 
+     * They call functions in Data layer to query based on the creteria. 
+     * They assemble lead entities using columns given from data layer, and return them. 
+     * 
+    */
+    // ==========================================
+    //
+    
+    // Lucas's taking this
+    /**
+     * Create a new lead entity, validate, pass it to leadData to create a new lead if valid. Otherwise return errors. 
+     * When leadData finished adding this lead, it will return a promise. If error, log the error. 
+     * @param {Object} lead - The new lead (from API layer) to be added
+     * @param {Object? or String?} user - The current logged-in user
      * @return {Object} promise - Fulfillment value is id of new lead
+     * @return {Object} validationErrors - An array that has all the validation error message
     */
     var addLead = function (lead, user) {
         var leadEntity = new Lead(
+            // ok to put dummy data here, eg, null and birthDate
             null,
             lead.partyTypeId,
             lead.preferredCurrencyUomId,
@@ -66,10 +83,11 @@ var leadController = function(knex) {
             return promise;
         } else {
             return validationErrors;
-        }
-            
+        }    
     };
     
+    // Lucas's taking this
+    // Not finished, nor used. 
     /**
      * Gets all leads
      * @return {Object} promise - Fulfillment value is an array of lead entities
@@ -102,15 +120,12 @@ var leadController = function(knex) {
                     lead.comments = leads[i].comments;
                     lead.createdDate = leads[i].created_date;
                     lead.updatedDate = leads[i].updated_date;
-                    
-                    // Needed? 
-                    /*
+                                        
                     lead.parentPartyId = leads[i].parent_party_id;
                     lead.companyName = leads[i].company_name;
                     lead.annualRevenue = leads[i].annual_revenue;
                     lead.numEmployees = leads[i].num_employees;
-                    lead.ownershipEnumId = leads[i].ownership_enum_id;
-                    */
+                    
                     
                     leadEntities.push(lead);
                 }
@@ -122,7 +137,56 @@ var leadController = function(knex) {
             });
         return promise;
     };
+    
+    
+    // Lucas's taking this
+    /**
+     * Gets all leads created by owner 
+     * @param {String?} userId - Unique id of logged-in user (owner)
+     * @return {Object} promise - Fulfillment value is an array of lead entities
+    */
+    var getLeadsByOwner = function (userId) {
+        var promise = leadData.getLeadsByOwner(userId)
+            .then(function (leads) {
+                var leadEntities = [];
+                for (var i = 0; i < leads.length; i++) {
+                    var lead = new Lead(
+                        // this is the order in which values show
+                        // the order in which keys show, is determined by knex
+                        leads[i].party_id,
+                        leads[i].party_type_id,
+                        leads[i].preferred_currency_uom_Id,
+                        leads[i].description,
+                        leads[i].statusId,
+                        leads[i].created_by, 
 
+                        leads[i].created_date,
+                        leads[i].updated_date,
+
+                        leads[i].salutation,
+                        leads[i].first_name,
+                        leads[i].middle_name,
+                        leads[i].last_name,
+                        leads[i].birth_date,
+                        leads[i].comments,
+
+                        leads[i].parent_party_id,
+                        leads[i].company_name,
+                        leads[i].annual_revenue,
+                        leads[i].num_employees
+                    );
+                    leadEntities.push(lead);
+                }
+                return leadEntities;
+            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
+        return promise;
+    };
+
+    // Lucas's taking this
     /**
      * Gets one lead by its id
      * @param {Number} leadId - Unique id (actually partyId) of the lead to be fetched
@@ -153,7 +217,6 @@ var leadController = function(knex) {
                     leads[0].birth_date,
                     leads[0].comments,
                     
-
                     
                     leads[0].parent_party_id,
                     leads[0].company_name,
@@ -169,6 +232,8 @@ var leadController = function(knex) {
         return promise;
     };
     
+    
+    // Divine: your implementation of update and delete below are wrong. Should not use new Party() or .deleteParty()
     /**
      * Update a lead in database
      * @param {Number} leadId - Unique id of the lead to be updated
@@ -225,6 +290,7 @@ var leadController = function(knex) {
     return {
         //getLeads: getLeads,
         getLeadById: getLeadById,
+        getLeadsByOwner: getLeadsByOwner,
         addLead: addLead,
         //updateLead: updateLead,
         //deleteLead: deleteLead

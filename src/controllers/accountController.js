@@ -24,7 +24,7 @@ var accountController = function(knex) {
      * @param {Object} account - The new account to be added
      * @return {Object} promise - Fulfillment value is id of new account
     */
-    var addAccount = function (account) {
+    var addAccount = function (account, contact, user) {
         // Convert the received object into an entity
         var accountEntity = new Account(
             null,
@@ -156,9 +156,9 @@ var accountController = function(knex) {
      * @param {Number} phoneNumber - Unique phone number associated with the account to be fetched
      * @return {Object} promise - Fulfillment value is a raw data object
      */
-    var getAccountByPhoneNumber = function (phoneNumber) {
-        
-    };
+//    var getAccountByPhoneNumber = function (phoneNumber) {
+//        
+//    };
     /**
      * Gets one account by <SOME ACCOUNT ATTRIBUTE OR COMBINATION OF ATTRIBUTES> from database
      * @param {String????? Multi-property JSON Object???} identity - The identity/identities of the account to be retrieved
@@ -168,38 +168,10 @@ var accountController = function(knex) {
         
     };
     
-    /**
-     * Gets one account by its owner
-     * @param {Number} ownerId - Unique id of the account to be fetched
-     * @return {Object} promise - Fulfillment value is a account entity
-    */
-    var getAccountByOwner = function (ownerId) {
-        var promise = accountData.getAccountByOwner(ownerId)
-            .then(function(accounts) {
-                // Map the retrieved result set to corresponding entity
-                var accountEntity = new Account(
-                    accounts[0].party_id,
-                    accounts[0].organization_name,
-                    accounts[0].office_site_name,
-                    accounts[0].annual_revenue,
-                    accounts[0].num_employees,
-                    accounts[0].ticker_symbol,
-                    accounts[0].comments,
-                    accounts[0].logo_image_url,
-                    accounts[0].created_date,
-                    accounts[0].updated_date
-                );
-                return accountEntity;
-            });
-            promise.catch(function(error) {
-                // Log the error
-                winston.error(error);
-            });
-        return promise;
-    };
+    
     /**
      * Gets one account by its phoneNumber
-     * @param {Number} partyId - Unique id of the party to be fetched
+     * @param {Number} phoneNumber - Phone number of the party to be fetched
      * @return {Object} promise - Fulfillment value is a account entity
     */
     var getAccountByPhoneNumber = function (partyId) {
