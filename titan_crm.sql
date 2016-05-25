@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2016 at 06:36 AM
+-- Generation Time: May 25, 2016 at 10:22 PM
 -- Server version: 5.6.30
 -- PHP Version: 5.5.35
 
@@ -1494,10 +1494,10 @@ INSERT INTO `geo_type` (`geo_type_id`, `parent_type_id`, `has_table`, `descripti
 -- --------------------------------------------------------
 
 --
--- Table structure for table `node_data`
+-- Table structure for table `note_data`
 --
 
-CREATE TABLE IF NOT EXISTS `node_data` (
+CREATE TABLE IF NOT EXISTS `note_data` (
   `note_id` int(11) NOT NULL,
   `note_name` varchar(100) DEFAULT NULL,
   `note_info` longtext,
@@ -2773,9 +2773,9 @@ ALTER TABLE `geo_type`
   ADD KEY `parent_type_id` (`parent_type_id`);
 
 --
--- Indexes for table `node_data`
+-- Indexes for table `note_data`
 --
-ALTER TABLE `node_data`
+ALTER TABLE `note_data`
   ADD PRIMARY KEY (`note_id`),
   ADD KEY `note_party` (`note_party`);
 
@@ -2971,9 +2971,9 @@ ALTER TABLE `case_status`
 ALTER TABLE `contact_mech`
   MODIFY `contact_mech_id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `node_data`
+-- AUTO_INCREMENT for table `note_data`
 --
-ALTER TABLE `node_data`
+ALTER TABLE `note_data`
   MODIFY `note_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `party`
@@ -3000,7 +3000,7 @@ ALTER TABLE `case_`
 --
 ALTER TABLE `case_note`
   ADD CONSTRAINT `FOREIGN_case_note_case` FOREIGN KEY (`case_id`) REFERENCES `case_` (`case_id`),
-  ADD CONSTRAINT `FOREIGN_case_note_note_data` FOREIGN KEY (`note_id`) REFERENCES `node_data` (`note_id`);
+  ADD CONSTRAINT `FOREIGN_case_note_note_data` FOREIGN KEY (`note_id`) REFERENCES `note_data` (`note_id`);
 
 --
 -- Constraints for table `case_resolution`
@@ -3074,9 +3074,9 @@ ALTER TABLE `geo_type`
   ADD CONSTRAINT `FOREIGN_geo_type_geo_type` FOREIGN KEY (`parent_type_id`) REFERENCES `geo_type` (`geo_type_id`);
 
 --
--- Constraints for table `node_data`
+-- Constraints for table `note_data`
 --
-ALTER TABLE `node_data`
+ALTER TABLE `note_data`
   ADD CONSTRAINT `FOREIGN_note_data_party` FOREIGN KEY (`note_party`) REFERENCES `party` (`party_id`);
 
 --
