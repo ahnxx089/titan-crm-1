@@ -119,7 +119,7 @@ ContactMech.prototype.validateForUpdate = function () {
             this.validateCountryCode(true),
             this.validateAreaCode(true),
             this.validateContactNumber(true),
-            this.validateaskForName(true)
+            this.validateAskForName(true)
         ]);
     }
 
@@ -247,7 +247,7 @@ ContactMech.prototype.validateContactNumber = function (isRequired) {
 };
 
 // ask_for_name type is varchar(100)
-ContactMech.prototype.validateaskForName = function (isRequired) {
+ContactMech.prototype.validateAskForName = function (isRequired) {
     this.askForName = validation.sanitizeInput(this.askForName);
     var validationResult = validation.validateString(this.askForName, isRequired, 100, 'askForName');
     return validationResult;

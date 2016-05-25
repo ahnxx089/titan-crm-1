@@ -1,8 +1,9 @@
 /////////////////////////////////////////////////
 // RESTful API module for contacts.
 //
-// @file:   contactApi.js
-// @author: Dinesh Shenoy <astroshenoy@gmail.com>
+// @file:    contactApi.js
+// @authors: Dinesh Shenoy <astroshenoy@gmail.com>
+//           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 var contactApi = function (knex) {
@@ -118,12 +119,25 @@ var contactApi = function (knex) {
     };
     // PUT /api/contacts/:id
     var updateContact = function (req, res) {
-
+        var contactId = req.params.id;
+        var contact = req.body;
+        contactController.updateContact(contactId, contact)
+            .then(function (result) {
+                res.json({
+                    updated: result
+                });
+            });
     };
 
     // DELETE /api/contacts/:id
     var deleteContact = function (req, res) {
-
+        var contactId = req.params.id;
+        contactController.deleteContact(contactId)
+            .then(function (result) {
+                res.json({
+                    deleted: result
+                });
+            });
     };
 
     return {

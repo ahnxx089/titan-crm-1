@@ -21,7 +21,7 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
     statusId, createdBy, createdDate, updatedDate, salutation, firstName,
     middleName, lastName, birthDate, comments, countryCode, areaCode,
     contactNumber, askForName, emailAddress, toName, attnName,
-    address1, address2, directions, city, stateProvinceGeoId, zipOrPostalCode, countryGeoId) {
+    address1, address2, city, stateProvinceGeoId, zipOrPostalCode, countryGeoId) {
 
     // Call the parent constructor (Person), making sure
     // that "this" is set correctly during the call
@@ -29,6 +29,7 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
         statusId, createdBy, createdDate, updatedDate,
         salutation, firstName, middleName, lastName, birthDate, comments);
 
+    /*
     // Contact-specific Properties
     this.contactMechs = [];
     var contactMech;
@@ -53,6 +54,7 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
             zipOrPostalCode, countryGeoId);
         this.contactMechs.push(contactMech);
     }
+    */
 }
 
 // Inherit from Person
@@ -69,17 +71,18 @@ Contact.prototype.validateForInsert = function () {
     //Run parent validaton method
     var validations = Person.validateForInsert.call(this);
 
+    /*
     //Run validation method on each contactMech
     for (var i = 0; i < this.contactMechs.length; i++) {
         validation.push(this.contactMechs[i].validateForInsert());
     }
+    */
 
     //Run validation methods for remaining properties
 
     //Errors are non-empty validation results
     var errors = [];
-    
-    for ( i = 0; i < validations.length; i++) {
+    for (var i = 0; i < validations.length; i++) {
         if (validations[i]) {
             errors.push(validations[i]);
         }
@@ -91,17 +94,19 @@ Contact.prototype.validateForUpdate = function () {
     //Run parent validaton method
     var validations = Person.validateForUpdate.call(this);
 
+    /*
     //Run validation method on each contactMech
     for (var i = 0; i < this.contactMechs.length; i++) {
         validation.push(this.contactMechs[i].validateForUpdate());
     }
+    */
 
     //Run validation methods for remaining properties
 
     //Errors are non-empty validation results
     var errors = [];
 
-    for( i = 0; i < validations.length; i++) {
+    for(var i = 0; i < validations.length; i++) {
         if(validations[i]) {
             errors.push(validations[i]);
         }
