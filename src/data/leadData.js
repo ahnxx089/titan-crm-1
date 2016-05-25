@@ -21,9 +21,9 @@ var leadData = function (knex) {
 
         //NOTE TO LUCAS AND DIVINE: Below changes to this function were made by Eric to resolve errors crashing the app
 
-        // returns a promise
-        // #1
-        knex.insert({
+        return knex('party')
+            .returning('party_id')
+            .insert({
                 party_type_id: lead.partyTypeId,
                 preferred_currency_uom_id: lead.preferredCurrencyUomId,
                 description: lead.description,
@@ -32,10 +32,11 @@ var leadData = function (knex) {
                 created_date: lead.createdDate,
                 updated_date: lead.updatedDate
             })
-            .into('party')
-            .then(function () {
-                return knex.insert({
-                        party_id: lead.partyId,
+            .then(function (res) {
+                return knex('person')
+                    .returning('party_id')
+                    .insert({
+                        party_id: res[0],
                         salutation: lead.salutation,
                         first_name: lead.firstName,
                         middle_name: lead.middleName,
@@ -45,23 +46,20 @@ var leadData = function (knex) {
                         created_date: lead.createdDate,
                         updated_date: lead.updatedDate
                     })
-                    .into('person');
-            })
-            .then(function () {
-                return knex.insert({
-                        party_id: lead.partyId,
+            .then(function (party_id) {
+                return knex('party_supplemental_data')
+                    .insert({
+                        party_id: res[0],
                         parent_party_id: lead.parentPartyId,
                         company_name: lead.companyName,
                         annual_revenue: lead.annualRevenue,
-                        currency_uom_id: lead.preferredCurrencyUomId, // not the same? 
+                        currency_uom_id: lead.preferredCurrencyUomId, // the same
                         num_employees: lead.numEmployees,
-                        ownership_enum_id: lead.ownership_enum_id,
-
                         created_date: lead.createdDate,
                         updated_date: lead.updatedDate
-                    })
-                    .into('party_supplemental_data');
+                    });
             });
+        });
 
 
         // would this be returned as well? 
@@ -107,6 +105,7 @@ var leadData = function (knex) {
     var getLeads = function () {
         return knex.select('party_id', 'salutation', 'first_name', 'middle_name', 'last_name', 'birth_date', 'comments', 'created_date', 'updated_date')
             .from('person');
+
     };
 
     /**
@@ -115,11 +114,13 @@ var leadData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getLeadById = function (id) {
-        return knex.select('party_id', 'salutation', 'first_name', 'middle_name', 'last_name', 'birth_date', 'comments', 'created_date', 'updated_date')
-            .from('person')
-            .where({
-                party_id: id
-            });
+//        return knex.select('party_id', 'salutation', 'first_name', 'middle_name', 'last_name', 'birth_date', 'comments', 'created_date', 'updated_date')
+//            .from('person')
+//            .where({
+//                party_id: id
+//            });
+        
+        return knex.from('person').innerJoin('party', 'person.party_id', 'party.party_id').innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id').where('person.party_id', id);
     };
 
 
@@ -162,10 +163,10 @@ var leadData = function (knex) {
 
     return {
         addLead: addLead,
-        getLeads: getLeads,
+//        getLeads: getLeads,
         getLeadById: getLeadById,
-        updateLead: updateLead,
-        deleteLead: deleteLead
+//        updateLead: updateLead,
+//        deleteLead: deleteLead
     };
 
 };

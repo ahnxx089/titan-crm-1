@@ -23,12 +23,51 @@ var leadController = function(knex) {
     // ==========================================
     //
     /**
-     * Add a new 
+     * Add a new lead entity
      * @param {Object} lead - The new lead to be added
      * @return {Object} promise - Fulfillment value is id of new lead
     */
-    var addLead = function (lead) {
+    var addLead = function (lead, user) {
+        var leadEntity = new Lead(
+            null,
+            lead.partyTypeId,
+            lead.preferredCurrencyUomId,
+            lead.description,
+            lead.statusId,
+            user.userId, 
+//            'admin', // single quotes are must. For testing only
+            (new Date()).toISOString(), (new Date()).toISOString(),
+            
+            lead.salutation,
+            lead.firstName,
+            lead.middleName,
+            lead.lastName,
+//            lead.birthDate,
+            (new Date()).toISOString(), // for testing only
+            lead.comments,
+            
+            lead.parentPartyId,
+            lead.companyName,
+            lead.annualRevenue,
+            lead.numEmployees
+        );
         
+        // Validate the data before going ahead
+        var validationErrors = leadEntity.validateForInsert();
+        if (validationErrors.length === 0) {
+            // Pass on the entity to be added to the data layer
+            var promise = leadData.addLead(leadEntity)
+                .then(function (partyId) {
+                    return partyId;
+                });
+            promise.catch(function (error) {
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            return validationErrors;
+        }
+            
     };
     
     /**
@@ -94,15 +133,32 @@ var leadController = function(knex) {
             .then(function(leads) {
                 // Map the retrieved result set to corresponding entity
                 var leadEntity = new Lead(
+                    // this is the order in which values show
+                    // the order in which keys show, is determined by knex
                     leads[0].party_id,
+                    //
+                    leads[0].party_type_id,
+                    leads[0].preferred_currency_uom_Id,
+                    leads[0].description,
+                    leads[0].statusId,
+                    leads[0].created_by, 
+                    //
+                    leads[0].created_date,
+                    leads[0].updated_date,
+                    
                     leads[0].salutation,
                     leads[0].first_name,
                     leads[0].middle_name,
                     leads[0].last_name,
                     leads[0].birth_date,
                     leads[0].comments,
-                    leads[0].created_date,
-                    leads[0].updated_date
+                    
+
+                    
+                    leads[0].parent_party_id,
+                    leads[0].company_name,
+                    leads[0].annual_revenue,
+                    leads[0].num_employees
                 );
                 return leadEntity;
             });
@@ -169,7 +225,7 @@ var leadController = function(knex) {
     return {
         //getLeads: getLeads,
         getLeadById: getLeadById,
-        //addLead: addLead,
+        addLead: addLead,
         //updateLead: updateLead,
         //deleteLead: deleteLead
     };

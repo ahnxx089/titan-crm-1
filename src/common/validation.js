@@ -26,6 +26,8 @@ var validation = function () {
     var convertToInt = function (str) {
         return validator.toInt(str);
     };
+    
+    // TODO: create convertToDecimal or convertToFloat function
 
 
     // VALIDATION METHODS
@@ -81,6 +83,19 @@ var validation = function () {
         }
         return '';
     };
+    
+    // possible approach: use isFloat instead
+    var validateFloat = function (input, isRequired, label) {
+        if (isRequired && !input) {
+            return label + ' is required.';
+        }
+        if (input) {
+            if (!validator.isFloat(input)) {
+                return label + ' must be an float with less than 2 decimal places.';
+            }
+        }
+        return '';
+    };
 
 
     return {
@@ -90,6 +105,7 @@ var validation = function () {
         validateString: validateString,
         validateDate: validateDate,
         validateBoolean: validateBoolean,
+        validateFloat: validateFloat,
     };
 
 };

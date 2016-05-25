@@ -22,9 +22,25 @@ var leadApi = function (knex) {
     // API methods
     // ==========================================
     //
+    // Lucas's taking this
     // POST /api/leads
     var addLead = function (req, res) {
-        
+        var lead = req.body;
+        var user = req.user;
+        var result = leadController.addLead(lead, user);
+//        var result = leadController.addLead(lead);
+
+        // An array in result means it's array of validation errors
+        if( Object.prototype.toString.call(result) === '[object Array]' ) {
+            res.json(result);
+        }
+        // An object in result means it's a promise
+        // (which is returned only if validation succeeds)
+        else {
+            result.then(function(partyId) {
+               res.json({partyId: partyId}); 
+            });
+        }
     };
     
     // Lucas is taking this
@@ -50,6 +66,7 @@ var leadApi = function (knex) {
     /**
      * This method in api.js is called from presentation layer, or by ARC
      * It in turns, stripes the leadId paramenter from req, pass it to leadController
+     * Lucas's taking this
      * @param {Object} req - The request
      * @param {Object} res - The resource
      * @return {Object} promise - Fulfillment value is id of new party
@@ -87,7 +104,7 @@ var leadApi = function (knex) {
 
     return {
         middleware: middleware,
-//        addLead: addLead,
+        addLead: addLead,
 //        getLeadsByOwner: getLeadsByOwner,
 //        getLeadsByIdentity: getLeadsByIdentity,
 //        getLeadsByPhoneNumber: getLeadsByPhoneNumber,
