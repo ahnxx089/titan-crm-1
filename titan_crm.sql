@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 25, 2016 at 10:22 PM
+-- Generation Time: May 26, 2016 at 12:42 PM
 -- Server version: 5.6.30
 -- PHP Version: 5.5.35
 
@@ -1722,15 +1722,15 @@ CREATE TABLE IF NOT EXISTS `person` (
 
 CREATE TABLE IF NOT EXISTS `postal_address` (
   `contact_mech_id` int(11) NOT NULL,
-  `to_name` varchar(100) NOT NULL,
-  `attn_name` varchar(100) NOT NULL,
-  `address1` varchar(255) NOT NULL,
-  `address2` varchar(255) NOT NULL,
-  `directions` varchar(255) NOT NULL,
-  `city` varchar(100) NOT NULL,
-  `postal_code` varchar(20) NOT NULL,
-  `country_geo_id` varchar(20) NOT NULL,
-  `state_province_geo_id` varchar(20) NOT NULL,
+  `to_name` varchar(100) DEFAULT NULL,
+  `attn_name` varchar(100) DEFAULT NULL,
+  `address1` varchar(255) DEFAULT NULL,
+  `address2` varchar(255) DEFAULT NULL,
+  `directions` varchar(255) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `postal_code` varchar(20) DEFAULT NULL,
+  `country_geo_id` varchar(20) DEFAULT NULL,
+  `state_province_geo_id` varchar(20) DEFAULT NULL,
   `created_date` datetime NOT NULL,
   `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
