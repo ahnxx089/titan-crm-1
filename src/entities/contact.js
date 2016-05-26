@@ -24,6 +24,21 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
     Person.call(this, partyId, partyTypeId, currencyUomId, description,
         statusId, createdBy, createdDate, updatedDate,
         salutation, firstName, middleName, lastName, birthDate, comments);
+    
+    // Contact-specific properties
+    this.countryCode = countryCode;
+    this.areaCode = areaCode;
+    this.contactNumber = contactNumber;
+    this.askForName = askForName;
+    this.emailAddress = emailAddress;
+    this.toName = toName;
+    this.attentionName = attnName;
+    this.addressLine1 = address1;
+    this.addressLine2 = address2;
+    this.city = city;
+    this.stateOrProvinceId = stateProvinceGeoId;
+    this.zipOrPostalCode = zipOrPostalCode;
+    this.countryId = countryGeoId;
 
 }
 
@@ -38,8 +53,9 @@ Contact.prototype.constructor = Contact;
 //
 Contact.prototype.validateForInsert = function () {
     //Run parent validaton method
-    var validations = Person.prototype.validateForInsert.call(this);
-
+    var errors = Person.prototype.validateForInsert.call(this);
+    console.log('\nin Contact.prototype.validateForInsert, errors = ', errors);
+    
     //Run validation methods for remaining properties
     //
     // true means required, false means nullable
@@ -49,20 +65,21 @@ Contact.prototype.validateForInsert = function () {
             this.validateContactNumber(true),
             this.validateAskForName(false),
             this.validateEmailAddress(false),
-            this.validateToName(true),
-            this.validateAttentionName(true),
-            this.validateAddressLine1(true),
-            this.validateAddressLine2(true),
-            this.validateCity(true),
-            this.validateStateOrProvinceId(true),
-            this.validateZipOrPostalCode(true),
-            this.validateCountryId(true)
+            this.validateToName(false),
+            this.validateAttentionName(false),
+            this.validateAddressLine1(false),
+            this.validateAddressLine2(false),
+            this.validateCity(false),
+            this.validateStateOrProvinceId(false),
+            this.validateZipOrPostalCode(false),
+            this.validateCountryId(false)
     ];
+    console.log('\nin Contact.prototype.validateForInsert, contactSpecificValidations = ', contactSpecificValidations);
+
     //Errors are non-empty validation results
-    var errors = [];
-    for (var i = 0; i < validations.length; i++) {
-        if (validations[i]) {
-            errors.push(validations[i]);
+    for (var i = 0; i < contactSpecificValidations.length; i++) {
+        if (contactSpecificValidations[i]) {
+            errors.push(contactSpecificValidations[i]);
         }
     }
     return errors;
@@ -70,7 +87,7 @@ Contact.prototype.validateForInsert = function () {
 
 Contact.prototype.validateForUpdate = function () {
     //Run parent validaton method
-    var validations = Person.prototype.validateForUpdate.call(this);
+    var errors = Person.prototype.validateForUpdate.call(this);
 
     //Run validation methods for remaining properties
     //
@@ -81,21 +98,19 @@ Contact.prototype.validateForUpdate = function () {
             this.validateContactNumber(true),
             this.validateAskForName(false),
             this.validateEmailAddress(false),
-            this.validateToName(true),
-            this.validateAttentionName(true),
-            this.validateAddressLine1(true),
-            this.validateAddressLine2(true),
-            this.validateCity(true),
-            this.validateStateOrProvinceId(true),
-            this.validateZipOrPostalCode(true),
-            this.validateCountryId(true)
+            this.validateToName(false),
+            this.validateAttentionName(false),
+            this.validateAddressLine1(false),
+            this.validateAddressLine2(false),
+            this.validateCity(false),
+            this.validateStateOrProvinceId(false),
+            this.validateZipOrPostalCode(false),
+            this.validateCountryId(false)
     ];
     //Errors are non-empty validation results
-    var errors = [];
-
-    for (var i = 0; i < validations.length; i++) {
-        if (validations[i]) {
-            errors.push(validations[i]);
+    for (var i = 0; i < contactSpecificValidations.length; i++) {
+        if (contactSpecificValidations[i]) {
+            errors.push(contactSpecificValidations[i]);
         }
     }
     return errors;
@@ -195,7 +210,6 @@ Contact.prototype.validateCountryId = function (isRequired) {
     var validationResult = validation.validateString(this.countryId, isRequired, 20, 'countryId');
     return validationResult;
 };
-
 
 // Export the class as a module
 module.exports = Contact;

@@ -1,9 +1,11 @@
-/////////////////////////////////////////////////
+//////////////////////////////////////////////////
 // Jasmine spec (test suite) for Party APIs.
 //
 // @file:   partyApiSpec.js
 // @author: Anurag Bhandari <anurag@ofssam.com>
 /////////////////////////////////////////////////
+
+/*
 
 var request = require('request');
 var apiBaseUrl = 'http://localhost:5000/api/parties';
@@ -13,9 +15,11 @@ var baseRequest = request.defaults({
         'x-access-token': token
     }
 });
+*/
 
 describe('Party API', function () {
-    it('is inaccessible without a valid token', function (done) {
+/*
+    pageXOffsetit('is inaccessible without a valid token', function (done) {
         request.get(apiBaseUrl, function (err, res, body) {
             // Check the HTTP status code of response
             expect(res.statusCode).toBe(403);
@@ -23,7 +27,8 @@ describe('Party API', function () {
             done();
         });
     });
-    it('getParties returns all parties in system as an array', function (done) {
+*/
+    xit('getParties returns all parties in system as an array', function (done) {
         baseRequest.get(apiBaseUrl, function (err, res, body) {
             var typeofParties = Object.prototype.toString.call(JSON.parse(body));
             // Check whether the return value is an array
@@ -32,14 +37,14 @@ describe('Party API', function () {
             done();
         });
     });
-    it('getParty returns a valid party entity', function (done) {
+    xit('getParty returns a valid party entity', function (done) {
         baseRequest.get(apiBaseUrl + '/2', function (err, res, body) {
             expect(JSON.parse(body).hasOwnProperty('partyId')).toBeTruthy();
             // Call done to finish the async function
             done();
         });
     });
-    it('addParty adds a party and returns a single party id', function (done) {
+    xit('addParty adds a party and returns a single party id', function (done) {
         var newParty = {
             partyTypeId: 'PERSON',
             preferredCurrencyUomId: 'USD',

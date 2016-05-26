@@ -23,12 +23,59 @@ var contactController = function (knex) {
     //
 
     /**
-     * Add a new contact  -- IN DEVELOPMENT
+     * Add a new contact  
      * @param {Object} contact - The new contact to be added
+     * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is id of new contact
      */
-    var addContact = function (contact) {
-        
+    var addContact = function (contact, user) {
+        // Convert the received object into an entity
+        var contactEntity = new Contact(
+            null,
+            contact.partyTypeId,
+            contact.preferredCurrencyUomId,
+            contact.description,
+            contact.statusId,
+            user.userId, (new Date()).toISOString(), (new Date()).toISOString(),
+            contact.salutation,
+            contact.firstName,
+            contact.middleName,
+            contact.lastName,
+            contact.birthDate,
+            contact.comments,
+            contact.countryCode,
+            contact.areaCode,
+            contact.contactNumber,
+            contact.askForName,
+            contact.emailAddress,
+            contact.toName,
+            contact.attentionName,
+            contact.addressLine1,
+            contact.addressLine2,
+            contact.city,
+            contact.stateOrProvinceId,
+            contact.zipOrPostalCode,
+            contact.countryId
+        );
+        console.log('\ncontactController.addContact:  typeof contactEntity = ', typeof contactEntity);
+        console.log('\ncontactController.addContact:  contactEntity = ', contactEntity);
+
+        // Validate the data before going ahead
+        var validationErrors = contactEntity.validateForInsert();
+        console.log('\ncontactController.addContact: validationErrors = ', validationErrors);
+        if (validationErrors.length === 0) {
+            // Pass on the entity to be added to the data layer
+            var promise = contactData.addContact(contactEntity)
+                .then(function (partyId) {
+                    return partyId;
+                });
+            promise.catch(function (error) {
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            return validationErrors;
+        }
     };
 
     /**
@@ -73,7 +120,7 @@ var contactController = function (knex) {
                     );
                 } else {
                     contactEntity = new Contact();
-                };
+                }
 
                 return contactEntity;
             });
@@ -178,14 +225,8 @@ var contactController = function (knex) {
             });
             return promise;
         } else {
-            /* TO BE FINISHED:  FOR USER WHO DO NOT HAVE PERMISSION, MUST COME UP WITH SOME KIND 
-                OF FUNCTION AS AN ALTERNATIVE TO contactData.getContactsByOwner AND RETURN
-                SOMETHING SIMILAR TO "promise" AT THE END OF THE PRECEDING IF BLOCK.  UP TO NOW
-                MY ATTEMPTS IN HERE HAVE NOT RETURNED A PROPER FUNCTION TO THE API LAYER, WHICH THEN
-                THROWS A 500: Internal Server Error.  THAT IS THE API LAYER SAYING THAT WHAT 
-                contactController.getContactsByOwner HERE IS RETURNING TO IT IS NOT A FUNCTION, SO IT
-                CANNOT .then() TO SEND A JSON OBJECT BACK UP OUT OF THE API TO ARC AS THE RESPONSE.
-            */
+            // user does not have permissions of a contact owner, return null
+            return null;
         }
     };
 

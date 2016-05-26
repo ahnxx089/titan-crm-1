@@ -53,6 +53,15 @@ var router = function (knex) {
         .put(partyApi.updateParty)
         .delete(partyApi.deleteParty);
     
+    
+    // PERSONS -- TEMPORARILY ADDED BY DINESH,
+    // DOES NOT NEED TO BE USED IF NOT WANTED
+    // ==========================================
+    var personApi = require('../api/personApi')(knex);
+    apiRouter.route('/persons')
+        .post(personApi.addPerson);
+    
+    
     // LEADS, 7 in total: 1 post, 4 gets, 1 put, 1 delete
     var leadApi = require('../api/leadApi')(knex);
     apiRouter.route('/leads')

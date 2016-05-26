@@ -22,9 +22,28 @@ var contactApi = function (knex) {
     // API methods
     // ==========================================
     //
-    // POST /api/  -- IN DEVELOPMENT
+    // POST /api/contacts
     var addContact = function (req, res) {
-
+        var contact = req.body;
+        var user = req.user;
+        console.log('\ncontactApi.addContact:  incoming req.body = var contact = ', contact);
+        console.log('\ncontactApi.addContact:  incoming req.user = var user = ', user);
+        
+        var result = contactController.addContact(contact, user);
+        console.log('\ncontactApi.addContact:  controller returned result = ', result);
+        // An array in result means it's array of validation errors
+        if (Object.prototype.toString.call(result) === '[object Array]') {
+            res.json(result);
+        }
+        // An object in result means it's a promise
+        // (which is returned only if validation succeeds)
+        else {
+            result.then(function (partyId) {
+                res.json({
+                    partyId: partyId
+                });
+            });
+        }
     };
 
     // GET /api/contacts
@@ -68,10 +87,26 @@ var contactApi = function (knex) {
         if (req.query.hasOwnProperty('owner')) {
             var ownerId = req.user.partyId;
             var userSecurityPerm = req.user.securityPermissions;
-            contactController.getContactsByOwner(ownerId, userSecurityPerm)
-                .then(function (contacts) {
+
+            // Controller layer determines if user has one of the permissions of contact owners.
+            //  1.  If YES, returns a Promise object (and ultimately  promise comes back with
+            //      partyIds of contacts this user owns, if any... I think that's how promises work).
+            //  2.  If NO, controller returns null.
+            // Per May 25 standup meeting, a simple if block returns either the promise or 
+            // the null for users without permission.
+            var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
+
+            //console.log('typeof resultsForThisUser is ', typeof resultsForThisUser);
+            //console.log(typeof resultsForThisUser === 'object');
+            
+            if (resultsForThisUser === null) {
+                res.json('You do not have permission to own contacts!');
+            } 
+            else {
+                resultsForThisUser.then(function (contacts) {
                     res.json(contacts);
                 });
+            }
         }
 
         // *** DINESH HAS NOT IMPLEMENTED YET:  getContactsByIdentity
