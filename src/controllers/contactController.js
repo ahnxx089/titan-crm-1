@@ -225,14 +225,8 @@ var contactController = function (knex) {
             });
             return promise;
         } else {
-            /* TO BE FINISHED:  FOR USER WHO DO NOT HAVE PERMISSION, MUST COME UP WITH SOME KIND 
-                OF FUNCTION AS AN ALTERNATIVE TO contactData.getContactsByOwner AND RETURN
-                SOMETHING SIMILAR TO "promise" AT THE END OF THE PRECEDING IF BLOCK.  UP TO NOW
-                MY ATTEMPTS IN HERE HAVE NOT RETURNED A PROPER FUNCTION TO THE API LAYER, WHICH THEN
-                THROWS A 500: Internal Server Error.  THAT IS THE API LAYER SAYING THAT WHAT 
-                contactController.getContactsByOwner HERE IS RETURNING TO IT IS NOT A FUNCTION, SO IT
-                CANNOT .then() TO SEND A JSON OBJECT BACK UP OUT OF THE API TO ARC AS THE RESPONSE.
-            */
+            // user does not have permissions of a contact owner, return null
+            return null;
         }
     };
 

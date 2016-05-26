@@ -13,7 +13,7 @@
 var contactData = function (knex) {
 
     /**
-     * Add a new party in the database -- IN DEVELOPMENT
+     * Add a new contact in the database -- IN DEVELOPMENT, RIGHT JUST ADDS A PERSON
      *
      * @param {Object} contact - The new contact entity to be added as a Party
      * @return {Object} promise - Fulfillment value is id of row inserted
@@ -77,15 +77,42 @@ var contactData = function (knex) {
         // The ownership is all contained within the party_relationship table alone;
         // however, the party table is joined so that column party.party_id of the
         // contact can be passed by this function back to the controller layer.
-        return knex.select('party.party_id')
+        return knex.select('party.party_id','party.description','person.first_name','person.last_name')
             .from('party_relationship')
             .innerJoin('party', 'party.party_id', 'party_relationship.party_id_from')
+            .innerJoin('person', 'party.party_id', 'person.party_id')
             .whereIn('role_type_id_to', ['PERSON_ROLE', 'SALES_REP', 'ACCOUNT_MANAGER'])
             .andWhere('party_relationship_type_id', 'RESPONSIBLE_FOR')
             .andWhere('role_type_id_from', 'CONTACT')
             .andWhere('party_id_to', ownerId);
     };
-
+ 
+    /** WORK IN PROGRESS, COME THE OTHER WAY DOWN FROM THE API LAYER NOW THAT I KNOW THE THREE
+        THINGS I AM GOING TO COME WITH-- BUT IF ALSO LIMITING TO OWNER-- NO, THAT DOES NOT
+        MAKE SENSE, AS LONG AS THE USER HAS CONTACT OWNER OR CRMSFA_CONTACT_TASKS PERMISSION,
+        THEN THEY CAN GET CONTACTS.  IT MAKES NO SENSE TO HAVE CRMSFA_CONTACT_TASKS PERMISSION AND
+        NOT BE ABLE TO SOMEONE ELSE'S CONTACTS YOU HAVE BEEN ASSIGNED TO MONITOR OR UPDATE.
+        THAT WOULD BE SAYING THE ORIGINAL PARTY_ID = 2 ADMIN CANNOT SEE ALL THE CONTACTS OF THE COMPANY?!
+        THAT MAKES NO SENSE. SO, AFTER HANDLING SECURITY PERMISSION IN THE CONTROLLER LAYER ABOVE,
+        COME IN HERE WITH JUST FIRST NAME, LAST NAME AND PARTY_ID LIKE THE FIRST OF 3 SCREENS IN
+        OPENTAPS FIND CONTACTS WINDOW.  THE REST CAN WAIT.
+     * Gets all contacts from database by identity (first or last name matching)
+     * @param {Number} ownerId - Unique party_id of the user/owner whose contacts to be fetched
+     * @return {Object} promise - Fulfillment value is an array of raw data objects
+     */
+/*
+    var getContactsByIdentity = function (firstName, lastName) {
+        return knex.select('party.party_id','party.description','person.first_name','person.last_name')
+            .from('party_relationship')
+            .innerJoin('party', 'party.party_id', 'party_relationship.party_id_from')
+            .innerJoin('person', 'party.party_id', 'person.party_id')
+            .whereIn('role_type_id_to', ['PERSON_ROLE', 'SALES_REP', 'ACCOUNT_MANAGER'])
+            .andWhere('party_relationship_type_id', 'RESPONSIBLE_FOR')
+            .andWhere('role_type_id_from', 'CONTACT')
+            .andWhere('party_id_to', ownerId);
+    };
+*/
+    
     /**
      * Update a contact in database
      * @param {Object} contact - The contact entity that contains updated data
