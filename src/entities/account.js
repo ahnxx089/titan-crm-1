@@ -35,7 +35,7 @@ Account.prototype.constructor = Account;
 //
 Account.prototype.validateForInsert = function () {
     // Call Organization's validation function
-    var errors = [Organization.prototype.validateForInsert.call(this)];
+    var errors = Organization.prototype.validateForInsert.call(this);
     // Account-specific validation code
     var specificvalidations = [
         this.validatePartyParentId(true),

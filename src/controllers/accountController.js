@@ -126,7 +126,7 @@ var accountController = function(knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getAccountsByOwner = function (ownerId) {
-        var promise = accountData.getAccountByOwner(ownerId)
+        var promise = accountData.getAccountsByOwner(ownerId)
         .then(function(accounts) {
             var ownedAccounts = [];
             for (var i = 0; i < accounts.length; i++) {

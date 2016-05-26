@@ -152,11 +152,11 @@ var contactData = function (knex) {
      */
     var addEmailAddress = function (contact) {
         return knex.insert({
-                contact_mech_type_id: 'EMAIL_ADDRESS',
-                info_string: contact.emailAddress,
-                created_date: contact.createdDate,
-                updated_date: contact.updatedDate
-            })
+            contact_mech_type_id: 'EMAIL_ADDRESS',
+            info_string: contact.emailAddress,
+            created_date: contact.createdDate,
+            updated_date: contact.updatedDate
+        })
             .into('contact_mech');
     };
 

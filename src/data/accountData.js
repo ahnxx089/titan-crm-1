@@ -26,7 +26,7 @@ var accountData = function (knex) {
         orgData.addOrganization(account);
     };
     
-    var addAccountPartySupplementalData = function (account, ) {
+    var addAccountPartySupplementalData = function (account) {
         //EMPTY FOR NOW - UNCLEAR ON WHAT MUST GO HERE THAT 
         //WOULDN'T GO INTO orgData.addOrganization
         return knex.insert({
@@ -90,8 +90,9 @@ var accountData = function (knex) {
                     created_date: account.createdDate,
                     updated_date: account.updatedDate
                 }).into('party_relationship');
-            });
         }
+            
+        
         //If it is the second case, then the value of Role_Type_Id_From should be set to "contact". 
         //Role_Type_Id_To should then be set to "account". From_Date should be set to the datetime when the 
         //organization was converted. Party_Id_To should then be set to the new partyId of the account
