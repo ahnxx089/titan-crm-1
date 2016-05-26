@@ -34,16 +34,24 @@ var accountApi = function (knex) {
         }
     };
 
-   
+    /* getAccountsByIdentity use the value of req.user for passing API methoads by authentication.
+       IdentityId didn't read from the API. So, I take user function and response the security loop.
+       This forum are really helpful to me. http://www.ofssam.com/forums/showthread.php?tid=37*/
     // GET /api/accounts/?identity=
-    var getAccountByIdentity = function (req, res) {
+    var getAccountsByIdentity = function (req, res) {
+        var identityId = req.user.partyId;
+        var userSecurityPerm = req.user.securityPermissions;
+        accountController.getAccountsByIdentity(identityId, userSecurityPerm)
+        .then(function (accounts){
+            res.json(accounts);
+        });
         
     };
     
     // GET /api/accounts/?owner=
     var getAccountsByOwner = function (req, res) {
         var ownerId = req.params.owner;
-        accountController.getAccountByOwner(ownerId)
+        accountController.getAccountsByOwner(ownerId)
             .then(function (accounts) {
                 res.json(accounts);
             });
@@ -56,14 +64,18 @@ var accountApi = function (knex) {
                 res.json(accounts);
             });
     };
-    
+    /*This function also same like the Identity. Identity need to first_name and last_name and Company_Name.
+      PhoneNumber also exist from user part. So, firstly, check out the primary key(user.partyID), and call the phoneNumber data.
+    */
     // GET /api/accounts/?phoneNumber=
     var getAccountByPhoneNumber = function (req, res) {
-        var partyId = req.params.id;
-        accountController.getAccountByPhoneNumber(partyId)
-		      .then(function(accounts) {
-		          res.json(accounts);
+        var phoneNumberId = req.user.partyId;
+        var userSecurityPerm = req.user.securityPermissions;
+        accountController.getAccountByPhoneNumber(phoneNumberId, userSecurityPerm)
+        .then(function (accounts){
+            res.json(accounts);
         });
+        
     };
 
     // GET /api/accounts/:id
@@ -78,8 +90,8 @@ var accountApi = function (knex) {
     // PUT /api/accounts/:id
     var updateAccount = function (req, res) {
         var partyId = req.params.id;
-        var account = req.body;
-        accountController.updateAccount(partyId, account)
+        var accounts = req.body;
+        accountController.updateAccount(partyId, accounts)
             .then(function(result) {
                res.json({updated: result}); 
             });
@@ -96,9 +108,14 @@ var accountApi = function (knex) {
 
     return {
         addAccount: addAccount,
+<<<<<<< HEAD
+        getAccountsByIdentity: getAccountsByIdentity,
+        getAccountByPhoneNumber:getAccountByPhoneNumber.
+=======
         getAccountsByOwner: getAccountsByOwner,
         getAccounts: getAccounts,
         getAccountByPhoneNumber: getAccountByPhoneNumber,
+>>>>>>> a31afd8ded91e90418387957111c63cc9e1d9208
         getAccountById: getAccountById,
         updateAccount: updateAccount,
         deleteAccount: deleteAccount
