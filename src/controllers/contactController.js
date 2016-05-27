@@ -47,7 +47,14 @@ var contactController = function (knex) {
             contact.countryCode,
             contact.contactMechs
         );
-        
+
+        var contactMechsEntity = [];
+        for (var i = 0; i < contact.contactMechs.length; i++) {
+            contactMechsEntity.push(new ContactMech(
+                contact.contactMechs
+            ));
+        }
+
         var userEntity = new User(
             user.userId,
             user.password,
@@ -87,7 +94,7 @@ var contactController = function (knex) {
                         ContactMechController.addContactMech(contactEntity.contactMechs[i])
                             .then(function (contactMechId) {
                                 return ContactMechController.linkContactMechToParty(partyId, contactMechId);
-                        });
+                            });
                     }
                     return partyId;
                 });
@@ -251,85 +258,85 @@ var contactController = function (knex) {
      * Gets contacts by identity (see opentaps' Find Contact feature)u
      * @return {Object} promise - Fulfillment value is an array of contact entities
      */
-//    var getContactsByIdentity = function (partyId, firstName, lastName, userSecurityPerm) {
-//
-//        // Check security permissions of user against accepted permissions for this function
-//        // Start by assuming this user does not have permission, until proven otherwise.
-//        var hasPermission = false;
-//
-//        if (userSecurityPerm.length > 0) {
-//
-//            // loop over userSecurityPerm in case user has more than one permission 
-//            for (var i = 0; i < userSecurityPerm.length; i++) {
-//                if (userSecurityPerm[i] === 'FULLADMIN') {
-//                    hasPermission = true;
-//                }
-//                if (userSecurityPerm[i] === 'PARTYADMIN') {
-//                    hasPermission = true;
-//                }
-//                if (userSecurityPerm[i] === 'CONTACT_OWNER') {
-//                    hasPermission = true;
-//                }
-//                if (userSecurityPerm[i] === 'ACCOUNT_OWNER') {
-//                    hasPermission = true;
-//                }
-//                if (userSecurityPerm[i] === 'CRMSFA_CONTACT_TASKS') {
-//                    hasPermission = true;
-//                }
-//            }
-//        }
-//        if (hasPermission) {
-//
-//            // user has permission, proceed to the data layer
-//            var promise = contactData.getContactsByOwner(ownerId)
-//                .then(function (contacts) {
-//
-//                    // Map the retrieved result set to corresponding entities
-//                    var contactEntities = [];
-//                    for (var i = 0; i < contacts.length; i++) {
-//                        var contact = new Contact(
-//                            contacts[i].party_id,
-//                            contacts[i].party_type_id,
-//                            contacts[i].currency_uom_id,
-//                            contacts[i].description,
-//                            contacts[i].status_id,
-//                            contacts[i].created_by,
-//                            contacts[i].created_date,
-//                            contacts[i].updated_date,
-//                            contacts[i].salutation,
-//                            contacts[i].first_name,
-//                            contacts[i].middle_name,
-//                            contacts[i].last_name,
-//                            contacts[i].birth_date,
-//                            contacts[i].comments,
-//                            contacts[i].country_code,
-//                            contacts[i].area_code,
-//                            contacts[i].contact_number,
-//                            contacts[i].ask_for_name,
-//                            contacts[i].info_string,
-//                            contacts[i].to_name,
-//                            contacts[i].attn_name,
-//                            contacts[i].address1,
-//                            contacts[i].address2,
-//                            contacts[i].city,
-//                            contacts[i].state_province_geo_id,
-//                            contacts[i].postal_code,
-//                            contacts[i].country_geo_id
-//                        );
-//                        contactEntities.push(contact);
-//                    }
-//                    return contactEntities;
-//                });
-//            promise.catch(function (error) {
-//                // Log the error
-//                winston.error(error);
-//            });
-//            return promise;
-//        } else {
-//            // user does not have permissions of a contact owner, return null
-//            return null;
-//        }
-//    };
+    //    var getContactsByIdentity = function (partyId, firstName, lastName, userSecurityPerm) {
+    //
+    //        // Check security permissions of user against accepted permissions for this function
+    //        // Start by assuming this user does not have permission, until proven otherwise.
+    //        var hasPermission = false;
+    //
+    //        if (userSecurityPerm.length > 0) {
+    //
+    //            // loop over userSecurityPerm in case user has more than one permission 
+    //            for (var i = 0; i < userSecurityPerm.length; i++) {
+    //                if (userSecurityPerm[i] === 'FULLADMIN') {
+    //                    hasPermission = true;
+    //                }
+    //                if (userSecurityPerm[i] === 'PARTYADMIN') {
+    //                    hasPermission = true;
+    //                }
+    //                if (userSecurityPerm[i] === 'CONTACT_OWNER') {
+    //                    hasPermission = true;
+    //                }
+    //                if (userSecurityPerm[i] === 'ACCOUNT_OWNER') {
+    //                    hasPermission = true;
+    //                }
+    //                if (userSecurityPerm[i] === 'CRMSFA_CONTACT_TASKS') {
+    //                    hasPermission = true;
+    //                }
+    //            }
+    //        }
+    //        if (hasPermission) {
+    //
+    //            // user has permission, proceed to the data layer
+    //            var promise = contactData.getContactsByOwner(ownerId)
+    //                .then(function (contacts) {
+    //
+    //                    // Map the retrieved result set to corresponding entities
+    //                    var contactEntities = [];
+    //                    for (var i = 0; i < contacts.length; i++) {
+    //                        var contact = new Contact(
+    //                            contacts[i].party_id,
+    //                            contacts[i].party_type_id,
+    //                            contacts[i].currency_uom_id,
+    //                            contacts[i].description,
+    //                            contacts[i].status_id,
+    //                            contacts[i].created_by,
+    //                            contacts[i].created_date,
+    //                            contacts[i].updated_date,
+    //                            contacts[i].salutation,
+    //                            contacts[i].first_name,
+    //                            contacts[i].middle_name,
+    //                            contacts[i].last_name,
+    //                            contacts[i].birth_date,
+    //                            contacts[i].comments,
+    //                            contacts[i].country_code,
+    //                            contacts[i].area_code,
+    //                            contacts[i].contact_number,
+    //                            contacts[i].ask_for_name,
+    //                            contacts[i].info_string,
+    //                            contacts[i].to_name,
+    //                            contacts[i].attn_name,
+    //                            contacts[i].address1,
+    //                            contacts[i].address2,
+    //                            contacts[i].city,
+    //                            contacts[i].state_province_geo_id,
+    //                            contacts[i].postal_code,
+    //                            contacts[i].country_geo_id
+    //                        );
+    //                        contactEntities.push(contact);
+    //                    }
+    //                    return contactEntities;
+    //                });
+    //            promise.catch(function (error) {
+    //                // Log the error
+    //                winston.error(error);
+    //            });
+    //            return promise;
+    //        } else {
+    //            // user does not have permissions of a contact owner, return null
+    //            return null;
+    //        }
+    //    };
 
     /**
      * Update a contact in database
