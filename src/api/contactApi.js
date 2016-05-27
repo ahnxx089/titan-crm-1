@@ -52,6 +52,21 @@ var contactApi = function (knex) {
     // by PhoneNumber (but not getContactById, which is on a separate route).
     var getContacts = function (req, res) {
 
+
+        /* TROUBLESHOOTING NEW ERROR THAT DID NOT HAPPEN PRIOR TO CHANGES TO CONTACT ENTITY
+            ON MAY 26:
+            -- A new error occurs below at the end of the IF block for a getContactsByOwner request,
+                which is req.query.hasOwnProperty('owner').
+            -- The error occurs where, after successfully retrieving a user's Contacts so that
+                resultsForThisUser is a promise, the ELSE block calls res.json to send the 
+                results back out to ARC.
+            -- The error is:  "Unhandled rejection Error: Can't set headers after they are sent."
+            -- A stackoverflow discussion thread at:
+            http://stackoverflow.com/questions/7042340/node-js-error-cant-set-headers-after-they-are-sent
+                provides guidance . . . trying to follow it now . . . what state is res in?
+        */
+        //console.log('\ncontactApi.getContact immediately inside, above if blocks, res.header = ', res.header);
+
         // GET /api/contacts?owner
         //
         // getContactsByOwner:  an IF block triggers it if a query by owner has been made
@@ -76,6 +91,9 @@ var contactApi = function (knex) {
         // req.user.securityPermissions being an empty array in the controller layer.        
         //
         if (req.query.hasOwnProperty('owner')) {
+            
+            //console.log('\ncontactApi.getContact immediately inside if block for getContactsByOwner, res.header = ', res.header);
+
             var ownerId = req.user.partyId;
             var userSecurityPerm = req.user.securityPermissions;
 
@@ -87,6 +105,11 @@ var contactApi = function (knex) {
             // the null for users without permission.  That's not doing logic in the API layer,
             // just funnelling the result of logic in the control layer out sensibly.
             var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
+            
+            //console.log('\ncontactApi.getContactsByOwner after returned from controller, res.header = ', res.header);
+            //console.log(typeof resultsForThisUser);
+            //console.log('\n contactApi after returned from controller layer, resultsForThisUser = ', resultsForThisUser);
+            
             if (resultsForThisUser === null) {
                 res.json('You do not have permission to own contacts!');
             } else {

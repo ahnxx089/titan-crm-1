@@ -160,6 +160,16 @@ var contactController = function (knex) {
      */
     var getContactsByOwner = function (ownerId, userSecurityPerm) {
 
+        /* TRACING ERROR DOWN FROM API LAYER-- IS res.body SOMEHOW GETTING SET DOWN HERE
+            IN THE CONTROLLER LAYER UNKNOWINGLY?  BECAUSE WHEN THIS RETURNS TO THE API
+            LAYER, THE ATTEMPT UP THERE TO res.json(contacts) IS THROWING ERROR
+            "Unhandled rejection Error: Can't set headers after they are sent".  
+            IS SOMETHING IN HERE TRYING TO SET THE HEADER?
+            */
+        
+        //console.log('\ncontactController.getContactsByOwner, incoming ownerId = ', ownerId);
+        //console.log('\ncontactController.getContactsByOwner, incoming userSecurityPerm = ', userSecurityPerm);
+        
         // SECURITY PERMISSIONS ARE IMPLEMENTED HERE IN THE CONTROLLER LAYER
         //  1. For a user with permission to own a Contact, it proceeds to data layer and upon
         //      return it returns up to Api layer a function.
@@ -196,7 +206,8 @@ var contactController = function (knex) {
             }
         }
         if (hasPermission) {
-
+            //console.log('\nThis user has permission to own contacts, proceeding to data layer...');
+            
             // user has permission, proceed to the data layer
             var promise = contactData.getContactsByOwner(ownerId)
                 .then(function (contacts) {
@@ -218,23 +229,12 @@ var contactController = function (knex) {
                             contacts[i].middle_name,
                             contacts[i].last_name,
                             contacts[i].birth_date,
-                            contacts[i].comments,
-                            contacts[i].country_code,
-                            contacts[i].area_code,
-                            contacts[i].contact_number,
-                            contacts[i].ask_for_name,
-                            contacts[i].info_string,
-                            contacts[i].to_name,
-                            contacts[i].attn_name,
-                            contacts[i].address1,
-                            contacts[i].address2,
-                            contacts[i].city,
-                            contacts[i].state_province_geo_id,
-                            contacts[i].postal_code,
-                            contacts[i].country_geo_id
+                            contacts[i].comments
                         );
                         contactEntities.push(contact);
+                        //console.log('\ncontactController.getContactsByOwner, contactEntities = ', contactEntities)
                     }
+                    //console.log('\n about to return contactEntities to contactApi...');
                     return contactEntities;
                 });
             promise.catch(function (error) {
