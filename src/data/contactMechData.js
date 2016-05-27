@@ -188,6 +188,21 @@ var contactMechData = function (knex) {
             });
     };
 
+    var linkContactMechToParty = function (partyId, contactMechId) {
+        return knex.insert({
+                party_id: partyId,
+                contact_mech_id: contactMechId,
+                contact_mech_purpose_type_id: 'GENERAL_LOCATION', //need to fix
+                from_date: (new Date()).toISOString(),
+                through_date: null,
+                verified: null,
+                comments: null,
+                created_date: (new Date()).toISOString(),
+                updated_date: (new Date()).toISOString()
+            })
+            .into('party_contact_mech');
+    };
+
     return {
         addContactMechToGeneralTable: addContactMechToGeneralTable,
         addContactMechToTelecomTable: addContactMechToTelecomTable,
@@ -195,7 +210,8 @@ var contactMechData = function (knex) {
         getContactMechs: getContactMechs,
         getContactMechById: getContactMechById,
         updateContactMech: updateContactMech,
-        deleteContactMech: deleteContactMech
+        deleteContactMech: deleteContactMech,
+        linkContactMechToParty: linkContactMechToParty
     };
 };
 

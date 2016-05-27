@@ -44,7 +44,7 @@ ContactMech.prototype.validateForInsert = function () {
     // Perform general validations
     var validations = [
             this.validateContactMechTypeId(true),
-            this.validateInfoString(true)
+            this.validateInfoString(false)
     ];
 
     // Perform validations specific to postal addresses
@@ -67,10 +67,10 @@ ContactMech.prototype.validateForInsert = function () {
     if (this.infoString === 'TELECOM_NUMBER') {
         //validations only applicable to postal addresses
         validations.concat([
-            this.validateCountryCode(true),
-            this.validateAreaCode(true),
+            this.validateCountryCode(false),
+            this.validateAreaCode(false),
             this.validateContactNumber(true),
-            this.validateaskForName(true)
+            this.validateaskForName(false)
         ]);
     }
 
@@ -93,7 +93,7 @@ ContactMech.prototype.validateForUpdate = function () {
     var validations = [
             this.contactMechId(true),
             this.validateContactMechTypeId(true),
-            this.validateInfoString(true)
+            this.validateInfoString(false)
     ];
 
     // Perform validations specific to postal addresses
@@ -116,10 +116,10 @@ ContactMech.prototype.validateForUpdate = function () {
     if (this.infoString === 'TELECOM_NUMBER') {
         //validations only applicable to postal addresses
         validations.concat([
-            this.validateCountryCode(true),
-            this.validateAreaCode(true),
+            this.validateCountryCode(false),
+            this.validateAreaCode(false),
             this.validateContactNumber(true),
-            this.validateAskForName(true)
+            this.validateAskForName(false)
         ]);
     }
 

@@ -5,11 +5,10 @@
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>
 /////////////////////////////////////////////////
 
-/*
+
 var knex = require('../src/config/knexConfig')().getConfig();
 var contactController = require('../src/controllers/contactController')(knex);
 var Contact = require('../src/entities/contact');
-*/
 
 describe('Contact module ', function () {
 
@@ -28,12 +27,11 @@ describe('Contact module ', function () {
                 // Call done to finish the async function
                 done();            
         });
-    });
+    })
 
 
-
-
-    it('getContacts returns all contacts in system as an array of Contact objects', function (done) {
+    // TO BE ELIMIMATED IN FAVOR OF ABOVE
+    xit('getContacts returns all contacts in system as an array of Contact objects', function (done) {
            contactController.getContactsByOwner().then(function(contacts) {
                expect(contacts).toBeTruthy();
                // Get types of returned objects
@@ -48,8 +46,7 @@ describe('Contact module ', function () {
     });
     
 
-/*
-    it('getContactById returns a valid contact entity', function (done) {
+    xit('getContactById returns a valid contact entity', function (done) {
            contactController.getContactById(2).then(function(contact) {
                expect(contact).toBeTruthy();
                expect(contact instanceof Contact).toBeTruthy();
