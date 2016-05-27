@@ -26,11 +26,8 @@ var contactApi = function (knex) {
     var addContact = function (req, res) {
         var contact = req.body;
         var user = req.user;
-        console.log('\ncontactApi.addContact:  incoming req.body = var contact = ', contact);
-        console.log('\ncontactApi.addContact:  incoming req.user = var user = ', user);
-        
+
         var result = contactController.addContact(contact, user);
-        console.log('\ncontactApi.addContact:  controller returned result = ', result);
         // An array in result means it's array of validation errors
         if (Object.prototype.toString.call(result) === '[object Array]') {
             res.json(result);
@@ -48,19 +45,12 @@ var contactApi = function (knex) {
 
     // GET /api/contacts
     // 
-    // Methods:  there are two specific methods for getting Contacts using 
-    // this route /api/contacts/ 
-    // They are handled in this "meta" function called getContacts()
-    // with IF blocks that test whether the user entered a query string
-    // seeking to get Contacts by Owner, by Identity or other ways
-    // (besides getContactById, which is on a separate route).
+    // Methods:  there are specific methods for getting Contacts on this route /api/contacts/ 
+    //
+    // They are handled in this "meta" function called getContacts() with IF blocks that test 
+    // whether the user entered a query string seeking to get Contacts by Owner, by Identity or 
+    // by PhoneNumber (but not getContactById, which is on a separate route).
     var getContacts = function (req, res) {
-
-        // DINESH'S DIAGNOSTICS (COMMENTED OUT, PLEASE DO NOT DELETE FOR NOW)
-        // Shows req.user.securityPermissions contains this user's one or more security permissions.
-        //console.log('\nin contactApi.getContacts: req.user.userID = ', req.user.userId);
-        //console.log('in contactApi.getContacts: req.user.partyID = ', req.user.partyId);
-        //console.log('in contactApi.getContacts: req.user.securityPermissions = ', req.user.securityPermissions);
 
         // GET /api/contacts?owner
         //
@@ -76,6 +66,7 @@ var contactApi = function (knex) {
         // For a user with valid token, at this point req.user.securityPermissions = 
         // [ 'FULLADMIN' ] or [ 'CONTACT_OWNER' ] or [ 'PARTY_ADMIN' ] (all of which are
         // security permissions that the owner of a Contact might have.)  
+        //
         // By contrast and for reasons I cannot explain or figure out, a user with a valid
         // token but whose security permission is, e.g., LEAD_OWNER and does not have 
         // contact owner permission, req.user.securityPermission comes in as an empty array.
@@ -89,35 +80,48 @@ var contactApi = function (knex) {
             var userSecurityPerm = req.user.securityPermissions;
 
             // Controller layer determines if user has one of the permissions of contact owners.
-            //  1.  If YES, returns a Promise object (and ultimately  promise comes back with
+            //  1.  If YES, returns a Promise object (and ultimately the promise comes back with
             //      partyIds of contacts this user owns, if any... I think that's how promises work).
             //  2.  If NO, controller returns null.
             // Per May 25 standup meeting, a simple if block returns either the promise or 
-            // the null for users without permission.
+            // the null for users without permission.  That's not doing logic in the API layer,
+            // just funnelling the result of logic in the control layer out sensibly.
             var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
-
-            //console.log('typeof resultsForThisUser is ', typeof resultsForThisUser);
-            //console.log(typeof resultsForThisUser === 'object');
-            
             if (resultsForThisUser === null) {
                 res.json('You do not have permission to own contacts!');
-            } 
-            else {
+            } else {
                 resultsForThisUser.then(function (contacts) {
                     res.json(contacts);
                 });
             }
         }
 
-        // *** DINESH HAS NOT IMPLEMENTED YET:  getContactsByIdentity
+        /* getContactsByIdentity -- WORK IN PROGRESS, DINESH WILL FINISH SOON
+            -- unlike the case of getContactsByOwner above, here we can use the query string.
+            -- there is still security permissions checking done below in the controller layer,
+                so if the user does not have FULLADMIN or PARTYADMIN or CONTACT_OWNER or
+                ACCOUNT_OWNER or CRMSFA_CONTACT_TASKS in user_login_security_group.permission_group_id
+                then they will be told they do not have permission.  
+        */
+
+        // GET /api/contacts?partyId=&firstName=&lastName=
         //
-        // GET /api/contacts?identity
-        //if ( req.query.WHAT??? ) {
-        //    contactController.getContactsByIdentity()
-        //        .then(function (contacts) {
-        //            res.json(contacts);
-        //        });
-        //}
+        if (req.query.hasOwnProperty('partyId') || req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
+
+            var partyId = req.query.partyId;
+            var firstName = req.query.firstName;
+            var lastName = req.query.lastName;
+            var userSecurePerm = req.user.securityPermissions;
+
+            var resultsForUser = contactController.getContactsByIdentity(partyId, firstName, lastName, userSecurePerm);
+            if (resultsForUser === null) {
+                res.json('You do not have permission to get contacts by the supplied queries!');
+            } else {
+                resultsForUser.then(function (contacts) {
+                    res.json(contacts);
+                });
+            }
+        }
 
         // GET /api/contacts?phoneNum
         //if (INSERT LOGIC HERE){
