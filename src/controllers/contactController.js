@@ -44,21 +44,12 @@ var contactController = function (knex) {
             contact.birthDate,
             contact.comments,
             contact.countryCode,
-            contact.areaCode,
-            contact.contactNumber,
-            contact.askForName,
-            contact.emailAddress,
-            contact.toName,
-            contact.attentionName,
-            contact.addressLine1,
-            contact.addressLine2,
-            contact.city,
-            contact.stateOrProvinceId,
-            contact.zipOrPostalCode,
-            contact.countryId
+            contact.contactMechs
         );
         console.log('\ncontactController.addContact:  typeof contactEntity = ', typeof contactEntity);
         console.log('\ncontactController.addContact:  contactEntity = ', contactEntity);
+
+
 
         // Validate the data before going ahead
         var validationErrors = contactEntity.validateForInsert();
@@ -67,6 +58,12 @@ var contactController = function (knex) {
             // Pass on the entity to be added to the data layer
             var promise = contactData.addContact(contactEntity)
                 .then(function (partyId) {
+                    for (var i = 0; i < contactEntity.contactMechs.length; i++) {
+                        ContactMechController.addContactMech(contactEntity.contactMechs[i])
+                            .then(function (contactMechId) {
+                                return ContactMechController.linkContactMechToParty(partyId, contactMechId);
+                        });
+                    }
                     return partyId;
                 });
             promise.catch(function (error) {

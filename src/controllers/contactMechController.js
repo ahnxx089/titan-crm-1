@@ -220,13 +220,28 @@ var contactController = function (knex) {
         return promise;
     };
 
+    var linkContactMechToParty = function (partyId, contactMechId) {
+
+        var promise = contactMechData.linkContactMechToParty(partyId, contactMechId)
+            .then(function (result) {
+                return result;
+            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
+        return promise;
+
+    };
+
     return {
         addContactMech: addContactMech,
         getContactMechs: getContactMechs,
         getContactMechById: getContactMechById,
         updateContactMech: updateContactMech,
-        deleteContactMech: deleteContactMech
+        deleteContactMech: deleteContactMech,
+        linkContactMechToParty: linkContactMechToParty
     };
 };
 
-module.exports = contactController;
+module.exports = contactMechController;

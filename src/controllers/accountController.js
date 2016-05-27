@@ -156,7 +156,6 @@ var accountController = function(knex) {
      * @param {Number} phoneNumber - Unique phone number associated with the account to be fetched
      * @return {Object} promise - Fulfillment value is a raw data object
      */
-<<<<<<< HEAD
     var getAccountByPhoneNumber = function (phoneNumberId, userSecurityPerm) {
         var promise = accountData.getAccountByPhoneNumber(phoneNumberId)
         Account.find(phoneNumberId, function(err, accounts){
@@ -232,21 +231,6 @@ var accountController = function(knex) {
     /**
      * Gets one account by its owner
      * @param {Number} ownerId - Unique id of the account to be fetched
-=======
-//    var getAccountByPhoneNumber = function (phoneNumber) {
-//        
-//    };
-    /**
-     * Gets one account by <SOME ACCOUNT ATTRIBUTE OR COMBINATION OF ATTRIBUTES> from database
-     * @param {String????? Multi-property JSON Object???} identity - The identity/identities of the account to be retrieved
-     * @return {Object} promise - Fulfillment value is a raw data object
-     */
-    
-    
-    /**
-     * Gets one account by its phoneNumber
-     * @param {Number} phoneNumber - Phone number of the party to be fetched
->>>>>>> a31afd8ded91e90418387957111c63cc9e1d9208
      * @return {Object} promise - Fulfillment value is a account entity
     */
     var getAccountByOwner = function (ownerId) {
