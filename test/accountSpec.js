@@ -6,11 +6,9 @@
 //          DukJin Ahn <ahnxx089@gmail.com>
 /////////////////////////////////////////////////
 
-/*
 var knex = require('../src/config/knexConfig')().getConfig();
 var accountController = require('../src/controllers/accountController')(knex);
 var Account = require('../src/entities/account');
-*/
 
 
 describe('Account module', function () {
