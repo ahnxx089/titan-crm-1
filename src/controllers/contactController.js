@@ -340,14 +340,32 @@ var contactController = function (knex) {
      */
     var updateContact = function (contactId, contact) {
         //Convert contact to entity
+        var contactEntity = new Contact(
+            null,
+            contact.partyTypeId,
+            contact.preferredCurrencyUomId,
+            contact.description,
+            contact.statusId,
+            contact.createdBy,
+            contact.createdDate,
+            contact.updatedDate,
+            contact.salutation,
+            contact.firstName,
+            contact.middleName,
+            contact.lastName,
+            contact.birthDate,
+            contact.comments,
+            contact.countryCode,
+            contact.contactMechs
+        );
 
-        var validationErrors = contact.validateForUpdate();
+        var validationErrors = contactEntity.validateForUpdate();
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
             var promise = contactMechData.updateContact(contact)
                 .then(function (numRows) {
-                    for (var i = 0; i < contact.contactMechs.length; i++) {
-                        numRows += ContactMechController.updateContactMech(contact.contactMechs[i]);
+                    for (var i = 0; i < contactEntity.contactMechs.length; i++) {
+                        numRows += ContactMechController.updateContactMech(contactEntity.contactMechs[i]);
                     }
                     return numRows;
                 })
