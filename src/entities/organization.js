@@ -8,7 +8,7 @@
 /////////////////////////////////////////////////
 
 var validation = require('../common/validation')();
-var Party = require('../entities/party')();
+var Party = require('../entities/party');
 
 // Constructor
 //

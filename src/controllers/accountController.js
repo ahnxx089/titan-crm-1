@@ -8,7 +8,8 @@
 /* jshint camelcase: false */
 
 var winston = require('winston');
-var Account = require('../entities/account');
+var Account = require('../entities/account')();
+var userController = require('../controllers/userController');
 
 var accountController = function(knex) {
     // Get a reference to data layer module
@@ -24,7 +25,7 @@ var accountController = function(knex) {
      * @param {Object} account - The new account to be added
      * @return {Object} promise - Fulfillment value is id of new account
     */
-    var addAccount = function (account, contact, user) {
+    var addAccount = function (account, user, contact) {
         // Convert the received object into an entity
         var accountEntity = new Account(
             null,
@@ -39,10 +40,12 @@ var accountController = function(knex) {
             (new Date()).toISOString()
         );
         // Validate the data before going ahead
-        var validationErrors = accountEntity.validateForInsert();
+        var validationErrors = accountEntity.validateForInsert(); 
+        //MUST I ALSO VALIDATE THE USER CREDENTIALS AS WELL? I'M PASSING IT TO THE DB...
+        var userEntity = userController.getUserById(user.userId);
         if(validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
-            var promise = accountData.addAccount(accountEntity)
+            var promise = accountData.addAccount(accountEntity, userEntity)
                 .then(function(partyId) {
                    return partyId; 
                 });
@@ -156,17 +159,16 @@ var accountController = function(knex) {
      * @param {Number} phoneNumber - Unique phone number associated with the account to be fetched
      * @return {Object} promise - Fulfillment value is a raw data object
      */
-<<<<<<< HEAD
-    var getAccountByPhoneNumber = function (phoneNumberId, userSecurityPerm) {
+    /*var getAccountByPhoneNumber = function (phoneNumberId, userSecurityPerm) {
         var promise = accountData.getAccountByPhoneNumber(phoneNumberId)
-        Account.find(phoneNumberId, function(err, accounts){
+        .then(Account.find(phoneNumberId, function(err, accounts){
             if(err){
-                console.log("Account phoneNumber didn't find"+ err)
+                console.log('Account phoneNumber didn\'t find '+ err);
             }else if(accounts){
                 req.account = accounts;
             }
             
-        })
+        }))
             .then(function(accounts) {
                 // Map the retrieved result set to corresponding entity
                 var accountEntity = new Account(
@@ -188,19 +190,19 @@ var accountController = function(knex) {
                 winston.error(error);
             });
         return promise;
-    };
+    };*/
     /**
      * Gets one account by <SOME ACCOUNT ATTRIBUTE OR COMBINATION OF ATTRIBUTES> from database
      * @param {String????? Multi-property JSON Object???} identity - The identity/identities of the account to be retrieved
      * @return {Object} promise - Fulfillment value is a raw data object
      */
-    var getAccountsByIdentity = function (identityId, userSecurityPerm) {
-        var promise = accountData.getAccountsByIdentity(identityId)
+    /*var getAccountsByIdentity = function (identityId, userSecurityPerm) {
+        var promise = accountData.getAccountsByIdentity(identityId);
         Account.find(identityId, function(err, accounts){
             if(err){
-                console.log("Account Identity didn't find"+ err)
+                console.log('Account Identity didn\'t find '+ err);
             }else if(accounts){
-                req.accounts =accounts;
+                req.accounts = accounts;
             }
             
         })
@@ -219,7 +221,7 @@ var accountController = function(knex) {
                     accounts[i].created_date,
                     accounts[i].updated_date
                 );
-                ownedAccounts.push(accountEntity);
+                identityAccounts.push(accountEntity);
             }
             promise.catch(function(error) {
                 // Log the error
@@ -227,26 +229,11 @@ var accountController = function(knex) {
             });
             return identityAccounts;
         });
-    };
+    };*/
     
     /**
      * Gets one account by its owner
      * @param {Number} ownerId - Unique id of the account to be fetched
-=======
-//    var getAccountByPhoneNumber = function (phoneNumber) {
-//        
-//    };
-    /**
-     * Gets one account by <SOME ACCOUNT ATTRIBUTE OR COMBINATION OF ATTRIBUTES> from database
-     * @param {String????? Multi-property JSON Object???} identity - The identity/identities of the account to be retrieved
-     * @return {Object} promise - Fulfillment value is a raw data object
-     */
-    
-    
-    /**
-     * Gets one account by its phoneNumber
-     * @param {Number} phoneNumber - Phone number of the party to be fetched
->>>>>>> a31afd8ded91e90418387957111c63cc9e1d9208
      * @return {Object} promise - Fulfillment value is a account entity
     */
     var getAccountByOwner = function (ownerId) {

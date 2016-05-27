@@ -7,7 +7,7 @@
 
 var accountApi = function (knex) {
     //Not yet functional
-    var accountController = require('../controllers/accountController')();
+    var accountController = require('../controllers/accountController')(knex);
     //Not yet functional
     var middleware = function (req, res, next) {
         next();
@@ -20,7 +20,8 @@ var accountApi = function (knex) {
     // POST /api/accounts
     var addAccount = function (req, res) {
         var account = req.body;
-        var result = accountController.addAccount(account);
+        var user = req.user;
+        var result = accountController.addAccount(account, user);
         // An array in result means it's array of validation errors
         if( Object.prototype.toString.call(result) === '[object Array]' ) {
             res.json(result);
@@ -108,14 +109,10 @@ var accountApi = function (knex) {
 
     return {
         addAccount: addAccount,
-<<<<<<< HEAD
         getAccountsByIdentity: getAccountsByIdentity,
-        getAccountByPhoneNumber:getAccountByPhoneNumber.
-=======
         getAccountsByOwner: getAccountsByOwner,
         getAccounts: getAccounts,
         getAccountByPhoneNumber: getAccountByPhoneNumber,
->>>>>>> a31afd8ded91e90418387957111c63cc9e1d9208
         getAccountById: getAccountById,
         updateAccount: updateAccount,
         deleteAccount: deleteAccount
