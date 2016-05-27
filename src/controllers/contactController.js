@@ -51,8 +51,9 @@ var contactController = function (knex) {
         );
 
         var contactMechEntities = [];
+        var i;
         if (contact.contactMechs) {
-            for (var i = 0; i < contact.contactMechs.length; i++) {
+            for (i = 0; i < contact.contactMechs.length; i++) {
                 contactMechEntities.push(new ContactMech(
                     contact.contactMechs[i].contactMechId,
                     contact.contactMechs[i].contactMechTypeId,
@@ -95,7 +96,7 @@ var contactController = function (knex) {
         var validationErrors = [];
         var contactValidationErrors = contactEntity.validateForInsert();
         //Errors are non-empty validation results
-        for (var i = 0; i < contactValidationErrors.length; i++) {
+        for (i = 0; i < contactValidationErrors.length; i++) {
             if (contactValidationErrors[i]) {
                 validationErrors.push(contactValidationErrors[i]);
             }
@@ -133,7 +134,7 @@ var contactController = function (knex) {
                 var contactEntity;
                 if (contacts.length > 0) {
                     // Map the retrieved result set to corresponding entity
-                    var contactEntity = new Contact(
+                    contactEntity = new Contact(
                         contacts[0].party_id,
                         contacts[0].party_type_id,
                         contacts[0].currency_uom_id,
