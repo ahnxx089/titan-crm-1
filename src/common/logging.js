@@ -26,6 +26,6 @@ module.exports = function() {
         filename: './src/logs/error.log',
         maxsize: 10*1024*1024*1024, // 10 MB in bytes
         handleExceptions: true,
-        //humanReadableUnhandledException: true
+        humanReadableUnhandledException: true
     });
 };
