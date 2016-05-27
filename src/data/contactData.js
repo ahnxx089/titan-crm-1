@@ -13,8 +13,8 @@
 var contactData = function (knex) {
 
     /**
-     * Add a new contact in the database -- THIS DOES THE INSERTS INTO TABLES
-     * party, person, party_role and party_relationship.
+     * Add a new contact in the database:  insert into tables party, person, 
+     *  party_role and party_relationship.
      * 
      *  CREDIT:  Much thanks to Lucas for demonstrating how to chain knex inserts into 
      *  more than just two tables as in addPerson.
@@ -76,7 +76,6 @@ var contactData = function (knex) {
             });
     };
 
-
     /**
      * Gets one contact by its id from database
      * @param {Number} contactId - Unique id of the contact to be fetched
@@ -103,7 +102,7 @@ var contactData = function (knex) {
      */
     var getContactsByOwner = function (ownerId) {
         //console.log('\ncontactData.getContactsByOwner, incoming ownerId = ', ownerId);
-        
+
         // The ownership is all contained within the party_relationship table alone;
         // however, the party table is joined so that column party.party_id of the
         // contact can be passed by this function back to the controller layer.
@@ -117,23 +116,23 @@ var contactData = function (knex) {
             .andWhere('party_id_to', ownerId);
     };
 
-    /** WORK IN PROGRESS, DINESH WILL FINISH SOON-- DO NOT RELY ON CONTENT PRESENTLY SHOWN BELOW
+    /** 
      * Gets all contacts from database by identity (first or last name matching)
-     * @param {Number} ownerId - Unique party_id of the user/owner whose contacts to be fetched
+     * @param {Number} firstName - firstName of  to be fetched
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
-    /*
-        var getContactsByIdentity = function (firstName, lastName) {
-            return knex.select('party.party_id','party.description','person.first_name','person.last_name')
-                .from('party_relationship')
-                .innerJoin('party', 'party.party_id', 'party_relationship.party_id_from')
-                .innerJoin('person', 'party.party_id', 'person.party_id')
-                .whereIn('role_type_id_to', ['PERSON_ROLE', 'SALES_REP', 'ACCOUNT_MANAGER'])
-                .andWhere('party_relationship_type_id', 'RESPONSIBLE_FOR')
-                .andWhere('role_type_id_from', 'CONTACT')
-                .andWhere('party_id_to', ownerId);
-        };
-    */
+    var getContactsByIdentity = function (firstName, lastName) {
+        var firstNameLike = '%' + firstName + '%';
+        var lastNameLike = '%' + lastName + '%';
+        return knex.select('person.party_id', 'person.first_name', 'person.last_name')
+            .from('party_relationship')
+            .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+            .whereIn('role_type_id_to', ['PERSON_ROLE', 'SALES_REP', 'ACCOUNT_MANAGER'])
+            .andWhere('party_relationship_type_id', 'RESPONSIBLE_FOR')
+            .andWhere('role_type_id_from', 'CONTACT')
+            .andWhere('first_name', 'like', firstNameLike)
+            .orWhere('last_name', 'like', lastNameLike);
+    };
 
     /**
      * Update a contact in database
@@ -175,6 +174,7 @@ var contactData = function (knex) {
         addContact: addContact,
         getContactById: getContactById,
         getContactsByOwner: getContactsByOwner,
+        getContactsByIdentity: getContactsByIdentity,
         updateContact: updateContact,
         deleteContact: deleteContact
     };
