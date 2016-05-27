@@ -54,12 +54,14 @@ var caseApi = function (knex) {
             }
         }
 
-        // GET /api/contacts?<QUERY STRING OF SOME KIND FOR ADVANCED SEARCH>
+        // GET /api/contacts?<MAYBE A QUERY STRING OF SOME KIND TO TRIGGER ADVANCED SEARCH?>
         //
-        // getContactsByAdvancedSearch: ELSE IF ensures there is only one response to API layer!
-        //                        See: http://www.ofssam.com/forums/showthread.php?tid=43 
+        // getContactsByAdvancedSearch: 
         //
-        /* DUK JIN, THE ELSE IF BLOCK IS COMMENTED OUT FOR NOW, ACTIVATE WHEN YOU ARE READY
+        /* DUK JIN, THE ELSE IF BLOCK IS COMMENTED OUT FOR NOW, ACTIVATE WHEN YOU ARE READY.
+            ELSE IF ensures there is only one response to API layer!
+            See: http://www.ofssam.com/forums/showthread.php?tid=43 
+            
         else if (  ) {
             
         }
