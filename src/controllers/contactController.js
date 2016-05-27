@@ -11,6 +11,7 @@ var winston = require('winston');
 var Contact = require('../entities/contact');
 var User = require('../entities/user');
 var ContactMechController = require('../controllers/contactMechController');
+var ContactMech = require('../entities/contactMech');
 
 var contactController = function (knex) {
     // Get a reference to data layer module
@@ -48,9 +49,9 @@ var contactController = function (knex) {
             contact.contactMechs
         );
 
-        var contactMechsEntity = [];
+        var contactMechEntities = [];
         for (var i = 0; i < contact.contactMechs.length; i++) {
-            contactMechsEntity.push(new ContactMech(
+            contactMechEntities.push(new ContactMech(
                 contact.contactMechs
             ));
         }
@@ -73,25 +74,18 @@ var contactController = function (knex) {
         var validationErrors = [];
         var contactValidationErrors = contactEntity.validateForInsert();
         //Errors are non-empty validation results
-        for (var i = 0; i < contactValidationErrors.length; i++) {
+        for (i = 0; i < contactValidationErrors.length; i++) {
             if (contactValidationErrors[i]) {
                 validationErrors.push(contactValidationErrors[i]);
             }
         }
-        var userValidationErrors = userEntity.validateForInsert();
-        for (i = 0; i < userValidationErrors.length; i++) {
-            if (userValidationErrors[i]) {
-                validationErrors.push(userValidationErrors[i]);
-            }
-        }
-
-
+        
         if (validationErrors.length === 0) {
             // Pass on the entities with info to be added to the data layer
             var promise = contactData.addContact(contactEntity, userEntity)
                 .then(function (partyId) {
-                    for (var i = 0; i < contactEntity.contactMechs.length; i++) {
-                        ContactMechController.addContactMech(contactEntity.contactMechs[i])
+                    for (var i = 0; i < contactMechEntities.length; i++) {
+                        ContactMechController.addContactMech(contactMechEntities[i])
                             .then(function (contactMechId) {
                                 return ContactMechController.linkContactMechToParty(partyId, contactMechId);
                             });
