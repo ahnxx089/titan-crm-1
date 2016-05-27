@@ -47,7 +47,7 @@ var contactController = function (knex) {
             contact.countryCode,
             contact.contactMechs
         );
-
+        
         var userEntity = new User(
             user.userId,
             user.password,

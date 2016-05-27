@@ -28,7 +28,31 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
 
     // this array will contain the contact mechanisms and will be 
     // dealt with in the controller layer.
-    this.contactMechs = contactMechs;
+    
+    // convert each contactMech to an entity
+    this.contactMechs = [];
+    for (var i = 0; i < contactMechs.length; i++) {
+        this.contactMechs.push(new ContactMech(
+            contactMechs.contactMechId, 
+            contactMechs.contactMechTypeId, 
+            contactMechs.infoString, 
+            contactMechs.createdDate,
+            contactMechs.updatedDate, 
+            contactMechs.countryCode, 
+            contactMechs.areaCode, 
+            contactMechs.contactNumber, 
+            contactMechs.askForName,
+            contactMechs.toName, 
+            contactMechs.attnName, 
+            contactMechs.address1, 
+            contactMechs.address2, 
+            contactMechs.directions, 
+            contactMechs.city, 
+            contactMechs.stateProvinceGeoId,
+            contactMechs.zipOrPostalCode, 
+            contactMechs.countryGeoId
+        ));
+    }
 
     /*  THESE WILL NOT BE USED AFTER ALL, contactMechs CONTAINS THAT INFO
         // Contact-specific properties
@@ -65,7 +89,7 @@ Contact.prototype.validateForInsert = function () {
     for (var i = 0; i < this.contactMechs.length; i++) {
         validations.concat(ContactMech.validateForInsert.call(this.contactMechs[i]));
     }
-    
+
     //Errors are non-empty validation results
     var errors = [];
     for (i = 0; i < validations.length; i++) {
