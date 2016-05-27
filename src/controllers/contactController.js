@@ -50,11 +50,31 @@ var contactController = function (knex) {
         );
 
         var contactMechEntities = [];
-        for (var i = 0; i < contact.contactMechs.length; i++) {
-            contactMechEntities.push(new ContactMech(
-                contact.contactMechs
-            ));
+        if (contact.contactMechs) {
+            for (var i = 0; i < contact.contactMechs.length; i++) {
+                contactMechEntities.push(new ContactMech(
+                    contact.contactMechs[i].contactMechId,
+                    contact.contactMechs[i].contactMechTypeId,
+                    contact.contactMechs[i].infoString,
+                    contact.contactMechs[i].createdDate,
+                    contact.contactMechs[i].updatedDate,
+                    contact.contactMechs[i].countryCode,
+                    contact.contactMechs[i].areaCode,
+                    contact.contactMechs[i].contactNumber,
+                    contact.contactMechs[i].askForName,
+                    contact.contactMechs[i].toName,
+                    contact.contactMechs[i].attnName,
+                    contact.contactMechs[i].address1,
+                    contact.contactMechs[i].address2,
+                    contact.contactMechs[i].directions,
+                    contact.contactMechs[i].city,
+                    contact.contactMechs[i].stateProvinceGeoId,
+                    contact.contactMechs[i].zipOrPostalCode,
+                    contact.contactMechs[i].countryGeoId
+                ));
+            }
         }
+
 
         var userEntity = new User(
             user.userId,
@@ -74,12 +94,12 @@ var contactController = function (knex) {
         var validationErrors = [];
         var contactValidationErrors = contactEntity.validateForInsert();
         //Errors are non-empty validation results
-        for (i = 0; i < contactValidationErrors.length; i++) {
+        for (var i = 0; i < contactValidationErrors.length; i++) {
             if (contactValidationErrors[i]) {
                 validationErrors.push(contactValidationErrors[i]);
             }
         }
-        
+
         if (validationErrors.length === 0) {
             // Pass on the entities with info to be added to the data layer
             var promise = contactData.addContact(contactEntity, userEntity)
@@ -341,7 +361,7 @@ var contactController = function (knex) {
     var updateContact = function (contactId, contact) {
         //Convert contact to entity
         var contactEntity = new Contact(
-            null,
+            contactId,
             contact.partyTypeId,
             contact.preferredCurrencyUomId,
             contact.description,
