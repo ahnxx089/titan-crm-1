@@ -10,7 +10,7 @@
 var winston = require('winston');
 var ContactMech = require('../entities/contactMech.js');
 
-var contactController = function (knex) {
+var contactMechController = function (knex) {
     // Get a reference to data layer module
     //
     var contactMechData = require('../data/contactMechData')(knex);
