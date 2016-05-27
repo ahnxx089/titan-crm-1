@@ -92,6 +92,22 @@ var router = function (knex) {
         .put(contactApi.updateContact)
         .delete(contactApi.deleteContact);
 
+    
+    // CASES
+    // ==========================================
+    var caseApi = require('../api/caseApi')(knex);
+    //
+    // NOTE: all GET methods except getCaseById are reached
+    // on the single route http://localhost:5000/api/cases
+    //
+    apiRouter.route('/cases')
+        .get(caseApi.getCases)
+        .post(caseApi.addCase);
+    apiRouter.route('/cases/:id')
+        .get(caseApi.getCaseById)
+        .put(caseApi.updateCase)
+        .delete(caseApi.deleteCase);
+
     return apiRouter;
 };
 
