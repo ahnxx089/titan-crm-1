@@ -42,19 +42,18 @@ Contact.prototype.constructor = Contact;
 //
 Contact.prototype.validateForInsert = function () {
     //Run parent validation method
-    var validations = Person.validateForInsert.call(this);
-
-    for (var i = 0; i < this.contactMechs.length; i++) {
-        validations.concat(ContactMech.validateForInsert.call(this.contactMechs[i]));
-    }
+    var validations = Person.prototype.validateForInsert.call(this);
 
     //Errors are non-empty validation results
     var errors = [];
-    for (i = 0; i < validations.length; i++) {
-        if (validations[i]) {
-            errors.push(validations[i]);
+    if (validations) {
+        for (var i = 0; i < validations.length; i++) {
+            if (validations[i]) {
+                errors.push(validations[i]);
+            }
         }
     }
+
     return errors;
 
 };
@@ -63,13 +62,9 @@ Contact.prototype.validateForUpdate = function () {
     //Run parent validation method
     var validations = Person.validateForUpdate.call(this);
 
-    for (var i = 0; i < this.contactMechs.length; i++) {
-        validations.concat(ContactMech.validateForUpdate.call(this.contactMechs[i]));
-    }
-
     //Errors are non-empty validation results
     var errors = [];
-    for (i = 0; i < validations.length; i++) {
+    for (var i = 0; i < validations.length; i++) {
         if (validations[i]) {
             errors.push(validations[i]);
         }

@@ -51,11 +51,32 @@ var contactController = function (knex) {
         );
 
         var contactMechEntities = [];
-        for (var i = 0; i < contact.contactMechs.length; i++) {
-            contactMechEntities.push(new ContactMech(
-                contact.contactMechs
-            ));
+        var i;
+        if (contact.contactMechs) {
+            for (i = 0; i < contact.contactMechs.length; i++) {
+                contactMechEntities.push(new ContactMech(
+                    contact.contactMechs[i].contactMechId,
+                    contact.contactMechs[i].contactMechTypeId,
+                    contact.contactMechs[i].infoString,
+                    contact.contactMechs[i].createdDate,
+                    contact.contactMechs[i].updatedDate,
+                    contact.contactMechs[i].countryCode,
+                    contact.contactMechs[i].areaCode,
+                    contact.contactMechs[i].contactNumber,
+                    contact.contactMechs[i].askForName,
+                    contact.contactMechs[i].toName,
+                    contact.contactMechs[i].attnName,
+                    contact.contactMechs[i].address1,
+                    contact.contactMechs[i].address2,
+                    contact.contactMechs[i].directions,
+                    contact.contactMechs[i].city,
+                    contact.contactMechs[i].stateProvinceGeoId,
+                    contact.contactMechs[i].zipOrPostalCode,
+                    contact.contactMechs[i].countryGeoId
+                ));
+            }
         }
+
 
         var userEntity = new User(
             user.userId,
@@ -113,10 +134,7 @@ var contactController = function (knex) {
                 var contactEntity;
                 if (contacts.length > 0) {
                     // Map the retrieved result set to corresponding entity
-                    // MUHAMMAD, SORRY, I REMOVED THE "var" DECLARATION YOU HAD ADDED IN FRONT OF
-                    // contactEntity BECAUSE JSHINT IS COMPLAINING AND I'M TRYING TO GET THE APP
-                    // BACK UP AND RUNNING DUE TO CRASH SOMEWHERE...
-                    contactEntity = new Contact(
+                    var contactEntity = new Contact(
                         contacts[0].party_id,
                         contacts[0].party_type_id,
                         contacts[0].currency_uom_id,
@@ -321,7 +339,7 @@ var contactController = function (knex) {
     var updateContact = function (contactId, contact) {
         //Convert contact to entity
         var contactEntity = new Contact(
-            null,
+            contactId,
             contact.partyTypeId,
             contact.preferredCurrencyUomId,
             contact.description,

@@ -95,11 +95,14 @@ var router = function (knex) {
     
     // CASES
     // ==========================================
-    var caseApi = require('../api/caseApi')(knex);
+    //
     //
     // NOTE: all GET methods except getCaseById are reached
     // on the single route http://localhost:5000/api/cases
     //
+    /*
+    var caseApi = require('../api/caseApi')(knex); //did you check in this file?
+    
     apiRouter.route('/cases')
         .get(caseApi.getCases)
         .post(caseApi.addCase);
@@ -107,6 +110,7 @@ var router = function (knex) {
         .get(caseApi.getCaseById)
         .put(caseApi.updateCase)
         .delete(caseApi.deleteCase);
+        */
 
     return apiRouter;
 };

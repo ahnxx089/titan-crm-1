@@ -162,11 +162,46 @@ var contactData = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */
     var deleteContact = function (contactId) {
-        return knex('party')
+        return knex('party_contact_mech')
             .where({
                 party_id: contactId
             })
-            .del();
+            .del()
+            .then(function (partyLinkRows) {
+                return knex('party_relationship')
+                    .where({
+                        party_id_from: contactId
+                    })
+                    .orWhere({
+                        party_id_to: contactId
+                    })
+                    .del()
+                    .then(function (relationshipRows) {
+                        return knex('party_role')
+                            .where({
+                                party_id: contactId
+                            })
+                            .del()
+                            .then(function (roleRows) {
+                                return knex('person')
+                                    .where({
+                                        party_id: contactId
+                                    })
+                                    .del()
+                                    .then(function (personRows) {
+                                        return knex('party')
+                                            .where({
+                                                party_id: contactId
+                                            })
+                                            .del()
+                                            .then(function (partyRows) {
+                                                return partyRows + personRows + roleRows + relationshipRows + partyLinkRows;
+                                            });
+                                    });
+                            });
+                    });
+            });
+
         //Does *not* delete any associated ContactMechs
     };
 
