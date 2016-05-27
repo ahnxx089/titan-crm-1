@@ -28,31 +28,7 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
 
     // this array will contain the contact mechanisms and will be 
     // dealt with in the controller layer.
-    
-    // convert each contactMech to an entity
-    this.contactMechs = [];
-    for (var i = 0; i < contactMechs.length; i++) {
-        this.contactMechs.push(new ContactMech(
-            contactMechs.contactMechId, 
-            contactMechs.contactMechTypeId, 
-            contactMechs.infoString, 
-            contactMechs.createdDate,
-            contactMechs.updatedDate, 
-            contactMechs.countryCode, 
-            contactMechs.areaCode, 
-            contactMechs.contactNumber, 
-            contactMechs.askForName,
-            contactMechs.toName, 
-            contactMechs.attnName, 
-            contactMechs.address1, 
-            contactMechs.address2, 
-            contactMechs.directions, 
-            contactMechs.city, 
-            contactMechs.stateProvinceGeoId,
-            contactMechs.zipOrPostalCode, 
-            contactMechs.countryGeoId
-        ));
-    }
+    this.contactMechs = contactMechs;
 
     /*  THESE WILL NOT BE USED AFTER ALL, contactMechs CONTAINS THAT INFO
         // Contact-specific properties

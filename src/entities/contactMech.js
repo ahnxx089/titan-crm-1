@@ -6,6 +6,8 @@
 // @authors: William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
+/* jshint maxparams: false */
+
 var validation = require('../common/validation')();
 
 // Constructor
