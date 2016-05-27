@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 26, 2016 at 12:42 PM
+-- Generation Time: May 27, 2016 at 08:49 PM
 -- Server version: 5.6.30
 -- PHP Version: 5.5.35
 
@@ -376,6 +376,11 @@ CREATE TABLE IF NOT EXISTS `enumeration` (
 --
 
 INSERT INTO `enumeration` (`enum_id`, `enum_type_id`, `enum_code`, `description`, `parent_enum_id`, `disabled`, `created_date`, `updated_date`) VALUES
+('AFFIL_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'AFFIL_CHANNEL', 'Affiliate Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
+('AMAZON_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'AMAZON_CHANNEL', 'Amazon.com', NULL, NULL, '2016-04-30 23:56:27', '2016-04-30 23:56:27'),
+('EBAY_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'EBAY_CHANNEL', 'eBay Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
+('EMAIL_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'EMAIL_CAHNNEL', 'E-Mail Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
+('FAX_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'FAX_CAHNNEL', 'Fax Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
 ('IND_AEROSPACE', 'PARTY_INDUSTRY', 'AEROSPACE', 'Aerospace', NULL, NULL, '2016-05-01 00:01:59', '2016-05-01 00:01:59'),
 ('IND_DISTRIBUTION', 'PARTY_INDUSTRY', 'DISTRIBUTION', 'Distribution', NULL, NULL, '2016-04-30 23:59:20', '2016-04-30 23:59:20'),
 ('IND_ETAILER', 'PARTY_INDUSTRY', 'ETAILER', 'E-tailer', NULL, NULL, '2016-04-30 23:59:20', '2016-04-30 23:59:20'),
@@ -397,7 +402,12 @@ INSERT INTO `enumeration` (`enum_id`, `enum_type_id`, `enum_code`, `description`
 ('OWN_PARTNERSHIP', 'PARTY_OWNERSHIP', 'PARTNERSHIP', 'Partnership', NULL, NULL, '2016-05-10 15:50:46', '2016-05-10 15:50:46'),
 ('OWN_PROPRIETOR', 'PARTY_OWNERSHIP', 'PROPRIETOR', 'Sole Proprietorship', NULL, NULL, '2016-05-10 15:50:46', '2016-05-10 15:50:46'),
 ('OWN_PUBLIC_CORP', 'PARTY_OWNERSHIP', 'PUBLIC_CORP', 'Public Corporation', NULL, NULL, '2016-05-10 15:50:46', '2016-05-10 15:50:46'),
-('OWN_SCORP', 'PARTY_OWNERSHIP', 'SCORP', 'S-Corporation', NULL, NULL, '2016-05-10 15:50:46', '2016-05-10 15:50:46');
+('OWN_SCORP', 'PARTY_OWNERSHIP', 'SCORP', 'S-Corporation', NULL, NULL, '2016-05-10 15:50:46', '2016-05-10 15:50:46'),
+('PHONE_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'PHONE_CAHNNEL', 'Phone Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
+('POS_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'POS_CHANNEL', 'POS Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
+('SNAIL_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'SNAIL_CAHNNEL', 'Snail Mail Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
+('UNKNWN_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'UNKOWN_CAHNNEL', 'Unknown Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
+('WEB_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'WEB_CHANNEL', 'Web Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36');
 
 -- --------------------------------------------------------
 
@@ -419,6 +429,7 @@ CREATE TABLE IF NOT EXISTS `enumeration_type` (
 --
 
 INSERT INTO `enumeration_type` (`enum_type_id`, `parent_type_id`, `has_table`, `description`, `created_date`, `updated_date`) VALUES
+('ORDER_SALES_CHANNEL', NULL, 0, 'Order Sales Channel', '2016-05-26 17:36:24', '2016-05-26 17:36:24'),
 ('PARTY_INDUSTRY', NULL, 0, 'Industry', '2016-05-10 14:42:07', '2016-05-10 14:42:07'),
 ('PARTY_OWNERSHIP', NULL, 0, 'Ownership types', '2016-05-10 14:42:07', '2016-05-10 14:42:07');
 
@@ -1738,6 +1749,319 @@ CREATE TABLE IF NOT EXISTS `postal_address` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `product`
+--
+
+CREATE TABLE IF NOT EXISTS `product` (
+  `product_id` varchar(20) NOT NULL,
+  `product_type_id` varchar(20) DEFAULT NULL,
+  `primary_product_category_id` varchar(20) DEFAULT NULL,
+  `manufacturer_party_id` int(11) DEFAULT NULL,
+  `introduction_date` datetime DEFAULT NULL,
+  `support_discontinuation_date` datetime DEFAULT NULL,
+  `sales_discontinuation_date` datetime DEFAULT NULL,
+  `internal_name` varchar(255) DEFAULT NULL,
+  `brand_name` varchar(100) DEFAULT NULL,
+  `comments` varchar(255) DEFAULT NULL,
+  `product_name` varchar(100) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `long_description` longtext,
+  `price_detail_text` varchar(255) DEFAULT NULL,
+  `small_image_url` varchar(255) DEFAULT NULL,
+  `medium_image_url` varchar(255) DEFAULT NULL,
+  `large_image_url` varchar(255) DEFAULT NULL,
+  `detail_image_url` varchar(255) DEFAULT NULL,
+  `original_image_url` varchar(255) DEFAULT NULL,
+  `quantity_uom_id` varchar(20) DEFAULT NULL,
+  `quantity_included` decimal(18,6) DEFAULT NULL,
+  `pieces_included` decimal(20,0) DEFAULT NULL,
+  `require_amount` tinyint(1) DEFAULT NULL,
+  `fixed_amount` decimal(18,2) DEFAULT NULL,
+  `amount_uom_type_id` varchar(20) DEFAULT NULL,
+  `weight_uom_id` varchar(20) DEFAULT NULL,
+  `weight` decimal(18,6) DEFAULT NULL,
+  `height_uom_id` varchar(20) DEFAULT NULL,
+  `product_height` decimal(18,6) DEFAULT NULL,
+  `shipping_height` decimal(18,6) DEFAULT NULL,
+  `width_uom_id` varchar(20) DEFAULT NULL,
+  `product_width` decimal(18,6) DEFAULT NULL,
+  `shipping_width` decimal(18,6) DEFAULT NULL,
+  `depth_uom_id` varchar(20) DEFAULT NULL,
+  `product_depth` decimal(18,6) DEFAULT NULL,
+  `shipping_depth` decimal(18,6) DEFAULT NULL,
+  `product_rating` decimal(18,6) DEFAULT NULL,
+  `returnable` tinyint(1) DEFAULT NULL,
+  `taxable` tinyint(1) DEFAULT NULL,
+  `charge_shipping` tinyint(1) DEFAULT NULL,
+  `include_in_promotions` tinyint(1) DEFAULT NULL,
+  `is_virtual` tinyint(1) DEFAULT NULL,
+  `is_variant` tinyint(1) DEFAULT NULL,
+  `origin_geo_id` varchar(20) DEFAULT NULL,
+  `bill_of_material_level` decimal(20,0) DEFAULT NULL,
+  `created_by_user_login` varchar(250) DEFAULT NULL,
+  `last_modified_by_user_login` varchar(250) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_category`
+--
+
+CREATE TABLE IF NOT EXISTS `product_category` (
+  `product_category_id` varchar(20) NOT NULL,
+  `product_category_type_id` varchar(20) DEFAULT NULL,
+  `primary_parent_category_id` varchar(20) DEFAULT NULL,
+  `category_name` varchar(100) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `long_description` longtext,
+  `category_image_url` varchar(255) DEFAULT NULL,
+  `link_one_image_url` varchar(255) DEFAULT NULL,
+  `link_two_image_url` varchar(255) DEFAULT NULL,
+  `show_in_select` tinyint(1) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `product_category`
+--
+
+INSERT INTO `product_category` (`product_category_id`, `product_category_type_id`, `primary_parent_category_id`, `category_name`, `description`, `long_description`, `category_image_url`, `link_one_image_url`, `link_two_image_url`, `show_in_select`, `created_date`, `updated_date`) VALUES
+('100', 'CATALOG_CATEGORY', 'CATALOG1', NULL, NULL, 'long description of Gizmos', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('101', 'CATALOG_CATEGORY', '100', NULL, NULL, 'long description of Small Gizmos', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('102', 'CATALOG_CATEGORY', '100', NULL, NULL, 'long description of Large Gizmos', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('200', 'CATALOG_CATEGORY', 'CATALOG1', NULL, NULL, 'long description of Widgets', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('201', 'CATALOG_CATEGORY', '200', NULL, NULL, 'long description of Small Widgets', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('2011', 'CATALOG_CATEGORY', '201', NULL, NULL, 'long description of Mini Widgets', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('20111', 'CATALOG_CATEGORY', '2011', NULL, NULL, 'long description of Micro Widgets', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('2012', 'CATALOG_CATEGORY', '201', NULL, NULL, 'long description of Other Mini Widgets', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('202', 'CATALOG_CATEGORY', '200', NULL, NULL, 'long description of Large Widgets', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('BoatRental', 'CATALOG_CATEGORY', 'RentBrowseRoot', NULL, 'Boat Rental', 'long description of Boat rentals', NULL, NULL, NULL, NULL, '2016-04-30 23:57:45', '2016-04-30 23:57:45'),
+('CATALOG1', 'CATALOG_CATEGORY', NULL, 'Demo Browse Root', NULL, 'Demo Catalog Primary Browse Root Category', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('CATALOG1_QUICKADD1', 'QUICKADD_CATEGORY', NULL, 'Main Quick Add', NULL, 'For quick orders, you have found the right place!', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('CATALOG1_QUICKADD2', 'QUICKADD_CATEGORY', NULL, 'Widget Quick Add', NULL, 'Get all you widgets here!', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('CATALOG1_SEARCH', 'SEARCH_CATEGORY', NULL, 'Demo Default Search', NULL, 'Catalog1 Search Products - only products in this category will show up in a search in catalog1', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('COMM_CATEGORY_A', 'COMMISSION_CATEGORY', NULL, 'Commission Category A', 'Category A products that qualify for commission.', NULL, NULL, NULL, NULL, NULL, '2016-05-01 00:00:12', '2016-05-01 00:00:12'),
+('COMM_CATEGORY_B', 'COMMISSION_CATEGORY', NULL, 'Commission Category B', 'Category B products that qualify for commission.', NULL, NULL, NULL, NULL, NULL, '2016-05-01 00:00:12', '2016-05-01 00:00:12'),
+('COMM_CATEGORY_C', 'COMMISSION_CATEGORY', NULL, 'Commission Category C', 'Category C products that qualify for commission.', NULL, NULL, NULL, NULL, NULL, '2016-05-01 00:00:12', '2016-05-01 00:00:12'),
+('ConfRooms', 'CATALOG_CATEGORY', 'HotelFac', NULL, 'Conference Rooms', 'long description of Hotel conference rooms', NULL, NULL, NULL, NULL, '2016-04-30 23:57:45', '2016-04-30 23:57:45'),
+('dropShip', 'CATALOG_CATEGORY', 'CATALOG1', NULL, 'DropShip Products', NULL, NULL, NULL, NULL, NULL, '2016-04-30 23:58:24', '2016-04-30 23:58:24'),
+('FA-100', 'CATALOG_CATEGORY', NULL, NULL, 'Account Activation', NULL, NULL, NULL, NULL, NULL, '2016-04-30 23:58:28', '2016-04-30 23:58:28'),
+('FOOD-001', 'CATALOG_CATEGORY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2016-04-30 23:57:42', '2016-04-30 23:57:42'),
+('GC-100', 'CATALOG_CATEGORY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2016-04-30 23:57:28', '2016-04-30 23:57:28'),
+('GC-101', 'CATALOG_CATEGORY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2016-04-30 23:57:28', '2016-04-30 23:57:28'),
+('GC-102', 'CATALOG_CATEGORY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2016-04-30 23:57:28', '2016-04-30 23:57:28'),
+('HotelFac', 'CATALOG_CATEGORY', 'RentBrowseRoot', NULL, 'Hotel Facilities', 'long description of Hotel facilities', NULL, NULL, NULL, NULL, '2016-04-30 23:57:45', '2016-04-30 23:57:45'),
+('MotorBoats', 'CATALOG_CATEGORY', 'BoatRental', NULL, 'Motor Boats', 'long description of Motor Boats', NULL, NULL, NULL, NULL, '2016-04-30 23:57:45', '2016-04-30 23:57:45'),
+('PC-100', 'CATALOG_CATEGORY', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2016-04-30 23:57:41', '2016-04-30 23:57:41'),
+('PROMOTIONS', 'CATALOG_CATEGORY', NULL, 'Featured Products', NULL, NULL, NULL, NULL, NULL, NULL, '2016-05-01 00:02:03', '2016-04-30 23:57:15'),
+('RentalPromo', 'CATALOG_CATEGORY', NULL, NULL, 'Rental Promotions', 'Rental Catalog Primary Browse Root Category', NULL, NULL, NULL, NULL, '2016-04-30 23:57:45', '2016-04-30 23:57:45'),
+('RentBrowseRoot', 'CATALOG_CATEGORY', NULL, NULL, 'Rental Browse Root', 'Rental Catalog Primary Browse Root Category', NULL, NULL, NULL, NULL, '2016-04-30 23:57:45', '2016-04-30 23:57:45'),
+('RentBrowseRoot_SRCH', 'CATALOG_CATEGORY', NULL, NULL, 'Rental Browse Root to search', 'Rental Catalog Primary Browse Root Category', NULL, NULL, NULL, NULL, '2016-04-30 23:57:45', '2016-04-30 23:57:45'),
+('Rooms', 'CATALOG_CATEGORY', 'HotelFac', NULL, 'Rooms', 'long description of Hotel rooms', NULL, NULL, NULL, NULL, '2016-04-30 23:57:45', '2016-04-30 23:57:45'),
+('RowBoats', 'CATALOG_CATEGORY', 'BoatRental', NULL, 'Row Boats', 'long description of Row Boats', NULL, NULL, NULL, NULL, '2016-04-30 23:57:45', '2016-04-30 23:57:45'),
+('SailBoats', 'CATALOG_CATEGORY', 'BoatRental', NULL, 'Sailing Boats', 'long description of Sailing Boats', NULL, NULL, NULL, NULL, '2016-04-30 23:57:45', '2016-04-30 23:57:45'),
+('SERV-001', 'CATALOG_CATEGORY', NULL, NULL, 'Services', NULL, NULL, NULL, NULL, NULL, '2016-04-30 23:57:21', '2016-04-30 23:57:21'),
+('SpeedBoats', 'CATALOG_CATEGORY', 'BoatRental', NULL, 'Speed Boats', 'long description of Speed Boats', NULL, NULL, NULL, NULL, '2016-04-30 23:57:45', '2016-04-30 23:57:45'),
+('STRGRP_CAT', 'CATALOG_CATEGORY', NULL, 'Store Group Demo Browse Root', NULL, 'Store Group Demo Catalog Primary Browse Root Category', NULL, NULL, NULL, NULL, '2016-05-01 00:01:06', '2016-05-01 00:01:06'),
+('STRGRP_CAT100', 'CATALOG_CATEGORY', 'STRGRP_CAT', NULL, NULL, 'long description of store group category 100', NULL, NULL, NULL, NULL, '2016-05-01 00:01:06', '2016-05-01 00:01:06'),
+('Suites', 'CATALOG_CATEGORY', 'HotelFac', NULL, 'Suites', 'long description of Hotel suites', NULL, NULL, NULL, NULL, '2016-04-30 23:57:45', '2016-04-30 23:57:45'),
+('TSTCSL', 'CROSS_SELL_CATEGORY', NULL, 'Test Cross Sell Category', NULL, 'Test Cross Sell Category', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15'),
+('TSTLTDADMIN', 'CATALOG_CATEGORY', NULL, 'Test Limited Admin Category', NULL, 'Test Limited Admin Category', NULL, NULL, NULL, NULL, '2016-04-30 23:57:15', '2016-04-30 23:57:15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_category_type`
+--
+
+CREATE TABLE IF NOT EXISTS `product_category_type` (
+  `product_category_type_id` varchar(20) NOT NULL,
+  `parent_type_id` varchar(20) DEFAULT NULL,
+  `has_table` char(1) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `product_category_type`
+--
+
+INSERT INTO `product_category_type` (`product_category_type_id`, `parent_type_id`, `has_table`, `description`, `created_date`, `updated_date`) VALUES
+('CATALOG_CATEGORY', NULL, 'N', 'Catalog', '2016-04-30 23:54:12', '2016-04-30 23:54:12'),
+('COMMISSION_CATEGORY', NULL, 'N', 'Products in this kind of category qualify for commissions', '2016-04-30 23:55:20', '2016-04-30 23:55:20'),
+('CROSS_SELL_CATEGORY', NULL, 'N', 'Cross Sell', '2016-04-30 23:54:13', '2016-04-30 23:54:13'),
+('INDUSTRY_CATEGORY', NULL, 'N', 'Industry', '2016-04-30 23:54:13', '2016-04-30 23:54:13'),
+('INTERNAL_CATEGORY', NULL, 'N', 'Internal', '2016-04-30 23:54:13', '2016-04-30 23:54:13'),
+('MATERIALS_CATEGORY', NULL, 'N', 'Materials', '2016-04-30 23:54:13', '2016-04-30 23:54:13'),
+('MIXMATCH_CATEGORY', NULL, 'N', 'Mix and Match', '2016-04-30 23:54:13', '2016-04-30 23:54:13'),
+('QUICKADD_CATEGORY', NULL, 'N', 'Quick Add', '2016-04-30 23:54:13', '2016-04-30 23:54:13'),
+('SEARCH_CATEGORY', NULL, 'N', 'Search', '2016-04-30 23:54:13', '2016-04-30 23:54:13'),
+('TAX_CATEGORY', NULL, 'N', 'Tax', '2016-04-30 23:54:13', '2016-04-30 23:54:13'),
+('USAGE_CATEGORY', NULL, 'N', 'Usage', '2016-04-30 23:54:13', '2016-04-30 23:54:13');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_type`
+--
+
+CREATE TABLE IF NOT EXISTS `product_type` (
+  `product_type_id` varchar(20) NOT NULL,
+  `parent_type_id` varchar(20) DEFAULT NULL,
+  `is_physical` tinyint(1) DEFAULT NULL,
+  `is_digital` tinyint(1) DEFAULT NULL,
+  `has_table` tinyint(1) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `product_type`
+--
+
+INSERT INTO `product_type` (`product_type_id`, `parent_type_id`, `is_physical`, `is_digital`, `has_table`, `description`, `created_date`, `updated_date`) VALUES
+('AGGREGATED', 'GOOD', 0, 0, 0, 'Configurable Good', '2016-04-30 23:54:16', '2016-04-30 23:54:16'),
+('AGGREGATED_CONF', 'AGGREGATED', 0, 0, 0, 'Configurable Good Configuration', '2016-04-30 23:54:16', '2016-04-30 23:54:16'),
+('ASSET_USAGE', NULL, 0, 0, 0, 'Fixed Asset Usage', '2016-04-30 23:54:16', '2016-04-30 23:54:16'),
+('DIGITAL_GOOD', 'GOOD', 0, 0, 0, 'Digital Good', '2016-04-30 23:54:16', '2016-04-30 23:54:16'),
+('FINDIG_GOOD', 'GOOD', 0, 0, 0, 'Finished/Digital Good', '2016-04-30 23:54:16', '2016-04-30 23:54:16'),
+('FINISHED_GOOD', 'GOOD', 0, 0, 0, 'Finished Good', '2016-04-30 23:54:16', '2016-04-30 23:54:16'),
+('FIXED_ASSET', NULL, 0, 0, 0, 'Fixed Asset', '2016-04-30 23:55:05', '2016-04-30 23:55:05'),
+('GOOD', NULL, 0, 0, 0, 'Good', '2016-04-30 23:54:16', '2016-04-30 23:54:16'),
+('MARKETING_PKG_AUTO', 'GOOD', 0, 0, 0, 'Marketing Package: Auto Manufactured', '2016-04-30 23:54:16', '2016-04-30 23:54:16'),
+('MARKETING_PKG_PICK', 'GOOD', 0, 0, 0, 'Marketing Package: Pick Assembly', '2016-04-30 23:54:16', '2016-04-30 23:54:16'),
+('PURCH_PKG_AUTO', 'GOOD', 0, 0, 0, 'Purchasing Package', '2016-04-30 23:55:05', '2016-04-30 23:55:05'),
+('RAW_MATERIAL', 'GOOD', 0, 0, 0, 'Raw Material', '2016-04-30 23:54:16', '2016-04-30 23:54:16'),
+('SERVICE', NULL, 0, 0, 0, 'Service', '2016-04-30 23:54:16', '2016-04-30 23:54:16'),
+('SERVICE_CONTRACT_MFG', 'SERVICE', 0, 0, 0, 'Contracted Manufacturing Service', '2016-04-30 23:55:05', '2016-04-30 23:55:05'),
+('SUBASSEMBLY', 'GOOD', 0, 0, 0, 'Subassembly', '2016-04-30 23:54:16', '2016-04-30 23:54:16'),
+('SUPPLIES', NULL, 0, 0, 0, 'Supplies', '2016-04-30 23:55:05', '2016-04-30 23:55:05'),
+('WIP', 'GOOD', 0, 0, 0, 'Work In Process', '2016-04-30 23:54:16', '2016-04-30 23:54:16');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quote`
+--
+
+CREATE TABLE IF NOT EXISTS `quote` (
+  `quote_id` int(11) NOT NULL,
+  `quote_type_id` varchar(20) NOT NULL,
+  `party_id` int(11) DEFAULT NULL,
+  `issue_date` datetime NOT NULL,
+  `status_id` varchar(20) DEFAULT NULL,
+  `currency_uom_id` varchar(20) DEFAULT NULL,
+  `sales_channel_enum_id` varchar(20) NOT NULL,
+  `valid_from_date` datetime DEFAULT NULL,
+  `valid_thru_date` datetime DEFAULT NULL,
+  `quote_name` varchar(100) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `contact_party_id` int(11) DEFAULT NULL,
+  `created_by_party_id` int(11) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quote_item`
+--
+
+CREATE TABLE IF NOT EXISTS `quote_item` (
+  `quote_id` int(11) NOT NULL,
+  `quote_item_seq_id` varchar(20) NOT NULL,
+  `product_id` varchar(20) DEFAULT NULL,
+  `quantity` decimal(18,6) DEFAULT NULL,
+  `selected_amount` decimal(18,6) DEFAULT NULL,
+  `quote_unit_price` decimal(18,2) DEFAULT NULL,
+  `estimated_delivery_date` datetime DEFAULT NULL,
+  `comments` varchar(255) DEFAULT NULL,
+  `is_promo` tinyint(1) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quote_item_option`
+--
+
+CREATE TABLE IF NOT EXISTS `quote_item_option` (
+  `quote_id` int(11) NOT NULL,
+  `quote_item_seq_id` varchar(20) NOT NULL,
+  `quote_item_option_seq_id` varchar(20) NOT NULL,
+  `quantity` decimal(18,6) NOT NULL,
+  `quote_unit_price` decimal(18,2) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quote_note`
+--
+
+CREATE TABLE IF NOT EXISTS `quote_note` (
+  `quote_id` int(11) NOT NULL,
+  `note_id` int(11) NOT NULL,
+  `internal_note` tinyint(1) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quote_role`
+--
+
+CREATE TABLE IF NOT EXISTS `quote_role` (
+  `quote_id` int(11) NOT NULL,
+  `party_id` int(11) NOT NULL,
+  `role_type_id` varchar(20) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quote_type`
+--
+
+CREATE TABLE IF NOT EXISTS `quote_type` (
+  `quote_type_id` varchar(20) NOT NULL,
+  `parent_type_id` varchar(20) DEFAULT NULL,
+  `has_table` tinyint(1) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_date` datetime NOT NULL,
+  `updated_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `quote_type`
+--
+
+INSERT INTO `quote_type` (`quote_type_id`, `parent_type_id`, `has_table`, `description`, `created_date`, `updated_date`) VALUES
+('OTHER_QUOTE', NULL, 0, 'Other', '2016-05-26 17:15:47', '2016-05-26 17:15:47'),
+('PRODUCT_QUOTE', NULL, 0, 'Product', '2016-05-26 17:15:47', '2016-05-26 17:15:47'),
+('PROPOSAL', NULL, 0, 'Proposal', '2016-05-26 17:15:47', '2016-05-26 17:15:47'),
+('PURCHASE_QUOTE', NULL, 0, 'Product Purchase', '2016-05-26 17:15:47', '2016-05-26 17:15:47');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `role_type`
 --
 
@@ -1761,6 +2085,7 @@ INSERT INTO `role_type` (`role_type`, `parent_type_id`, `has_table`, `descriptio
 ('CUSTOMER', NULL, 0, 'Customer', '2016-05-10 11:42:32', '2016-05-10 11:42:32'),
 ('LEAD', NULL, 0, 'Lead or prospect', '2016-05-10 11:42:32', '2016-05-10 11:42:32'),
 ('PERSON_ROLE', NULL, 0, 'Person', '2016-05-10 11:42:32', '2016-05-10 11:42:32'),
+('REQ_TAKER', NULL, 0, 'Request Taker', '2016-05-26 21:10:56', '2016-05-26 21:10:56'),
 ('SALES_REP', 'PERSON_ROLE', 0, 'Sales Representative', '2016-05-10 11:43:45', '2016-05-10 11:43:45');
 
 -- --------------------------------------------------------
@@ -2222,7 +2547,14 @@ INSERT INTO `status_item` (`status_id`, `status_type_id`, `status_code`, `descri
 ('CASE_SUBMITTED', 'CASE_STATUS', 'SUBMITTED', 'Submitted', '2016-04-30 23:54:37', '2016-04-30 23:54:37'),
 ('PARTY_DISABLED', 'PARTY_STATUS', 'DISABLED', 'Disabled', '2016-05-22 05:14:55', '2016-05-22 05:14:55'),
 ('PARTY_ENABLED', 'PARTY_STATUS', 'ENABLED', 'Enabled', '2016-05-10 13:08:11', '2016-05-10 13:08:11'),
-('PTYLEAD_CONVERTED', 'PARTY_LEAD_STATUS', 'CONVERTED', 'Party Lead Converted', '2016-05-10 13:08:11', '2016-05-10 13:08:11');
+('PTYLEAD_CONVERTED', 'PARTY_LEAD_STATUS', 'CONVERTED', 'Party Lead Converted', '2016-05-10 13:08:11', '2016-05-10 13:08:11'),
+('QUO_APPROVED', 'QUOTE_STATUS', 'APPROVED', 'Approved', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('QUO_CANCELLED', 'QUOTE_STATUS', 'CANCELLED', 'Cancelled', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('QUO_CREATED', 'QUOTE_STATUS', 'CREATED', 'Created', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('QUO_FINALIZED', 'QUOTE_STATUS', 'FINALIZED', 'Finalized', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('QUO_ORDERED', 'QUOTE_STATUS', 'ORDERED', 'Ordered', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('QUO_REJECTED', 'QUOTE_STATUS', 'REJECTED', 'Rejected', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
+('QUO_SENT', 'QUOTE_STATUS', 'SENT', 'Sent', '2016-04-30 23:56:05', '2016-04-30 23:56:05');
 
 -- --------------------------------------------------------
 
@@ -2246,7 +2578,8 @@ CREATE TABLE IF NOT EXISTS `status_type` (
 INSERT INTO `status_type` (`status_type_id`, `parent_type_id`, `has_table`, `description`, `created_date`, `updated_date`) VALUES
 ('CASE_STATUS', NULL, 0, 'Case Status', '2016-05-22 05:13:48', '2016-05-22 05:13:48'),
 ('PARTY_LEAD_STATUS', 'PARTY_STATUS', 0, 'Status codes for parties which are leads (role = PROSPECT)', '2016-05-10 12:59:38', '2016-05-10 12:59:38'),
-('PARTY_STATUS', NULL, 0, 'Party Status', '2016-05-10 12:59:07', '2016-05-10 12:59:07');
+('PARTY_STATUS', NULL, 0, 'Party Status', '2016-05-10 12:59:07', '2016-05-10 12:59:07'),
+('QUOTE_STATUS', NULL, 0, 'Quote Status', '2016-05-26 17:32:23', '2016-05-26 17:32:23');
 
 -- --------------------------------------------------------
 
@@ -2877,6 +3210,94 @@ ALTER TABLE `postal_address`
   ADD KEY `state_province_geo_id` (`state_province_geo_id`);
 
 --
+-- Indexes for table `product`
+--
+ALTER TABLE `product`
+  ADD PRIMARY KEY (`product_id`),
+  ADD KEY `product_type_id` (`product_type_id`),
+  ADD KEY `primary_product_category_id` (`primary_product_category_id`),
+  ADD KEY `manufacturer_party_id` (`manufacturer_party_id`),
+  ADD KEY `quantity_uom_id` (`quantity_uom_id`),
+  ADD KEY `amount_uom_type_id` (`amount_uom_type_id`),
+  ADD KEY `weight_uom_id` (`weight_uom_id`),
+  ADD KEY `height_uom_id` (`height_uom_id`),
+  ADD KEY `width_uom_id` (`width_uom_id`),
+  ADD KEY `depth_uom_id` (`depth_uom_id`),
+  ADD KEY `origin_geo_id` (`origin_geo_id`),
+  ADD KEY `created_by_user_login` (`created_by_user_login`),
+  ADD KEY `last_modified_by_user_login` (`last_modified_by_user_login`);
+
+--
+-- Indexes for table `product_category`
+--
+ALTER TABLE `product_category`
+  ADD PRIMARY KEY (`product_category_id`),
+  ADD KEY `product_category_type_id` (`product_category_type_id`),
+  ADD KEY `primary_parent_category_id` (`primary_parent_category_id`);
+
+--
+-- Indexes for table `product_category_type`
+--
+ALTER TABLE `product_category_type`
+  ADD PRIMARY KEY (`product_category_type_id`),
+  ADD KEY `parent_type_id` (`parent_type_id`);
+
+--
+-- Indexes for table `product_type`
+--
+ALTER TABLE `product_type`
+  ADD PRIMARY KEY (`product_type_id`),
+  ADD KEY `parent_type_id` (`parent_type_id`);
+
+--
+-- Indexes for table `quote`
+--
+ALTER TABLE `quote`
+  ADD PRIMARY KEY (`quote_id`),
+  ADD KEY `quote_type_id` (`quote_type_id`),
+  ADD KEY `party_id` (`party_id`),
+  ADD KEY `status_id` (`status_id`),
+  ADD KEY `currency_uom_id` (`currency_uom_id`),
+  ADD KEY `sales_channel_enum_id` (`sales_channel_enum_id`),
+  ADD KEY `contact_party_id` (`contact_party_id`),
+  ADD KEY `created_by_party_id` (`created_by_party_id`);
+
+--
+-- Indexes for table `quote_item`
+--
+ALTER TABLE `quote_item`
+  ADD PRIMARY KEY (`quote_id`,`quote_item_seq_id`),
+  ADD KEY `quote_id` (`quote_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `quote_item_option`
+--
+ALTER TABLE `quote_item_option`
+  ADD PRIMARY KEY (`quote_id`,`quote_item_seq_id`,`quote_item_option_seq_id`);
+
+--
+-- Indexes for table `quote_note`
+--
+ALTER TABLE `quote_note`
+  ADD PRIMARY KEY (`quote_id`,`note_id`),
+  ADD KEY `FOREIGN_quo_note_note` (`note_id`);
+
+--
+-- Indexes for table `quote_role`
+--
+ALTER TABLE `quote_role`
+  ADD PRIMARY KEY (`quote_id`,`party_id`,`role_type_id`),
+  ADD KEY `FOREIGN_quote_role_party_role_1` (`party_id`),
+  ADD KEY `FOREIGN_quote_role_party_role_2` (`role_type_id`);
+
+--
+-- Indexes for table `quote_type`
+--
+ALTER TABLE `quote_type`
+  ADD PRIMARY KEY (`quote_type_id`);
+
+--
 -- Indexes for table `role_type`
 --
 ALTER TABLE `role_type`
@@ -2980,6 +3401,11 @@ ALTER TABLE `note_data`
 --
 ALTER TABLE `party`
   MODIFY `party_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
+--
+-- AUTO_INCREMENT for table `quote`
+--
+ALTER TABLE `quote`
+  MODIFY `quote_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- Constraints for dumped tables
 --
@@ -3159,6 +3585,83 @@ ALTER TABLE `postal_address`
   ADD CONSTRAINT `FOREIGN_postal_address_contact_mech` FOREIGN KEY (`contact_mech_id`) REFERENCES `contact_mech` (`contact_mech_id`),
   ADD CONSTRAINT `FOREIGN_postal_address_geo_1` FOREIGN KEY (`country_geo_id`) REFERENCES `geo` (`geo_id`),
   ADD CONSTRAINT `FOREIGN_postal_address_geo_2` FOREIGN KEY (`state_province_geo_id`) REFERENCES `geo` (`geo_id`);
+
+--
+-- Constraints for table `product`
+--
+ALTER TABLE `product`
+  ADD CONSTRAINT `FOREIGN_prod_geo` FOREIGN KEY (`origin_geo_id`) REFERENCES `geo` (`geo_id`),
+  ADD CONSTRAINT `FOREIGN_prod_party` FOREIGN KEY (`manufacturer_party_id`) REFERENCES `party` (`party_id`),
+  ADD CONSTRAINT `FOREIGN_prod_prod_cat` FOREIGN KEY (`primary_product_category_id`) REFERENCES `product_category` (`product_category_id`),
+  ADD CONSTRAINT `FOREIGN_prod_prod_type` FOREIGN KEY (`product_type_id`) REFERENCES `product_type` (`product_type_id`),
+  ADD CONSTRAINT `FOREIGN_prod_uom_1` FOREIGN KEY (`quantity_uom_id`) REFERENCES `uom` (`uom_id`),
+  ADD CONSTRAINT `FOREIGN_prod_uom_2` FOREIGN KEY (`weight_uom_id`) REFERENCES `uom` (`uom_id`),
+  ADD CONSTRAINT `FOREIGN_prod_uom_3` FOREIGN KEY (`height_uom_id`) REFERENCES `uom` (`uom_id`),
+  ADD CONSTRAINT `FOREIGN_prod_uom_4` FOREIGN KEY (`width_uom_id`) REFERENCES `uom` (`uom_id`),
+  ADD CONSTRAINT `FOREIGN_prod_uom_5` FOREIGN KEY (`depth_uom_id`) REFERENCES `uom` (`uom_id`),
+  ADD CONSTRAINT `FOREIGN_prod_uom_type` FOREIGN KEY (`amount_uom_type_id`) REFERENCES `uom_type` (`uom_type_id`),
+  ADD CONSTRAINT `FOREIGN_prod_user_login_1` FOREIGN KEY (`created_by_user_login`) REFERENCES `user_login` (`user_login_id`),
+  ADD CONSTRAINT `FOREIGN_prod_user_login_2` FOREIGN KEY (`last_modified_by_user_login`) REFERENCES `user_login` (`user_login_id`);
+
+--
+-- Constraints for table `product_category`
+--
+ALTER TABLE `product_category`
+  ADD CONSTRAINT `FOREIGN_prod_cat_prod_cat` FOREIGN KEY (`primary_parent_category_id`) REFERENCES `product_category` (`product_category_id`),
+  ADD CONSTRAINT `FOREIGN_prod_cat_prod_cat_type` FOREIGN KEY (`product_category_type_id`) REFERENCES `product_category_type` (`product_category_type_id`);
+
+--
+-- Constraints for table `product_category_type`
+--
+ALTER TABLE `product_category_type`
+  ADD CONSTRAINT `FOREIGN_product_category_type_product_category_type` FOREIGN KEY (`parent_type_id`) REFERENCES `product_category_type` (`product_category_type_id`);
+
+--
+-- Constraints for table `product_type`
+--
+ALTER TABLE `product_type`
+  ADD CONSTRAINT `FOREIGN_product_type_product_type` FOREIGN KEY (`parent_type_id`) REFERENCES `product_type` (`product_type_id`);
+
+--
+-- Constraints for table `quote`
+--
+ALTER TABLE `quote`
+  ADD CONSTRAINT `FOREIGN_quote_enum` FOREIGN KEY (`sales_channel_enum_id`) REFERENCES `enumeration` (`enum_id`),
+  ADD CONSTRAINT `FOREIGN_quote_party_1` FOREIGN KEY (`party_id`) REFERENCES `party` (`party_id`),
+  ADD CONSTRAINT `FOREIGN_quote_party_2` FOREIGN KEY (`contact_party_id`) REFERENCES `party` (`party_id`),
+  ADD CONSTRAINT `FOREIGN_quote_party_3` FOREIGN KEY (`created_by_party_id`) REFERENCES `party` (`party_id`),
+  ADD CONSTRAINT `FOREIGN_quote_quote_type` FOREIGN KEY (`quote_type_id`) REFERENCES `quote_type` (`quote_type_id`),
+  ADD CONSTRAINT `FOREIGN_quote_status` FOREIGN KEY (`status_id`) REFERENCES `status_item` (`status_id`),
+  ADD CONSTRAINT `FOREIGN_quote_uom` FOREIGN KEY (`currency_uom_id`) REFERENCES `uom` (`uom_id`);
+
+--
+-- Constraints for table `quote_item`
+--
+ALTER TABLE `quote_item`
+  ADD CONSTRAINT `FOREIGN_quote_item_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`),
+  ADD CONSTRAINT `FOREIGN_quote_item_quote` FOREIGN KEY (`quote_id`) REFERENCES `quote` (`quote_id`);
+
+--
+-- Constraints for table `quote_item_option`
+--
+ALTER TABLE `quote_item_option`
+  ADD CONSTRAINT `FOREIGN_quo_itm_opt_quo` FOREIGN KEY (`quote_id`) REFERENCES `quote` (`quote_id`),
+  ADD CONSTRAINT `FOREIGN_quo_itm_opt_quo_itm` FOREIGN KEY (`quote_id`, `quote_item_seq_id`) REFERENCES `quote_item` (`quote_id`, `quote_item_seq_id`);
+
+--
+-- Constraints for table `quote_note`
+--
+ALTER TABLE `quote_note`
+  ADD CONSTRAINT `FOREIGN_quo_note_note` FOREIGN KEY (`note_id`) REFERENCES `note_data` (`note_id`),
+  ADD CONSTRAINT `FOREIGN_quo_note_quo` FOREIGN KEY (`quote_id`) REFERENCES `quote` (`quote_id`);
+
+--
+-- Constraints for table `quote_role`
+--
+ALTER TABLE `quote_role`
+  ADD CONSTRAINT `FOREIGN_quote_role_party_role_1` FOREIGN KEY (`party_id`) REFERENCES `party_role` (`party_id`),
+  ADD CONSTRAINT `FOREIGN_quote_role_party_role_2` FOREIGN KEY (`role_type_id`) REFERENCES `party_role` (`role_type_id`),
+  ADD CONSTRAINT `FOREIGN_quote_role_quote` FOREIGN KEY (`quote_id`) REFERENCES `quote` (`quote_id`);
 
 --
 -- Constraints for table `role_type`

@@ -47,8 +47,8 @@ var contactApi = function (knex) {
     // 
     // Methods:  there are specific methods for getting Contacts on this route /api/contacts/ 
     //
-    // They are handled in this "meta" function called getContacts() with IF blocks that test 
-    // whether the user entered a query string seeking to get Contacts by Owner, by Identity or 
+    // They are handled in this "meta" function called getContacts() with IF ELSE IF blocks that 
+    // test whether user entered a query string seeking to get Contacts by Owner, by Identity or 
     // by PhoneNumber (but not getContactById, which is on a separate route).
     var getContacts = function (req, res) {
 
@@ -56,26 +56,27 @@ var contactApi = function (knex) {
         //
         // getContactsByOwner:  an IF block triggers it if a query by owner has been made
         // 
-        // REMINDER:  We do not use the query string to identify the owner/user who is making
-        // this request.  See:  http://www.ofssam.com/forums/showthread.php?tid=37
-        // With an api route of: /api/contacts?owner the result is req.query = { owner: '' }.
-        // It is fine that property 'owner' is an empty string; what matters is that 
-        // req.query HAS a property 'owner'.  It gets that property when route is /api/contacts?owner
-        // That is how the IF block triggers.
-        //
-        // For a user with valid token, at this point req.user.securityPermissions = 
-        // [ 'FULLADMIN' ] or [ 'CONTACT_OWNER' ] or [ 'PARTY_ADMIN' ] (all of which are
-        // security permissions that the owner of a Contact might have.)  
-        //
-        // By contrast and for reasons I cannot explain or figure out, a user with a valid
-        // token but whose security permission is, e.g., LEAD_OWNER and does not have 
-        // contact owner permission, req.user.securityPermission comes in as an empty array.
-        // And yes, that is for a user whose entry in the party_role table has them listed
-        // as a LEAD_OWNER.  Why would their security permission not make it in even to
-        // the API layer?  I do not know. For getContactsByOwner, I deal with 
-        // req.user.securityPermissions being an empty array in the controller layer.        
+        //  REMINDER:  We do not use the query string to identify the owner/user who is making
+        //  this request.  See:  http://www.ofssam.com/forums/showthread.php?tid=37
+        //  With an api route of: /api/contacts?owner the result is req.query = { owner: '' }.
+        //  It is fine that property 'owner' is an empty string; what matters is that 
+        //  req.query HAS a property 'owner'.  It gets that property when route is 
+        //   /api/contacts?owner     That is how the IF block triggers.
+        //  
+        //  For a user with valid token, at this point req.user.securityPermissions = 
+        //  [ 'FULLADMIN' ] or [ 'CONTACT_OWNER' ] or [ 'PARTY_ADMIN' ] (all of which are
+        //  security permissions that the owner of a Contact might have.)  
+        //  
+        //  By contrast and for reasons I cannot explain or figure out, a user with a valid
+        //  token but whose security permission is, e.g., LEAD_OWNER and does not have 
+        //  contact owner permission, req.user.securityPermission comes in as an empty array.
+        //  And yes, that is for a user whose entry in the party_role table has them listed
+        //  as a LEAD_OWNER.  Why would their security permission not make it in even to
+        //  the API layer?  I do not know. For getContactsByOwner, I deal with 
+        //  req.user.securityPermissions being an empty array in the controller layer.        
         //
         if (req.query.hasOwnProperty('owner')) {
+
             var ownerId = req.user.partyId;
             var userSecurityPerm = req.user.securityPermissions;
 
@@ -87,6 +88,7 @@ var contactApi = function (knex) {
             // the null for users without permission.  That's not doing logic in the API layer,
             // just funnelling the result of logic in the control layer out sensibly.
             var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
+
             if (resultsForThisUser === null) {
                 res.json('You do not have permission to own contacts!');
             } else {
@@ -96,24 +98,22 @@ var contactApi = function (knex) {
             }
         }
 
-        /* getContactsByIdentity -- WORK IN PROGRESS, DINESH WILL FINISH SOON
-            -- unlike the case of getContactsByOwner above, here we can use the query string.
-            -- there is still security permissions checking done below in the controller layer,
-                so if the user does not have FULLADMIN or PARTYADMIN or CONTACT_OWNER or
-                ACCOUNT_OWNER or CRMSFA_CONTACT_TASKS in user_login_security_group.permission_group_id
-                then they will be told they do not have permission.  
-        */
-
-        // GET /api/contacts?partyId=&firstName=&lastName=
+        // GET /api/contacts?firstName=&lastName=
         //
-        if (req.query.hasOwnProperty('partyId') || req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
+        // getContactsByIdentity: ELSE IF ensures there is only one response to API layer!
+        //                        See: http://www.ofssam.com/forums/showthread.php?tid=43 
+        //
+        //  The search is inclusive, returning any contacts this user owns matching whichever
+        //  supplied portion of either the firstName or lastName.  Corresponds to:
+        //  WHERE person.first_name LIKE "%firstName%" OR person.last_name LIKE "%lastName%"
+        //
+        else if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
 
-            var partyId = req.query.partyId;
             var firstName = req.query.firstName;
             var lastName = req.query.lastName;
             var userSecurePerm = req.user.securityPermissions;
 
-            var resultsForUser = contactController.getContactsByIdentity(partyId, firstName, lastName, userSecurePerm);
+            var resultsForUser = contactController.getContactsByIdentity(firstName, lastName, userSecurePerm);
             if (resultsForUser === null) {
                 res.json('You do not have permission to get contacts by the supplied queries!');
             } else {
