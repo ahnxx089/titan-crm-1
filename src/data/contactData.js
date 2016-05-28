@@ -162,19 +162,19 @@ var contactData = function (knex) {
                 party_id: contactId
             })
             .del()
-            .then(function (partyLinkRows) {
-                return knex('party_relationship')
+            .then(function (relationshipRows) {
+                return knex('party_role')
                     .where({
-                        party_id_from: contactId
-                    })
-                    .orWhere({
-                        party_id_to: contactId
+                        party_id: contactId
                     })
                     .del()
-                    .then(function (relationshipRows) {
-                        return knex('party_role')
+                    .then(function (partyLinkRows) {
+                        return knex('party_relationship')
                             .where({
-                                party_id: contactId
+                                party_id_from: contactId
+                            })
+                            .orWhere({
+                                party_id_to: contactId
                             })
                             .del()
                             .then(function (roleRows) {
