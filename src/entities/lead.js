@@ -28,18 +28,44 @@ function Lead(partyId, /*PK, SHARED #1 */
                createdDate, updatedDate, /* SHARED 6,7 */
                // for Party
                
-               salutation, firstName, middleName, lastName, birthDate, comments, 
+               salutation, firstName, middleName, lastName, birthDate, p_comments, 
                // Use SHARED #1,6,7
                // for Person
                
-               parentPartyId, companyName, annualRevenue, numEmployees
+               parentPartyId, companyName, annualRevenue, numEmployees, 
+               
+               industryEnumId, /*FK #8, enumeration.enum_id */
+               ownershipEnumId, /*FK #9, enumeration.enum_id */ 
+               tickerSymbol, 
+               importantNote,
+               primaryPostalAddressId, /*FK #10, contact_mech.contact_mech_id */
+               primaryTelecomNumberId, /*FK #11, contact_mech.contact_mech_id */
+               primaryEmailId, /*FK #12, contact_mech.contact_mech_id */
                // Use SHARED #1,3,6,7
-               // for party_supplemental_data. Some less useful or interesting fields are omitted. 
+               // for party_supplemental_data. 
+               
+               roleTypeId, /*FK #13, role_type.role_type, in this case a LEAD */
+               // Use SHARED #1,6,7
+               // for party_role
+               
+               contactMechId, /*FK #14, contact_mech.contact_mech_id */
+               contactMechPurposeTypeId, /*FK #15, contact_mech_purpose_type.contact_mech_purpose_type_id */
+               fromDate,
+               thruDate,
+               verified,
+               pc_comments
+               // Use SHARED #1,6,7
+               
+               // I DONT UNDERSTAND party_id_to, and party_id_from. 
+               // They are linking to party_role, that is an empty table. 
+               // How am I supposed to refer to null values?
+               // for party_relationship. Several (less useful or interesting) and nullable fields were omitted. 
+               
               ) {
 
     Person.call(this, partyId, partyTypeId, currencyUomId, description,
                statusId, createdBy, createdDate, updatedDate,
-               salutation, firstName, middleName, lastName, birthDate, comments
+               salutation, firstName, middleName, lastName, birthDate, p_comments
                );
     
     // Lead-specific Properties
@@ -47,6 +73,23 @@ function Lead(partyId, /*PK, SHARED #1 */
     this.companyName = companyName;
     this.annualRevenue = annualRevenue;
     this.numEmployees = numEmployees;
+    
+    this.industryEnumId = industryEnumId; 
+    this.ownershipEnumId = ownershipEnumId;
+    this.tickerSymbol = tickerSymbol;
+    this.importantNote = importantNote; 
+    this.primaryPostalAddressId = primaryPostalAddressId;
+    this.primaryTelecomNumberId = primaryTelecomNumberId;
+    this.primaryEmailId = primaryEmailId;
+    this.roleTypeId = roleTypeId;
+    
+    this.contactMechId = contactMechId;
+    this.contactMechPurposeTypeId = contactMechPurposeTypeId;
+    this.fromDate = fromDate;
+    this.thruDate = thruDate;
+    this.verified = verified;
+    this.pc_comments = pc_comments;
+    // these 6 are not validated
 }
 
 
@@ -71,7 +114,16 @@ Lead.prototype.validateForInsert = function () {
         this.validateParentPartyId(true),
         this.validateCompanyName(false),
         this.validateAnnualRevenue(false),
-        this.validateNumEmployees(false)
+        this.validateNumEmployees(false),
+        
+        this.validateIndustryEnumId(false), 
+        this.validateOwnershipEnumId(false),
+        this.validateTickerSymbol(false),
+        this.validateImportantNote(false), 
+        this.validatePrimaryPostalAddressId(false),
+        this.validatePrimaryTelecomNumberId(false),
+        this.validatePrimaryEmailId(false), 
+        this.validateRoleTypeId(true)
     ]; 
     
     // The "errors" array is "validations" array
@@ -87,6 +139,7 @@ Lead.prototype.validateForInsert = function () {
     
 };
 
+// NOT FINISHED YET
 Lead.prototype.validateForUpdate = function () {
     // Call Person's validation function
     Person.prototype.validateForUpdate.call(this);
@@ -113,12 +166,12 @@ Person.prototype.validateCompanyName = function(isRequired) {
     return validationResult;
 };
 
-// annualRevenue is decimal(18,2) but we are doing int now 
+// annualRevenue is decimal(18,2) but we are doing floats without any limits now 
 Person.prototype.validateAnnualRevenue = function(isRequired) {
     this.annualRevenue = validation.sanitizeInput(this.annualRevenue);
-    var validationResult = validation.validateInt(this.annualRevenue, isRequired, 'annualRevenue');
+    var validationResult = validation.validateFloat(this.annualRevenue, isRequired, 'annualRevenue');
     if(this.annualRevenue && !validationResult) {
-        this.annualRevenue = validation.convertToInt(this.annualRevenue);
+        this.annualRevenue = validation.convertToFloat(this.annualRevenue);
     }
     return validationResult;
 };
@@ -132,6 +185,75 @@ Person.prototype.validateNumEmployees = function(isRequired) {
     }
     return validationResult;
 };
+
+
+//
+
+// industryEnumId is varchar(20)
+Person.prototype.validateIndustryEnumId = function(isRequired) {
+    this.industryEnumId = validation.sanitizeInput(this.industryEnumId);
+    var validationResult = validation.validateString(this.industryEnumId, isRequired, 20, 'industryEnumId');
+    return validationResult;
+};
+
+// ownershipEnumId is varchar(20)
+Person.prototype.validateOwnershipEnumId = function(isRequired) {
+    this.ownershipEnumId = validation.sanitizeInput(this.ownershipEnumId);
+    var validationResult = validation.validateString(this.ownershipEnumId, isRequired, 20, 'ownershipEnumId');
+    return validationResult;
+};
+
+// tickerSymbol is varchar(20)
+Person.prototype.validateTickerSymbol = function(isRequired) {
+    this.tickerSymbol = validation.sanitizeInput(this.tickerSymbol);
+    var validationResult = validation.validateString(this.tickerSymbol, isRequired, 20, 'tickerSymbol');
+    return validationResult;
+};
+
+// importantNote is longtext (max length is 4,294,967,295)
+Person.prototype.validateImportantNote = function(isRequired) {
+    this.importantNote = validation.sanitizeInput(this.importantNote);
+    var validationResult = validation.validateString(this.importantNote, isRequired, 4294967295, 'importantNote');
+    return validationResult;
+};
+
+// primaryPostalAddressId is int(11)
+Person.prototype.validatePrimaryPostalAddressId = function(isRequired) {
+    this.primaryPostalAddressId = validation.sanitizeInput(this.primaryPostalAddressId);
+    var validationResult = validation.validateInt(this.primaryPostalAddressId, isRequired, 'primaryPostalAddressId');
+    if(this.primaryPostalAddressId && !validationResult) {
+        this.primaryPostalAddressId = validation.convertToInt(this.primaryPostalAddressId);
+    }
+    return validationResult;
+};
+
+// primaryTelecomNumberId is int(11)
+Person.prototype.validatePrimaryTelecomNumberId = function(isRequired) {
+    this.primaryTelecomNumberId = validation.sanitizeInput(this.primaryTelecomNumberId);
+    var validationResult = validation.validateInt(this.primaryTelecomNumberId, isRequired, 'primaryTelecomNumberId');
+    if(this.primaryTelecomNumberId && !validationResult) {
+        this.primaryTelecomNumberId = validation.convertToInt(this.primaryTelecomNumberId);
+    }
+    return validationResult;
+};
+
+// primaryEmailId is int(11)
+Person.prototype.validatePrimaryEmailId = function(isRequired) {
+    this.primaryEmailId = validation.sanitizeInput(this.primaryEmailId);
+    var validationResult = validation.validateInt(this.primaryEmailId, isRequired, 'primaryEmailId');
+    if(this.primaryEmailId && !validationResult) {
+        this.primaryEmailId = validation.convertToInt(this.primaryEmailId);
+    }
+    return validationResult;
+};
+
+// roleTypeId is varchar(20)
+Person.prototype.validateRoleTypeId = function(isRequired) {
+    this.roleTypeId = validation.sanitizeInput(this.roleTypeId);
+    var validationResult = validation.validateString(this.roleTypeId, isRequired, 20, 'roleTypeId');
+    return validationResult;
+};
+
 
 
 

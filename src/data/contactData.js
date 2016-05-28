@@ -86,13 +86,8 @@ var contactData = function (knex) {
         return knex.select('party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date')
             .from('party')
             .innerJoin('party_role', 'party_role.party_id', 'party.party_id')
-            //.innerJoin('role_type', 'role_type.role_type_id', 'party_role.role_type_id')
             .where('party_role.role_type_id', 'CONTACT')
             .andWhere('party.party_id', id);
-
-        //.andWhere({
-        //party_id: id
-        //});
     };
 
     /**
