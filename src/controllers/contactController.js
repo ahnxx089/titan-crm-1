@@ -32,97 +32,117 @@ var contactController = function (knex) {
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is id of new contact
      */
-    var addContact = function (contact, user) {
-        // Convert the received objects into entities (protect the data layer)
-        var contactEntity = new Contact(
-            null,
-            contact.partyTypeId,
-            contact.preferredCurrencyUomId,
-            contact.description,
-            contact.statusId,
-            user.userId, (new Date()).toISOString(), (new Date()).toISOString(),
-            contact.salutation,
-            contact.firstName,
-            contact.middleName,
-            contact.lastName,
-            contact.birthDate,
-            contact.comments,
-            contact.countryCode,
-            contact.contactMechs
-        );
+    var addContact = function (contact, user, userSecurityPerm) {
 
-        var contactMechEntities = [];
-        var i;
-        if (contact.contactMechs) {
-            for (i = 0; i < contact.contactMechs.length; i++) {
-                contactMechEntities.push(new ContactMech(
-                    contact.contactMechs[i].contactMechId,
-                    contact.contactMechs[i].contactMechTypeId,
-                    contact.contactMechs[i].infoString,
-                    contact.contactMechs[i].createdDate,
-                    contact.contactMechs[i].updatedDate,
-                    contact.contactMechs[i].countryCode,
-                    contact.contactMechs[i].areaCode,
-                    contact.contactMechs[i].contactNumber,
-                    contact.contactMechs[i].askForName,
-                    contact.contactMechs[i].toName,
-                    contact.contactMechs[i].attnName,
-                    contact.contactMechs[i].address1,
-                    contact.contactMechs[i].address2,
-                    contact.contactMechs[i].directions,
-                    contact.contactMechs[i].city,
-                    contact.contactMechs[i].stateProvinceGeoId,
-                    contact.contactMechs[i].zipOrPostalCode,
-                    contact.contactMechs[i].countryGeoId
-                ));
+        // Check user's security permission to add contacts
+        var hasPermission = false;
+        if (userSecurityPerm.length > 0) {
+
+            // loop over userSecurityPerm in case user has more than one permission 
+            for (var i = 0; i < userSecurityPerm.length; i++) {
+                if (userSecurityPerm[i] === 'FULLADMIN') {
+                    hasPermission = true;
+                }
+                if (userSecurityPerm[i] === 'PARTYADMIN') {
+                    hasPermission = true;
+                }
+                if (userSecurityPerm[i] === 'CONTACT_OWNER') {
+                    hasPermission = true;
+                }
             }
         }
+        if (hasPermission) {
+            // Convert the received objects into entities (protect the data layer)
+            var contactEntity = new Contact(
+                null,
+                contact.partyTypeId,
+                contact.preferredCurrencyUomId,
+                contact.description,
+                contact.statusId,
+                user.userId, (new Date()).toISOString(), (new Date()).toISOString(),
+                contact.salutation,
+                contact.firstName,
+                contact.middleName,
+                contact.lastName,
+                contact.birthDate,
+                contact.comments,
+                contact.countryCode,
+                contact.contactMechs
+            );
 
-        var userEntity = new User(
-            user.userId,
-            user.password,
-            user.passwordHint,
-            user.enabled,
-            user.disabledDate,
-            user.partyId,
-            user.createdDate,
-            user.updatedDate,
-            user.securityPermissions,
-            user.iat,
-            user.exp
-        );
-        // DINESH'S TEMPORARY NOTE:  user.iat, user.exp ARE NOT ARGUMENTS TO User function
-        // IN THE CONSTRUCTOR (see user.js).
-        
-        
-        // Validate the contact and user data before going ahead
-        var validationErrors = [];
-        var contactValidationErrors = contactEntity.validateForInsert();
-        //Errors are non-empty validation results
-        for (i = 0; i < contactValidationErrors.length; i++) {
-            if (contactValidationErrors[i]) {
-                validationErrors.push(contactValidationErrors[i]);
+            var contactMechEntities = [];
+            var i;
+            if (contact.contactMechs) {
+                for (i = 0; i < contact.contactMechs.length; i++) {
+                    contactMechEntities.push(new ContactMech(
+                        contact.contactMechs[i].contactMechId,
+                        contact.contactMechs[i].contactMechTypeId,
+                        contact.contactMechs[i].infoString,
+                        contact.contactMechs[i].createdDate,
+                        contact.contactMechs[i].updatedDate,
+                        contact.contactMechs[i].countryCode,
+                        contact.contactMechs[i].areaCode,
+                        contact.contactMechs[i].contactNumber,
+                        contact.contactMechs[i].askForName,
+                        contact.contactMechs[i].toName,
+                        contact.contactMechs[i].attnName,
+                        contact.contactMechs[i].address1,
+                        contact.contactMechs[i].address2,
+                        contact.contactMechs[i].directions,
+                        contact.contactMechs[i].city,
+                        contact.contactMechs[i].stateProvinceGeoId,
+                        contact.contactMechs[i].zipOrPostalCode,
+                        contact.contactMechs[i].countryGeoId
+                    ));
+                }
             }
-        }
 
-        if (validationErrors.length === 0) {
-            // Pass on the entities with info to be added to the data layer
-            var promise = contactData.addContact(contactEntity, userEntity)
-                .then(function (partyId) {
-                    for (var i = 0; i < contactMechEntities.length; i++) {
-                        ContactMechController.addContactMech(contactMechEntities[i])
-                            .then(function (contactMechId) {
-                                return ContactMechController.linkContactMechToParty(partyId, contactMechId);
-                            });
-                    }
-                    return partyId;
+            var userEntity = new User(
+                user.userId,
+                user.password,
+                user.passwordHint,
+                user.enabled,
+                user.disabledDate,
+                user.partyId,
+                user.createdDate,
+                user.updatedDate,
+                user.securityPermissions,
+                user.iat,
+                user.exp
+            );
+
+            // Validate the contact and user data before going ahead
+            var validationErrors = [];
+            var contactValidationErrors = contactEntity.validateForInsert();
+            //Errors are non-empty validation results
+            for (i = 0; i < contactValidationErrors.length; i++) {
+                if (contactValidationErrors[i]) {
+                    validationErrors.push(contactValidationErrors[i]);
+                }
+            }
+
+            if (validationErrors.length === 0) {
+                // Pass on the entities with info to be added to the data layer
+                var promise = contactData.addContact(contactEntity, userEntity)
+                    .then(function (partyId) {
+                        for (var i = 0; i < contactMechEntities.length; i++) {
+                            ContactMechController.addContactMech(contactMechEntities[i])
+                                .then(function (contactMechId) {
+                                    return ContactMechController.linkContactMechToParty(partyId, contactMechId);
+                                });
+                        }
+                        return partyId;
+                    });
+                promise.catch(function (error) {
+                    winston.error(error);
                 });
-            promise.catch(function (error) {
-                winston.error(error);
-            });
-            return promise;
+                return promise;
+            } else {
+                return validationErrors;
+            }
         } else {
-            return validationErrors;
+            // user does not have permissions of a contact owner, return null
+            return null;
         }
     };
 

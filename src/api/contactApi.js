@@ -6,6 +6,8 @@
 //           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
+/* jshint shadow:true */
+
 var contactApi = function (knex) {
 
     // Get a reference to data layer module
@@ -26,24 +28,18 @@ var contactApi = function (knex) {
     var addContact = function (req, res) {
         var contact = req.body;
         var user = req.user;
+        var userSecurityPerm = req.user.securityPermissions;
 
-        console.log('contactApi.addContact, user = ', user);
-        
-        var result = contactController.addContact(contact, user);
-        // An array in result means it's array of validation errors
-        if (Object.prototype.toString.call(result) === '[object Array]') {
-            res.json(result);
-        }
-        // An object in result means it's a promise
-        // (which is returned only if validation succeeds)
-        else {
-            result.then(function (partyId) {
-                res.json({
-                    partyId: partyId
-                });
+        var resultsForThisUser = contactController.addContact(contact, user, userSecurityPerm);
+
+        if (resultsForThisUser === null) {
+            res.json('You do not have permission to add contacts!');
+        } else {
+            resultsForThisUser.then(function (contacts) {
+                res.json(contacts);
             });
         }
-    };
+   };
 
     // GET /api/contacts
     // 
