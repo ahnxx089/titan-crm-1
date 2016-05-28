@@ -41,9 +41,12 @@ var caseApi = function (knex) {
         // 
         if (req.query.hasOwnProperty('owner')) {
 
-            var ownerId = req.user.partyId;
-            var userSecurityPerm = req.user.securityPermissions;
-            var resultsForThisUser = caseController.getCasesByOwner(ownerId, userSecurityPerm);
+            //var ownerId = req.user.partyId;
+            //var userSecurityPerm = req.user.securityPermissions;
+            //var resultsForThisUser = caseController.getCasesByOwner(ownerId, userSecurityPerm);
+            
+            var user = req.user; // pass along the User object to the controller 
+            var resultsForThisUser = caseController.getCasesByOwner(user);
 
             if (resultsForThisUser === null) {
                 res.json('You do not have permission to own contacts!');

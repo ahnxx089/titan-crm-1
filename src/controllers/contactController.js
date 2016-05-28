@@ -22,7 +22,6 @@ var contactController = function (knex) {
     var contactData = require('../data/contactData')(knex);
     var contactMechData = require('../data/contactMechData')(knex);
 
-
     // CONTROLLER METHODS
     // ==========================================
     //

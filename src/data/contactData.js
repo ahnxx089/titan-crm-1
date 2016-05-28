@@ -99,7 +99,6 @@ var contactData = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getContactsByOwner = function (ownerId) {
-        //console.log('\ncontactData.getContactsByOwner, incoming ownerId = ', ownerId);
 
         // The ownership is all contained within the party_relationship table alone;
         // however, the party table is joined so that column party.party_id of the

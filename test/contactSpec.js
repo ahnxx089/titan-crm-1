@@ -5,6 +5,8 @@
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>
 /////////////////////////////////////////////////
 
+/* jshint shadow:true */
+/* jshint jasmine:true */
 
 var knex = require('../src/config/knexConfig')().getConfig();
 var contactController = require('../src/controllers/contactController')(knex);
@@ -13,7 +15,7 @@ var Contact = require('../src/entities/contact');
 describe('Contact module ', function () {
 
     // Test of addContact where a user has security permission to add a contact
-    xit('contactController.addContact allows a user with permission to add a Contact', function (done) {
+    it('contactController.addContact allows a user with permission to add a Contact', function (done) {
 
         // party_id = 3 is fullAdminABC, who has permission
         var user = {
@@ -31,6 +33,7 @@ describe('Contact module ', function () {
         };
         var contact = {
             partyId: null,
+<<<<<<< HEAD
             partyTypeId: "PERSON",
             preferredCurrencyUomId: "USD",
             description: "addContact test",
@@ -44,20 +47,49 @@ describe('Contact module ', function () {
             lastName: "Fire",
             birthDate: "2016-05-10 14:00:00",
             comments: "testing addContact",
+=======
+            partyTypeId: 'PERSON',
+            preferredCurrencyUomId: 'USD',
+            description: 'addContact test',
+            statusId: 'PARTY_ENABLED',
+            createdBy: 'admin',
+            createdDate: '',
+            updatedDate: '',
+            salutation: 'Mrs.',
+            firstName: 'Butter',
+            middleName: '',
+            lastName: 'Worth',
+            birthDate: '2016-05-10 14:00:00',
+            comments: 'testing addContact',
+>>>>>>> 03cb3fc51a4088cd556d3e47bc1ae9ca26906389
             contactMechs: []
         };
         var userSecurityPerm = 'FULLADMIN';
 
         var resultsForThisUser = contactController.addContact(contact, user, userSecurityPerm);
-        expect(typeof resultsForThisUser === 'object').toBeTruthy();
 
-        // Call done to finish the async function
-        done();
+        // Per contactApi.addContact the controller level returns a promise if the POST works;
+        // if it fails (e.g., no permission), it returns null.  Recycle here the same IF ELSE
+        // block used in contactApi.addContact to interpret these two possibilities.
+        if (resultsForThisUser === null) {
+            done();
+        } else {
+            // The controller returns a promise, therefore the expect() and done() must be put in a 
+            // .then() clause so that the promise can be fulfilled. Othersise the adding of the Contact
+            // does not actually happen before the expect() is reached and the done() executes.
+            resultsForThisUser.then(function (contact) {
+                // Get types of returned objects
+                var typeofContact = Object.prototype.toString.call(contact);
+                // Check whether the return value is an array
+                expect(typeofContact).toBe('[object Array]');
+                // Call done to finish the async function
+                done();
+            });
+        }
     });
 
     // Two tests of contactController.getContactsByOwner where a user has security permission
     it('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
-
 
         // Test 1 out of 3:
         // party_id = 14 is contactOwnerDEF, who has permission to own Contacts (but does not happen to
