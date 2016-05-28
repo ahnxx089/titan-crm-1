@@ -138,13 +138,44 @@ var contactData = function (knex) {
         //var numRows = PersonData.updatePerson(contact);
 
         //Update the unique properies of Contact
-        knex('party_role')
+        return knex('party_contact_mech')
             .where({
                 party_id: contact.partyId
             })
-            .update({
-                role_type_id: 'CONTACT',
-                updated_date: (new Date()).toISOString()
+            .update({})
+            .then(function (partyLinkRows) {
+                return knex('party_relationship')
+                    .where({
+                        party_id_from: contact.partyId
+                    })
+                    .orWhere({
+                        party_id_to: contact.partyId
+                    })
+                    .update({})
+                    .then(function (relationshipRows) {
+                        return knex('party_role')
+                            .where({
+                                party_id: contact.partyId
+                            })
+                            .update({})
+                            .then(function (roleRows) {
+                                return knex('person')
+                                    .where({
+                                        party_id: contact.partyId
+                                    })
+                                    .update({})
+                                    .then(function (personRows) {
+                                        return knex('party')
+                                            .where({
+                                                party_id: contact.partyId
+                                            })
+                                            .update({first_name: contact.firstName})
+                                            .then(function (partyRows) {
+                                                return partyRows + personRows + roleRows + relationshipRows + partyLinkRows;
+                                            });
+                                    });
+                            });
+                    });
             });
 
         //This function does *not* handle any ContactMechs associated with this Contact
@@ -161,38 +192,39 @@ var contactData = function (knex) {
                 party_id: contactId
             })
             .del()
-            .then(function (relationshipRows) {
-                return knex('party_role')
+            .then(function (partyLinkRows) {
+                return knex('party_relationship')
                     .where({
-                        party_id: contactId
+                        party_id_from: contactId
+                    })
+                    .orWhere({
+                        party_id_to: contactId
                     })
                     .del()
-                    .then(function (partyLinkRows) {
-                        return knex('party_relationship')
+                    .then(function (relationshipRows) {
+                        return knex('party_role')
                             .where({
-                                party_id_from: contactId
-                            })
-                            .orWhere({
-                                party_id_to: contactId
+                                party_id: contactId
                             })
                             .del()
-                            .then(function (roleRows) {
-                                return knex('person')
-                                    .where({
-                                        party_id: contactId
-                                    })
-                                    .del()
-                                    .then(function (personRows) {
-                                        return knex('party')
-                                            .where({
-                                                party_id: contactId
-                                            })
-                                            .del()
-                                            .then(function (partyRows) {
-                                                return partyRows + personRows + roleRows + relationshipRows + partyLinkRows;
-                                            });
-                                    });
-                            });
+
+                        .then(function (roleRows) {
+                            return knex('person')
+                                .where({
+                                    party_id: contactId
+                                })
+                                .del()
+                                .then(function (personRows) {
+                                    return knex('party')
+                                        .where({
+                                            party_id: contactId
+                                        })
+                                        .del()
+                                        .then(function (partyRows) {
+                                            return partyRows + personRows + roleRows + relationshipRows + partyLinkRows;
+                                        });
+                                });
+                        });
                     });
             });
 
