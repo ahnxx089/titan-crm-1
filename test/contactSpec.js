@@ -55,10 +55,10 @@ describe('Contact module ', function () {
         done();
     });
 
-
     // Two tests of contactController.getContactsByOwner where a user has security permission
     xit('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
 
+        
         // Test 1 out of 3:
         // party_id = 14 is contactOwnerDEF, who has permission to own Contacts (but does not happen to
         // actually own any, that is the next test.)
@@ -71,15 +71,13 @@ describe('Contact module ', function () {
         var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
         expect(typeof resultsForThisUser === 'object').toBeTruthy();
 
-        // Test 2 out of 3 -- NOT COMPLETED:  HOW TO TAKE THE PROMISE RETURNED BY CONTROLLER
-        //                      AND res.json IT AS THE API LAYER DOES WITH IT?
+        
+        // Test 2 out of 3:
         // party_id = 13 is contactOwnerABC, who has permission to own Contacts and happens to own two
         var ownerId = 13;
         var userSecurityPerm = ['CONTACT_OWNER']; // from user_login_security_group_table
 
-        // when a user has Contact owner rights, the controller returns an object... BUT HOW DO
-        // I GET THE TWO CONTACTS' INFO OUT OF IT AND INTO JSON FORMAT LIKE res.json CAN DO?
-        // I KNOW THIS TEST PASSES, BUT HOW TO SHOW THE RESULT?
+        // when a user has Contact owner rights, the controller returns an object.
         var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
         expect(typeof resultsForThisUser === 'object').toBeTruthy();
 
@@ -101,6 +99,21 @@ describe('Contact module ', function () {
         done();
     });
 
+    // Test of contactController.getContactsByIdentity where a user has contact tasks permissions
+    xit('contactController.getContactsByIdentity allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
+
+        // this search looks for any first name containing "w" OR last name containing "e"
+        var firstName = 'w';
+        var lastName = 'e';
+        var userSecurePerm = 'CRMSFA_CONTACT_TASKS';
+
+        var resultsForUser = contactController.getContactsByIdentity(firstName, lastName, userSecurePerm);
+        expect(typeof resultsForUser === 'object').toBeTruthy();
+
+        // Call done to finish the async function
+        done();
+    });    
+    
     xit('getContactById returns a valid contact entity', function (done) {
         contactController.getContactById(56).then(function (contact) {
             expect(contact).toBeTruthy();
