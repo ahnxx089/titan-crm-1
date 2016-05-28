@@ -45,31 +45,14 @@ var caseController = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of case entities
      */
     var getCasesByOwner = function (user) {
-
-        var userLoginId = user.userId;
-        var userSecurityPerm = user.securityPermissions;
         
-        // Check security permissions of user against accepted permissions for this function
-        // Start by assuming this user does not have permission, until proven otherwise.
-        var hasPermission = false;
-        if (userSecurityPerm.length > 0) {
+        // PENDING SATURDAY'S CREATION OF MORE FLEXIBLE CHECKING OF SECURITY, FOR NOW
+        // JUST SHORT-CIRCUIT CHECKING SECURITY PERMISSION, GET ON TO DATA LAYER
+        var hasPermission = true;
 
-            // loop over userSecurityPerm in case user has more than one permission 
-            for (var i = 0; i < userSecurityPerm.length; i++) {
-                if (userSecurityPerm[i] === 'FULLADMIN') {
-                    hasPermission = true;
-                }
-                if (userSecurityPerm[i] === 'PARTYADMIN') {
-                    hasPermission = true;
-                }
-                if (userSecurityPerm[i] === 'CONTACT_OWNER') {
-                    hasPermission = true;
-                }
-            }
-        }
         if (hasPermission) {
             // user has permission, proceed to the data layer
-            var promise = caseData.getCasesByOwner(userLoginId)
+            var promise = caseData.getCasesByOwner(user.userId)
                 .then(function (cases) {
 
                     // Map the retrieved result set to corresponding entities

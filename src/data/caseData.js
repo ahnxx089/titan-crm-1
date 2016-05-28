@@ -6,6 +6,7 @@
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
+/* jshint maxlen: false */
 
 var caseData = function (knex) {
 
@@ -27,17 +28,16 @@ var caseData = function (knex) {
 
     };
 
-    /** -- FOR THIS TO WORK, I NEED TO BRING IN THE USERS user_login.user_login_id WHICH IS THE
-     *      THE FIRST PROPERTY OF A USER OBJECT...
-     * Gets all case from database for the user/owner making this GET request
-     * @param {Number} ownerId - Unique party_id of the user/owner whose cases to be fetched
+    /** 
+     * Gets all cases from database for the user/owner making this GET request
+     * @param {Number} userLoginId - Unique party_id of the user/owner whose cases to be fetched
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getCasesByOwner = function (userLoginId) {
-        return knex.select('case_role.case_id')
+        return knex.select('case_.case_id', 'case_.case_type_id', 'case_.case_category_id', 'case_.status_id', 'case_.from_party_id', 'case_.priority', 'case_.case_date', 'case_.response_required_date', 'case_.case_name', 'case_.description', 'case_.resolution_id', 'case_.created_by', 'case_.created_date', 'case_.updated_date')
             .from('case_')
             .innerJoin('user_login', 'case_.created_by', 'user_login.user_login_id')
-            .Where('user_login.user_login_id', userLoginId);
+            .where('user_login.user_login_id', userLoginId);
     };
 
     /** 
