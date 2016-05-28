@@ -7,6 +7,8 @@
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
+/* jshint maxparams: false */
+
 // NOT COMPLETED! 
 // Anurag: statusId is a foreign key that is not reflected in the design document. Consider update. 
 // Need work on validateForUpdate, and validateAnnualRevenue.

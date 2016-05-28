@@ -32,7 +32,7 @@ var contactController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new contact
      */
     var addContact = function (contact, user) {
-        // Convert the received objects into entities (protect the data laye)
+        // Convert the received objects into entities (protect the data layer)
         var contactEntity = new Contact(
             null,
             contact.partyTypeId,
@@ -134,7 +134,7 @@ var contactController = function (knex) {
                 var contactEntity;
                 if (contacts.length > 0) {
                     // Map the retrieved result set to corresponding entity
-                    contactEntity = new Contact(
+                    var contactEntity = new Contact(
                         contacts[0].party_id,
                         contacts[0].party_type_id,
                         contacts[0].currency_uom_id,
