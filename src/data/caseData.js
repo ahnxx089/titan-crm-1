@@ -27,12 +27,23 @@ var caseData = function (knex) {
 
     };
 
-    /**
+    /** -- NOT FULLY IMPLEMENTED YET, IS BASED ON MY CURRENT UNDERSTANDING OF HOW A CASE IS OWNED,
+     *      COMPARING TO OPENTAPS:
+     *      -- In table case_role, there will be two rows with the same case_id.
+     *      -- In the row with role_type_id = 'PERSON_ROLE', party_id is for the owner/user
+     *      -- In the other row with the same case_id, party_id is the Lead or Contact who the
+     *          case was created for.  Strictly speaking that other row is not needed to answer
+     *          this question of which cases does this user own
      * Gets all case from database for the user/owner making this GET request
      * @param {Number} ownerId - Unique party_id of the user/owner whose cases to be fetched
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getCasesByOwner = function (ownerId) {
+        return knex.select('case_role.case_id')
+            .from('case_')
+            .innerJoin('case_role', 'case_.case_id', 'case_role.case_id')
+            .where('case_role.role_type_id', 'PERSON_ROLE')
+            .andWhere('case_role.party_id', ownerId);
 
     };
 
@@ -41,7 +52,7 @@ var caseData = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getCasesByAdvanced = function () {
-    
+
     };
 
     /**
@@ -50,7 +61,7 @@ var caseData = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateCase = function (case_) {
- 
+
     };
 
     /**

@@ -46,6 +46,62 @@ var caseController = function (knex) {
      */
     var getCasesByOwner = function (ownerId, userSecurityPerm) {
 
+        // Check security permissions of user against accepted permissions for this function
+        // Start by assuming this user does not have permission, until proven otherwise.
+        var hasPermission = false;
+        if (userSecurityPerm.length > 0) {
+
+            // loop over userSecurityPerm in case user has more than one permission 
+            for (var i = 0; i < userSecurityPerm.length; i++) {
+                if (userSecurityPerm[i] === 'FULLADMIN') {
+                    hasPermission = true;
+                }
+                if (userSecurityPerm[i] === 'PARTYADMIN') {
+                    hasPermission = true;
+                }
+                if (userSecurityPerm[i] === 'CONTACT_OWNER') {
+                    hasPermission = true;
+                }
+            }
+        }
+        if (hasPermission) {
+            // user has permission, proceed to the data layer
+            var promise = caseData.getCasesByOwner(ownerId)
+                .then(function (cases) {
+
+                    // Map the retrieved result set to corresponding entities
+                    var caseEntities = [];
+                    for (var i = 0; i < cases.length; i++) {
+                        var case_ = new Case(
+                            cases[i].case_id,
+                            cases[i].case_type_id,
+                            cases[i].case_category_id,
+                            cases[i].status_id,
+                            cases[i].from_party_id,
+                            cases[i].priority,
+                            cases[i].case_date,
+                            cases[i].response_required_date,
+                            cases[i].case_name,
+                            cases[i].description,
+                            cases[i].resolution_id,
+                            cases[i].created_by,
+                            cases[i].created_date,
+                            cases[i].updated_date
+                        );
+                        caseEntities.push(case_);
+                    }
+                    return caseEntities;
+                });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
+            });
+            return promise;            
+        } else {
+            // user does not have permissions of a contact owner, return null
+            return null;
+        }
+        
     };
 
     /** 
