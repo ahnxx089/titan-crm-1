@@ -12,47 +12,58 @@ var Contact = require('../src/entities/contact');
 
 describe('Contact module ', function () {
 
-    //NOT WORKING YET:   UNIT TEST(S) FOR getContactsByOwner
+    // Two tests of contactController.getContactsByOwner where a user HAS security permission
+    xit('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
+        
+        // Test 1 out of 3:
+        // party_id = 14 is contactOwnerDEF, who has permission to own Contacts (but does not happen to
+        // actually own any, that is the next test.)
+        var ownerId = 14;
+        var userSecurityPerm = ['CONTACT_OWNER']; // from user_login_security_group_table
 
-    // Dinesh's contactController.getContactsByOwner using ownership of a Contact
-    // in his local database; has been commented out after confirming it works
-    // since central repo database won't have this exact relationship
-    xit('contactController.getContactsByOwner allows user with permission to own Contact(s) to view the partyId(s)', function(){
-        var ownerId = 3;    // a party with permission to own Contacts (and therefore retrieve his)
-        var userSecurityPerm = [ 'FULLADMIN' ];
-        contactController.getContactsByOwner(ownerId, userSecurityPerm)
-        .then(function(contacts){
-                expect(typeof contacts === 'object').toBeTruthy();
+        // when a user has Contact owner rights, the controller returns an object.  The object will
+        // be empty if the user does not actually own any contacts, but user had permission is what
+        // matters for this test.
+        var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
+        expect(typeof resultsForThisUser === 'object').toBeTruthy();
 
-                // Call done to finish the async function
-                done();            
-        });
-    })
+        // Test 2 out of 3 -- NOT COMPLETED:  HOW TO TAKE THE PROMISE RETURNED BY CONTROLLER
+        //                      AND res.json IT AS THE API LAYER DOES WITH IT?
+        // party_id = 13 is contactOwnerABC, who has permission to own Contacts and happens to own two
+        var ownerId = 13;
+        var userSecurityPerm = ['CONTACT_OWNER']; // from user_login_security_group_table
 
+        // when a user has Contact owner rights, the controller returns an object... BUT HOW DO
+        // I GET THE TWO CONTACTS' INFO OUT OF IT AND INTO JSON FORMAT LIKE res.json CAN DO?
+        // I KNOW THIS TEST PASSES, BUT HOW TO SHOW THE RESULT?
+        var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
+        expect(typeof resultsForThisUser === 'object').toBeTruthy();
 
-    // TO BE ELIMIMATED IN FAVOR OF ABOVE
-    xit('getContacts returns all contacts in system as an array of Contact objects', function (done) {
-           contactController.getContactsByOwner().then(function(contacts) {
-               expect(contacts).toBeTruthy();
-               // Get types of returned objects
-               var typeofContacts = Object.prototype.toString.call(contacts);
-               // Check whether the return value is an array
-               expect(typeofContacts).toBe('[object Array]');
-               // Check whether the first element in returned array is of type Object
-               expect(contacts[0] instanceof Contact).toBeTruthy();
-               // Call done to finish the async function
-               done();
-           });
+        // Call done to finish the async function
+        done();
     });
-    
+
+    // One test of contactController.getContactsByOwner where a user LACKS security permission
+    xit('contactController.getContactsByOwner DENIES a user without permission to own Contact(s) to get the party_id of (any) Contacts', function (done) {
+        // party_id = 17 is leadOwnerDEF, who has permission to own Leads, but not Contacts
+        var ownerId = 17;
+        var userSecurityPerm = ['LEAD_OWNER']; // from user_login_security_group_table
+
+        var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
+
+        // when a user lacks Contact owner rights, the controller returns null. 
+        expect(resultsForThisUser === null).toBeTruthy();
+        // Call done to finish the async function
+        done();
+    });
 
     xit('getContactById returns a valid contact entity', function (done) {
-           contactController.getContactById(56).then(function(contact) {
-               expect(contact).toBeTruthy();
-               expect(contact instanceof Contact).toBeTruthy();
-               // Call done to finish the async function
-               done();
-           });
+        contactController.getContactById(56).then(function (contact) {
+            expect(contact).toBeTruthy();
+            expect(contact instanceof Contact).toBeTruthy();
+            // Call done to finish the async function
+            done();
+        });
     });
 
 });
