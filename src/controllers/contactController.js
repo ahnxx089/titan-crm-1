@@ -7,6 +7,7 @@
 
 /* jshint camelcase: false */
 /* jshint maxcomplexity: false */
+/* jshint shadow:true */
 
 var winston = require('winston');
 var Contact = require('../entities/contact');
@@ -77,7 +78,6 @@ var contactController = function (knex) {
             }
         }
 
-
         var userEntity = new User(
             user.userId,
             user.password,
@@ -91,7 +91,10 @@ var contactController = function (knex) {
             user.iat,
             user.exp
         );
-
+        // DINESH'S TEMPORARY NOTE:  user.iat, user.exp ARE NOT ARGUMENTS TO User function
+        // IN THE CONSTRUCTOR (see user.js).
+        
+        
         // Validate the contact and user data before going ahead
         var validationErrors = [];
         var contactValidationErrors = contactEntity.validateForInsert();
@@ -148,25 +151,11 @@ var contactController = function (knex) {
                         contacts[0].middle_name,
                         contacts[0].last_name,
                         contacts[0].birth_date,
-                        contacts[0].comments,
-                        contacts[0].country_code,
-                        contacts[0].area_code,
-                        contacts[0].contact_number,
-                        contacts[0].ask_for_name,
-                        contacts[0].email_address,
-                        contacts[0].to_name,
-                        contacts[0].attn_name,
-                        contacts[0].address1,
-                        contacts[0].address2,
-                        contacts[0].city,
-                        contacts[0].state_province_geo_id,
-                        contacts[0].zip_or_postal_code,
-                        contacts[0].country_geo_id
+                        contacts[0].comments
                     );
                 } else {
                     contactEntity = new Contact();
                 }
-
                 return contactEntity;
             });
         promise.catch(function (error) {

@@ -47,7 +47,7 @@ describe('Contact module ', function () {
     
 
     xit('getContactById returns a valid contact entity', function (done) {
-           contactController.getContactById(2).then(function(contact) {
+           contactController.getContactById(56).then(function(contact) {
                expect(contact).toBeTruthy();
                expect(contact instanceof Contact).toBeTruthy();
                // Call done to finish the async function

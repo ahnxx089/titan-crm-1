@@ -27,6 +27,8 @@ var contactApi = function (knex) {
         var contact = req.body;
         var user = req.user;
 
+        console.log('contactApi.addContact, user = ', user);
+        
         var result = contactController.addContact(contact, user);
         // An array in result means it's array of validation errors
         if (Object.prototype.toString.call(result) === '[object Array]') {
@@ -123,8 +125,9 @@ var contactApi = function (knex) {
             }
         }
 
-        // GET /api/contacts?phoneNum
-        //if (INSERT LOGIC HERE){
+        // GET /api/contacts?phoneNum=
+        //
+        //else if (INSERT LOGIC HERE){
         //     var getContactByPhoneNum = function (req, res) {
         //
         //    };  
