@@ -30,13 +30,13 @@ var contactApi = function (knex) {
         var user = req.user;
         var userSecurityPerm = req.user.securityPermissions;
 
-        var resultsForThisUser = contactController.addContact(contact, user, userSecurityPerm);
+        var resultsForThisUser = contactController.addContact(contact, user);
 
         if (resultsForThisUser === null) {
-            res.json('You do not have permission to add contacts!');
+            res.json({ message: "You do not have permission to add contacts!" });
         } else {
-            resultsForThisUser.then(function (contacts) {
-                res.json(contacts);
+            resultsForThisUser.then(function (contactPartyId) {
+                res.json({ contactPartyId: contactPartyId });
             });
         }
    };
@@ -73,7 +73,7 @@ var contactApi = function (knex) {
         //  the API layer?  I do not know. For getContactsByOwner, I deal with 
         //  req.user.securityPermissions being an empty array in the controller layer.        
         //
-        if (req.query.hasOwnProperty('owner')) {
+        if (Object.keys(req.query).length === 0) {
 
             var ownerId = req.user.partyId;
             var userSecurityPerm = req.user.securityPermissions;
@@ -85,7 +85,7 @@ var contactApi = function (knex) {
             // Per May 25 standup meeting, a simple if block returns either the promise or 
             // the null for users without permission.  That's not doing logic in the API layer,
             // just funnelling the result of logic in the control layer out sensibly.
-            var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
+            var resultsForThisUser = contactController.getContactsByOwner(req.user);
 
             if (resultsForThisUser === null) {
                 res.json('You do not have permission to own contacts!');

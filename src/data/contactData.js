@@ -59,6 +59,7 @@ var contactData = function (knex) {
                             })
                             .then(function () {
                                 return knex('party_relationship')
+                                    .returning('party_id')
                                     .insert({
                                         party_id_from: passAlongPartyId,
                                         party_id_to: user.partyId,
@@ -70,6 +71,8 @@ var contactData = function (knex) {
                                         party_relationship_type_id: 'RESPONSIBLE_FOR',
                                         created_date: contact.createdDate,
                                         updated_date: contact.updatedDate
+                                    }).then(function() {
+                                        return passAlongPartyId;
                                     });
                             });
                     });

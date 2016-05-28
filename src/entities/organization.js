@@ -8,12 +8,11 @@
 /////////////////////////////////////////////////
 
 var validation = require('../common/validation')();
-var Party = require('../entities/party')();
+var Party = require('../entities/party');
 
 // Constructor
 //
-function Organization(partyId, createdDate, updatedDate, orgName, officeSiteName, annualRevenue,
-                numEmployees, tickerSymbol, comments,  logoImgURL) {
+function Organization(partyId, createdDate, updatedDate, orgName, officeSiteName, annualRevenue, numEmployees, tickerSymbol, comments,  logoImgURL) {
     // Call the parent constructor first
     Party.call(this, partyId, createdDate, updatedDate);
     

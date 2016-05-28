@@ -14,6 +14,7 @@ var Contact = require('../entities/contact');
 var User = require('../entities/user');
 var ContactMechController = require('../controllers/contactMechController');
 var ContactMech = require('../entities/contactMech');
+var _ = require('lodash');
 
 var contactController = function (knex) {
     // Get a reference to data layer module
@@ -32,84 +33,93 @@ var contactController = function (knex) {
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is id of new contact
      */
-    var addContact = function (contact, user, userSecurityPerm) {
+    var addContact = function (contact, user) {
 
         // Check user's security permission to add contacts
-        var hasPermission = false;
-        if (userSecurityPerm.length > 0) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
 
-            // loop over userSecurityPerm in case user has more than one permission 
-            for (var i = 0; i < userSecurityPerm.length; i++) {
-                if (userSecurityPerm[i] === 'FULLADMIN') {
-                    hasPermission = true;
-                }
-                if (userSecurityPerm[i] === 'PARTYADMIN') {
-                    hasPermission = true;
-                }
-                if (userSecurityPerm[i] === 'CONTACT_OWNER') {
-                    hasPermission = true;
-                }
-            }
-        }
-        if (hasPermission) {
+        if (hasPermission !== -1) {
+            var now = (new Date()).toISOString();
             // Convert the received objects into entities (protect the data layer)
+            //
+            // Contact mechanisms
+            var contactMechEntities = [];
+            if (contact.emailAddress) {
+                var emailContactMech = new ContactMech(
+                    null,
+                    'EMAIL_ADDRESS',
+                    contact.emailAddress,
+                    now,
+                    now
+                );
+                contactMechEntities.push(emailContactMech);
+            }
+            if (contact.webAddress) {
+                var webContactMech = new ContactMech(
+                    null,
+                    'WEB_ADDRESS',
+                    contact.webAddress,
+                    now,
+                    now
+                );
+                contactMechEntities.push(webContactMech);
+            }
+            if (contact.contactNumber) {
+                var phoneContactMech = new ContactMech(
+                    null,
+                    'TELECOM_NUMBER',
+                    null,
+                    now,
+                    now,
+                    contact.countryCode,
+                    contact.areaCode,
+                    contact.contactNumber,
+                    contact.askForName
+                );
+                contactMechEntities.push(phoneContactMech);
+            }
+            if (contact.countryGeoId) {
+                var addressContactMech = new ContactMech(
+                    null,
+                    'POSTAL_ADDRESS',
+                    null,
+                    now,
+                    now,
+                    null,
+                    null,
+                    null,
+                    null,
+                    contact.toName,
+                    contact.attnName,
+                    contact.address1,
+                    contact.address2,
+                    contact.directions,
+                    contact.city,
+                    contact.zipOrPostalCode,
+                    contact.stateProvinceGeoId,
+                    contact.countryGeoId
+                );
+                contactMechEntities.push(addressContactMech);
+            }
+
+            // Contact entity
             var contactEntity = new Contact(
                 null,
                 contact.partyTypeId,
                 contact.preferredCurrencyUomId,
                 contact.description,
                 contact.statusId,
-                user.userId, (new Date()).toISOString(), (new Date()).toISOString(),
+                user.userId,
+                now,
+                now,
                 contact.salutation,
                 contact.firstName,
                 contact.middleName,
                 contact.lastName,
                 contact.birthDate,
-                contact.comments,
-                contact.countryCode,
-                contact.contactMechs
+                contact.comments
             );
 
-            var contactMechEntities = [];
-            var i;
-            if (contact.contactMechs) {
-                for (i = 0; i < contact.contactMechs.length; i++) {
-                    contactMechEntities.push(new ContactMech(
-                        contact.contactMechs[i].contactMechId,
-                        contact.contactMechs[i].contactMechTypeId,
-                        contact.contactMechs[i].infoString,
-                        contact.contactMechs[i].createdDate,
-                        contact.contactMechs[i].updatedDate,
-                        contact.contactMechs[i].countryCode,
-                        contact.contactMechs[i].areaCode,
-                        contact.contactMechs[i].contactNumber,
-                        contact.contactMechs[i].askForName,
-                        contact.contactMechs[i].toName,
-                        contact.contactMechs[i].attnName,
-                        contact.contactMechs[i].address1,
-                        contact.contactMechs[i].address2,
-                        contact.contactMechs[i].directions,
-                        contact.contactMechs[i].city,
-                        contact.contactMechs[i].stateProvinceGeoId,
-                        contact.contactMechs[i].zipOrPostalCode,
-                        contact.contactMechs[i].countryGeoId
-                    ));
-                }
-            }
-
-            var userEntity = new User(
-                user.userId,
-                user.password,
-                user.passwordHint,
-                user.enabled,
-                user.disabledDate,
-                user.partyId,
-                user.createdDate,
-                user.updatedDate,
-                user.securityPermissions,
-                user.iat,
-                user.exp
-            );
 
             // Validate the contact and user data before going ahead
             var validationErrors = [];
@@ -123,14 +133,16 @@ var contactController = function (knex) {
 
             if (validationErrors.length === 0) {
                 // Pass on the entities with info to be added to the data layer
-                var promise = contactData.addContact(contactEntity, userEntity)
+                var promise = contactData.addContact(contactEntity, user)
                     .then(function (partyId) {
+                        var addContactMechPromises = [];
                         for (var i = 0; i < contactMechEntities.length; i++) {
-                            ContactMechController.addContactMech(contactMechEntities[i])
-                                .then(function (contactMechId) {
-                                    return ContactMechController.linkContactMechToParty(partyId, contactMechId);
-                                });
+                            addContactMechPromises.push(
+                                ContactMechController.addContactMech(addContactMechPromises[i])
+                            );
+                                
                         }
+                        addContactMechCallback(addContactMechPromises, partyId);
                         return partyId;
                     });
                 promise.catch(function (error) {
@@ -143,6 +155,21 @@ var contactController = function (knex) {
         } else {
             // user does not have permissions of a contact owner, return null
             return null;
+        }
+    };
+    
+    var addContactMechCallback = function(addContactMechPromises, partyId) {
+        if (addContactMechPromises.length > 0) {
+            var promise = addContactMechPromises.pop();
+            promise.then(function(contactMechId) {
+                return ContactMechController.linkContactMechToParty(partyId, contactMechId)
+                .then(function() {
+                    return addContactMechCallback(partyId);
+                })
+            });
+        }
+        else {
+            return partyId;
         }
     };
 
@@ -189,7 +216,7 @@ var contactController = function (knex) {
      * Gets contacts owned by the user/owner
      * @return {Object} promise - Fulfillment value is an array of contact entities
      */
-    var getContactsByOwner = function (ownerId, userSecurityPerm) {
+    var getContactsByOwner = function (user) {
 
         // SECURITY PERMISSIONS ARE IMPLEMENTED HERE IN THE CONTROLLER LAYER
         //  1. For a user with permission to own a Contact, it proceeds to data layer and upon
@@ -199,7 +226,7 @@ var contactController = function (knex) {
 
         // Check security permissions of user against accepted permissions for this function
         // Start by assuming this user does not have permission, until proven otherwise.
-        var hasPermission = false;
+        //var hasPermission = false;
 
         // Per comments above in API layer, for unknown reasons a user with valid token
         // such as a LEAD_OWNER at the Api layer ITSELF comes in with userSecurityPerm empty!
@@ -211,25 +238,13 @@ var contactController = function (knex) {
         // userSecurityPerm; if yes, then it proceeds to loop through userSecurityPerm for any one 
         // of the correct permissions for owning a Contact to allow this user's request to pass to 
         // the data layer.
-        if (userSecurityPerm.length > 0) {
+        // Check user's security permission to add contacts
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
 
-            // loop over userSecurityPerm in case user has more than one permission 
-            for (var i = 0; i < userSecurityPerm.length; i++) {
-                if (userSecurityPerm[i] === 'FULLADMIN') {
-                    hasPermission = true;
-                }
-                if (userSecurityPerm[i] === 'PARTYADMIN') {
-                    hasPermission = true;
-                }
-                if (userSecurityPerm[i] === 'CONTACT_OWNER') {
-                    hasPermission = true;
-                }
-            }
-        }
-        if (hasPermission) {
+        if (hasPermission !== -1) {
 
             // user has permission, proceed to the data layer
-            var promise = contactData.getContactsByOwner(ownerId)
+            var promise = contactData.getContactsByOwner(user.partyId)
                 .then(function (contacts) {
 
                     // Map the retrieved result set to corresponding entities
@@ -362,23 +377,13 @@ var contactController = function (knex) {
             contact.lastName,
             contact.birthDate,
             contact.comments,
-            contact.countryCode,
-            contact.contactMechs
+            contact.countryCode
         );
 
         var validationErrors = contactEntity.validateForUpdate();
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
             var promise = contactData.updateContact(contact)
-                .then(function (numRows) {
-                    if (contactEntity.contactMechs) {
-                        for (var i = 0; i < contactEntity.contactMechs.length; i++) {
-                            numRows += ContactMechController.updateContactMech(contactEntity.contactMechs[i]);
-                        }
-                    }
-
-                    return numRows;
-                })
                 .then(function (numRows) {
                     return numRows;
                 });

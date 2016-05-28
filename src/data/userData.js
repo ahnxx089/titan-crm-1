@@ -48,13 +48,25 @@ var userData = function(knex) {
     };
     
     /**
-     * Gets all security permissions for a user from database
-     * @param {Number} userId - Id of the user whose permissions are to be fetched
+     * Gets all security permission groups for a user from database
+     * @param {String} id - Id of the user whose permissions are to be fetched
      * @return {Object} promise - Fulfillment value is a raw data object
     */
-    var getUserPermissionsById = function(id) {
+    var getPermissionGroupsByUserId = function(id) {
         return knex.select('permission_group_id', 'from_date', 'thru_date')
             .from('user_login_security_group')
+            .where({user_login_id: id});
+    };
+    
+    /**
+     * Gets all security permissions for a user
+     * @param {String} id - Id of the user for which we need to fetch permissions
+     * @return {Object} promise - Fulfillment value is a raw data object
+     */
+    var getPermissionsByUserId = function (id) {
+        return knex.select('permission_id', 'from_date', 'thru_date')
+            .from('security_group_permission')
+            .innerJoin('user_login_security_group', 'group_id', 'permission_group_id')
             .where({user_login_id: id});
     };
     
@@ -63,7 +75,8 @@ var userData = function(knex) {
         getUserById: getUserById,
         updateUser: updateUser,
         deleteUser: deleteUser,
-        getUserPermissionsById: getUserPermissionsById
+        getPermissionGroupsByUserId: getPermissionGroupsByUserId,
+        getPermissionsByUserId: getPermissionsByUserId
     };
 };
 

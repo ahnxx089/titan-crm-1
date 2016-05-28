@@ -39,9 +39,9 @@ describe('Contact module ', function () {
             createdDate: "",
             updatedDate: "",
             salutation: "Mrs.",
-            firstName: "Butter",
+            firstName: "Doubt",
             middleName: "",
-            lastName: "Worth",
+            lastName: "Fire",
             birthDate: "2016-05-10 14:00:00",
             comments: "testing addContact",
             contactMechs: []
@@ -56,9 +56,9 @@ describe('Contact module ', function () {
     });
 
     // Two tests of contactController.getContactsByOwner where a user has security permission
-    xit('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
+    it('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
 
-        
+
         // Test 1 out of 3:
         // party_id = 14 is contactOwnerDEF, who has permission to own Contacts (but does not happen to
         // actually own any, that is the next test.)
@@ -69,9 +69,11 @@ describe('Contact module ', function () {
         // be empty if the user does not actually own any contacts, but user had permission is what
         // matters for this test.
         var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
+        // THE RESULT IS A PROMISE
+
         expect(typeof resultsForThisUser === 'object').toBeTruthy();
 
-        
+
         // Test 2 out of 3:
         // party_id = 13 is contactOwnerABC, who has permission to own Contacts and happens to own two
         var ownerId = 13;
@@ -79,10 +81,16 @@ describe('Contact module ', function () {
 
         // when a user has Contact owner rights, the controller returns an object.
         var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
-        expect(typeof resultsForThisUser === 'object').toBeTruthy();
 
         // Call done to finish the async function
-        done();
+        resultsForThisUser.then(function (contacts) {
+            var typeOfContacts = Object.prototype.toString.call(contacts);
+            // Check whether the return value is an array
+            expect(typeOfContacts).toBe('[object Array]');
+
+            //expect(typeof resultsForThisUser === 'object').toBeTruthy();
+            done();
+        });
     });
 
     // One test of contactController.getContactsByOwner where a user lacks security permission
@@ -112,8 +120,8 @@ describe('Contact module ', function () {
 
         // Call done to finish the async function
         done();
-    });    
-    
+    });
+
     xit('getContactById returns a valid contact entity', function (done) {
         contactController.getContactById(56).then(function (contact) {
             expect(contact).toBeTruthy();

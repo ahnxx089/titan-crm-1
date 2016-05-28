@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.4.15.5
+-- version 4.5.1
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 27, 2016 at 08:49 PM
--- Server version: 5.6.30
--- PHP Version: 5.5.35
+-- Generation Time: May 29, 2016 at 12:15 AM
+-- Server version: 10.1.10-MariaDB
+-- PHP Version: 5.6.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `titan_crm`
+-- Database: `opentaps_dinesh`
 --
 
 -- --------------------------------------------------------
@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `case_`
 --
 
-CREATE TABLE IF NOT EXISTS `case_` (
+CREATE TABLE `case_` (
   `case_id` int(11) NOT NULL,
   `case_type_id` varchar(20) NOT NULL,
   `case_category_id` varchar(20) NOT NULL,
@@ -43,13 +43,20 @@ CREATE TABLE IF NOT EXISTS `case_` (
   `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `case_`
+--
+
+INSERT INTO `case_` (`case_id`, `case_type_id`, `case_category_id`, `status_id`, `from_party_id`, `priority`, `case_date`, `response_required_date`, `case_name`, `description`, `resolution_id`, `created_by`, `created_date`, `updated_date`) VALUES
+(1, 'RF_SUPPORT', 'CRCAT_NEW_PROB', 'CASE_ACCEPTED', 62, '5', '2016-05-28 12:31:26', '2016-05-28 12:31:26', 'Red light keeps flashing', 'Customer expects a few niceties first, before getting down to business', NULL, 'fullAdminDEF', '2016-05-28 12:31:26', '2016-05-28 12:31:26');
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `case_category`
 --
 
-CREATE TABLE IF NOT EXISTS `case_category` (
+CREATE TABLE `case_category` (
   `case_category_id` varchar(20) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   `created_date` datetime NOT NULL,
@@ -73,7 +80,7 @@ INSERT INTO `case_category` (`case_category_id`, `description`, `created_date`, 
 -- Table structure for table `case_note`
 --
 
-CREATE TABLE IF NOT EXISTS `case_note` (
+CREATE TABLE `case_note` (
   `case_id` int(11) NOT NULL,
   `note_id` int(11) NOT NULL,
   `created_date` datetime NOT NULL,
@@ -86,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `case_note` (
 -- Table structure for table `case_resolution`
 --
 
-CREATE TABLE IF NOT EXISTS `case_resolution` (
+CREATE TABLE `case_resolution` (
   `case_resolution_id` varchar(20) NOT NULL,
   `case_type_id` varchar(20) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -112,7 +119,7 @@ INSERT INTO `case_resolution` (`case_resolution_id`, `case_type_id`, `descriptio
 -- Table structure for table `case_role`
 --
 
-CREATE TABLE IF NOT EXISTS `case_role` (
+CREATE TABLE `case_role` (
   `case_id` int(11) NOT NULL,
   `party_id` int(11) NOT NULL,
   `role_type_id` varchar(20) NOT NULL,
@@ -120,13 +127,21 @@ CREATE TABLE IF NOT EXISTS `case_role` (
   `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `case_role`
+--
+
+INSERT INTO `case_role` (`case_id`, `party_id`, `role_type_id`, `created_date`, `updated_date`) VALUES
+(1, 4, 'PERSON_ROLE', '2016-05-28 12:36:18', '2016-05-28 12:36:18'),
+(1, 62, 'CONTACT', '2016-05-28 12:35:17', '2016-05-28 12:35:17');
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `case_status`
 --
 
-CREATE TABLE IF NOT EXISTS `case_status` (
+CREATE TABLE `case_status` (
   `case_status_id` int(11) NOT NULL,
   `case_id` int(11) NOT NULL,
   `status_id` varchar(20) NOT NULL,
@@ -141,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `case_status` (
 -- Table structure for table `case_type`
 --
 
-CREATE TABLE IF NOT EXISTS `case_type` (
+CREATE TABLE `case_type` (
   `case_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -170,7 +185,7 @@ INSERT INTO `case_type` (`case_type_id`, `parent_type_id`, `has_table`, `descrip
 -- Table structure for table `contact_mech`
 --
 
-CREATE TABLE IF NOT EXISTS `contact_mech` (
+CREATE TABLE `contact_mech` (
   `contact_mech_id` int(11) NOT NULL,
   `contact_mech_type_id` varchar(20) NOT NULL,
   `info_string` varchar(255) DEFAULT NULL,
@@ -178,13 +193,20 @@ CREATE TABLE IF NOT EXISTS `contact_mech` (
   `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `contact_mech`
+--
+
+INSERT INTO `contact_mech` (`contact_mech_id`, `contact_mech_type_id`, `info_string`, `created_date`, `updated_date`) VALUES
+(1, 'EMAIL_ADDRESS', 'party56@nomail.com', '2016-05-28 00:49:02', '2016-05-28 00:49:02');
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `contact_mech_purpose_type`
 --
 
-CREATE TABLE IF NOT EXISTS `contact_mech_purpose_type` (
+CREATE TABLE `contact_mech_purpose_type` (
   `contact_mech_purpose_type_id` varchar(20) NOT NULL,
   `description` varchar(255) NOT NULL,
   `created_date` datetime NOT NULL,
@@ -233,7 +255,7 @@ INSERT INTO `contact_mech_purpose_type` (`contact_mech_purpose_type_id`, `descri
 -- Table structure for table `contact_mech_type`
 --
 
-CREATE TABLE IF NOT EXISTS `contact_mech_type` (
+CREATE TABLE `contact_mech_type` (
   `contact_mech_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -262,7 +284,7 @@ INSERT INTO `contact_mech_type` (`contact_mech_type_id`, `parent_type_id`, `has_
 -- Table structure for table `contact_mech_type_purpose`
 --
 
-CREATE TABLE IF NOT EXISTS `contact_mech_type_purpose` (
+CREATE TABLE `contact_mech_type_purpose` (
   `contact_mech_type_id` varchar(20) NOT NULL,
   `contact_mech_purpose_type_id` varchar(20) NOT NULL,
   `created_date` datetime NOT NULL,
@@ -307,7 +329,7 @@ INSERT INTO `contact_mech_type_purpose` (`contact_mech_type_id`, `contact_mech_p
 -- Table structure for table `data_source`
 --
 
-CREATE TABLE IF NOT EXISTS `data_source` (
+CREATE TABLE `data_source` (
   `data_source_id` varchar(20) NOT NULL,
   `data_source_type_id` varchar(20) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -339,7 +361,7 @@ INSERT INTO `data_source` (`data_source_id`, `data_source_type_id`, `description
 -- Table structure for table `data_source_type`
 --
 
-CREATE TABLE IF NOT EXISTS `data_source_type` (
+CREATE TABLE `data_source_type` (
   `data_source_type_id` varchar(20) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   `created_date` datetime NOT NULL,
@@ -360,7 +382,7 @@ INSERT INTO `data_source_type` (`data_source_type_id`, `description`, `created_d
 -- Table structure for table `enumeration`
 --
 
-CREATE TABLE IF NOT EXISTS `enumeration` (
+CREATE TABLE `enumeration` (
   `enum_id` varchar(20) NOT NULL,
   `enum_type_id` varchar(20) NOT NULL,
   `enum_code` varchar(60) DEFAULT NULL,
@@ -376,11 +398,6 @@ CREATE TABLE IF NOT EXISTS `enumeration` (
 --
 
 INSERT INTO `enumeration` (`enum_id`, `enum_type_id`, `enum_code`, `description`, `parent_enum_id`, `disabled`, `created_date`, `updated_date`) VALUES
-('AFFIL_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'AFFIL_CHANNEL', 'Affiliate Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
-('AMAZON_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'AMAZON_CHANNEL', 'Amazon.com', NULL, NULL, '2016-04-30 23:56:27', '2016-04-30 23:56:27'),
-('EBAY_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'EBAY_CHANNEL', 'eBay Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
-('EMAIL_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'EMAIL_CAHNNEL', 'E-Mail Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
-('FAX_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'FAX_CAHNNEL', 'Fax Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
 ('IND_AEROSPACE', 'PARTY_INDUSTRY', 'AEROSPACE', 'Aerospace', NULL, NULL, '2016-05-01 00:01:59', '2016-05-01 00:01:59'),
 ('IND_DISTRIBUTION', 'PARTY_INDUSTRY', 'DISTRIBUTION', 'Distribution', NULL, NULL, '2016-04-30 23:59:20', '2016-04-30 23:59:20'),
 ('IND_ETAILER', 'PARTY_INDUSTRY', 'ETAILER', 'E-tailer', NULL, NULL, '2016-04-30 23:59:20', '2016-04-30 23:59:20'),
@@ -402,12 +419,7 @@ INSERT INTO `enumeration` (`enum_id`, `enum_type_id`, `enum_code`, `description`
 ('OWN_PARTNERSHIP', 'PARTY_OWNERSHIP', 'PARTNERSHIP', 'Partnership', NULL, NULL, '2016-05-10 15:50:46', '2016-05-10 15:50:46'),
 ('OWN_PROPRIETOR', 'PARTY_OWNERSHIP', 'PROPRIETOR', 'Sole Proprietorship', NULL, NULL, '2016-05-10 15:50:46', '2016-05-10 15:50:46'),
 ('OWN_PUBLIC_CORP', 'PARTY_OWNERSHIP', 'PUBLIC_CORP', 'Public Corporation', NULL, NULL, '2016-05-10 15:50:46', '2016-05-10 15:50:46'),
-('OWN_SCORP', 'PARTY_OWNERSHIP', 'SCORP', 'S-Corporation', NULL, NULL, '2016-05-10 15:50:46', '2016-05-10 15:50:46'),
-('PHONE_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'PHONE_CAHNNEL', 'Phone Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
-('POS_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'POS_CHANNEL', 'POS Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
-('SNAIL_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'SNAIL_CAHNNEL', 'Snail Mail Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
-('UNKNWN_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'UNKOWN_CAHNNEL', 'Unknown Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36'),
-('WEB_SALES_CHANNEL', 'ORDER_SALES_CHANNEL', 'WEB_CHANNEL', 'Web Channel', NULL, NULL, '2016-04-30 23:54:36', '2016-04-30 23:54:36');
+('OWN_SCORP', 'PARTY_OWNERSHIP', 'SCORP', 'S-Corporation', NULL, NULL, '2016-05-10 15:50:46', '2016-05-10 15:50:46');
 
 -- --------------------------------------------------------
 
@@ -415,7 +427,7 @@ INSERT INTO `enumeration` (`enum_id`, `enum_type_id`, `enum_code`, `description`
 -- Table structure for table `enumeration_type`
 --
 
-CREATE TABLE IF NOT EXISTS `enumeration_type` (
+CREATE TABLE `enumeration_type` (
   `enum_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -429,7 +441,6 @@ CREATE TABLE IF NOT EXISTS `enumeration_type` (
 --
 
 INSERT INTO `enumeration_type` (`enum_type_id`, `parent_type_id`, `has_table`, `description`, `created_date`, `updated_date`) VALUES
-('ORDER_SALES_CHANNEL', NULL, 0, 'Order Sales Channel', '2016-05-26 17:36:24', '2016-05-26 17:36:24'),
 ('PARTY_INDUSTRY', NULL, 0, 'Industry', '2016-05-10 14:42:07', '2016-05-10 14:42:07'),
 ('PARTY_OWNERSHIP', NULL, 0, 'Ownership types', '2016-05-10 14:42:07', '2016-05-10 14:42:07');
 
@@ -439,7 +450,7 @@ INSERT INTO `enumeration_type` (`enum_type_id`, `parent_type_id`, `has_table`, `
 -- Table structure for table `geo`
 --
 
-CREATE TABLE IF NOT EXISTS `geo` (
+CREATE TABLE `geo` (
   `geo_id` varchar(20) NOT NULL,
   `geo_type_id` varchar(20) DEFAULT NULL,
   `geo_name` varchar(100) DEFAULT NULL,
@@ -1477,7 +1488,7 @@ INSERT INTO `geo` (`geo_id`, `geo_type_id`, `geo_name`, `geo_code`, `geo_sec_cod
 -- Table structure for table `geo_type`
 --
 
-CREATE TABLE IF NOT EXISTS `geo_type` (
+CREATE TABLE `geo_type` (
   `geo_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -1508,7 +1519,7 @@ INSERT INTO `geo_type` (`geo_type_id`, `parent_type_id`, `has_table`, `descripti
 -- Table structure for table `note_data`
 --
 
-CREATE TABLE IF NOT EXISTS `note_data` (
+CREATE TABLE `note_data` (
   `note_id` int(11) NOT NULL,
   `note_name` varchar(100) DEFAULT NULL,
   `note_info` longtext,
@@ -1524,7 +1535,7 @@ CREATE TABLE IF NOT EXISTS `note_data` (
 -- Table structure for table `organization`
 --
 
-CREATE TABLE IF NOT EXISTS `organization` (
+CREATE TABLE `organization` (
   `party_id` int(11) NOT NULL,
   `organization_name` varchar(100) NOT NULL,
   `office_site_name` varchar(100) NOT NULL,
@@ -1543,7 +1554,7 @@ CREATE TABLE IF NOT EXISTS `organization` (
 -- Table structure for table `party`
 --
 
-CREATE TABLE IF NOT EXISTS `party` (
+CREATE TABLE `party` (
   `party_id` int(11) NOT NULL,
   `party_type_id` varchar(20) NOT NULL,
   `preferred_currency_uom_id` varchar(20) DEFAULT NULL,
@@ -1552,26 +1563,72 @@ CREATE TABLE IF NOT EXISTS `party` (
   `created_by` varchar(100) DEFAULT NULL,
   `created_date` datetime NOT NULL,
   `updated_date` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `party`
 --
 
 INSERT INTO `party` (`party_id`, `party_type_id`, `preferred_currency_uom_id`, `description`, `status_id`, `created_by`, `created_date`, `updated_date`) VALUES
-(2, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', NULL, '2016-05-10 14:00:00', '2016-05-10 14:00:00'),
-(3, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', NULL, '2016-05-10 14:00:00', '2016-05-10 14:00:00'),
-(4, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', NULL, '2016-05-10 14:00:00', '2016-05-10 14:00:00'),
-(5, 'PERSON', 'USD', 'USD', 'PARTY_ENABLED', NULL, '2016-05-10 14:00:00', '2016-05-10 14:00:00'),
-(7, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', NULL, '2016-05-13 00:54:21', '2016-05-13 00:54:21'),
-(11, 'PERSON', 'INR', NULL, 'PARTY_ENABLED', 'admin', '2016-05-13 01:16:55', '2016-05-13 01:23:19'),
-(12, 'ORGANIZATION', 'USD', NULL, 'PARTY_ENABLED', 'admin', '2016-05-20 19:35:43', '2016-05-20 19:35:43'),
-(13, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', 'admin', '2016-05-20 23:20:49', '2016-05-20 23:20:49'),
-(14, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', 'admin', '2016-05-20 23:31:14', '2016-05-20 23:31:14'),
-(15, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', 'admin', '2016-05-20 23:31:42', '2016-05-20 23:31:42'),
-(16, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', 'admin', '2016-05-20 23:34:00', '2016-05-20 23:34:00'),
-(17, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', 'admin', '2016-05-20 23:35:03', '2016-05-20 23:35:03'),
-(18, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', 'admin', '2016-05-20 23:36:18', '2016-05-20 23:36:18');
+(2, 'PERSON', 'USD', 'user_login_id=admin', 'PARTY_ENABLED', NULL, '2016-05-10 14:00:00', '2016-05-10 14:00:00'),
+(3, 'PERSON', 'USD', 'user_login_id=fullAdminABC', 'PARTY_ENABLED', NULL, '2016-05-10 14:00:00', '2016-05-25 10:50:17'),
+(4, 'PERSON', 'USD', 'user_login_id=fullAdminDEF', 'PARTY_ENABLED', NULL, '2016-05-10 14:00:00', '2016-05-25 10:51:37'),
+(5, 'PERSON', 'USD', 'user_login_id=partyAdminABC', 'PARTY_ENABLED', NULL, '2016-05-10 14:00:00', '2016-05-25 10:54:51'),
+(7, 'PERSON', 'USD', 'user_login_id=partyAdminDEF', 'PARTY_ENABLED', NULL, '2016-05-13 00:54:21', '2016-05-13 00:54:21'),
+(11, 'PERSON', 'INR', 'user_login_id=acctOwnerABC', 'PARTY_ENABLED', 'admin', '2016-05-25 11:02:01', '2016-05-25 11:02:01'),
+(12, 'PERSON', 'USD', 'user_login_id=acctOwnerDEF', 'PARTY_ENABLED', 'admin', '2016-05-20 19:35:43', '2016-05-25 11:06:16'),
+(13, 'PERSON', 'USD', 'user_login_id=contactOwnerABC', 'PARTY_ENABLED', 'admin', '2016-05-20 23:20:49', '2016-05-25 11:08:50'),
+(14, 'PERSON', 'USD', 'user_login_id=contactOwnerDEF', 'PARTY_ENABLED', 'admin', '2016-05-20 23:31:14', '2016-05-20 23:31:14'),
+(15, 'PERSON', 'USD', 'user_login_id=crmsfaContactTasksABC', 'PARTY_ENABLED', 'admin', '2016-05-20 23:31:42', '2016-05-25 11:15:00'),
+(16, 'PERSON', 'USD', 'user_login_id=crmsfaContactTasksDEF', 'PARTY_ENABLED', 'admin', '2016-05-20 23:34:00', '2016-05-25 11:17:41'),
+(17, 'PERSON', 'USD', 'user_login_id=leadOwnerABC', 'PARTY_ENABLED', 'admin', '2016-05-20 23:35:03', '2016-05-20 23:35:03'),
+(18, 'PERSON', 'USD', 'user_login_id = leadOwnerDEF', 'PARTY_ENABLED', 'admin', '2016-05-20 23:36:18', '2016-05-20 23:36:18'),
+(19, 'PERSON', 'USD', '', 'PARTY_ENABLED', 'admin', '2016-05-25 10:40:35', '2016-05-25 10:40:35'),
+(20, 'PERSON', 'USD', 'Contact owned by admin', 'PARTY_ENABLED', 'fullAdminABC', '2016-05-25 11:20:31', '2016-05-25 11:22:47'),
+(21, 'PERSON', 'USD', 'Contact owned by contactOwnerDEF', 'PARTY_ENABLED', NULL, '2016-05-25 11:21:29', '2016-05-25 11:23:00'),
+(22, 'PERSON', 'USD', 'Lead owned by admin', 'PARTY_ENABLED', 'fullAdminABC', '2016-05-25 11:22:21', '2016-05-25 11:23:14'),
+(23, 'PERSON', 'USD', 'Contact owned by fullAdminABC', 'PARTY_ENABLED', 'admin', '2016-05-25 12:34:51', '2016-05-25 12:34:51'),
+(24, 'PERSON', 'USD', 'Lead owned by fullAdminABC', 'PARTY_ENABLED', 'admin', '2016-05-25 12:35:03', '2016-05-25 12:35:03'),
+(25, 'PERSON', 'USD', 'Contact owned by contactOwnerABC', 'PARTY_ENABLED', 'admin', '2016-05-25 12:35:43', '2016-05-25 12:35:43'),
+(26, 'PERSON', 'USD', 'add party test', 'PARTY_ENABLED', 'admin', '2016-05-25 19:03:02', '2016-05-25 19:03:02'),
+(27, 'PERSON', 'USD', 'nobody in particular', 'PARTY_ENABLED', 'admin', '2016-05-25 19:27:16', '2016-05-25 19:27:16'),
+(28, 'PERSON', 'USD', 'added by contactOwnerABC...?', 'PARTY_ENABLED', 'contactOwnerABC', '2016-05-25 19:28:24', '2016-05-25 19:28:24'),
+(29, 'PERSON', 'USD', 'added just as a test', 'PARTY_ENABLED', 'contactOwnerABC', '2016-05-25 19:29:20', '2016-05-25 19:29:20'),
+(30, 'PERSON', 'USD', 'addPerson test', 'PARTY_ENABLED', 'admin', '2016-05-25 19:31:20', '2016-05-25 19:31:20'),
+(31, 'PERSON', 'USD', 'addParty test', 'PARTY_ENABLED', 'admin', '2016-05-25 19:35:09', '2016-05-25 19:35:09'),
+(32, 'PERSON', 'USD', 'addParty test', 'PARTY_ENABLED', 'admin', '2016-05-25 19:37:53', '2016-05-25 19:37:53'),
+(33, 'PERSON', 'USD', 'addParty test', 'PARTY_ENABLED', 'admin', '2016-05-25 19:39:46', '2016-05-25 19:39:46'),
+(34, 'PERSON', 'USD', 'addPerson test', 'PARTY_ENABLED', 'admin', '2016-05-25 19:49:29', '2016-05-25 19:49:29'),
+(35, 'PERSON', 'USD', 'addPerson test', 'PARTY_ENABLED', 'admin', '2016-05-25 19:53:14', '2016-05-25 19:53:14'),
+(40, 'PERSON', 'USD', 'can I force party_id?', 'PARTY_ENABLED', 'admin', '2016-05-25 23:18:59', '2016-05-25 23:18:59'),
+(41, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 14:23:48', '2016-05-26 14:23:48'),
+(42, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 14:54:11', '2016-05-26 14:54:11'),
+(43, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 15:48:35', '2016-05-26 15:48:35'),
+(44, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 15:53:43', '2016-05-26 15:53:43'),
+(45, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 15:58:17', '2016-05-26 15:58:17'),
+(46, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 16:18:32', '2016-05-26 16:18:32'),
+(47, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 16:21:30', '2016-05-26 16:21:30'),
+(48, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 16:22:04', '2016-05-26 16:22:04'),
+(49, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 16:33:20', '2016-05-26 16:33:20'),
+(50, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 16:33:55', '2016-05-26 16:33:55'),
+(51, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 16:36:20', '2016-05-26 16:36:20'),
+(52, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 16:39:01', '2016-05-26 16:39:01'),
+(53, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 17:44:07', '2016-05-26 17:44:07'),
+(54, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 18:09:38', '2016-05-26 18:09:38'),
+(55, 'PERSON', 'USD', 'Contact owned by contactOwnerABC', 'PARTY_ENABLED', 'admin', '2016-05-26 18:18:07', '2016-05-26 18:18:07'),
+(56, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 18:21:41', '2016-05-26 18:21:41'),
+(57, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-26 18:28:22', '2016-05-26 18:28:22'),
+(58, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-28 05:51:41', '2016-05-28 05:51:41'),
+(59, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-28 06:02:20', '2016-05-28 06:02:20'),
+(60, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-28 06:03:30', '2016-05-28 06:03:30'),
+(61, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-28 06:13:16', '2016-05-28 06:13:16'),
+(62, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'fullAdminABC', '2016-05-28 06:26:20', '2016-05-28 06:26:20'),
+(63, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'fullAdminABC', '2016-05-28 06:29:13', '2016-05-28 06:29:13'),
+(64, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'fullAdminABC', '2016-05-28 06:34:45', '2016-05-28 06:34:45'),
+(65, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'fullAdminABC', '2016-05-28 14:24:37', '2016-05-28 14:24:37'),
+(66, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'fullAdminABC', '2016-05-28 19:28:48', '2016-05-28 19:28:48'),
+(67, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'fullAdminABC', '2016-05-28 19:43:24', '2016-05-28 19:43:24'),
+(68, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'fullAdminABC', '2016-05-28 19:50:57', '2016-05-28 19:50:57');
 
 -- --------------------------------------------------------
 
@@ -1579,7 +1636,7 @@ INSERT INTO `party` (`party_id`, `party_type_id`, `preferred_currency_uom_id`, `
 -- Table structure for table `party_contact_mech`
 --
 
-CREATE TABLE IF NOT EXISTS `party_contact_mech` (
+CREATE TABLE `party_contact_mech` (
   `party_id` int(11) NOT NULL,
   `contact_mech_id` int(11) NOT NULL,
   `contact_mech_purpose_type_id` varchar(20) NOT NULL,
@@ -1597,7 +1654,7 @@ CREATE TABLE IF NOT EXISTS `party_contact_mech` (
 -- Table structure for table `party_data_source`
 --
 
-CREATE TABLE IF NOT EXISTS `party_data_source` (
+CREATE TABLE `party_data_source` (
   `party_id` int(11) NOT NULL,
   `data_source_id` varchar(20) NOT NULL,
   `from_date` datetime NOT NULL,
@@ -1611,7 +1668,7 @@ CREATE TABLE IF NOT EXISTS `party_data_source` (
 -- Table structure for table `party_relationship`
 --
 
-CREATE TABLE IF NOT EXISTS `party_relationship` (
+CREATE TABLE `party_relationship` (
   `party_id_from` int(11) NOT NULL,
   `party_id_to` int(11) NOT NULL,
   `role_type_id_from` varchar(20) NOT NULL,
@@ -1624,13 +1681,37 @@ CREATE TABLE IF NOT EXISTS `party_relationship` (
   `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `party_relationship`
+--
+
+INSERT INTO `party_relationship` (`party_id_from`, `party_id_to`, `role_type_id_from`, `role_type_id_to`, `from_date`, `thru_date`, `status_id`, `party_relationship_type_id`, `created_date`, `updated_date`) VALUES
+(20, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-25 11:32:42', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-25 11:32:42', '2016-05-25 11:32:42'),
+(22, 2, 'LEAD', 'PERSON_ROLE', '2016-05-25 11:35:40', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-25 11:35:40', '2016-05-25 11:35:40'),
+(23, 3, 'CONTACT', 'PERSON_ROLE', '2016-05-25 12:39:52', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-25 12:39:52', '2016-05-25 12:39:52'),
+(24, 3, 'LEAD', 'PERSON_ROLE', '2016-05-25 12:40:31', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-25 12:40:31', '2016-05-25 12:40:31'),
+(25, 13, 'CONTACT', 'PERSON_ROLE', '2016-05-25 12:42:30', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-25 12:42:30', '2016-05-25 12:42:30'),
+(55, 13, 'CONTACT', 'PERSON_ROLE', '0000-00-00 00:00:00', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '0000-00-00 00:00:00', '2016-05-28 00:16:00'),
+(57, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-26 18:28:22', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-26 18:28:22', '2016-05-26 18:28:22'),
+(58, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-28 05:51:41', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 05:51:41', '2016-05-28 05:51:41'),
+(59, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-28 06:02:20', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 06:02:20', '2016-05-28 06:02:20'),
+(60, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-28 06:03:30', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 06:03:30', '2016-05-28 06:03:30'),
+(61, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-28 06:13:16', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 06:13:16', '2016-05-28 06:13:16'),
+(62, 3, 'CONTACT', 'PERSON_ROLE', '2016-05-28 06:26:20', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 06:26:20', '2016-05-28 06:26:20'),
+(63, 3, 'CONTACT', 'PERSON_ROLE', '2016-05-28 06:29:13', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 06:29:13', '2016-05-28 06:29:13'),
+(64, 3, 'CONTACT', 'PERSON_ROLE', '2016-05-28 06:34:45', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 06:34:45', '2016-05-28 06:34:45'),
+(65, 3, 'CONTACT', 'PERSON_ROLE', '2016-05-28 14:24:37', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 14:24:37', '2016-05-28 14:24:37'),
+(66, 3, 'CONTACT', 'PERSON_ROLE', '2016-05-28 19:28:48', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 19:28:48', '2016-05-28 19:28:48'),
+(67, 3, 'CONTACT', 'PERSON_ROLE', '2016-05-28 19:43:24', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 19:43:24', '2016-05-28 19:43:24'),
+(68, 3, 'CONTACT', 'PERSON_ROLE', '2016-05-28 19:50:57', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 19:50:57', '2016-05-28 19:50:57');
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `party_relationship_type`
 --
 
-CREATE TABLE IF NOT EXISTS `party_relationship_type` (
+CREATE TABLE `party_relationship_type` (
   `party_relationship_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -1654,12 +1735,51 @@ INSERT INTO `party_relationship_type` (`party_relationship_type_id`, `parent_typ
 -- Table structure for table `party_role`
 --
 
-CREATE TABLE IF NOT EXISTS `party_role` (
+CREATE TABLE `party_role` (
   `party_id` int(11) NOT NULL,
   `role_type_id` varchar(20) NOT NULL,
   `created_date` datetime NOT NULL,
   `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `party_role`
+--
+
+INSERT INTO `party_role` (`party_id`, `role_type_id`, `created_date`, `updated_date`) VALUES
+(2, 'PERSON_ROLE', '2016-05-25 11:43:51', '2016-05-25 11:43:51'),
+(3, 'PERSON_ROLE', '2016-05-25 11:28:30', '2016-05-25 11:28:30'),
+(11, 'PERSON_ROLE', '2016-05-25 12:41:27', '2016-05-25 12:41:27'),
+(13, 'PERSON_ROLE', '2016-05-25 12:47:21', '2016-05-25 12:47:21'),
+(14, 'PERSON_ROLE', '2016-05-25 11:29:19', '2016-05-25 11:29:19'),
+(17, 'PERSON_ROLE', '2016-05-25 13:22:25', '2016-05-25 13:22:25'),
+(20, 'CONTACT', '2016-05-25 11:30:57', '2016-05-25 11:30:57'),
+(21, 'CONTACT', '2016-05-25 11:31:13', '2016-05-25 11:31:13'),
+(22, 'LEAD', '2016-05-25 11:31:31', '2016-05-25 11:31:31'),
+(23, 'CONTACT', '2016-05-25 12:38:03', '2016-05-25 12:38:03'),
+(24, 'LEAD', '2016-05-25 12:38:25', '2016-05-25 12:38:25'),
+(25, 'CONTACT', '2016-05-25 12:38:46', '2016-05-25 12:38:46'),
+(48, 'CONTACT', '2016-05-26 16:22:04', '2016-05-26 16:22:04'),
+(49, 'CONTACT', '2016-05-26 16:33:20', '2016-05-26 16:33:20'),
+(50, 'CONTACT', '2016-05-26 16:33:55', '2016-05-26 16:33:55'),
+(51, 'CONTACT', '2016-05-26 16:36:20', '2016-05-26 16:36:20'),
+(52, 'CONTACT', '2016-05-26 16:39:01', '2016-05-26 16:39:01'),
+(53, 'CONTACT', '2016-05-26 17:44:07', '2016-05-26 17:44:07'),
+(54, 'CONTACT', '2016-05-26 18:09:38', '2016-05-26 18:09:38'),
+(55, 'CONTACT', '2016-05-26 18:18:07', '2016-05-26 18:18:07'),
+(56, 'CONTACT', '2016-05-26 18:21:41', '2016-05-26 18:21:41'),
+(57, 'CONTACT', '2016-05-26 18:28:22', '2016-05-26 18:28:22'),
+(58, 'CONTACT', '2016-05-28 05:51:41', '2016-05-28 05:51:41'),
+(59, 'CONTACT', '2016-05-28 06:02:20', '2016-05-28 06:02:20'),
+(60, 'CONTACT', '2016-05-28 06:03:30', '2016-05-28 06:03:30'),
+(61, 'CONTACT', '2016-05-28 06:13:16', '2016-05-28 06:13:16'),
+(62, 'CONTACT', '2016-05-28 06:26:20', '2016-05-28 06:26:20'),
+(63, 'CONTACT', '2016-05-28 06:29:13', '2016-05-28 06:29:13'),
+(64, 'CONTACT', '2016-05-28 06:34:45', '2016-05-28 06:34:45'),
+(65, 'CONTACT', '2016-05-28 14:24:37', '2016-05-28 14:24:37'),
+(66, 'CONTACT', '2016-05-28 19:28:48', '2016-05-28 19:28:48'),
+(67, 'CONTACT', '2016-05-28 19:43:24', '2016-05-28 19:43:24'),
+(68, 'CONTACT', '2016-05-28 19:50:57', '2016-05-28 19:50:57');
 
 -- --------------------------------------------------------
 
@@ -1667,7 +1787,7 @@ CREATE TABLE IF NOT EXISTS `party_role` (
 -- Table structure for table `party_supplemental_data`
 --
 
-CREATE TABLE IF NOT EXISTS `party_supplemental_data` (
+CREATE TABLE `party_supplemental_data` (
   `party_id` int(11) NOT NULL,
   `parent_party_id` int(11) NOT NULL,
   `company_name` varchar(100) DEFAULT NULL,
@@ -1691,7 +1811,7 @@ CREATE TABLE IF NOT EXISTS `party_supplemental_data` (
 -- Table structure for table `party_type`
 --
 
-CREATE TABLE IF NOT EXISTS `party_type` (
+CREATE TABLE `party_type` (
   `party_type_id` varchar(20) NOT NULL,
   `has_table` tinyint(1) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -1713,7 +1833,7 @@ INSERT INTO `party_type` (`party_type_id`, `has_table`, `description`, `created_
 -- Table structure for table `person`
 --
 
-CREATE TABLE IF NOT EXISTS `person` (
+CREATE TABLE `person` (
   `party_id` int(11) NOT NULL,
   `salutation` varchar(100) DEFAULT NULL,
   `first_name` varchar(100) NOT NULL,
@@ -1725,13 +1845,55 @@ CREATE TABLE IF NOT EXISTS `person` (
   `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `person`
+--
+
+INSERT INTO `person` (`party_id`, `salutation`, `first_name`, `middle_name`, `last_name`, `birth_date`, `comments`, `created_date`, `updated_date`) VALUES
+(20, 'Ms.', 'Regina', NULL, 'Smith', NULL, 'knows my son''s swim coach', '2016-05-26 11:18:51', '2016-05-26 11:18:51'),
+(21, 'Mr.', 'Def', NULL, 'Leppard', NULL, 'is hard of hearing now, prefers emails only.', '2016-05-26 11:25:49', '2016-05-26 11:25:49'),
+(22, 'Mr.', 'Lead', NULL, 'Belly', NULL, 'likes to sing the blues', '2016-05-26 11:21:08', '2016-05-26 11:21:08'),
+(23, 'Mrs.', 'Sheela', NULL, 'Murthy', NULL, NULL, '2016-05-26 11:22:14', '2016-05-26 11:22:14'),
+(24, NULL, 'Paul', NULL, 'Farmer', NULL, NULL, '2016-05-26 11:23:03', '2016-05-26 11:23:03'),
+(25, '', 'Wesley', NULL, 'Snipes', NULL, 'Not the Wesley Snipes you are thinking of... I asked', '2016-05-26 11:24:39', '2016-05-26 11:24:39'),
+(30, 'Mr.', 'Added', NULL, 'Person', '2016-05-10 14:00:00', NULL, '2016-05-25 19:31:20', '2016-05-25 19:31:20'),
+(34, 'Ms.', 'Added', NULL, 'Person', '2016-05-10 14:00:00', NULL, '2016-05-25 19:49:29', '2016-05-25 19:49:29'),
+(35, 'Son of', 'Added', NULL, 'Person', '2016-05-10 14:00:00', NULL, '2016-05-25 19:53:14', '2016-05-25 19:53:14'),
+(41, 'Mr.', 'First', 'Added', 'Contact', '2016-05-10 14:00:00', 'first try duplicate addPerson at least', '2016-05-26 14:23:48', '2016-05-26 14:23:48'),
+(42, 'Ms.', 'Second', 'Added', 'Contact', '2016-05-10 14:00:00', 'second use of repaired Contact entity', '2016-05-26 14:54:11', '2016-05-26 14:54:11'),
+(43, NULL, 'Third', 'Added', 'Contact', '2016-05-10 14:00:00', NULL, '2016-05-26 15:48:35', '2016-05-26 15:48:35'),
+(44, NULL, 'Fourth', 'Added', 'Contact', '2016-05-10 14:00:00', 'did party_role get insert?', '2016-05-26 15:53:43', '2016-05-26 15:53:43'),
+(45, NULL, 'Fourth', 'Added', 'Contact', '2016-05-10 14:00:00', 'did party_role get insert?', '2016-05-26 15:58:17', '2016-05-26 15:58:17'),
+(46, NULL, 'Fourth', 'Added', 'Contact', '2016-05-10 14:00:00', 'did party_role get insert?', '2016-05-26 16:18:32', '2016-05-26 16:18:32'),
+(47, NULL, 'Fourth', 'Added', 'Contact', '2016-05-10 14:00:00', 'did party_role get insert?', '2016-05-26 16:21:30', '2016-05-26 16:21:30'),
+(48, NULL, 'Fourth', 'Added', 'Contact', '2016-05-10 14:00:00', 'did party_role get insert?', '2016-05-26 16:22:04', '2016-05-26 16:22:04'),
+(49, NULL, 'Fourth', 'Added', 'Contact', '2016-05-10 14:00:00', 'did party_role get insert?', '2016-05-26 16:33:20', '2016-05-26 16:33:20'),
+(50, NULL, 'Fourth', 'Added', 'Contact', '2016-05-10 14:00:00', 'did party_role get insert?', '2016-05-26 16:33:55', '2016-05-26 16:33:55'),
+(51, NULL, 'Fourth', 'Added', 'Contact', '2016-05-10 14:00:00', 'did party_role get insert?', '2016-05-26 16:36:20', '2016-05-26 16:36:20'),
+(52, NULL, 'Fourth', 'Added', 'Contact', '2016-05-10 14:00:00', 'did party_role get insert?', '2016-05-26 16:39:01', '2016-05-26 16:39:01'),
+(53, NULL, 'Fourth', 'Added', 'Contact', '2016-05-10 14:00:00', 'testing userEntity', '2016-05-26 17:44:07', '2016-05-26 17:44:07'),
+(54, NULL, 'Fourth', 'Added', 'Contact', '2016-05-10 14:00:00', 'testing userEntity', '2016-05-26 18:09:38', '2016-05-26 18:09:38'),
+(55, NULL, 'Wendy', 'Fiona', 'Martin', '2016-05-10 14:00:00', 'testing userEntity', '2016-05-26 18:18:07', '2016-05-28 00:16:59'),
+(56, NULL, 'Bye ', 'Bye', 'Contact', '2016-05-10 14:00:00', 'testing delete', '2016-05-26 18:21:41', '2016-05-26 18:21:41'),
+(57, NULL, 'Fourth', 'Added', 'Contact', '2016-05-10 14:00:00', 'testing userEntity', '2016-05-26 18:28:22', '2016-05-26 18:28:22'),
+(58, 'Mr.', 'Tom', NULL, 'Riddle', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 05:51:41', '2016-05-28 05:51:41'),
+(59, 'Mr.', 'Tom', NULL, 'Riddle', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 06:02:20', '2016-05-28 06:02:20'),
+(61, 'Mr.', 'Tom', NULL, 'Brady', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 06:13:16', '2016-05-28 06:13:16'),
+(62, 'Mrs.', 'Butter', NULL, 'Worth', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 06:26:20', '2016-05-28 06:26:20'),
+(63, 'Mrs.', 'Butter', NULL, 'Worth', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 06:29:13', '2016-05-28 06:29:13'),
+(64, 'Mrs.', 'Butter', NULL, 'Worth', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 06:34:45', '2016-05-28 06:34:45'),
+(65, 'Mr.', 'Pete', NULL, 'Pettigrew', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 14:24:37', '2016-05-28 14:24:37'),
+(66, 'Mr.', 'You-Know-Who', NULL, 'Riddle', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 19:28:48', '2016-05-28 19:28:48'),
+(67, 'Mr.', 'You-Know-Who Part II', NULL, 'Riddle', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 19:43:24', '2016-05-28 19:43:24'),
+(68, 'Mr.', 'You-Know-Who Part III', NULL, 'Riddle', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 19:50:57', '2016-05-28 19:50:57');
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `postal_address`
 --
 
-CREATE TABLE IF NOT EXISTS `postal_address` (
+CREATE TABLE `postal_address` (
   `contact_mech_id` int(11) NOT NULL,
   `to_name` varchar(100) DEFAULT NULL,
   `attn_name` varchar(100) DEFAULT NULL,
@@ -1752,7 +1914,7 @@ CREATE TABLE IF NOT EXISTS `postal_address` (
 -- Table structure for table `product`
 --
 
-CREATE TABLE IF NOT EXISTS `product` (
+CREATE TABLE `product` (
   `product_id` varchar(20) NOT NULL,
   `product_type_id` varchar(20) DEFAULT NULL,
   `primary_product_category_id` varchar(20) DEFAULT NULL,
@@ -1811,7 +1973,7 @@ CREATE TABLE IF NOT EXISTS `product` (
 -- Table structure for table `product_category`
 --
 
-CREATE TABLE IF NOT EXISTS `product_category` (
+CREATE TABLE `product_category` (
   `product_category_id` varchar(20) NOT NULL,
   `product_category_type_id` varchar(20) DEFAULT NULL,
   `primary_parent_category_id` varchar(20) DEFAULT NULL,
@@ -1879,7 +2041,7 @@ INSERT INTO `product_category` (`product_category_id`, `product_category_type_id
 -- Table structure for table `product_category_type`
 --
 
-CREATE TABLE IF NOT EXISTS `product_category_type` (
+CREATE TABLE `product_category_type` (
   `product_category_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` char(1) DEFAULT NULL,
@@ -1911,7 +2073,7 @@ INSERT INTO `product_category_type` (`product_category_type_id`, `parent_type_id
 -- Table structure for table `product_type`
 --
 
-CREATE TABLE IF NOT EXISTS `product_type` (
+CREATE TABLE `product_type` (
   `product_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `is_physical` tinyint(1) DEFAULT NULL,
@@ -1951,7 +2113,7 @@ INSERT INTO `product_type` (`product_type_id`, `parent_type_id`, `is_physical`, 
 -- Table structure for table `quote`
 --
 
-CREATE TABLE IF NOT EXISTS `quote` (
+CREATE TABLE `quote` (
   `quote_id` int(11) NOT NULL,
   `quote_type_id` varchar(20) NOT NULL,
   `party_id` int(11) DEFAULT NULL,
@@ -1975,7 +2137,7 @@ CREATE TABLE IF NOT EXISTS `quote` (
 -- Table structure for table `quote_item`
 --
 
-CREATE TABLE IF NOT EXISTS `quote_item` (
+CREATE TABLE `quote_item` (
   `quote_id` int(11) NOT NULL,
   `quote_item_seq_id` varchar(20) NOT NULL,
   `product_id` varchar(20) DEFAULT NULL,
@@ -1996,7 +2158,7 @@ CREATE TABLE IF NOT EXISTS `quote_item` (
 -- Table structure for table `quote_item_option`
 --
 
-CREATE TABLE IF NOT EXISTS `quote_item_option` (
+CREATE TABLE `quote_item_option` (
   `quote_id` int(11) NOT NULL,
   `quote_item_seq_id` varchar(20) NOT NULL,
   `quote_item_option_seq_id` varchar(20) NOT NULL,
@@ -2012,7 +2174,7 @@ CREATE TABLE IF NOT EXISTS `quote_item_option` (
 -- Table structure for table `quote_note`
 --
 
-CREATE TABLE IF NOT EXISTS `quote_note` (
+CREATE TABLE `quote_note` (
   `quote_id` int(11) NOT NULL,
   `note_id` int(11) NOT NULL,
   `internal_note` tinyint(1) DEFAULT NULL,
@@ -2026,7 +2188,7 @@ CREATE TABLE IF NOT EXISTS `quote_note` (
 -- Table structure for table `quote_role`
 --
 
-CREATE TABLE IF NOT EXISTS `quote_role` (
+CREATE TABLE `quote_role` (
   `quote_id` int(11) NOT NULL,
   `party_id` int(11) NOT NULL,
   `role_type_id` varchar(20) NOT NULL,
@@ -2040,7 +2202,7 @@ CREATE TABLE IF NOT EXISTS `quote_role` (
 -- Table structure for table `quote_type`
 --
 
-CREATE TABLE IF NOT EXISTS `quote_type` (
+CREATE TABLE `quote_type` (
   `quote_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -2065,7 +2227,7 @@ INSERT INTO `quote_type` (`quote_type_id`, `parent_type_id`, `has_table`, `descr
 -- Table structure for table `role_type`
 --
 
-CREATE TABLE IF NOT EXISTS `role_type` (
+CREATE TABLE `role_type` (
   `role_type` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -2085,7 +2247,6 @@ INSERT INTO `role_type` (`role_type`, `parent_type_id`, `has_table`, `descriptio
 ('CUSTOMER', NULL, 0, 'Customer', '2016-05-10 11:42:32', '2016-05-10 11:42:32'),
 ('LEAD', NULL, 0, 'Lead or prospect', '2016-05-10 11:42:32', '2016-05-10 11:42:32'),
 ('PERSON_ROLE', NULL, 0, 'Person', '2016-05-10 11:42:32', '2016-05-10 11:42:32'),
-('REQ_TAKER', NULL, 0, 'Request Taker', '2016-05-26 21:10:56', '2016-05-26 21:10:56'),
 ('SALES_REP', 'PERSON_ROLE', 0, 'Sales Representative', '2016-05-10 11:43:45', '2016-05-10 11:43:45');
 
 -- --------------------------------------------------------
@@ -2094,7 +2255,7 @@ INSERT INTO `role_type` (`role_type`, `parent_type_id`, `has_table`, `descriptio
 -- Table structure for table `security_group`
 --
 
-CREATE TABLE IF NOT EXISTS `security_group` (
+CREATE TABLE `security_group` (
   `group_id` varchar(60) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   `created_date` datetime NOT NULL,
@@ -2130,216 +2291,215 @@ INSERT INTO `security_group` (`group_id`, `description`, `created_date`, `update
 -- Table structure for table `security_group_permission`
 --
 
-CREATE TABLE IF NOT EXISTS `security_group_permission` (
+CREATE TABLE `security_group_permission` (
   `group_id` varchar(60) NOT NULL,
   `permission_id` varchar(60) NOT NULL,
   `created_date` datetime NOT NULL,
-  `updated_date` datetime NOT NULL,
-  `temp1` datetime NOT NULL,
-  `temp2` datetime NOT NULL
+  `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `security_group_permission`
 --
 
-INSERT INTO `security_group_permission` (`group_id`, `permission_id`, `created_date`, `updated_date`, `temp1`, `temp2`) VALUES
-('ACCOUNT_OWNER', 'CRMSFA_ACCOUNT_DEACTIVATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_ACCOUNT_REASSIGN', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_ACCOUNT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_ACCOUNT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_ACT_ADMIN', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_ACT_CLOSE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_ACT_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_ACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_ACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_CONTACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_CONTACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_OPP_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_OPP_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_OPP_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_TEAM_ASSIGN', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_TEAM_REMOVE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ACCOUNT_OWNER', 'CRMSFA_TEAM_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CONTACT_OWNER', 'CRMSFA_ACT_ADMIN', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CONTACT_OWNER', 'CRMSFA_ACT_CLOSE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CONTACT_OWNER', 'CRMSFA_ACT_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CONTACT_OWNER', 'CRMSFA_ACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CONTACT_OWNER', 'CRMSFA_ACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CONTACT_OWNER', 'CRMSFA_CONTACT_DEACTIVATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CONTACT_OWNER', 'CRMSFA_CONTACT_REASSIGN', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CONTACT_OWNER', 'CRMSFA_CONTACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CONTACT_OWNER', 'CRMSFA_CONTACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'CRMSFA_ACTS_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'CRMSFA_ACT_CLOSE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'CRMSFA_ACT_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'CRMSFA_ACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'CRMSFA_ACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'CRMSFA_CONTACTS_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'CRMSFA_CONTACT_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'CRMSFA_CONTACT_DEACTIVATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'CRMSFA_CONTACT_REASSIGN', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'CRMSFA_CONTACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'CRMSFA_CONTACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'CRMSFA_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_CME_CREATE', '2016-04-30 23:56:07', '2016-04-30 23:56:05', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_CME_DELETE', '2016-04-30 23:56:07', '2016-04-30 23:56:05', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_CME_UPDATE', '2016-04-30 23:56:07', '2016-04-30 23:56:05', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_GRP_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_NOTE', '2016-04-30 23:56:07', '2016-04-30 23:56:05', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_PCM_CREATE', '2016-04-30 23:56:07', '2016-04-30 23:56:05', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_PCM_DELETE', '2016-04-30 23:56:07', '2016-04-30 23:56:05', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_PCM_UPDATE', '2016-04-30 23:56:07', '2016-04-30 23:56:05', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_REL_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_REL_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_ROLE_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_ROLE_DELETE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_SRC_CREATE', '2016-04-30 23:56:07', '2016-04-30 23:56:05', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'PARTYMGR_STS_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_CONTACT_TASKS', 'WORKEFFORTMGR_ADMIN', '2016-04-30 23:56:07', '2016-04-30 23:56:05', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
-('CRMSFA_LOGIN_ONLY', 'CRMSFA_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_SYSTEM', 'CRMSFA_4C_UPDATE', '2016-04-30 23:56:07', '2016-04-30 23:56:05', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
-('CRMSFA_TASKS_ONLY', 'CRMSFA_ACTS_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_TASKS_ONLY', 'CRMSFA_ACT_CLOSE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_TASKS_ONLY', 'CRMSFA_ACT_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_TASKS_ONLY', 'CRMSFA_ACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_TASKS_ONLY', 'CRMSFA_ACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_TASKS_ONLY', 'CRMSFA_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('FULLADMIN', 'ACCOUNTING_ADMIN', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
-('FULLADMIN', 'ACCOUNTING_COMM_VIEW', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
-('FULLADMIN', 'ACCOUNTING_PRINT_CHECKS', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
-('FULLADMIN', 'ACCTG_ATX_ADMIN', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
-('FULLADMIN', 'ACCTG_FX_UPDATE', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
-('FULLADMIN', 'ACCTG_PREF_ADMIN', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
-('FULLADMIN', 'ARTIFACT_INFO_VIEW', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
-('FULLADMIN', 'ASSETMAINT_ADMIN', '2016-04-30 23:54:42', '2016-04-30 23:54:42', '2016-04-30 23:54:42', '2016-04-30 23:54:42'),
-('FULLADMIN', 'CATALOG_ADMIN', '2016-04-30 23:54:18', '2016-04-30 23:54:17', '2016-04-30 23:54:18', '2016-04-30 23:54:17'),
-('FULLADMIN', 'CATALOG_PRICE_MAINT', '2016-04-30 23:54:18', '2016-04-30 23:54:17', '2016-04-30 23:54:18', '2016-04-30 23:54:17'),
-('FULLADMIN', 'CATALOG_PURCHASE_ALLOW', '2016-04-30 23:54:18', '2016-04-30 23:54:17', '2016-04-30 23:54:18', '2016-04-30 23:54:17'),
-('FULLADMIN', 'CATALOG_VIEW_ALLOW', '2016-04-30 23:54:18', '2016-04-30 23:54:17', '2016-04-30 23:54:18', '2016-04-30 23:54:17'),
-('FULLADMIN', 'COMMON_ADMIN', '2016-04-30 23:53:39', '2016-04-30 23:53:39', '2016-04-30 23:53:39', '2016-04-30 23:53:39'),
-('FULLADMIN', 'CONTENTMGR_ADMIN', '2016-04-30 23:54:08', '2016-04-30 23:54:08', '2016-04-30 23:54:08', '2016-04-30 23:54:08'),
-('FULLADMIN', 'DATAFILE_MAINT', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
-('FULLADMIN', 'EBAY_VIEW', '2016-04-30 23:54:44', '2016-04-30 23:54:44', '2016-04-30 23:54:44', '2016-04-30 23:54:44'),
-('FULLADMIN', 'ENTITY_DATA_ADMIN', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
-('FULLADMIN', 'ENTITY_MAINT', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
-('FULLADMIN', 'ENTITY_SYNC_ADMIN', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
-('FULLADMIN', 'ENUM_STATUS_MAINT', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
-('FULLADMIN', 'EXAMPLE_ADMIN', '2016-04-30 23:53:50', '2016-04-30 23:53:50', '2016-04-30 23:53:50', '2016-04-30 23:53:50'),
-('FULLADMIN', 'FACILITY_ADMIN', '2016-04-30 23:54:18', '2016-04-30 23:54:17', '2016-04-30 23:54:18', '2016-04-30 23:54:17'),
-('FULLADMIN', 'GOOGLEBASE_VIEW', '2016-04-30 23:54:43', '2016-04-30 23:54:43', '2016-04-30 23:54:43', '2016-04-30 23:54:43'),
-('FULLADMIN', 'LABEL_MANAGER_VIEW', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
-('FULLADMIN', 'MANUAL_PAYMENT', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
-('FULLADMIN', 'MANUFACTURING_ADMIN', '2016-04-30 23:54:21', '2016-04-30 23:54:21', '2016-04-30 23:54:21', '2016-04-30 23:54:21'),
-('FULLADMIN', 'MARKETING_ADMIN', '2016-04-30 23:54:41', '2016-04-30 23:54:41', '2016-04-30 23:54:41', '2016-04-30 23:54:41'),
-('FULLADMIN', 'OAGIS_VIEW', '2016-04-30 23:54:43', '2016-04-30 23:54:43', '2016-04-30 23:54:43', '2016-04-30 23:54:43'),
-('FULLADMIN', 'OFBTOOLS_VIEW', '2016-04-30 23:53:39', '2016-04-30 23:53:38', '2016-04-30 23:53:39', '2016-04-30 23:53:38'),
-('FULLADMIN', 'ORDERMGR_ADMIN', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('FULLADMIN', 'PARTYMGR_ADMIN', '2016-04-30 23:53:58', '2016-04-30 23:53:58', '2016-04-30 23:53:58', '2016-04-30 23:53:58'),
-('FULLADMIN', 'PAYPROC_ADMIN', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
-('FULLADMIN', 'PAY_INFO_ADMIN', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
-('FULLADMIN', 'PERIOD_MAINT', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
-('FULLADMIN', 'PROJECTMGR_ADMIN', '2016-04-30 23:54:43', '2016-04-30 23:54:43', '2016-04-30 23:54:43', '2016-04-30 23:54:43'),
-('FULLADMIN', 'SECURITY_ADMIN', '2016-04-30 23:53:58', '2016-04-30 23:53:58', '2016-04-30 23:53:58', '2016-04-30 23:53:58'),
-('FULLADMIN', 'SEND_CONTROL_APPLET', '2016-04-30 23:54:08', '2016-04-30 23:54:08', '2016-04-30 23:54:08', '2016-04-30 23:54:08'),
-('FULLADMIN', 'SERVER_STATS_VIEW', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
-('FULLADMIN', 'SERVICE_INVOKE_ANY', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
-('FULLADMIN', 'SERVICE_MAINT', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
-('FULLADMIN', 'SHIPRATE_ADMIN', '2016-04-30 23:54:18', '2016-04-30 23:54:17', '2016-04-30 23:54:18', '2016-04-30 23:54:17'),
-('FULLADMIN', 'TEMPEXPR_ADMIN', '2016-04-30 23:53:39', '2016-04-30 23:53:39', '2016-04-30 23:53:39', '2016-04-30 23:53:39'),
-('FULLADMIN', 'USERPREF_ADMIN', '2016-04-30 23:53:39', '2016-04-30 23:53:39', '2016-04-30 23:53:39', '2016-04-30 23:53:39'),
-('FULLADMIN', 'UTIL_CACHE_EDIT', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
-('FULLADMIN', 'UTIL_CACHE_VIEW', '2016-04-30 23:53:49', '2016-04-30 23:53:48', '2016-04-30 23:53:49', '2016-04-30 23:53:48'),
-('FULLADMIN', 'UTIL_DEBUG_EDIT', '2016-04-30 23:53:49', '2016-04-30 23:53:48', '2016-04-30 23:53:49', '2016-04-30 23:53:48'),
-('FULLADMIN', 'UTIL_DEBUG_VIEW', '2016-04-30 23:53:49', '2016-04-30 23:53:48', '2016-04-30 23:53:49', '2016-04-30 23:53:48'),
-('FULLADMIN', 'VISUALTHEME_ADMIN', '2016-04-30 23:53:39', '2016-04-30 23:53:39', '2016-04-30 23:53:39', '2016-04-30 23:53:39'),
-('FULLADMIN', 'WEBTOOLS_VIEW', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
-('FULLADMIN', 'WORKEFFORTMGR_ADMIN', '2016-04-30 23:54:11', '2016-04-30 23:54:11', '2016-04-30 23:54:11', '2016-04-30 23:54:11'),
-('LEAD_OWNER', 'CRMSFA_ACT_ADMIN', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('LEAD_OWNER', 'CRMSFA_ACT_CLOSE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('LEAD_OWNER', 'CRMSFA_ACT_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('LEAD_OWNER', 'CRMSFA_ACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('LEAD_OWNER', 'CRMSFA_ACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('LEAD_OWNER', 'CRMSFA_LEAD_DEACTIVATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('LEAD_OWNER', 'CRMSFA_LEAD_DELETE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('LEAD_OWNER', 'CRMSFA_LEAD_REASSIGN', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('LEAD_OWNER', 'CRMSFA_LEAD_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('LEAD_OWNER', 'CRMSFA_LEAD_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('LEAD_OWNER', 'CRMSFA_OPP_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('LEAD_OWNER', 'CRMSFA_OPP_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('LEAD_OWNER', 'CRMSFA_OPP_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('ORDERADMIN', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERADMIN', 'ORDERMGR_ADMIN', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERADMIN_LTD', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERADMIN_LTD', 'ORDERMGR_ROLE_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERADMIN_LTD', 'ORDERMGR_ROLE_DELETE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERADMIN_LTD', 'ORDERMGR_ROLE_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERADMIN_LTD', 'ORDERMGR_ROLE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERADMIN_LTD', 'ORDERMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'CATALOG_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'ORDERMGR_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'ORDERMGR_CRQ_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'ORDERMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'ORDERMGR_ROLE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'ORDERMGR_SALES_ENTRY', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'ORDERMGR_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'ORDERMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'PARTYMGR_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'PARTYMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'PARTYMGR_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'PARTYMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'PAY_INFO_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'PAY_INFO_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY', 'PAY_INFO_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'CATALOG_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'ORDERMGR_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'ORDERMGR_CRQ_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'ORDERMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'ORDERMGR_ROLE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'ORDERMGR_SALES_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'ORDERMGR_SALES_ENTRY', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'ORDERMGR_SALES_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'ORDERMGR_SEND_CONFIRMATION', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'ORDERMGR_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'ORDERMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'PARTYMGR_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'PARTYMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'PARTYMGR_PCM_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'PARTYMGR_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'PARTYMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'PAY_INFO_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'PAY_INFO_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERENTRY_ALL', 'PAY_INFO_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPROC', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPROC', 'ORDERMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPROC', 'ORDERMGR_ROLE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPROC', 'PARTYMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPROC', 'PARTYMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'CATALOG_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'ORDERMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'ORDERMGR_PURCHASE_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'ORDERMGR_PURCHASE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'ORDERMGR_ROLE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'ORDERMGR_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'ORDERMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'PARTYMGR_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'PARTYMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'PARTYMGR_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'PARTYMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'PAY_INFO_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'PAY_INFO_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERPURCH', 'PAY_INFO_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERSUPPLIER_LTD', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERSUPPLIER_LTD', 'ORDERMGR_ROLE_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERSUPPLIER_LTD', 'ORDERMGR_ROLE_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERSUPPLIER_LTD', 'ORDERMGR_ROLE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('ORDERSUPPLIER_LTD', 'ORDERMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
-('PARTYADMIN', 'OFBTOOLS_VIEW', '2016-04-30 23:53:58', '2016-04-30 23:53:58', '2016-04-30 23:53:58', '2016-04-30 23:53:58'),
-('PARTYADMIN', 'PARTYMGR_ADMIN', '2016-04-30 23:53:58', '2016-04-30 23:53:58', '2016-04-30 23:53:58', '2016-04-30 23:53:58'),
-('SECURITYADMIN', 'SECURITY_ADMIN', '2016-04-30 23:53:58', '2016-04-30 23:53:58', '2016-04-30 23:53:58', '2016-04-30 23:53:58');
+INSERT INTO `security_group_permission` (`group_id`, `permission_id`, `created_date`, `updated_date`) VALUES
+('ACCOUNT_OWNER', 'CRMSFA_ACCOUNT_DEACTIVATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_ACCOUNT_REASSIGN', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_ACCOUNT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_ACCOUNT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_ACT_ADMIN', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_ACT_CLOSE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_ACT_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_ACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_ACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_CONTACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_CONTACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_OPP_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_OPP_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_OPP_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_TEAM_ASSIGN', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_TEAM_REMOVE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ACCOUNT_OWNER', 'CRMSFA_TEAM_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CONTACT_OWNER', 'CRMSFA_ACT_ADMIN', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CONTACT_OWNER', 'CRMSFA_ACT_CLOSE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CONTACT_OWNER', 'CRMSFA_ACT_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CONTACT_OWNER', 'CRMSFA_ACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CONTACT_OWNER', 'CRMSFA_ACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CONTACT_OWNER', 'CRMSFA_CONTACT_CREATE', '2016-05-28 18:55:58', '2016-05-28 18:55:58'),
+('CONTACT_OWNER', 'CRMSFA_CONTACT_DEACTIVATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CONTACT_OWNER', 'CRMSFA_CONTACT_REASSIGN', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CONTACT_OWNER', 'CRMSFA_CONTACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CONTACT_OWNER', 'CRMSFA_CONTACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'CRMSFA_ACTS_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'CRMSFA_ACT_CLOSE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'CRMSFA_ACT_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'CRMSFA_ACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'CRMSFA_ACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'CRMSFA_CONTACTS_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'CRMSFA_CONTACT_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'CRMSFA_CONTACT_DEACTIVATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'CRMSFA_CONTACT_REASSIGN', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'CRMSFA_CONTACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'CRMSFA_CONTACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'CRMSFA_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_CME_CREATE', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_CME_DELETE', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_CME_UPDATE', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_GRP_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_NOTE', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_PCM_CREATE', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_PCM_DELETE', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_PCM_UPDATE', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_REL_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_REL_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_ROLE_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_ROLE_DELETE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_SRC_CREATE', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'PARTYMGR_STS_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CONTACT_TASKS', 'WORKEFFORTMGR_ADMIN', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
+('CRMSFA_LOGIN_ONLY', 'CRMSFA_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_SYSTEM', 'CRMSFA_4C_UPDATE', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
+('CRMSFA_TASKS_ONLY', 'CRMSFA_ACTS_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_TASKS_ONLY', 'CRMSFA_ACT_CLOSE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_TASKS_ONLY', 'CRMSFA_ACT_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_TASKS_ONLY', 'CRMSFA_ACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_TASKS_ONLY', 'CRMSFA_ACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_TASKS_ONLY', 'CRMSFA_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('FULLADMIN', 'ACCOUNTING_ADMIN', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
+('FULLADMIN', 'ACCOUNTING_COMM_VIEW', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
+('FULLADMIN', 'ACCOUNTING_PRINT_CHECKS', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
+('FULLADMIN', 'ACCTG_ATX_ADMIN', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
+('FULLADMIN', 'ACCTG_FX_UPDATE', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
+('FULLADMIN', 'ACCTG_PREF_ADMIN', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
+('FULLADMIN', 'ARTIFACT_INFO_VIEW', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
+('FULLADMIN', 'ASSETMAINT_ADMIN', '2016-04-30 23:54:42', '2016-04-30 23:54:42'),
+('FULLADMIN', 'CATALOG_ADMIN', '2016-04-30 23:54:18', '2016-04-30 23:54:17'),
+('FULLADMIN', 'CATALOG_PRICE_MAINT', '2016-04-30 23:54:18', '2016-04-30 23:54:17'),
+('FULLADMIN', 'CATALOG_PURCHASE_ALLOW', '2016-04-30 23:54:18', '2016-04-30 23:54:17'),
+('FULLADMIN', 'CATALOG_VIEW_ALLOW', '2016-04-30 23:54:18', '2016-04-30 23:54:17'),
+('FULLADMIN', 'COMMON_ADMIN', '2016-04-30 23:53:39', '2016-04-30 23:53:39'),
+('FULLADMIN', 'CONTENTMGR_ADMIN', '2016-04-30 23:54:08', '2016-04-30 23:54:08'),
+('FULLADMIN', 'DATAFILE_MAINT', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
+('FULLADMIN', 'EBAY_VIEW', '2016-04-30 23:54:44', '2016-04-30 23:54:44'),
+('FULLADMIN', 'ENTITY_DATA_ADMIN', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
+('FULLADMIN', 'ENTITY_MAINT', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
+('FULLADMIN', 'ENTITY_SYNC_ADMIN', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
+('FULLADMIN', 'ENUM_STATUS_MAINT', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
+('FULLADMIN', 'EXAMPLE_ADMIN', '2016-04-30 23:53:50', '2016-04-30 23:53:50'),
+('FULLADMIN', 'FACILITY_ADMIN', '2016-04-30 23:54:18', '2016-04-30 23:54:17'),
+('FULLADMIN', 'GOOGLEBASE_VIEW', '2016-04-30 23:54:43', '2016-04-30 23:54:43'),
+('FULLADMIN', 'LABEL_MANAGER_VIEW', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
+('FULLADMIN', 'MANUAL_PAYMENT', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
+('FULLADMIN', 'MANUFACTURING_ADMIN', '2016-04-30 23:54:21', '2016-04-30 23:54:21'),
+('FULLADMIN', 'MARKETING_ADMIN', '2016-04-30 23:54:41', '2016-04-30 23:54:41'),
+('FULLADMIN', 'OAGIS_VIEW', '2016-04-30 23:54:43', '2016-04-30 23:54:43'),
+('FULLADMIN', 'OFBTOOLS_VIEW', '2016-04-30 23:53:39', '2016-04-30 23:53:38'),
+('FULLADMIN', 'ORDERMGR_ADMIN', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('FULLADMIN', 'PARTYMGR_ADMIN', '2016-04-30 23:53:58', '2016-04-30 23:53:58'),
+('FULLADMIN', 'PAYPROC_ADMIN', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
+('FULLADMIN', 'PAY_INFO_ADMIN', '2016-04-30 23:54:31', '2016-04-30 23:54:31'),
+('FULLADMIN', 'PERIOD_MAINT', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
+('FULLADMIN', 'PROJECTMGR_ADMIN', '2016-04-30 23:54:43', '2016-04-30 23:54:43'),
+('FULLADMIN', 'SECURITY_ADMIN', '2016-04-30 23:53:58', '2016-04-30 23:53:58'),
+('FULLADMIN', 'SEND_CONTROL_APPLET', '2016-04-30 23:54:08', '2016-04-30 23:54:08'),
+('FULLADMIN', 'SERVER_STATS_VIEW', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
+('FULLADMIN', 'SERVICE_INVOKE_ANY', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
+('FULLADMIN', 'SERVICE_MAINT', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
+('FULLADMIN', 'SHIPRATE_ADMIN', '2016-04-30 23:54:18', '2016-04-30 23:54:17'),
+('FULLADMIN', 'TEMPEXPR_ADMIN', '2016-04-30 23:53:39', '2016-04-30 23:53:39'),
+('FULLADMIN', 'USERPREF_ADMIN', '2016-04-30 23:53:39', '2016-04-30 23:53:39'),
+('FULLADMIN', 'UTIL_CACHE_EDIT', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
+('FULLADMIN', 'UTIL_CACHE_VIEW', '2016-04-30 23:53:49', '2016-04-30 23:53:48'),
+('FULLADMIN', 'UTIL_DEBUG_EDIT', '2016-04-30 23:53:49', '2016-04-30 23:53:48'),
+('FULLADMIN', 'UTIL_DEBUG_VIEW', '2016-04-30 23:53:49', '2016-04-30 23:53:48'),
+('FULLADMIN', 'VISUALTHEME_ADMIN', '2016-04-30 23:53:39', '2016-04-30 23:53:39'),
+('FULLADMIN', 'WEBTOOLS_VIEW', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
+('FULLADMIN', 'WORKEFFORTMGR_ADMIN', '2016-04-30 23:54:11', '2016-04-30 23:54:11'),
+('LEAD_OWNER', 'CRMSFA_ACT_ADMIN', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('LEAD_OWNER', 'CRMSFA_ACT_CLOSE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('LEAD_OWNER', 'CRMSFA_ACT_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('LEAD_OWNER', 'CRMSFA_ACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('LEAD_OWNER', 'CRMSFA_ACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('LEAD_OWNER', 'CRMSFA_LEAD_DEACTIVATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('LEAD_OWNER', 'CRMSFA_LEAD_DELETE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('LEAD_OWNER', 'CRMSFA_LEAD_REASSIGN', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('LEAD_OWNER', 'CRMSFA_LEAD_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('LEAD_OWNER', 'CRMSFA_LEAD_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('LEAD_OWNER', 'CRMSFA_OPP_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('LEAD_OWNER', 'CRMSFA_OPP_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('LEAD_OWNER', 'CRMSFA_OPP_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('ORDERADMIN', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERADMIN', 'ORDERMGR_ADMIN', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERADMIN_LTD', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERADMIN_LTD', 'ORDERMGR_ROLE_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERADMIN_LTD', 'ORDERMGR_ROLE_DELETE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERADMIN_LTD', 'ORDERMGR_ROLE_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERADMIN_LTD', 'ORDERMGR_ROLE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERADMIN_LTD', 'ORDERMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'CATALOG_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'ORDERMGR_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'ORDERMGR_CRQ_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'ORDERMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'ORDERMGR_ROLE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'ORDERMGR_SALES_ENTRY', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'ORDERMGR_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'ORDERMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'PARTYMGR_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'PARTYMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'PARTYMGR_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'PARTYMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'PAY_INFO_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'PAY_INFO_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY', 'PAY_INFO_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'CATALOG_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'ORDERMGR_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'ORDERMGR_CRQ_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'ORDERMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'ORDERMGR_ROLE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'ORDERMGR_SALES_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'ORDERMGR_SALES_ENTRY', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'ORDERMGR_SALES_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'ORDERMGR_SEND_CONFIRMATION', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'ORDERMGR_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'ORDERMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'PARTYMGR_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'PARTYMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'PARTYMGR_PCM_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'PARTYMGR_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'PARTYMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'PAY_INFO_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'PAY_INFO_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERENTRY_ALL', 'PAY_INFO_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPROC', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPROC', 'ORDERMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPROC', 'ORDERMGR_ROLE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPROC', 'PARTYMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPROC', 'PARTYMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'CATALOG_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'ORDERMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'ORDERMGR_PURCHASE_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'ORDERMGR_PURCHASE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'ORDERMGR_ROLE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'ORDERMGR_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'ORDERMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'PARTYMGR_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'PARTYMGR_NOTE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'PARTYMGR_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'PARTYMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'PAY_INFO_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'PAY_INFO_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERPURCH', 'PAY_INFO_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERSUPPLIER_LTD', 'OFBTOOLS_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERSUPPLIER_LTD', 'ORDERMGR_ROLE_CREATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERSUPPLIER_LTD', 'ORDERMGR_ROLE_UPDATE', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERSUPPLIER_LTD', 'ORDERMGR_ROLE_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('ORDERSUPPLIER_LTD', 'ORDERMGR_VIEW', '2016-04-30 23:54:40', '2016-04-30 23:54:39'),
+('PARTYADMIN', 'OFBTOOLS_VIEW', '2016-04-30 23:53:58', '2016-04-30 23:53:58'),
+('PARTYADMIN', 'PARTYMGR_ADMIN', '2016-04-30 23:53:58', '2016-04-30 23:53:58'),
+('SECURITYADMIN', 'SECURITY_ADMIN', '2016-04-30 23:53:58', '2016-04-30 23:53:58');
 
 -- --------------------------------------------------------
 
@@ -2347,7 +2507,7 @@ INSERT INTO `security_group_permission` (`group_id`, `permission_id`, `created_d
 -- Table structure for table `security_permission`
 --
 
-CREATE TABLE IF NOT EXISTS `security_permission` (
+CREATE TABLE `security_permission` (
   `permission_id` varchar(60) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   `created_date` datetime NOT NULL,
@@ -2524,7 +2684,7 @@ INSERT INTO `security_permission` (`permission_id`, `description`, `created_date
 -- Table structure for table `status_item`
 --
 
-CREATE TABLE IF NOT EXISTS `status_item` (
+CREATE TABLE `status_item` (
   `status_id` varchar(20) NOT NULL,
   `status_type_id` varchar(20) NOT NULL,
   `status_code` varchar(60) DEFAULT NULL,
@@ -2547,14 +2707,7 @@ INSERT INTO `status_item` (`status_id`, `status_type_id`, `status_code`, `descri
 ('CASE_SUBMITTED', 'CASE_STATUS', 'SUBMITTED', 'Submitted', '2016-04-30 23:54:37', '2016-04-30 23:54:37'),
 ('PARTY_DISABLED', 'PARTY_STATUS', 'DISABLED', 'Disabled', '2016-05-22 05:14:55', '2016-05-22 05:14:55'),
 ('PARTY_ENABLED', 'PARTY_STATUS', 'ENABLED', 'Enabled', '2016-05-10 13:08:11', '2016-05-10 13:08:11'),
-('PTYLEAD_CONVERTED', 'PARTY_LEAD_STATUS', 'CONVERTED', 'Party Lead Converted', '2016-05-10 13:08:11', '2016-05-10 13:08:11'),
-('QUO_APPROVED', 'QUOTE_STATUS', 'APPROVED', 'Approved', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
-('QUO_CANCELLED', 'QUOTE_STATUS', 'CANCELLED', 'Cancelled', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
-('QUO_CREATED', 'QUOTE_STATUS', 'CREATED', 'Created', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
-('QUO_FINALIZED', 'QUOTE_STATUS', 'FINALIZED', 'Finalized', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
-('QUO_ORDERED', 'QUOTE_STATUS', 'ORDERED', 'Ordered', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
-('QUO_REJECTED', 'QUOTE_STATUS', 'REJECTED', 'Rejected', '2016-04-30 23:56:05', '2016-04-30 23:56:05'),
-('QUO_SENT', 'QUOTE_STATUS', 'SENT', 'Sent', '2016-04-30 23:56:05', '2016-04-30 23:56:05');
+('PTYLEAD_CONVERTED', 'PARTY_LEAD_STATUS', 'CONVERTED', 'Party Lead Converted', '2016-05-10 13:08:11', '2016-05-10 13:08:11');
 
 -- --------------------------------------------------------
 
@@ -2562,7 +2715,7 @@ INSERT INTO `status_item` (`status_id`, `status_type_id`, `status_code`, `descri
 -- Table structure for table `status_type`
 --
 
-CREATE TABLE IF NOT EXISTS `status_type` (
+CREATE TABLE `status_type` (
   `status_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -2578,8 +2731,7 @@ CREATE TABLE IF NOT EXISTS `status_type` (
 INSERT INTO `status_type` (`status_type_id`, `parent_type_id`, `has_table`, `description`, `created_date`, `updated_date`) VALUES
 ('CASE_STATUS', NULL, 0, 'Case Status', '2016-05-22 05:13:48', '2016-05-22 05:13:48'),
 ('PARTY_LEAD_STATUS', 'PARTY_STATUS', 0, 'Status codes for parties which are leads (role = PROSPECT)', '2016-05-10 12:59:38', '2016-05-10 12:59:38'),
-('PARTY_STATUS', NULL, 0, 'Party Status', '2016-05-10 12:59:07', '2016-05-10 12:59:07'),
-('QUOTE_STATUS', NULL, 0, 'Quote Status', '2016-05-26 17:32:23', '2016-05-26 17:32:23');
+('PARTY_STATUS', NULL, 0, 'Party Status', '2016-05-10 12:59:07', '2016-05-10 12:59:07');
 
 -- --------------------------------------------------------
 
@@ -2587,7 +2739,7 @@ INSERT INTO `status_type` (`status_type_id`, `parent_type_id`, `has_table`, `des
 -- Table structure for table `telecom_number`
 --
 
-CREATE TABLE IF NOT EXISTS `telecom_number` (
+CREATE TABLE `telecom_number` (
   `contact_mech_id` int(11) NOT NULL,
   `country_code` varchar(10) DEFAULT NULL,
   `area_code` varchar(10) DEFAULT NULL,
@@ -2603,7 +2755,7 @@ CREATE TABLE IF NOT EXISTS `telecom_number` (
 -- Table structure for table `uom`
 --
 
-CREATE TABLE IF NOT EXISTS `uom` (
+CREATE TABLE `uom` (
   `uom_id` varchar(20) NOT NULL,
   `uom_type_id` varchar(20) DEFAULT NULL,
   `abbreviation` varchar(60) DEFAULT NULL,
@@ -2902,7 +3054,7 @@ INSERT INTO `uom` (`uom_id`, `uom_type_id`, `abbreviation`, `description`, `crea
 -- Table structure for table `uom_type`
 --
 
-CREATE TABLE IF NOT EXISTS `uom_type` (
+CREATE TABLE `uom_type` (
   `uom_type_id` varchar(20) NOT NULL,
   `parent_type_id` varchar(20) DEFAULT NULL,
   `has_table` tinyint(1) NOT NULL,
@@ -2935,7 +3087,7 @@ INSERT INTO `uom_type` (`uom_type_id`, `parent_type_id`, `has_table`, `descripti
 -- Table structure for table `user_login`
 --
 
-CREATE TABLE IF NOT EXISTS `user_login` (
+CREATE TABLE `user_login` (
   `user_login_id` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
   `password_hint` varchar(255) DEFAULT NULL,
@@ -2951,7 +3103,19 @@ CREATE TABLE IF NOT EXISTS `user_login` (
 --
 
 INSERT INTO `user_login` (`user_login_id`, `password`, `password_hint`, `enabled`, `disabled_date`, `party_id`, `created_date`, `updated_date`) VALUES
-('admin', '$2a$10$A1QQckgQ/hhfvxWTT3vxluuZQ/EepyF570eBxxH7xd3qOCpmjGSbC', NULL, 1, NULL, 2, '2016-05-13 01:16:35', '2016-05-13 01:16:35');
+('acctOwnerABC', '$2a$08$lhP4sYwN1vux1iTOSXckEelmCJN47ifl40rgwiwgRaPjISjzwL1ci', NULL, 1, NULL, 11, '2016-05-25 11:01:22', '2016-05-25 11:01:22'),
+('acctOwnerDEF', '$2a$08$c13ijYX1S4JFRWCc9X32.e1xtjP1MSuJSup8oi7DNXsHsPt7z0UXO', NULL, 1, NULL, 12, '2016-05-25 11:05:11', '2016-05-25 11:05:11'),
+('admin', '$2a$10$A1QQckgQ/hhfvxWTT3vxluuZQ/EepyF570eBxxH7xd3qOCpmjGSbC', NULL, 1, NULL, 2, '2016-05-13 01:16:35', '2016-05-13 01:16:35'),
+('contactOwnerABC', '$2a$08$iTaPqQ/4W8LSDNBDT18opegvSxo4kWC8SjWNojHP/lhN7eOSTYHJu', NULL, 1, NULL, 13, '2016-05-25 11:07:11', '2016-05-25 11:07:11'),
+('contactOwnerDEF', '$2a$08$H/jGQdzkk1YrMJh92vtZH.sblwGrgnbOpKYhwxrHmdaFRe7h6E4/q', NULL, 1, NULL, 14, '2016-05-25 11:11:12', '2016-05-25 11:11:12'),
+('crmsfaContactTasksABC', '$2a$08$CB.AAzCvAM7ghsIgD9HurePO3BsLDAJ0tBGIPHLhv9ijyay1E24O2', NULL, 1, NULL, 15, '2016-05-25 11:14:33', '2016-05-25 11:14:33'),
+('crmsfaContactTasksDEF', '$2a$08$uqe3rKbDeVzAeSzQhP6RVuxKsnss0EJUuW0rsba7J/laB2p1vylmK', NULL, 1, NULL, 16, '2016-05-25 11:17:03', '2016-05-25 11:17:03'),
+('fullAdminABC', '$2a$08$sJPUoxXV5fkcdgf9Ga8yeubPQ8WAzJVJVCUW3LrD0vgI9HsHQqkNO', NULL, 1, NULL, 3, '2016-05-25 10:28:01', '2016-05-25 10:28:01'),
+('fullAdminDEF', '$2a$08$ad7XcDpVh0wpnuL9FqTwSechN8QPk/rd2q9imGZ5hmv9gez4/I5IS', NULL, 1, NULL, 4, '2016-05-25 10:52:26', '2016-05-25 10:52:26'),
+('leadOwnerABC', '$2a$08$5RdFI2AF2Qwl5UHpBqy0Ve67wHhMB4ctOyPpaDMe8Yw/CZA66TutW', NULL, 1, NULL, 17, '2016-05-25 13:14:31', '2016-05-25 13:14:31'),
+('leadOwnerDEF', '$2a$08$Y/fQPgblCV2ZK6UtopnyveZpn.VoY1ZP4oPK6R3JOuzTi9FU42Hiu', NULL, 1, NULL, 18, '2016-05-27 22:34:11', '2016-05-27 22:34:11'),
+('partyAdminABC', '$2a$08$pUshY95nXvnDW/5/aB3KReIYIUjo7AiVDXoxK4/AYjIKPjRF33ms2', NULL, 1, NULL, 5, '2016-05-25 10:54:19', '2016-05-25 10:54:19'),
+('partyAdminDEF', '$2a$08$vUx4jjmAf74hlcB5WvM6Lu.usTZTtgSLrRhMM.rK90yK9AyPPolV2', NULL, 1, NULL, 7, '2016-05-25 10:57:29', '2016-05-25 10:57:29');
 
 -- --------------------------------------------------------
 
@@ -2959,7 +3123,7 @@ INSERT INTO `user_login` (`user_login_id`, `password`, `password_hint`, `enabled
 -- Table structure for table `user_login_security_group`
 --
 
-CREATE TABLE IF NOT EXISTS `user_login_security_group` (
+CREATE TABLE `user_login_security_group` (
   `user_login_id` varchar(250) NOT NULL,
   `permission_group_id` varchar(20) NOT NULL,
   `from_date` datetime NOT NULL,
@@ -2973,7 +3137,22 @@ CREATE TABLE IF NOT EXISTS `user_login_security_group` (
 --
 
 INSERT INTO `user_login_security_group` (`user_login_id`, `permission_group_id`, `from_date`, `thru_date`, `created_date`, `updated_date`) VALUES
-('admin', 'FULLADMIN', '2016-05-01 00:00:00', '2016-12-31 00:00:00', '2016-05-19 01:16:54', '2016-05-19 01:16:54');
+('acctOwnerABC', 'ACCOUNT_OWNER', '2016-05-25 11:49:48', NULL, '2016-05-25 11:49:48', '2016-05-25 11:49:48'),
+('acctOwnerDEF', 'ACCOUNT_OWNER', '2016-05-25 11:50:03', NULL, '2016-05-25 11:50:03', '2016-05-25 11:50:03'),
+('admin', 'CONTACT_OWNER', '2016-05-28 21:57:44', NULL, '2016-05-28 21:57:44', '2016-05-28 21:57:44'),
+('admin', 'FULLADMIN', '2016-05-01 00:00:00', '2016-12-31 00:00:00', '2016-05-19 01:16:54', '2016-05-19 01:16:54'),
+('contactOwnerABC', 'CONTACT_OWNER', '2016-05-25 11:59:00', NULL, '2016-05-25 11:59:00', '2016-05-25 11:59:00'),
+('contactOwnerDEF', 'CONTACT_OWNER', '2016-05-25 11:59:22', NULL, '2016-05-25 11:59:22', '2016-05-25 11:59:22'),
+('crmsfaContactTasksABC', 'CRMSFA_CONTACT_TASKS', '2016-05-25 12:00:15', NULL, '2016-05-25 12:00:15', '2016-05-25 12:00:15'),
+('crmsfaContactTasksDEF', 'CRMSFA_CONTACT_TASKS', '2016-05-25 12:01:27', NULL, '2016-05-25 12:01:27', '2016-05-25 12:01:27'),
+('fullAdminABC', 'CONTACT_OWNER', '2016-05-25 11:49:17', NULL, '2016-05-25 11:49:17', '2016-05-25 11:49:17'),
+('fullAdminABC', 'FULLADMIN', '2016-05-25 13:07:52', NULL, '2016-05-25 13:07:52', '2016-05-25 13:07:52'),
+('fullAdminABC', 'PARTYADMIN', '2016-05-25 13:07:28', '2016-05-27 00:00:00', '2016-05-25 13:07:28', '2016-05-25 13:07:28'),
+('fullAdminDEF', 'FULLADMIN', '2016-05-25 12:01:50', NULL, '2016-05-25 12:01:50', '2016-05-25 12:01:50'),
+('leadOwnerABC', 'LEAD_OWNER', '2016-05-25 13:17:16', NULL, '2016-05-25 13:17:16', '2016-05-25 13:17:16'),
+('leadOwnerDEF', 'LEAD_OWNER', '2016-05-27 22:35:06', NULL, '2016-05-27 22:35:06', '2016-05-27 22:35:06'),
+('partyAdminABC', 'PARTYADMIN', '2016-05-25 12:02:15', NULL, '2016-05-25 12:02:15', '2016-05-25 12:02:15'),
+('partyAdminDEF', 'PARTYADMIN', '2016-05-25 12:02:32', NULL, '2016-05-25 12:02:32', '2016-05-25 12:02:32');
 
 --
 -- Indexes for dumped tables
@@ -3040,7 +3219,8 @@ ALTER TABLE `case_type`
 -- Indexes for table `contact_mech`
 --
 ALTER TABLE `contact_mech`
-  ADD PRIMARY KEY (`contact_mech_id`);
+  ADD PRIMARY KEY (`contact_mech_id`),
+  ADD KEY `contact_mech_type_id` (`contact_mech_type_id`);
 
 --
 -- Indexes for table `contact_mech_purpose_type`
@@ -3380,7 +3560,7 @@ ALTER TABLE `user_login_security_group`
 -- AUTO_INCREMENT for table `case_`
 --
 ALTER TABLE `case_`
-  MODIFY `case_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `case_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `case_status`
 --
@@ -3390,7 +3570,7 @@ ALTER TABLE `case_status`
 -- AUTO_INCREMENT for table `contact_mech`
 --
 ALTER TABLE `contact_mech`
-  MODIFY `contact_mech_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `contact_mech_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `note_data`
 --
@@ -3400,7 +3580,7 @@ ALTER TABLE `note_data`
 -- AUTO_INCREMENT for table `party`
 --
 ALTER TABLE `party`
-  MODIFY `party_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
+  MODIFY `party_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 --
 -- AUTO_INCREMENT for table `quote`
 --
@@ -3454,6 +3634,12 @@ ALTER TABLE `case_status`
 --
 ALTER TABLE `case_type`
   ADD CONSTRAINT `FOREIGN_case_type_case_type` FOREIGN KEY (`parent_type_id`) REFERENCES `case_type` (`case_type_id`);
+
+--
+-- Constraints for table `contact_mech`
+--
+ALTER TABLE `contact_mech`
+  ADD CONSTRAINT `FOREIGN_contact_mech_contact_mech_type` FOREIGN KEY (`contact_mech_type_id`) REFERENCES `contact_mech_type` (`contact_mech_type_id`);
 
 --
 -- Constraints for table `contact_mech_type`
@@ -3540,8 +3726,6 @@ ALTER TABLE `party_data_source`
 --
 ALTER TABLE `party_relationship`
   ADD CONSTRAINT `FOREIGN_party_relationship_party_relationship_type` FOREIGN KEY (`party_relationship_type_id`) REFERENCES `party_relationship_type` (`party_relationship_type_id`),
-  ADD CONSTRAINT `FOREIGN_party_relationship_party_role_1` FOREIGN KEY (`party_id_from`) REFERENCES `party_role` (`party_id`),
-  ADD CONSTRAINT `FOREIGN_party_relationship_party_role_2` FOREIGN KEY (`party_id_to`) REFERENCES `party_role` (`party_id`),
   ADD CONSTRAINT `FOREIGN_party_relationship_party_role_3` FOREIGN KEY (`role_type_id_from`) REFERENCES `party_role` (`role_type_id`),
   ADD CONSTRAINT `FOREIGN_party_relationship_party_role_4` FOREIGN KEY (`role_type_id_to`) REFERENCES `party_role` (`role_type_id`),
   ADD CONSTRAINT `FOREIGN_party_relationship_status_item` FOREIGN KEY (`status_id`) REFERENCES `status_item` (`status_id`);
@@ -3646,7 +3830,7 @@ ALTER TABLE `quote_item`
 --
 ALTER TABLE `quote_item_option`
   ADD CONSTRAINT `FOREIGN_quo_itm_opt_quo` FOREIGN KEY (`quote_id`) REFERENCES `quote` (`quote_id`),
-  ADD CONSTRAINT `FOREIGN_quo_itm_opt_quo_itm` FOREIGN KEY (`quote_id`, `quote_item_seq_id`) REFERENCES `quote_item` (`quote_id`, `quote_item_seq_id`);
+  ADD CONSTRAINT `FOREIGN_quo_itm_opt_quo_itm` FOREIGN KEY (`quote_id`,`quote_item_seq_id`) REFERENCES `quote_item` (`quote_id`, `quote_item_seq_id`);
 
 --
 -- Constraints for table `quote_note`
