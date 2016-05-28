@@ -134,7 +134,7 @@ var contactController = function (knex) {
                 var contactEntity;
                 if (contacts.length > 0) {
                     // Map the retrieved result set to corresponding entity
-                    var contactEntity = new Contact(
+                    contactEntity = new Contact(
                         contacts[0].party_id,
                         contacts[0].party_type_id,
                         contacts[0].currency_uom_id,
@@ -360,11 +360,14 @@ var contactController = function (knex) {
         var validationErrors = contactEntity.validateForUpdate();
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
-            var promise = contactMechData.updateContact(contact)
+            var promise = contactData.updateContact(contact)
                 .then(function (numRows) {
-                    for (var i = 0; i < contactEntity.contactMechs.length; i++) {
-                        numRows += ContactMechController.updateContactMech(contactEntity.contactMechs[i]);
+                    if (contactEntity.contactMechs) {
+                        for (var i = 0; i < contactEntity.contactMechs.length; i++) {
+                            numRows += ContactMechController.updateContactMech(contactEntity.contactMechs[i]);
+                        }
                     }
+
                     return numRows;
                 })
                 .then(function (numRows) {

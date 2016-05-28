@@ -60,13 +60,15 @@ Contact.prototype.validateForInsert = function () {
 
 Contact.prototype.validateForUpdate = function () {
     //Run parent validation method
-    var validations = Person.validateForUpdate.call(this);
+    var validations = Person.prototype.validateForUpdate.call(this);
 
     //Errors are non-empty validation results
     var errors = [];
     for (var i = 0; i < validations.length; i++) {
         if (validations[i]) {
             errors.push(validations[i]);
+        } else {
+            console.log(validations[i]);
         }
     }
 
