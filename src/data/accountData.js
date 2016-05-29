@@ -58,7 +58,7 @@ var accountData = function (knex) {
         //If converting a contact/organization into a lead/account, take the partyId of the newly converted party. 
         //Then add an entry to the party_role table, using the above partyId value in the party_id column,
         //and "account" as the value in the role_type_id column.
-        knex.insert({
+        return knex.insert({
             party_id: account.partyId,
             role_type_id: 'ACCOUNT',
             created_date: account.createdDate,
@@ -66,7 +66,7 @@ var accountData = function (knex) {
         }).into('party_role');
     };
     
-    var addAccountPartyRelationship = function (account, contact, user) {
+    var addAccountPartyRelationship = function (account, user, contact) {
         //Check if the user is creating a new account from scratch, or converting a lead 
         //at an organization  into a contact (and thus converting the organization into an account). 
         
@@ -74,8 +74,8 @@ var accountData = function (knex) {
         //Role_Type_Id_To should then be set to "account_manager". From_Date should be set to the same value 
         //as Created_Date. Party_Id_To may be set to "admin" or the partyId of the user who made the change, 
         //if we want to create this functionality. This last bit is optional.
-        if(contact || user) {
-            knex.insert({
+        if(!contact) {
+            return knex.insert({
                     party_id_from: account.partyId,
                     party_id_to: user.partyId,
                     role_type_id_from: 'ACCOUNT',
@@ -98,7 +98,7 @@ var accountData = function (knex) {
         //organization was converted. Party_Id_To should then be set to the new partyId of the account
         //(which should have been created by addAccountParty above). 
         else {
-            knex.insert({
+            return knex.insert({
                 party_id_from: contact.partyId,
                 party_id_to: account.partyId,
                 role_type_id_from: 'CONTACT',
@@ -117,16 +117,17 @@ var accountData = function (knex) {
     };
 
     
-    var addAccount = function (account, contact, user) {
+    var addAccount = function (account, user, contact) {
         //Not fully sure yet that I can do this, but will write it down here anyway for now.
         //Call all of the previous addAccount___ methods. 
-        addAccountParty(account);
-        addAccountOrg(account);
-        addAccountPartySupplementalData(account); //I STRONGLY SUSPECT THAT THIS SHOULD BE CONTACT OR LEAD
+        var results = addAccountParty(account);
+        results += addAccountOrg(account);
+        results += addAccountPartySupplementalData(account); //I STRONGLY SUSPECT THAT THIS SHOULD BE CONTACT OR LEAD
         //Deleting account-related fields from the contact/lead's p_s_d entry would happen here
-        addAccountContactMech(account); //this may not be fully functional
-        addAccountPartyRole(account);
-        addAccountPartyRelationship(account, contact, user);
+        results += addAccountContactMech(account); //this may not be fully functional
+        results += addAccountPartyRole(account);
+        results += addAccountPartyRelationship(account, user, contact);
+        return results;
     };
     
     /**

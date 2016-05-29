@@ -7,7 +7,7 @@
 
 var accountApi = function (knex) {
     //Not yet functional
-    var accountController = require('../controllers/accountController')();
+    var accountController = require('../controllers/accountController')(knex);
     //Not yet functional
     var middleware = function (req, res, next) {
         next();
@@ -20,7 +20,8 @@ var accountApi = function (knex) {
     // POST /api/accounts
     var addAccount = function (req, res) {
         var account = req.body;
-        var result = accountController.addAccount(account);
+        var user = req.user;
+        var result = accountController.addAccount(account, user);
         // An array in result means it's array of validation errors
         if( Object.prototype.toString.call(result) === '[object Array]' ) {
             res.json(result);
@@ -32,6 +33,11 @@ var accountApi = function (knex) {
                res.json({partyId: partyId}); 
             });
         }
+        
+        //if( result === null) {
+        //    res.json({message: "No permission to access this"});
+        //    }
+    
     };
 
    

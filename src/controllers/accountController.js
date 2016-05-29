@@ -24,10 +24,34 @@ var accountController = function(knex) {
      * @param {Object} account - The new account to be added
      * @return {Object} promise - Fulfillment value is id of new account
     */
-    var addAccount = function (account, contact, user) {
+    var addAccount = function (account, user, contact) {
+        //Check user's security permissions to add account
+        //var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACCOUNT_CREATE'); <-- using lodash library
+        var hasSecurityPermissions = user.securityPermissions; //should be an array of sec groups, with
+        //each one having an array of granular permissions pulled from the database, e.g. secPermissions = [ 'Contact_Owner': [1, 2, 3], 'FullAdmin': [...], ...];. So only someone with permission CRMSFA_ACCOUNT_CREATE to add a new Account, in this example.
+        //if (hasSecurityPermissions !== -1) { the below code }
+        
+        var contactMechPromises = [];
+        if (account.primaryEmailAddress) {
+            var emailContactMech = new ContactMech(
+                null, 
+                'EMAIL_ADDRESS',
+                contact.primaryEmailAddress,
+                (new Date()).toISOString(),
+                (new Date()).toISOString()
+            );
+            contactMechPromises.push(emailContactMech);
+        } //do similar if blocks to check for other contact mechanisms and read them in. 
         // Convert the received object into an entity
         var accountEntity = new Account(
             null,
+            account.partyTypeId,
+            account.preferredCurrencyUomId,
+            account.description,
+            account.statusId,
+            user.userId,
+            (new Date()).toISOString(),
+            (new Date()).toISOString(),
             account.orgName,
             account.officeSiteName,
             account.annualRevenue,
@@ -35,16 +59,22 @@ var accountController = function(knex) {
             account.tickerSymbol,
             account.comments,
             account.logoImgURL,
-            (new Date()).toISOString(),
-            (new Date()).toISOString()
+            account.partyParentId,
+            account.industryEnumId,
+            account.ownershipEnumId,
+            account.importantNote,
+            account.primaryPostalAddressId,
+            account.primaryTelecomNumberId,
+            account.primaryEmailId
         );
         // Validate the data before going ahead
         var validationErrors = accountEntity.validateForInsert();
         if(validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
-            var promise = accountData.addAccount(accountEntity)
+            var promise = accountData.addAccount(accountEntity, user)
                 .then(function(partyId) {
-                   return partyId; 
+                   
+                    return partyId; 
                 });
                 promise.catch(function(error) {
                     winston.error(error);
@@ -56,6 +86,21 @@ var accountController = function(knex) {
         }
     };
     
+    var addContactMechCallback = function(partyId) {
+        if (addContactMechPromises.length > 0) {
+            var promise = contactMechPromises.pop();
+            promise.then(function(contactMechId) {
+                ContactMechController.linkContactMechToParty(partyId, contactMechId)
+                .then(function() {
+                    addContactMechCallback(partyId);
+                })
+                
+            })
+        }
+        else {
+            return;
+        }
+    }
     /**
      * Gets all account.
      * @return {Object} promise - Fulfillment value is an array of account entities
@@ -68,6 +113,13 @@ var accountController = function(knex) {
                 for(var i=0; i < accounts.length; i++) {
                     var account = new Account();
                     account.partyId = accounts[i].party_id;
+                    account.partyTypeId = accounts[i].party_type_id;
+                    account.preferredCurrencyUomId = accounts[i].preferred_currency_uom_id;
+                    account.description = accounts[i].description;
+                    account.statusId = accounts[i].status_id;
+                    account.createdBy = accounts[i].created_by;
+                    account.createdDate = accounts[i].created_date;
+                    account.updatedDate = accounts[i].updated_date;
                     account.orgName = accounts[i].organization_name;
                     account.officeSiteName = accounts[i].office_site_name;
                     account.annualRevenue = accounts[i].annual_revenue;
@@ -75,8 +127,14 @@ var accountController = function(knex) {
                     account.tickerSymbol = accounts[i].ticker_symbol;
                     account.comments = accounts[i].comments;
                     account.logoImgURL = accounts[i].logo_image_url;
-                    account.createdDate = accounts[i].created_date;
-                    account.updatedDate = accounts[i].updated_date;
+                    account.partyParentId = accounts[i].party_parent_id;
+                    account.industryEnumId = accounts[i].industry_enum_id;
+                    account.ownershipEnumId = accounts[i].ownership_enum_id;
+                    account.importantNote = accounts[i].important_note;
+                    account.primaryPostalAddressId = accounts[i].primary_postal_address_id;
+                    account.primaryTelecomNumberId = accounts[i].primary_telecom_number_id;
+                    account.primaryEmailId = accounts[i].primary_email_id;
+                    
                     accountEntities.push(account);
                 }
                 return accountEntities;
@@ -101,6 +159,13 @@ var accountController = function(knex) {
                 if(accounts.length > 0) {
                     accountEntity = new Account(
                         accounts[0].party_id,
+                        accounts[0].party_type_id,
+                        accounts[0].preferred_currency_uom_id,
+                        accounts[0].description,
+                        accounts[0].status_id,
+                        accounts[0].created_by,
+                        accounts[0].created_date,
+                        accounts[0].updated_date,
                         accounts[0].organization_name,
                         accounts[0].office_site_name,
                         accounts[0].annual_revenue,
@@ -108,8 +173,13 @@ var accountController = function(knex) {
                         accounts[0].ticker_symbol,
                         accounts[0].comments,
                         accounts[0].logo_image_url,
-                        accounts[0].created_date,
-                        accounts[0].updated_date
+                        accounts[0].party_parent_id,
+                        accounts[0].industry_enum_id,
+                        accounts[0].ownership_enum_id,
+                        accounts[0].important_note,
+                        accounts[0].primary_postal_address_id,
+                        accounts[0].primary_telecom_number_id,
+                        accounts[0].primary_email_id
                     );
                 }
                 return accountEntity;
@@ -132,6 +202,13 @@ var accountController = function(knex) {
             for (var i = 0; i < accounts.length; i++) {
                 var accountEntity = new Account(
                     accounts[i].party_id,
+                    accounts[i].party_type_id,
+                    accounts[i].preferred_currency_uom_id,
+                    accounts[i].description,
+                    accounts[i].status_id,
+                    accounts[i].created_by,
+                    accounts[i].created_date,
+                    accounts[i].updated_date,
                     accounts[i].organization_name,
                     accounts[i].office_site_name,
                     accounts[i].annual_revenue,
@@ -139,8 +216,13 @@ var accountController = function(knex) {
                     accounts[i].ticker_symbol,
                     accounts[i].comments,
                     accounts[i].logo_image_url,
-                    accounts[i].created_date,
-                    accounts[i].updated_date
+                    accounts[i].party_parent_id,
+                    accounts[i].industry_enum_id,
+                    accounts[i].ownership_enum_id,
+                    accounts[i].important_note,
+                    accounts[i].primary_postal_address_id,
+                    accounts[i].primary_telecom_number_id,
+                    accounts[i].primary_email_id
                 );
                 ownedAccounts.push(accountEntity);
             }
@@ -179,16 +261,28 @@ var accountController = function(knex) {
             .then(function(accounts) {
                 // Map the retrieved result set to corresponding entity
                 var accountEntity = new Account(
-                    accounts[0].party_id,
-                    accounts[0].organization_name,
-                    accounts[0].office_site_name,
-                    accounts[0].annual_revenue,
-                    accounts[0].num_employees,
-                    accounts[0].ticker_symbol,
-                    accounts[0].comments,
-                    accounts[0].logo_image_url,
-                    accounts[0].created_date,
-                    accounts[0].updated_date
+                        accounts[0].party_id,
+                        accounts[0].party_type_id,
+                        accounts[0].preferred_currency_uom_id,
+                        accounts[0].description,
+                        accounts[0].status_id,
+                        accounts[0].created_by,
+                        accounts[0].created_date,
+                        accounts[0].updated_date,
+                        accounts[0].organization_name,
+                        accounts[0].office_site_name,
+                        accounts[0].annual_revenue,
+                        accounts[0].num_employees,
+                        accounts[0].ticker_symbol,
+                        accounts[0].comments,
+                        accounts[0].logo_image_url,
+                        accounts[0].party_parent_id,
+                        accounts[0].industry_enum_id,
+                        accounts[0].ownership_enum_id,
+                        accounts[0].important_note,
+                        accounts[0].primary_postal_address_id,
+                        accounts[0].primary_telecom_number_id,
+                        accounts[0].primary_email_id
                 );
                 return accountEntity;
             });

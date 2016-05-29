@@ -52,7 +52,7 @@ var userData = function(knex) {
      * @param {Number} userId - Id of the user whose permissions are to be fetched
      * @return {Object} promise - Fulfillment value is a raw data object
     */
-    var getUserPermissionsById = function(id) {
+    var getPermissionGroupsByUserId = function(id) {
         return knex.select('permission_group_id', 'from_date', 'thru_date')
             .from('user_login_security_group')
             .where({user_login_id: id});
@@ -63,7 +63,7 @@ var userData = function(knex) {
         getUserById: getUserById,
         updateUser: updateUser,
         deleteUser: deleteUser,
-        getUserPermissionsById: getUserPermissionsById
+        getPermissionGroupsByUserId: getPermissionGroupsByUserId
     };
 };
 

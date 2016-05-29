@@ -24,8 +24,8 @@ var userController = function (knex) {
      * @param {Number} userId - Id of the user whose permissions are to be fetched
      * @return {Object} promise - Fulfillment value is an array of permissions
      */
-    var getUserPermissionsById = function (id) {
-        var promise = userData.getUserPermissionsById(id)
+    var getPermissionGroupsByUserId = function (userId) {
+        var promise = userData.getPermissionGroupsByUserId(userId)
             .then(function (permissions) {
                 // Map the retrieved result set to corresponding entity
                 var userPermissions = [];
@@ -112,7 +112,7 @@ var userController = function (knex) {
         getUserById: getUserById,
         updateUser: updateUser,
         deleteUser: deleteUser,
-        getUserPermissionsById: getUserPermissionsById
+        getPermissionGroupsByUserId: getPermissionGroupsByUserId
     };
 };
 

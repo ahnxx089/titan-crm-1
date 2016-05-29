@@ -8,14 +8,14 @@
 /////////////////////////////////////////////////
 
 var validation = require('../common/validation')();
-var Party = require('../entities/party')();
+var Party = require('../entities/party');
 
 // Constructor
 //
-function Organization(partyId, createdDate, updatedDate, orgName, officeSiteName, annualRevenue,
-                numEmployees, tickerSymbol, comments,  logoImgURL) {
+function Organization(partyId, partyTypeId, currencyUomId, description, statusId, createdBy, createdDate, updatedDate, 
+        orgName, officeSiteName, annualRevenue, numEmployees, tickerSymbol, comments,  logoImgURL) {
     // Call the parent constructor first
-    Party.call(this, partyId, createdDate, updatedDate);
+    Party.call(this, partyId, partyTypeId, currencyUomId, description, statusId, createdBy, createdDate, updatedDate);
     
     // Properties specific to Organization 
     this.orgName = orgName;
@@ -36,7 +36,7 @@ Organization.prototype.constructor = Organization;
 //
 Organization.prototype.validateForInsert = function () {
     // Call Party's validation function
-    var errors = [Party.prototype.validateForInsert.call(this)];
+    var errors = Party.prototype.validateForInsert.call(this);
     // Organization-specific validation code
     var specificvalidations = [
         this.validateOrgName(true),
@@ -58,7 +58,7 @@ Organization.prototype.validateForInsert = function () {
 
 Organization.prototype.validateForUpdate = function () {
     // Call Party's validation function
-    var errors = [Party.prototype.validateForUpdate.call(this)];
+    var errors = Party.prototype.validateForUpdate.call(this);
     // Person-specific validation code
     
     var specificvalidations = [
