@@ -176,14 +176,22 @@ var contactMechData = function (knex) {
                     })
                     .del()
                     .then(function (postalRows) {
-                        return knex('contact_mech')
+                        return knex('party_contact_mech')
                             .where({
                                 contact_mech_id: contactMechId
                             })
                             .del()
-                            .then(function (standardRows) {
-                                return telecomRows + postalRows + standardRows;
+                            .then(function (partyLinkRows) {
+                                return knex('contact_mech')
+                                    .where({
+                                        contact_mech_id: contactMechId
+                                    })
+                                    .del()
+                                    .then(function (standardRows) {
+                                        return telecomRows + postalRows + standardRows + partyLinkRows;
+                                    });
                             });
+
                     });
             });
     };

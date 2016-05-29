@@ -11,12 +11,12 @@ var winston = require('winston');
 var Account = require('../entities/account')();
 var userController = require('../controllers/userController');
 
-var accountController = function(knex) {
+var accountController = function (knex) {
     // Get a reference to data layer module
     //
     var accountData = require('../data/organizationData')(knex);
-    
-    
+
+
     // CONTROLLER METHODS
     // ==========================================
     //
@@ -35,9 +35,7 @@ var accountController = function(knex) {
             account.numEmployees,
             account.tickerSymbol,
             account.comments,
-            account.logoImgURL,
-            (new Date()).toISOString(),
-            (new Date()).toISOString()
+            account.logoImgURL, (new Date()).toISOString(), (new Date()).toISOString()
         );
         // Validate the data before going ahead
         var validationErrors = accountEntity.validateForInsert(); 
@@ -52,23 +50,25 @@ var accountController = function(knex) {
                 promise.catch(function(error) {
                     winston.error(error);
                 });
+            promise.catch(function (error) {
+                winston.error(error);
+            });
             return promise;
-        }
-        else {
+        } else {
             return validationErrors;
         }
     };
-    
+
     /**
      * Gets all account.
      * @return {Object} promise - Fulfillment value is an array of account entities
-    */
+     */
     var getAccounts = function () {
         var promise = accountData.getAccounts()
-            .then(function(accounts) {
+            .then(function (accounts) {
                 // Map the retrieved result set to corresponding entities
                 var accountEntities = [];
-                for(var i=0; i < accounts.length; i++) {
+                for (var i = 0; i < accounts.length; i++) {
                     var account = new Account();
                     account.partyId = accounts[i].party_id;
                     account.orgName = accounts[i].organization_name;
@@ -84,10 +84,10 @@ var accountController = function(knex) {
                 }
                 return accountEntities;
             });
-            promise.catch(function(error) {
-                // Log the error
-                winston.error(error);
-            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
         return promise;
     };
 
@@ -95,13 +95,13 @@ var accountController = function(knex) {
      * Gets one account by its id
      * @param {Number} partyId - Unique id of the party to be fetched
      * @return {Object} promise - Fulfillment value is a account entity
-    */
+     */
     var getAccountById = function (partyId) {
         var promise = accountData.getAccountById(partyId)
-            .then(function(accounts) {
+            .then(function (accounts) {
                 // Map the retrieved result set to corresponding entity
                 var accountEntity;
-                if(accounts.length > 0) {
+                if (accounts.length > 0) {
                     accountEntity = new Account(
                         accounts[0].party_id,
                         accounts[0].organization_name,
@@ -117,10 +117,10 @@ var accountController = function(knex) {
                 }
                 return accountEntity;
             });
-            promise.catch(function(error) {
-                // Log the error
-                winston.error(error);
-            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
         return promise;
     };
     /**
@@ -130,46 +130,50 @@ var accountController = function(knex) {
      */
     var getAccountsByOwner = function (ownerId) {
         var promise = accountData.getAccountsByOwner(ownerId)
-        .then(function(accounts) {
-            var ownedAccounts = [];
-            for (var i = 0; i < accounts.length; i++) {
-                var accountEntity = new Account(
-                    accounts[i].party_id,
-                    accounts[i].organization_name,
-                    accounts[i].office_site_name,
-                    accounts[i].annual_revenue,
-                    accounts[i].num_employees,
-                    accounts[i].ticker_symbol,
-                    accounts[i].comments,
-                    accounts[i].logo_image_url,
-                    accounts[i].created_date,
-                    accounts[i].updated_date
-                );
-                ownedAccounts.push(accountEntity);
-            }
-            promise.catch(function(error) {
-                // Log the error
-                winston.error(error);
+            .then(function (accounts) {
+                var ownedAccounts = [];
+                for (var i = 0; i < accounts.length; i++) {
+                    var accountEntity = new Account(
+                        accounts[i].party_id,
+                        accounts[i].organization_name,
+                        accounts[i].office_site_name,
+                        accounts[i].annual_revenue,
+                        accounts[i].num_employees,
+                        accounts[i].ticker_symbol,
+                        accounts[i].comments,
+                        accounts[i].logo_image_url,
+                        accounts[i].created_date,
+                        accounts[i].updated_date
+                    );
+                    ownedAccounts.push(accountEntity);
+                }
+                promise.catch(function (error) {
+                    // Log the error
+                    winston.error(error);
+                });
+                return ownedAccounts;
             });
-            return ownedAccounts;
-        });
     };
     /**
      * Gets one account by its associated phone number from database
      * @param {Number} phoneNumber - Unique phone number associated with the account to be fetched
      * @return {Object} promise - Fulfillment value is a raw data object
      */
-    /*var getAccountByPhoneNumber = function (phoneNumberId, userSecurityPerm) {
-        var promise = accountData.getAccountByPhoneNumber(phoneNumberId)
-        .then(Account.find(phoneNumberId, function(err, accounts){
-            if(err){
-                console.log('Account phoneNumber didn\'t find '+ err);
-            }else if(accounts){
-                req.account = accounts;
-            }
-            
-        }))
-            .then(function(accounts) {
+
+    var getAccountByPhoneNumber = function (phoneNumberId, userSecurityPerm) {
+        var promise = accountData.getAccountByPhoneNumber(phoneNumberId);
+        Account.find(phoneNumberId, function (err, accounts) {
+                if (err) {
+                    console.log('Account phoneNumber did not find' + err);
+                } 
+                // ERIC, I COMMENTED THIS ELSE IF BLOCK OUT DUE TO req NOT DEFINED,
+                // TRYING TO GET THE APP TO NOT CRASH, NOT SURE IF THIS IS DOING IT 
+                //else if (accounts) {
+                //    req.account = accounts;
+                //}
+
+            })
+            .then(function (accounts) {
                 // Map the retrieved result set to corresponding entity
                 var accountEntity = new Account(
                     accounts[0].party_id,
@@ -185,10 +189,10 @@ var accountController = function(knex) {
                 );
                 return accountEntity;
             });
-            promise.catch(function(error) {
-                // Log the error
-                winston.error(error);
-            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
         return promise;
     };*/
     /**
@@ -196,49 +200,54 @@ var accountController = function(knex) {
      * @param {String????? Multi-property JSON Object???} identity - The identity/identities of the account to be retrieved
      * @return {Object} promise - Fulfillment value is a raw data object
      */
-    /*var getAccountsByIdentity = function (identityId, userSecurityPerm) {
-        var promise = accountData.getAccountsByIdentity(identityId);
-        Account.find(identityId, function(err, accounts){
-            if(err){
-                console.log('Account Identity didn\'t find '+ err);
-            }else if(accounts){
-                req.accounts = accounts;
-            }
-            
-        })
-        .then(function(accounts) {
-            var identityAccounts = [];
-            for (var i = 0; i < accounts.length; i++) {
-                var accountEntity = new Account(
-                    accounts[i].party_id,
-                    accounts[i].organization_name,
-                    accounts[i].office_site_name,
-                    accounts[i].annual_revenue,
-                    accounts[i].num_employees,
-                    accounts[i].ticker_symbol,
-                    accounts[i].comments,
-                    accounts[i].logo_image_url,
-                    accounts[i].created_date,
-                    accounts[i].updated_date
-                );
-                identityAccounts.push(accountEntity);
-            }
-            promise.catch(function(error) {
-                // Log the error
-                winston.error(error);
-            });
-            return identityAccounts;
-        });
-    };*/
     
+    var getAccountsByIdentity = function (identityId, userSecurityPerm) {
+        var promise = accountData.getAccountsByIdentity(identityId);
+        Account.find(identityId, function (err, accounts) {
+                if (err) {
+                    console.log('Account Identity did not find' + err);
+                } 
+                // ERIC, I COMMENTED THIS ELSE IF BLOCK OUT DUE TO req NOT DEFINED,
+                // TRYING TO GET THE APP TO NOT CRASH, NOT SURE IF THIS IS DOING IT 
+                //else if (accounts) {
+                //   req.accounts = accounts;
+                //}
+
+            })
+            .then(function (accounts) {
+                var identityAccounts = [];
+                for (var i = 0; i < accounts.length; i++) {
+                    var accountEntity = new Account(
+                        accounts[i].party_id,
+                        accounts[i].organization_name,
+                        accounts[i].office_site_name,
+                        accounts[i].annual_revenue,
+                        accounts[i].num_employees,
+                        accounts[i].ticker_symbol,
+                        accounts[i].comments,
+                        accounts[i].logo_image_url,
+                        accounts[i].created_date,
+                        accounts[i].updated_date
+                    );
+                    identityAccounts.push(accountEntity);   // ERIC, I EDITED THIS TO SEE IF
+                                                            // WAS CAUSING APP CRASH
+                }
+                promise.catch(function (error) {
+                    // Log the error
+                    winston.error(error);
+                });
+                return identityAccounts;
+            });
+    };
+
     /**
      * Gets one account by its owner
      * @param {Number} ownerId - Unique id of the account to be fetched
      * @return {Object} promise - Fulfillment value is a account entity
-    */
+     */
     var getAccountByOwner = function (ownerId) {
         var promise = accountData.getAccountByOwner(ownerId)
-            .then(function(accounts) {
+            .then(function (accounts) {
                 // Map the retrieved result set to corresponding entity
                 var accountEntity = new Account(
                     accounts[0].party_id,
@@ -254,10 +263,10 @@ var accountController = function(knex) {
                 );
                 return accountEntity;
             });
-            promise.catch(function(error) {
-                // Log the error
-                winston.error(error);
-            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
         return promise;
     };
     /**
@@ -265,7 +274,7 @@ var accountController = function(knex) {
      * @param {Number} partyId - Unique id of the account to be updated
      * @param {Object} account - The object that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
-    */
+     */
     var updateAccount = function (partyId, account) {
         // Convert the received object into an entity
         var accountEntity = new Account(
@@ -277,41 +286,39 @@ var accountController = function(knex) {
             account.tickerSymbol,
             account.comments,
             account.logoImgURL,
-            null,
-            (new Date()).toISOString()
+            null, (new Date()).toISOString()
         );
         // Validate the data before going ahead
         var validationErrors = accountEntity.validateForUpdate();
-        if(validationErrors.length === 0) {
+        if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
             var promise = accountData.updateAccount(accountEntity)
-                .then(function(partyId) {
-                   return partyId; 
+                .then(function (partyId) {
+                    return partyId;
                 });
-                promise.catch(function(error) {
-                    winston.error(error);
-                });
+            promise.catch(function (error) {
+                winston.error(error);
+            });
             return promise;
-        }
-        else {
+        } else {
             return null;
         }
     };
-    
+
     /**
      * Delete a Account
      * @param {Number} partyId - Unique id of the account to be deleted
      * @return {Object} promise - Fulfillment value is number of rows deleted
-    */
+     */
     var deleteAccount = function (partyId) {
         var promise = accountData.deleteAccount(partyId)
-            .then(function(result) {
+            .then(function (result) {
                 return result;
             });
-            promise.catch(function(error) {
-                // Log the error
-                winston.error(error);
-            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
         return promise;
     };
 

@@ -7,6 +7,8 @@
 // @author: Eric Brichetto <brichett13@gmail.com>
 /////////////////////////////////////////////////
 
+/* jshint maxparams: false */
+
 var validation = require('../common/validation')();
 var Organization = require('../entities/organization')();
 

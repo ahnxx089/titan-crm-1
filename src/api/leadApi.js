@@ -118,7 +118,7 @@ var leadApi = function (knex) {
     // GET /api/leads/?owner=
     var getLeadsByOwner = function (req, res) {
         var ownerId = req.query.owner;
-        console.log(ownerId); // this prints "admin" to terminal console, not browser console
+        //console.log(ownerId); // this prints "admin" to terminal console, not browser console
         leadController.getLeadsByOwner(ownerId)
             .then(function (lead) {
                 res.json(lead);

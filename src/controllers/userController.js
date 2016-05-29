@@ -20,19 +20,42 @@ var userController = function (knex) {
     // ==========================================
     //
     /**
-     * Gets all security permissions for a user
-     * @param {Number} userId - Id of the user whose permissions are to be fetched
-     * @return {Object} promise - Fulfillment value is an array of permissions
+     * Gets all security permission groups for a user
+     * @param {String} userId - Id of the user whose permissions are to be fetched
+     * @return {Object} promise - Fulfillment value is an array of permission groups (and individual group permissions)
      */
-    var getUserPermissionsById = function (id) {
-        var promise = userData.getUserPermissionsById(id)
-            .then(function (permissions) {
+    var getPermissionGroupsByUserId = function (userId) {
+        var promise = userData.getPermissionGroupsByUserId(userId)
+            .then(function (groups) {
                 // Map the retrieved result set to corresponding entity
-                var userPermissions = [];
-                for (var i = 0; i < permissions.length; i++) {
+                var userPermissionGroups = [];
+                for (var i = 0; i < groups.length; i++) {
                     // TODO: add logic to push only those permissions to the array
                     // that are still valid (based on from_date and thru_date)
-                    userPermissions.push(permissions[0].permission_group_id);
+                    userPermissionGroups.push(groups[i].permission_group_id);
+                }
+                return userPermissionGroups;
+            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
+        return promise;
+    };
+    
+    /**
+     * Gets all security permissions for a user
+     * @param {String} userId - Id of the user for which we need to fetch permissions
+     * @return {Object} promise - Fulfillment value is an array of permissions
+     */
+    var getPermissionsByUserId = function (userId) {
+        var promise = userData.getPermissionsByUserId(userId)
+            .then(function (permissions) {
+                // TODO: add logic to push only those permissions to the array
+                // that are still valid (based on from_date and thru_date)
+                var userPermissions = [];
+                for (var i = 0; i < permissions.length; i++) {
+                    userPermissions.push(permissions[i].permission_id);
                 }
                 return userPermissions;
             });
@@ -62,7 +85,7 @@ var userController = function (knex) {
             .then(function (users) {
                 if (users.length > 0) {
                     // Get all security permissions for this user
-                    return getUserPermissionsById(userId).then(function(permissions) {
+                    return getPermissionsByUserId(userId).then(function(perms) {
                         // Map the retrieved result set to corresponding entity
                         var userEntity;
                         userEntity = new User(
@@ -74,7 +97,7 @@ var userController = function (knex) {
                             users[0].party_id,
                             users[0].created_date,
                             users[0].updated_date,
-                            permissions
+                            perms
                         );
                         return userEntity;
                     });
@@ -112,7 +135,8 @@ var userController = function (knex) {
         getUserById: getUserById,
         updateUser: updateUser,
         deleteUser: deleteUser,
-        getUserPermissionsById: getUserPermissionsById
+        getPermissionGroupsByUserId: getPermissionGroupsByUserId,
+        getPermissionsByUserId: getPermissionsByUserId
     };
 };
 
