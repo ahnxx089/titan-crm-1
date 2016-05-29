@@ -11,6 +11,7 @@
 var winston = require('winston');
 var Case = require('../entities/case');
 var User = require('../entities/user');
+var _ = require('lodash');
 
 var caseController = function (knex) {
     // Get a reference to data layer module
@@ -45,13 +46,6 @@ var caseController = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of case entities
      */
     var getCasesByOwner = function (user) {
-        
-        // ON HOLD PENDING CREATION OF NEW SECURITY GROUP (OR OTHER SOLUTION)
-        // Check user's security permission to own cases:  At least one of this user's 
-        // user_login_security_group.permission_group_id entries (group permissions)
-        // must include 'CRMSFA_CASE_CREATE'.  To determine which of the 17 possible groups
-        // have this permission, you can query the db:
-        // SELECT * FROM security_group_permission WHERE permission_id LIKE "%CASE_CREATE%"
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CASE_CREATE');
         if (hasPermission !== -1) {
             // user has permission, proceed to the data layer
