@@ -72,7 +72,8 @@ var contactData = function (knex) {
                                         created_date: contact.createdDate,
                                         updated_date: contact.updatedDate
                                     }).then(function() {
-                                        return passAlongPartyId;
+                                        // return new Contact's party_id up to API layer
+                                        return passAlongPartyId; 
                                     });
                             });
                     });
@@ -98,7 +99,7 @@ var contactData = function (knex) {
      * @param {Number} ownerId - Unique party_id of the user/owner whose contacts to be fetched
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
-    var getContactsByOwner = function (ownerId) {
+    var getContactsByOwner = function (userPartyId) {
 
         // The ownership is all contained within the party_relationship table alone;
         // however, the party table is joined so that column party.party_id of the
@@ -110,7 +111,7 @@ var contactData = function (knex) {
             .whereIn('role_type_id_to', ['PERSON_ROLE', 'SALES_REP', 'ACCOUNT_MANAGER'])
             .andWhere('party_relationship_type_id', 'RESPONSIBLE_FOR')
             .andWhere('role_type_id_from', 'CONTACT')
-            .andWhere('party_id_to', ownerId);
+            .andWhere('party_id_to', userPartyId);
     };
 
     /** 

@@ -124,7 +124,7 @@ var contactController = function (knex) {
             var validationErrors = [];
             var contactValidationErrors = contactEntity.validateForInsert();
             //Errors are non-empty validation results
-            for (i = 0; i < contactValidationErrors.length; i++) {
+            for (var i = 0; i < contactValidationErrors.length; i++) {
                 if (contactValidationErrors[i]) {
                     validationErrors.push(contactValidationErrors[i]);
                 }
@@ -164,7 +164,7 @@ var contactController = function (knex) {
                 return ContactMechController.linkContactMechToParty(partyId, contactMechId)
                 .then(function() {
                     return addContactMechCallback(partyId);
-                })
+                });
             });
         }
         else {
@@ -216,36 +216,12 @@ var contactController = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of contact entities
      */
     var getContactsByOwner = function (user) {
-
-        // SECURITY PERMISSIONS ARE IMPLEMENTED HERE IN THE CONTROLLER LAYER
-        //  1. For a user with permission to own a Contact, it proceeds to data layer and upon
-        //      return it returns up to Api layer a function.
-        //  2. But for a user without permission to own a Contact (e.g., only a Lead Owner),
-        //      it returns null.
-
-        // Check security permissions of user against accepted permissions for this function
-        // Start by assuming this user does not have permission, until proven otherwise.
-        //var hasPermission = false;
-
-        // Per comments above in API layer, for unknown reasons a user with valid token
-        // such as a LEAD_OWNER at the Api layer ITSELF comes in with userSecurityPerm empty!
-        // That does not make sense-- a LEAD_OWNER for whom I've created a token should at least
-        // be able to pass into this function their permission as [ 'LEAD_OWNER' ] instead of
-        // it coming in as an empty array [ ].  I have added NO logic in the Api layer to
-        // screen for permission; the whole point is to implement it here in the controller layer.
-        // I can't explain it.  For now I must check to see if there even is a permission in
-        // userSecurityPerm; if yes, then it proceeds to loop through userSecurityPerm for any one 
-        // of the correct permissions for owning a Contact to allow this user's request to pass to 
-        // the data layer.
-        // Check user's security permission to add contacts
+        // Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
-
         if (hasPermission !== -1) {
-
             // user has permission, proceed to the data layer
             var promise = contactData.getContactsByOwner(user.partyId)
                 .then(function (contacts) {
-
                     // Map the retrieved result set to corresponding entities
                     var contactEntities = [];
                     for (var i = 0; i < contacts.length; i++) {
@@ -286,37 +262,12 @@ var contactController = function (knex) {
      * @param {String} firstName - portion of a last name to search for
      * @return {Object} promise - Fulfillment value is an array of contact entities
      */
-    var getContactsByIdentity = function (firstName, lastName, userSecurePerm) {
-
+    var getContactsByIdentity = function (query, user) {
         // Check security permissions of user against accepted permissions for this function
-        // Start by assuming this user does not have permission, until proven otherwise.
-        var hasPermission = false;
-
-        if (userSecurePerm.length > 0) {
-
-            // loop over userSecurityPerm in case user has more than one permission 
-            for (var i = 0; i < userSecurePerm.length; i++) {
-                if (userSecurePerm[i] === 'FULLADMIN') {
-                    hasPermission = true;
-                }
-                if (userSecurePerm[i] === 'PARTYADMIN') {
-                    hasPermission = true;
-                }
-                if (userSecurePerm[i] === 'CONTACT_OWNER') {
-                    hasPermission = true;
-                }
-                if (userSecurePerm[i] === 'ACCOUNT_OWNER') {
-                    hasPermission = true;
-                }
-                if (userSecurePerm[i] === 'CRMSFA_CONTACT_TASKS') {
-                    hasPermission = true;
-                }
-            }
-        }
-        if (hasPermission) {
-
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
+        if (hasPermission !== -1) {
             // user has permission, proceed to the data layer
-            var promise = contactData.getContactsByIdentity(firstName, lastName)
+            var promise = contactData.getContactsByIdentity(query.firstName, query.lastName)
                 .then(function (contacts) {
 
                     // Map the retrieved result set to corresponding entities
