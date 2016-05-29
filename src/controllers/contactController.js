@@ -34,7 +34,7 @@ var contactController = function (knex) {
     var addContactMechCallback = function (addContactMechPromises, partyId) {
         if (addContactMechPromises.length > 1) {
             var promise = addContactMechPromises.pop();
-            promise.then(function (contactMechId) {
+            return promise.then(function (contactMechId) {
                 return contactMechController.linkContactMechToParty(partyId, contactMechId)
                     .then(function () {
                         return addContactMechCallback(partyId);
@@ -42,8 +42,11 @@ var contactController = function (knex) {
             });
         } else {
             var promise = addContactMechPromises.pop();
-            promise.then(function (contactMechId) {
-                return contactMechController.linkContactMechToParty(partyId, contactMechId);
+            return promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId)
+                .then(function () {
+                    return partyId;
+                });
             });
         }
     };
@@ -185,9 +188,6 @@ var contactController = function (knex) {
                 if (addContactMechPromises.length > 0) {
                     return promise.then(function (partyId) {
                         return addContactMechCallback(addContactMechPromises, partyId);
-                            /*.then (function() {
-                                return partyId;
-                            });*/
                     });
                 } else {
 
