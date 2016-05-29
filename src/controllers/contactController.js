@@ -31,19 +31,23 @@ var contactController = function (knex) {
 
 
 
-    var addContactMechCallback = function (addContactMechPromises, partyId) {
+    var addContactMechCallback = function (addContactMechPromises, contactMechEntities, partyId) {
         if (addContactMechPromises.length > 1) {
             var promise = addContactMechPromises.pop();
+            var contactMech = contactMechEntities.pop();
+            var purposeTypeId = contactMech.contactMechPurposeTypeId;
             return promise.then(function (contactMechId) {
-                return contactMechController.linkContactMechToParty(partyId, contactMechId)
+                return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
                     .then(function () {
-                        return addContactMechCallback(partyId);
+                        return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
                     });
             });
         } else {
             var promise = addContactMechPromises.pop();
+            var contactMech = contactMechEntities.pop();
+            var purposeTypeId = contactMech.contactMechPurposeTypeId;
             return promise.then(function (contactMechId) {
-                return contactMechController.linkContactMechToParty(partyId, contactMechId)
+                return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
                 .then(function () {
                     return partyId;
                 });
@@ -78,6 +82,7 @@ var contactController = function (knex) {
                 var emailContactMech = new ContactMech(
                     null,
                     'EMAIL_ADDRESS',
+                    'PRIMARY_EMAIL',
                     contact.emailAddress,
                     now,
                     now
@@ -88,6 +93,7 @@ var contactController = function (knex) {
                 var webContactMech = new ContactMech(
                     null,
                     'WEB_ADDRESS',
+                    'PRIMARY_WEB_URL',
                     contact.webAddress,
                     now,
                     now
@@ -98,6 +104,7 @@ var contactController = function (knex) {
                 var phoneContactMech = new ContactMech(
                     null,
                     'TELECOM_NUMBER',
+                    'PRIMARY_PHONE',
                     null,
                     now,
                     now,
@@ -112,6 +119,7 @@ var contactController = function (knex) {
                 var addressContactMech = new ContactMech(
                     null,
                     'POSTAL_ADDRESS',
+                    'PRIMARY_LOCATION',
                     null,
                     now,
                     now,
@@ -187,7 +195,7 @@ var contactController = function (knex) {
 
                 if (addContactMechPromises.length > 0) {
                     return promise.then(function (partyId) {
-                        return addContactMechCallback(addContactMechPromises, partyId);
+                        return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
                     });
                 } else {
 
