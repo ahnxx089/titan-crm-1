@@ -8,8 +8,10 @@
 /* jshint camelcase: false */
 
 var winston = require('winston');
-var Account = require('../entities/account')();
+var Account = require('../entities/account');
 var userController = require('../controllers/userController');
+var ContactMech = require('../entities/contactMech');
+var ContactMechController = require('../controllers/contactMechController');
 
 var accountController = function (knex) {
     // Get a reference to data layer module
@@ -29,7 +31,8 @@ var accountController = function (knex) {
         //Check user's security permissions to add account
         //var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACCOUNT_CREATE'); <-- using lodash library
         var hasSecurityPermissions = user.securityPermissions; //should be an array of sec groups, with
-        //each one having an array of granular permissions pulled from the database, e.g. secPermissions = [ 'Contact_Owner': [1, 2, 3], 'FullAdmin': [...], ...];. So only someone with permission CRMSFA_ACCOUNT_CREATE to add a new Account, in this example.
+        //each one having an array of granular permissions pulled from the database, e.g. secPermissions = [ 'Contact_Owner': [1, 2, 3], 'FullAdmin': [...], ...];. 
+        //So only someone with permission CRMSFA_ACCOUNT_CREATE to add a new Account, in this example.
         //if (hasSecurityPermissions !== -1) { the below code }
         
         var contactMechPromises = [];
@@ -60,9 +63,6 @@ var accountController = function (knex) {
             account.numEmployees,
             account.tickerSymbol,
             account.comments,
-<<<<<<< HEAD
-            account.logoImgURL, (new Date()).toISOString(), (new Date()).toISOString()
-=======
             account.logoImgURL,
             account.partyParentId,
             account.industryEnumId,
@@ -71,7 +71,6 @@ var accountController = function (knex) {
             account.primaryPostalAddressId,
             account.primaryTelecomNumberId,
             account.primaryEmailId
->>>>>>> nastybug
         );
         // Validate the data before going ahead
         var validationErrors = accountEntity.validateForInsert(); 
@@ -96,27 +95,24 @@ var accountController = function (knex) {
         } else {
             return validationErrors;
         }
-    };
-<<<<<<< HEAD
-
-=======
     
-    var addContactMechCallback = function(partyId) {
-        if (addContactMechPromises.length > 0) {
-            var promise = contactMechPromises.pop();
-            promise.then(function(contactMechId) {
-                ContactMechController.linkContactMechToParty(partyId, contactMechId)
-                .then(function() {
-                    addContactMechCallback(partyId);
+    
+        var addContactMechCallback = function(partyId) {
+            if (ContactMechPromises.length > 0) {
+                var promise = contactMechPromises.pop();
+                promise.then(function(contactMechId) {
+                    ContactMechController.linkContactMechToParty(partyId, contactMechId)
+                    .then(function() {
+                        addContactMechCallback(partyId);
+                    })
+
                 })
-                
-            })
-        }
-        else {
-            return;
-        }
-    }
->>>>>>> nastybug
+            }
+            else {
+                return;
+            }
+        };
+};
     /**
      * Gets all account.
      * @return {Object} promise - Fulfillment value is an array of account entities
@@ -242,10 +238,12 @@ var accountController = function (knex) {
                 );
                 ownedAccounts.push(accountEntity);
             }
-            promise.catch(function(error) {
-                // Log the error
-                winston.error(error);
-            });
+        })
+        promise.catch(function(error) {
+            // Log the error
+            winston.error(error);
+        });
+        return promise;
     };
     /**
      * Gets one account by its associated phone number from database
