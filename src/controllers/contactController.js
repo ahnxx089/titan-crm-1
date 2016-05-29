@@ -64,13 +64,13 @@ var contactController = function (knex) {
         // SELECT * FROM security_group_permission WHERE permission_id LIKE "%CONTACT_CREATE%"
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
 
-        if (true /*hasPermission !== -1*/ ) {
+        if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
             // Convert the received objects into entities (protect the data layer)
             //
             // Contact mechanisms
             var contactMechEntities = [];
-            /*
+            
             if (contact.emailAddress) {
                 var emailContactMech = new ContactMech(
                     null,
@@ -128,7 +128,7 @@ var contactController = function (knex) {
                 );
                 contactMechEntities.push(addressContactMech);
             }
-            */
+            
 
 
             // Contact entity
@@ -191,9 +191,9 @@ var contactController = function (knex) {
                 if (addContactMechPromises.length > 0) {
                     return promise.then(function (partyId) {
                         return addContactMechCallback(addContactMechPromises, partyId)
-                        /*.then (function() {
-                            return partyId;
-                        });*/
+                            /*.then (function() {
+                                return partyId;
+                            });*/
                     });
                 } else {
 
