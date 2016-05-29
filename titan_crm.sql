@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
+-- version 4.5.2
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: May 29, 2016 at 12:15 AM
--- Server version: 10.1.10-MariaDB
--- PHP Version: 5.6.19
+-- Host: localhost
+-- Generation Time: May 29, 2016 at 03:45 PM
+-- Server version: 10.1.13-MariaDB
+-- PHP Version: 5.6.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `opentaps_dinesh`
+-- Database: `titan_crm`
 --
 
 -- --------------------------------------------------------
@@ -48,7 +48,8 @@ CREATE TABLE `case_` (
 --
 
 INSERT INTO `case_` (`case_id`, `case_type_id`, `case_category_id`, `status_id`, `from_party_id`, `priority`, `case_date`, `response_required_date`, `case_name`, `description`, `resolution_id`, `created_by`, `created_date`, `updated_date`) VALUES
-(1, 'RF_SUPPORT', 'CRCAT_NEW_PROB', 'CASE_ACCEPTED', 62, '5', '2016-05-28 12:31:26', '2016-05-28 12:31:26', 'Red light keeps flashing', 'Customer expects a few niceties first, before getting down to business', NULL, 'fullAdminDEF', '2016-05-28 12:31:26', '2016-05-28 12:31:26');
+(1, 'RF_SUPPORT', 'CRCAT_NEW_PROB', 'CASE_ACCEPTED', 62, '5', '2016-05-28 12:31:26', '2016-05-28 12:31:26', 'Red light keeps flashing', 'Customer expects a few niceties first, before getting down to business', NULL, 'fullAdminDEF', '2016-05-28 12:31:26', '2016-05-28 12:31:26'),
+(2, 'RF_BUGFIX', 'CRCAT_COMPLEX', 'CASE_ACCEPTED', 15, NULL, '2016-05-29 03:30:22', NULL, 'BigBugFix', 'fix major bugs!', NULL, 'crmsfaContactTasksABC', '2016-05-29 03:30:22', '2016-05-29 03:30:22');
 
 -- --------------------------------------------------------
 
@@ -2269,6 +2270,7 @@ CREATE TABLE `security_group` (
 INSERT INTO `security_group` (`group_id`, `description`, `created_date`, `updated_date`) VALUES
 ('ACCOUNT_OWNER', 'Permissions granted to account owners, including view and update on the contacts of the account', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
 ('CONTACT_OWNER', 'Permissions granted to contact owners', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
+('CRMSFA_CASE_TASKS', 'Use CRMSFA for tasks, activities, and emails only', '2016-05-29 11:07:33', '2016-05-29 11:07:33'),
 ('CRMSFA_CONTACT_TASKS', 'Use CRMSFA for tasks, activities, and emails only', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
 ('CRMSFA_LOGIN_ONLY', 'For testing: Permission to login and view basic screens only.  No permission to see or modify data', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
 ('CRMSFA_SYSTEM', 'System user privileges for automatically performed functions in CRM/SFA', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
@@ -2330,6 +2332,7 @@ INSERT INTO `security_group_permission` (`group_id`, `permission_id`, `created_d
 ('CONTACT_OWNER', 'CRMSFA_CONTACT_REASSIGN', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
 ('CONTACT_OWNER', 'CRMSFA_CONTACT_UPDATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
 ('CONTACT_OWNER', 'CRMSFA_CONTACT_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
+('CRMSFA_CASE_TASKS', 'CRMSFA_CASE_CREATE', '2016-05-29 11:11:52', '2016-05-29 11:11:52'),
 ('CRMSFA_CONTACT_TASKS', 'CRMSFA_ACTS_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
 ('CRMSFA_CONTACT_TASKS', 'CRMSFA_ACT_CLOSE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
 ('CRMSFA_CONTACT_TASKS', 'CRMSFA_ACT_CREATE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
@@ -3142,6 +3145,7 @@ INSERT INTO `user_login_security_group` (`user_login_id`, `permission_group_id`,
 ('admin', 'CONTACT_OWNER', '2016-05-28 21:57:44', NULL, '2016-05-28 21:57:44', '2016-05-28 21:57:44'),
 ('admin', 'FULLADMIN', '2016-05-01 00:00:00', '2016-12-31 00:00:00', '2016-05-19 01:16:54', '2016-05-19 01:16:54'),
 ('contactOwnerABC', 'CONTACT_OWNER', '2016-05-25 11:59:00', NULL, '2016-05-25 11:59:00', '2016-05-25 11:59:00'),
+('contactOwnerABC', 'CRMSFA_CASE_TASKS', '2016-05-29 13:42:50', NULL, '2016-05-29 13:42:50', '2016-05-29 13:42:50'),
 ('contactOwnerDEF', 'CONTACT_OWNER', '2016-05-25 11:59:22', NULL, '2016-05-25 11:59:22', '2016-05-25 11:59:22'),
 ('crmsfaContactTasksABC', 'CRMSFA_CONTACT_TASKS', '2016-05-25 12:00:15', NULL, '2016-05-25 12:00:15', '2016-05-25 12:00:15'),
 ('crmsfaContactTasksDEF', 'CRMSFA_CONTACT_TASKS', '2016-05-25 12:01:27', NULL, '2016-05-25 12:01:27', '2016-05-25 12:01:27'),
@@ -3560,7 +3564,7 @@ ALTER TABLE `user_login_security_group`
 -- AUTO_INCREMENT for table `case_`
 --
 ALTER TABLE `case_`
-  MODIFY `case_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `case_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `case_status`
 --

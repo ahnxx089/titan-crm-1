@@ -34,7 +34,11 @@ var contactController = function (knex) {
      */
     var addContact = function (contact, user) {
 
-        // Check user's security permission to add contacts
+        // Check user's security permission to add contacts:  At least one of this user's 
+        // user_login_security_group.permission_group_id entries (group permissions)
+        // must include 'CRMSFA_CONTACT_CREATE'.  To determine which of the 17 possible groups
+        // have this permission, you can query the db:
+        // SELECT * FROM security_group_permission WHERE permission_id LIKE "%CONTACT_CREATE%"
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
 
         if (hasPermission !== -1) {

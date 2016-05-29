@@ -46,11 +46,14 @@ var caseController = function (knex) {
      */
     var getCasesByOwner = function (user) {
         
-        // PENDING SATURDAY'S CREATION OF MORE FLEXIBLE CHECKING OF SECURITY, FOR NOW
-        // JUST SHORT-CIRCUIT CHECKING SECURITY PERMISSION, GET ON TO DATA LAYER
-        var hasPermission = true;
-
-        if (hasPermission) {
+        // ON HOLD PENDING CREATION OF NEW SECURITY GROUP (OR OTHER SOLUTION)
+        // Check user's security permission to own cases:  At least one of this user's 
+        // user_login_security_group.permission_group_id entries (group permissions)
+        // must include 'CRMSFA_CASE_CREATE'.  To determine which of the 17 possible groups
+        // have this permission, you can query the db:
+        // SELECT * FROM security_group_permission WHERE permission_id LIKE "%CASE_CREATE%"
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CASE_CREATE');
+        if (hasPermission !== -1) {
             // user has permission, proceed to the data layer
             var promise = caseData.getCasesByOwner(user.userId)
                 .then(function (cases) {
@@ -82,12 +85,12 @@ var caseController = function (knex) {
                 // Log the error
                 winston.error(error);
             });
-            return promise;            
+            return promise;
         } else {
             // user does not have permissions of a contact owner, return null
             return null;
         }
-        
+
     };
 
     /** 
@@ -95,7 +98,7 @@ var caseController = function (knex) {
      * @param {String} SOME ARGUMENT - DESCRIPTION OF THAT ARGUMENT
      * @return {Object} promise - Fulfillment value is an array of case entities
      */
-    var getCasesByAdvanced = function ( ) {
+    var getCasesByAdvanced = function () {
 
     };
 
@@ -106,8 +109,8 @@ var caseController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateCase = function (caseId, case_) {
-        
-        
+
+
     };
 
     /**
