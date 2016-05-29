@@ -202,7 +202,7 @@ var contactMechData = function (knex) {
                 contact_mech_id: contactMechId,
                 contact_mech_purpose_type_id: 'GENERAL_LOCATION', //need to fix
                 from_date: (new Date()).toISOString(),
-                through_date: null,
+                thru_date: null,
                 verified: null,
                 comments: null,
                 created_date: (new Date()).toISOString(),

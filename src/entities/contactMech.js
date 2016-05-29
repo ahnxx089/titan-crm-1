@@ -39,6 +39,8 @@ function ContactMech(contactMechId, contactMechTypeId, infoString, createdDate,
 
 }
 
+ContactMech.prototype.constructor = ContactMech;
+
 // Methods - VALIDATIONS YET TO BE COMPLETED
 //
 ContactMech.prototype.validateForInsert = function () {

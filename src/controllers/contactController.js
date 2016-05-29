@@ -12,8 +12,9 @@
 var winston = require('winston');
 var Contact = require('../entities/contact');
 var User = require('../entities/user');
-var ContactMechController = require('../controllers/contactMechController');
 var ContactMech = require('../entities/contactMech');
+
+
 var _ = require('lodash');
 
 var contactController = function (knex) {
@@ -21,10 +22,32 @@ var contactController = function (knex) {
     //
     var contactData = require('../data/contactData')(knex);
     var contactMechData = require('../data/contactMechData')(knex);
+    var contactMechController = require('../controllers/contactMechController')(knex);
 
     // CONTROLLER METHODS
     // ==========================================
     //
+
+
+
+
+    var addContactMechCallback = function (addContactMechPromises, partyId) {
+        if (addContactMechPromises.length > 1) {
+            var promise = addContactMechPromises.pop();
+            promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId)
+                    .then(function () {
+                        return addContactMechCallback(partyId);
+                    });
+            });
+        } else {
+            var promise = addContactMechPromises.pop();
+            promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId);
+            });
+        }
+    };
+
 
     /**
      * Add a new contact  
@@ -37,12 +60,13 @@ var contactController = function (knex) {
         // Check user's security permission to add contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
 
-        if (hasPermission !== -1) {
+        if (true /*hasPermission !== -1*/ ) {
             var now = (new Date()).toISOString();
             // Convert the received objects into entities (protect the data layer)
             //
             // Contact mechanisms
             var contactMechEntities = [];
+            /*
             if (contact.emailAddress) {
                 var emailContactMech = new ContactMech(
                     null,
@@ -100,6 +124,8 @@ var contactController = function (knex) {
                 );
                 contactMechEntities.push(addressContactMech);
             }
+            */
+
 
             // Contact entity
             var contactEntity = new Contact(
@@ -116,15 +142,24 @@ var contactController = function (knex) {
                 contact.middleName,
                 contact.lastName,
                 contact.birthDate,
-                contact.comments
+                contact.comments,
+                contact.contactMechs
             );
+
+            for (var i = 0; i < contactEntity.contactMechs.length; i++) {
+                contactMechEntities.push(new ContactMech(
+                    null,
+                    contactEntity.contactMechs[i].contactMechTypeId,
+                    contactEntity.contactMechs[i].infoString
+                ));
+            }
 
 
             // Validate the contact and user data before going ahead
             var validationErrors = [];
             var contactValidationErrors = contactEntity.validateForInsert();
             //Errors are non-empty validation results
-            for (i = 0; i < contactValidationErrors.length; i++) {
+            for (var i = 0; i < contactValidationErrors.length; i++) {
                 if (contactValidationErrors[i]) {
                     validationErrors.push(contactValidationErrors[i]);
                 }
@@ -132,45 +167,49 @@ var contactController = function (knex) {
 
             if (validationErrors.length === 0) {
                 // Pass on the entities with info to be added to the data layer
-                var promise = contactData.addContact(contactEntity, user)
-                    .then(function (partyId) {
-                        var addContactMechPromises = [];
-                        for (var i = 0; i < contactMechEntities.length; i++) {
-                            addContactMechPromises.push(
-                                ContactMechController.addContactMech(addContactMechPromises[i])
-                            );
-                                
-                        }
-                        addContactMechCallback(addContactMechPromises, partyId);
-                        return partyId;
-                    });
+                var promise = contactData.addContact(contactEntity, user);
+
+                var addContactMechPromises = [];
+                var mechPromise;
+                for (var i = 0; i < contactMechEntities.length; i++) {
+                    mechPromise = contactMechController.addContactMech(contactMechEntities[i]);
+                    // Make sure we have promise,
+                    // and not array of errors
+                    if ('then' in mechPromise) {
+                        addContactMechPromises.push(mechPromise);
+                    }
+                }
+
                 promise.catch(function (error) {
                     winston.error(error);
                 });
-                return promise;
+
+                if (addContactMechPromises.length > 0) {
+                    return promise.then(function (partyId) {
+                        return addContactMechCallback(addContactMechPromises, partyId)
+                        /*.then (function() {
+                            return partyId;
+                        });*/
+                    });
+                } else {
+
+
+                    return promise;
+                }
+
+
             } else {
                 return validationErrors;
             }
+
         } else {
             // user does not have permissions of a contact owner, return null
             return null;
         }
     };
-    
-    var addContactMechCallback = function(addContactMechPromises, partyId) {
-        if (addContactMechPromises.length > 0) {
-            var promise = addContactMechPromises.pop();
-            promise.then(function(contactMechId) {
-                return ContactMechController.linkContactMechToParty(partyId, contactMechId)
-                .then(function() {
-                    return addContactMechCallback(partyId);
-                })
-            });
-        }
-        else {
-            return partyId;
-        }
-    };
+
+
+
 
     /**
      * Gets one contact by its id

@@ -33,7 +33,7 @@ var contactApi = function (knex) {
         var resultsForThisUser = contactController.addContact(contact, user);
 
         if (resultsForThisUser === null) {
-            res.json({ message: "You do not have permission to add contacts!" });
+            res.json({ message: 'You do not have permission to add contacts!' });
         } else {
             resultsForThisUser.then(function (contactPartyId) {
                 res.json({ contactPartyId: contactPartyId });
