@@ -8,37 +8,44 @@
 //           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
+/* jshint maxparams: false */
+
 var validation = require('../common/validation')();
 var Person = require('../entities/person');
+var ContactMech = require('../entities/contactMech');
 
 // Constructor
 //
 function Contact(partyId, partyTypeId, currencyUomId, description,
     statusId, createdBy, createdDate, updatedDate, salutation, firstName,
-    middleName, lastName, birthDate, comments, countryCode, areaCode,
-    contactNumber, askForName, emailAddress, toName, attnName,
-    address1, address2, city, stateProvinceGeoId, zipOrPostalCode, countryGeoId) {
+    middleName, lastName, birthDate, comments, contactMechs) {
 
     // Call the parent constructor (Person), making sure
     // that "this" is set correctly during the call
     Person.call(this, partyId, partyTypeId, currencyUomId, description,
         statusId, createdBy, createdDate, updatedDate,
         salutation, firstName, middleName, lastName, birthDate, comments);
-    
-    // Contact-specific properties
-    this.countryCode = countryCode;
-    this.areaCode = areaCode;
-    this.contactNumber = contactNumber;
-    this.askForName = askForName;
-    this.emailAddress = emailAddress;
-    this.toName = toName;
-    this.attentionName = attnName;
-    this.addressLine1 = address1;
-    this.addressLine2 = address2;
-    this.city = city;
-    this.stateOrProvinceId = stateProvinceGeoId;
-    this.zipOrPostalCode = zipOrPostalCode;
-    this.countryId = countryGeoId;
+
+    // this array will contain the contact mechanisms and will be 
+    // dealt with in the controller layer.
+    this.contactMechs = contactMechs;
+
+    /*  THESE WILL NOT BE USED AFTER ALL, contactMechs CONTAINS THAT INFO
+        // Contact-specific properties
+        this.countryCode = countryCode;
+        this.areaCode = areaCode;
+        this.contactNumber = contactNumber;
+        this.askForName = askForName;
+        this.emailAddress = emailAddress;
+        this.toName = toName;
+        this.attentionName = attnName;
+        this.addressLine1 = address1;
+        this.addressLine2 = address2;
+        this.city = city;
+        this.stateOrProvinceId = stateProvinceGeoId;
+        this.zipOrPostalCode = zipOrPostalCode;
+        this.countryId = countryGeoId;
+    */
 
 }
 
@@ -52,10 +59,24 @@ Contact.prototype.constructor = Contact;
 // Methods 
 //
 Contact.prototype.validateForInsert = function () {
-    //Run parent validaton method
-    var errors = Person.prototype.validateForInsert.call(this);
-    console.log('\nin Contact.prototype.validateForInsert, errors = ', errors);
-    
+    //Run parent validation method
+    var validations = Person.validateForInsert.call(this);
+
+    for (var i = 0; i < this.contactMechs.length; i++) {
+        validations.concat(ContactMech.validateForInsert.call(this.contactMechs[i]));
+    }
+
+    //Errors are non-empty validation results
+    var errors = [];
+    for (i = 0; i < validations.length; i++) {
+        if (validations[i]) {
+            errors.push(validations[i]);
+        }
+    }
+    return errors;
+
+    /* DEACTIVATED-- BILL, PLEASE SEE ABOVE FOR VALIDATING THE
+        contactMechs ARRAY FOR INSERT-- IS THAT CORRECT?
     //Run validation methods for remaining properties
     //
     // true means required, false means nullable
@@ -74,21 +95,30 @@ Contact.prototype.validateForInsert = function () {
             this.validateZipOrPostalCode(false),
             this.validateCountryId(false)
     ];
-    console.log('\nin Contact.prototype.validateForInsert, contactSpecificValidations = ', contactSpecificValidations);
+    */
 
-    //Errors are non-empty validation results
-    for (var i = 0; i < contactSpecificValidations.length; i++) {
-        if (contactSpecificValidations[i]) {
-            errors.push(contactSpecificValidations[i]);
-        }
-    }
-    return errors;
 };
 
 Contact.prototype.validateForUpdate = function () {
-    //Run parent validaton method
-    var errors = Person.prototype.validateForUpdate.call(this);
+    //Run parent validation method
+    var validations = Person.validateForUpdate.call(this);
 
+    for (var i = 0; i < this.contactMechs.length; i++) {
+        validations.concat(ContactMech.validateForUpdate.call(this.contactMechs[i]));
+    }
+
+    //Errors are non-empty validation results
+    var errors = [];
+    for (i = 0; i < validations.length; i++) {
+        if (validations[i]) {
+            errors.push(validations[i]);
+        }
+    }
+
+    return errors;
+
+    /* DEACTIVATED-- BILL, PLEASE SEE ABOVE FOR VALIDATING THE
+        contactMechs ARRAY FOR UPDATE-- IS THAT CORRECT?
     //Run validation methods for remaining properties
     //
     // true means required, false means nullable
@@ -107,14 +137,11 @@ Contact.prototype.validateForUpdate = function () {
             this.validateZipOrPostalCode(false),
             this.validateCountryId(false)
     ];
-    //Errors are non-empty validation results
-    for (var i = 0; i < contactSpecificValidations.length; i++) {
-        if (contactSpecificValidations[i]) {
-            errors.push(contactSpecificValidations[i]);
-        }
-    }
-    return errors;
+    */
+
 };
+
+/* DEACTIVATED VALIDATIONS FOR CONTACT MECHANISM INFO, WHICH ARE VALIDATED BY contachMech.js
 
 // telecom_number.country_code type is varchar(10)
 Contact.prototype.validateCountryCode = function (isRequired) {
@@ -210,6 +237,8 @@ Contact.prototype.validateCountryId = function (isRequired) {
     var validationResult = validation.validateString(this.countryId, isRequired, 20, 'countryId');
     return validationResult;
 };
+
+*/
 
 // Export the class as a module
 module.exports = Contact;

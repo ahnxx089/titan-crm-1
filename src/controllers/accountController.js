@@ -8,7 +8,8 @@
 /* jshint camelcase: false */
 
 var winston = require('winston');
-var Account = require('../entities/account');
+var Account = require('../entities/account')();
+var userController = require('../controllers/userController');
 
 var accountController = function(knex) {
     // Get a reference to data layer module
@@ -42,6 +43,7 @@ var accountController = function(knex) {
             );
             contactMechPromises.push(emailContactMech);
         } //do similar if blocks to check for other contact mechanisms and read them in. 
+
         // Convert the received object into an entity
         var accountEntity = new Account(
             null,
@@ -68,10 +70,14 @@ var accountController = function(knex) {
             account.primaryEmailId
         );
         // Validate the data before going ahead
-        var validationErrors = accountEntity.validateForInsert();
+        var validationErrors = accountEntity.validateForInsert(); 
+        //MUST I ALSO VALIDATE THE USER CREDENTIALS AS WELL? I'M PASSING IT TO THE DB...
+        var userEntity = userController.getUserById(user.userId);
         if(validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
-            var promise = accountData.addAccount(accountEntity, user)
+            //IF THIS PROMISE DOESN'T PULL THE USER'S PROPERTIES AS EXPECTED, JUST SWITCH USERENTITY TO USER
+            var promise = accountData.addAccount(accountEntity, userEntity)
+
                 .then(function(partyId) {
                    
                     return partyId; 
@@ -238,26 +244,85 @@ var accountController = function(knex) {
      * @param {Number} phoneNumber - Unique phone number associated with the account to be fetched
      * @return {Object} promise - Fulfillment value is a raw data object
      */
-//    var getAccountByPhoneNumber = function (phoneNumber) {
-//        
-//    };
+    /*var getAccountByPhoneNumber = function (phoneNumberId, userSecurityPerm) {
+        var promise = accountData.getAccountByPhoneNumber(phoneNumberId)
+        .then(Account.find(phoneNumberId, function(err, accounts){
+            if(err){
+                console.log('Account phoneNumber didn\'t find '+ err);
+            }else if(accounts){
+                req.account = accounts;
+            }
+            
+        }))
+            .then(function(accounts) {
+                // Map the retrieved result set to corresponding entity
+                var accountEntity = new Account(
+                    accounts[0].party_id,
+                    accounts[0].organization_name,
+                    accounts[0].office_site_name,
+                    accounts[0].annual_revenue,
+                    accounts[0].num_employees,
+                    accounts[0].ticker_symbol,
+                    accounts[0].comments,
+                    accounts[0].logo_image_url,
+                    accounts[0].created_date,
+                    accounts[0].updated_date
+                );
+                return accountEntity;
+            });
+            promise.catch(function(error) {
+                // Log the error
+                winston.error(error);
+            });
+        return promise;
+    };*/
     /**
      * Gets one account by <SOME ACCOUNT ATTRIBUTE OR COMBINATION OF ATTRIBUTES> from database
      * @param {String????? Multi-property JSON Object???} identity - The identity/identities of the account to be retrieved
      * @return {Object} promise - Fulfillment value is a raw data object
      */
-    var getAccountByIdentity = function (identity) {
-        
-    };
-    
+    /*var getAccountsByIdentity = function (identityId, userSecurityPerm) {
+        var promise = accountData.getAccountsByIdentity(identityId);
+        Account.find(identityId, function(err, accounts){
+            if(err){
+                console.log('Account Identity didn\'t find '+ err);
+            }else if(accounts){
+                req.accounts = accounts;
+            }
+            
+        })
+        .then(function(accounts) {
+            var identityAccounts = [];
+            for (var i = 0; i < accounts.length; i++) {
+                var accountEntity = new Account(
+                    accounts[i].party_id,
+                    accounts[i].organization_name,
+                    accounts[i].office_site_name,
+                    accounts[i].annual_revenue,
+                    accounts[i].num_employees,
+                    accounts[i].ticker_symbol,
+                    accounts[i].comments,
+                    accounts[i].logo_image_url,
+                    accounts[i].created_date,
+                    accounts[i].updated_date
+                );
+                identityAccounts.push(accountEntity);
+            }
+            promise.catch(function(error) {
+                // Log the error
+                winston.error(error);
+            });
+            return identityAccounts;
+        });
+    };*/
     
     /**
-     * Gets one account by its phoneNumber
-     * @param {Number} phoneNumber - Phone number of the party to be fetched
+     * Gets one account by its owner
+     * @param {Number} ownerId - Unique id of the account to be fetched
      * @return {Object} promise - Fulfillment value is a account entity
     */
-    var getAccountByPhoneNumber = function (partyId) {
-        var promise = accountData.getAccountByPhoneNumber(partyId)
+    var getAccountByOwner = function (ownerId) {
+        var promise = accountData.getAccountByOwner(ownerId)
             .then(function(accounts) {
                 // Map the retrieved result set to corresponding entity
                 var accountEntity = new Account(

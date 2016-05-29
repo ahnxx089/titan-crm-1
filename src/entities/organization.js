@@ -10,6 +10,7 @@
 var validation = require('../common/validation')();
 var Party = require('../entities/party');
 
+
 // Constructor
 //
 function Organization(partyId, partyTypeId, currencyUomId, description, statusId, createdBy, createdDate, updatedDate, 

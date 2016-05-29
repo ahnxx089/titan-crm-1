@@ -9,7 +9,9 @@
 
 var winston = require('winston');
 var Contact = require('../entities/contact');
+var User = require('../entities/user');
 var ContactMechController = require('../controllers/contactMechController');
+var ContactMech = require('../entities/contactMech');
 
 var contactController = function (knex) {
     // Get a reference to data layer module
@@ -29,7 +31,7 @@ var contactController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new contact
      */
     var addContact = function (contact, user) {
-        // Convert the received object into an entity
+        // Convert the received objects into entities (protect the data laye)
         var contactEntity = new Contact(
             null,
             contact.partyTypeId,
@@ -44,29 +46,50 @@ var contactController = function (knex) {
             contact.birthDate,
             contact.comments,
             contact.countryCode,
-            contact.areaCode,
-            contact.contactNumber,
-            contact.askForName,
-            contact.emailAddress,
-            contact.toName,
-            contact.attentionName,
-            contact.addressLine1,
-            contact.addressLine2,
-            contact.city,
-            contact.stateOrProvinceId,
-            contact.zipOrPostalCode,
-            contact.countryId
+            contact.contactMechs
         );
-        console.log('\ncontactController.addContact:  typeof contactEntity = ', typeof contactEntity);
-        console.log('\ncontactController.addContact:  contactEntity = ', contactEntity);
 
-        // Validate the data before going ahead
-        var validationErrors = contactEntity.validateForInsert();
-        console.log('\ncontactController.addContact: validationErrors = ', validationErrors);
+        var contactMechEntities = [];
+        for (var i = 0; i < contact.contactMechs.length; i++) {
+            contactMechEntities.push(new ContactMech(
+                contact.contactMechs
+            ));
+        }
+
+        var userEntity = new User(
+            user.userId,
+            user.password,
+            user.passwordHint,
+            user.enabled,
+            user.disabledDate,
+            user.partyId,
+            user.createdDate,
+            user.updatedDate,
+            user.securityPermissions,
+            user.iat,
+            user.exp
+        );
+
+        // Validate the contact and user data before going ahead
+        var validationErrors = [];
+        var contactValidationErrors = contactEntity.validateForInsert();
+        //Errors are non-empty validation results
+        for (i = 0; i < contactValidationErrors.length; i++) {
+            if (contactValidationErrors[i]) {
+                validationErrors.push(contactValidationErrors[i]);
+            }
+        }
+        
         if (validationErrors.length === 0) {
-            // Pass on the entity to be added to the data layer
-            var promise = contactData.addContact(contactEntity)
+            // Pass on the entities with info to be added to the data layer
+            var promise = contactData.addContact(contactEntity, userEntity)
                 .then(function (partyId) {
+                    for (var i = 0; i < contactMechEntities.length; i++) {
+                        ContactMechController.addContactMech(contactMechEntities[i])
+                            .then(function (contactMechId) {
+                                return ContactMechController.linkContactMechToParty(partyId, contactMechId);
+                            });
+                    }
                     return partyId;
                 });
             promise.catch(function (error) {
@@ -89,7 +112,7 @@ var contactController = function (knex) {
                 var contactEntity;
                 if (contacts.length > 0) {
                     // Map the retrieved result set to corresponding entity
-                    contactEntity = new Contact(
+             var  contactEntity = new Contact(
                         contacts[0].party_id,
                         contacts[0].party_type_id,
                         contacts[0].currency_uom_id,
@@ -137,16 +160,21 @@ var contactController = function (knex) {
      */
     var getContactsByOwner = function (ownerId, userSecurityPerm) {
 
-        // SECURITY PERMISSIONS ARE MOSTLY IMPLEMENTED HERE:  
+        /* TRACING ERROR DOWN FROM API LAYER-- IS res.body SOMEHOW GETTING SET DOWN HERE
+            IN THE CONTROLLER LAYER UNKNOWINGLY?  BECAUSE WHEN THIS RETURNS TO THE API
+            LAYER, THE ATTEMPT UP THERE TO res.json(contacts) IS THROWING ERROR
+            "Unhandled rejection Error: Can't set headers after they are sent".  
+            IS SOMETHING IN HERE TRYING TO SET THE HEADER?
+            */
+        
+        //console.log('\ncontactController.getContactsByOwner, incoming ownerId = ', ownerId);
+        //console.log('\ncontactController.getContactsByOwner, incoming userSecurityPerm = ', userSecurityPerm);
+        
+        // SECURITY PERMISSIONS ARE IMPLEMENTED HERE IN THE CONTROLLER LAYER
         //  1. For a user with permission to own a Contact, it proceeds to data layer and upon
         //      return it returns up to Api layer a function.
         //  2. But for a user without permission to own a Contact (e.g., only a Lead Owner),
-        //      it does not yet return a function that the Api layer knows what to do with ...
-        //      still need to work that out...
-
-        // DIAGNOSTICS -- UNCOMMENT TO SEE WHAT THE INCOMING ARGUMENTS CONTAIN
-        //console.log('\nin contactController.getContactsByOwner: ownerId = ', ownerId);
-        //console.log('in contactController.getContactsByOwner: userSecurityPerm = ', userSecurityPerm);
+        //      it returns null.
 
         // Check security permissions of user against accepted permissions for this function
         // Start by assuming this user does not have permission, until proven otherwise.
@@ -178,7 +206,8 @@ var contactController = function (knex) {
             }
         }
         if (hasPermission) {
-
+            //console.log('\nThis user has permission to own contacts, proceeding to data layer...');
+            
             // user has permission, proceed to the data layer
             var promise = contactData.getContactsByOwner(ownerId)
                 .then(function (contacts) {
@@ -200,23 +229,12 @@ var contactController = function (knex) {
                             contacts[i].middle_name,
                             contacts[i].last_name,
                             contacts[i].birth_date,
-                            contacts[i].comments,
-                            contacts[i].country_code,
-                            contacts[i].area_code,
-                            contacts[i].contact_number,
-                            contacts[i].ask_for_name,
-                            contacts[i].info_string,
-                            contacts[i].to_name,
-                            contacts[i].attn_name,
-                            contacts[i].address1,
-                            contacts[i].address2,
-                            contacts[i].city,
-                            contacts[i].state_province_geo_id,
-                            contacts[i].postal_code,
-                            contacts[i].country_geo_id
+                            contacts[i].comments
                         );
                         contactEntities.push(contact);
+                        //console.log('\ncontactController.getContactsByOwner, contactEntities = ', contactEntities)
                     }
+                    //console.log('\n about to return contactEntities to contactApi...');
                     return contactEntities;
                 });
             promise.catch(function (error) {
@@ -230,6 +248,90 @@ var contactController = function (knex) {
         }
     };
 
+    /** -- WORK IN PROGRESS, DINESH WILL FINISH SOON
+     * Gets contacts by identity (see opentaps' Find Contact feature)u
+     * @return {Object} promise - Fulfillment value is an array of contact entities
+     */
+    //    var getContactsByIdentity = function (partyId, firstName, lastName, userSecurityPerm) {
+    //
+    //        // Check security permissions of user against accepted permissions for this function
+    //        // Start by assuming this user does not have permission, until proven otherwise.
+    //        var hasPermission = false;
+    //
+    //        if (userSecurityPerm.length > 0) {
+    //
+    //            // loop over userSecurityPerm in case user has more than one permission 
+    //            for (var i = 0; i < userSecurityPerm.length; i++) {
+    //                if (userSecurityPerm[i] === 'FULLADMIN') {
+    //                    hasPermission = true;
+    //                }
+    //                if (userSecurityPerm[i] === 'PARTYADMIN') {
+    //                    hasPermission = true;
+    //                }
+    //                if (userSecurityPerm[i] === 'CONTACT_OWNER') {
+    //                    hasPermission = true;
+    //                }
+    //                if (userSecurityPerm[i] === 'ACCOUNT_OWNER') {
+    //                    hasPermission = true;
+    //                }
+    //                if (userSecurityPerm[i] === 'CRMSFA_CONTACT_TASKS') {
+    //                    hasPermission = true;
+    //                }
+    //            }
+    //        }
+    //        if (hasPermission) {
+    //
+    //            // user has permission, proceed to the data layer
+    //            var promise = contactData.getContactsByOwner(ownerId)
+    //                .then(function (contacts) {
+    //
+    //                    // Map the retrieved result set to corresponding entities
+    //                    var contactEntities = [];
+    //                    for (var i = 0; i < contacts.length; i++) {
+    //                        var contact = new Contact(
+    //                            contacts[i].party_id,
+    //                            contacts[i].party_type_id,
+    //                            contacts[i].currency_uom_id,
+    //                            contacts[i].description,
+    //                            contacts[i].status_id,
+    //                            contacts[i].created_by,
+    //                            contacts[i].created_date,
+    //                            contacts[i].updated_date,
+    //                            contacts[i].salutation,
+    //                            contacts[i].first_name,
+    //                            contacts[i].middle_name,
+    //                            contacts[i].last_name,
+    //                            contacts[i].birth_date,
+    //                            contacts[i].comments,
+    //                            contacts[i].country_code,
+    //                            contacts[i].area_code,
+    //                            contacts[i].contact_number,
+    //                            contacts[i].ask_for_name,
+    //                            contacts[i].info_string,
+    //                            contacts[i].to_name,
+    //                            contacts[i].attn_name,
+    //                            contacts[i].address1,
+    //                            contacts[i].address2,
+    //                            contacts[i].city,
+    //                            contacts[i].state_province_geo_id,
+    //                            contacts[i].postal_code,
+    //                            contacts[i].country_geo_id
+    //                        );
+    //                        contactEntities.push(contact);
+    //                    }
+    //                    return contactEntities;
+    //                });
+    //            promise.catch(function (error) {
+    //                // Log the error
+    //                winston.error(error);
+    //            });
+    //            return promise;
+    //        } else {
+    //            // user does not have permissions of a contact owner, return null
+    //            return null;
+    //        }
+    //    };
+
     /**
      * Update a contact in database
      * @param {Number} contactId - Unique id of the contact to be updated
@@ -238,14 +340,32 @@ var contactController = function (knex) {
      */
     var updateContact = function (contactId, contact) {
         //Convert contact to entity
+        var contactEntity = new Contact(
+            null,
+            contact.partyTypeId,
+            contact.preferredCurrencyUomId,
+            contact.description,
+            contact.statusId,
+            contact.createdBy,
+            contact.createdDate,
+            contact.updatedDate,
+            contact.salutation,
+            contact.firstName,
+            contact.middleName,
+            contact.lastName,
+            contact.birthDate,
+            contact.comments,
+            contact.countryCode,
+            contact.contactMechs
+        );
 
-        var validationErrors = contact.validateForUpdate();
+        var validationErrors = contactEntity.validateForUpdate();
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
             var promise = contactMechData.updateContact(contact)
                 .then(function (numRows) {
-                    for (var i = 0; i < contact.contactMechs.length; i++) {
-                        numRows += ContactMechController.updateContactMech(contact.contactMechs[i]);
+                    for (var i = 0; i < contactEntity.contactMechs.length; i++) {
+                        numRows += ContactMechController.updateContactMech(contactEntity.contactMechs[i]);
                     }
                     return numRows;
                 })

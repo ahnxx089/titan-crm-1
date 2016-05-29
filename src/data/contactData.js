@@ -13,14 +13,18 @@
 var contactData = function (knex) {
 
     /**
-     * Add a new contact in the database -- IN DEVELOPMENT, RIGHT JUST ADDS A PERSON
+     * Add a new contact in the database -- THIS DOES THE INSERTS INTO TABLES
+     * party, person, party_role and party_relationship.
+     * 
+     *  CREDIT:  Much thanks to Lucas for demonstrating how to chain knex inserts into 
+     *  more than just two tables as in addPerson.
      *
      * @param {Object} contact - The new contact entity to be added as a Party
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
-    var addContact = function (contact) {
+    var addContact = function (contact, user) {
         return knex('party')
-            .returning('party_id')
+            .returning('party_id') // for passing along to person table
             .insert({
                 party_type_id: contact.partyTypeId,
                 preferred_currency_uom_id: contact.preferredCurrencyUomId,
@@ -30,24 +34,48 @@ var contactData = function (knex) {
                 created_date: contact.createdDate,
                 updated_date: contact.updatedDate
             })
-            .then(function (party_id) {
-                return knex('person').insert({
-                    party_id: party_id,
-                    salutation: contact.salutation,
-                    first_name: contact.firstName,
-                    middle_name: contact.middleName,
-                    last_name: contact.lastName,
-                    birth_date: contact.birthDate,
-                    comments: contact.comments,
-                    created_date: contact.createdDate,
-                    updated_date: contact.updatedDate
-                });
+            .then(function (passAlongPartyId) {
+                return knex('person')
+                    .returning('party_id') // for passing along to party_role table
+                    .insert({
+                        party_id: passAlongPartyId,
+                        salutation: contact.salutation,
+                        first_name: contact.firstName,
+                        middle_name: contact.middleName,
+                        last_name: contact.lastName,
+                        birth_date: contact.birthDate,
+                        comments: contact.comments,
+                        created_date: contact.createdDate,
+                        updated_date: contact.updatedDate
+                    })
+                    .then(function () {
+                        return knex('party_role')
+                            .returning('party_id') // for passing along to party_relationship table
+                            .insert({
+                                party_id: passAlongPartyId,
+                                role_type_id: 'CONTACT',
+                                created_date: contact.createdDate,
+                                updated_date: contact.updatedDate
+                            })
+                            .then(function () {
+                                return knex('party_relationship')
+                                    .insert({
+                                        party_id_from: passAlongPartyId,
+                                        party_id_to: user.partyId,
+                                        role_type_id_from: 'CONTACT',
+                                        role_type_id_to: 'PERSON_ROLE',
+                                        from_date: contact.createdDate,
+                                        thru_date: null,
+                                        status_id: 'PARTY_ENABLED',
+                                        party_relationship_type_id: 'RESPONSIBLE_FOR',
+                                        created_date: contact.createdDate,
+                                        updated_date: contact.updatedDate
+                                    });
+                            });
+                    });
             });
-            // ADDITIONAL WORK TO BE DONE HERE TO EXPAND KNEX STATEMENT TO DO THE MANY MORE INSERTS
-            // INTO SUB-TABLES, OR FIGURE OUT SOME OTHER WAY.  JUST REMEMBER THAT I GET ONE RETURN
-            // STATEMENT-- addContact GETS ONE return knex(...).().() OR WHATEVER.   BUT AT LEAST FIRST
-            // TEST AND CONFIRM THAT THIS contactData.js DOES AT LEAST WHAT addPerson DOES.
     };
+
 
     /**
      * Gets one contact by its id from database
@@ -74,10 +102,12 @@ var contactData = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getContactsByOwner = function (ownerId) {
+        //console.log('\ncontactData.getContactsByOwner, incoming ownerId = ', ownerId);
+        
         // The ownership is all contained within the party_relationship table alone;
         // however, the party table is joined so that column party.party_id of the
         // contact can be passed by this function back to the controller layer.
-        return knex.select('party.party_id','party.description','person.first_name','person.last_name')
+        return knex.select('party.party_id', 'party.description', 'person.first_name', 'person.last_name')
             .from('party_relationship')
             .innerJoin('party', 'party.party_id', 'party_relationship.party_id_from')
             .innerJoin('person', 'party.party_id', 'person.party_id')
@@ -86,33 +116,25 @@ var contactData = function (knex) {
             .andWhere('role_type_id_from', 'CONTACT')
             .andWhere('party_id_to', ownerId);
     };
- 
-    /** WORK IN PROGRESS, COME THE OTHER WAY DOWN FROM THE API LAYER NOW THAT I KNOW THE THREE
-        THINGS I AM GOING TO COME WITH-- BUT IF ALSO LIMITING TO OWNER-- NO, THAT DOES NOT
-        MAKE SENSE, AS LONG AS THE USER HAS CONTACT OWNER OR CRMSFA_CONTACT_TASKS PERMISSION,
-        THEN THEY CAN GET CONTACTS.  IT MAKES NO SENSE TO HAVE CRMSFA_CONTACT_TASKS PERMISSION AND
-        NOT BE ABLE TO SOMEONE ELSE'S CONTACTS YOU HAVE BEEN ASSIGNED TO MONITOR OR UPDATE.
-        THAT WOULD BE SAYING THE ORIGINAL PARTY_ID = 2 ADMIN CANNOT SEE ALL THE CONTACTS OF THE COMPANY?!
-        THAT MAKES NO SENSE. SO, AFTER HANDLING SECURITY PERMISSION IN THE CONTROLLER LAYER ABOVE,
-        COME IN HERE WITH JUST FIRST NAME, LAST NAME AND PARTY_ID LIKE THE FIRST OF 3 SCREENS IN
-        OPENTAPS FIND CONTACTS WINDOW.  THE REST CAN WAIT.
+
+    /** WORK IN PROGRESS, DINESH WILL FINISH SOON-- DO NOT RELY ON CONTENT PRESENTLY SHOWN BELOW
      * Gets all contacts from database by identity (first or last name matching)
      * @param {Number} ownerId - Unique party_id of the user/owner whose contacts to be fetched
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
-/*
-    var getContactsByIdentity = function (firstName, lastName) {
-        return knex.select('party.party_id','party.description','person.first_name','person.last_name')
-            .from('party_relationship')
-            .innerJoin('party', 'party.party_id', 'party_relationship.party_id_from')
-            .innerJoin('person', 'party.party_id', 'person.party_id')
-            .whereIn('role_type_id_to', ['PERSON_ROLE', 'SALES_REP', 'ACCOUNT_MANAGER'])
-            .andWhere('party_relationship_type_id', 'RESPONSIBLE_FOR')
-            .andWhere('role_type_id_from', 'CONTACT')
-            .andWhere('party_id_to', ownerId);
-    };
-*/
-    
+    /*
+        var getContactsByIdentity = function (firstName, lastName) {
+            return knex.select('party.party_id','party.description','person.first_name','person.last_name')
+                .from('party_relationship')
+                .innerJoin('party', 'party.party_id', 'party_relationship.party_id_from')
+                .innerJoin('person', 'party.party_id', 'person.party_id')
+                .whereIn('role_type_id_to', ['PERSON_ROLE', 'SALES_REP', 'ACCOUNT_MANAGER'])
+                .andWhere('party_relationship_type_id', 'RESPONSIBLE_FOR')
+                .andWhere('role_type_id_from', 'CONTACT')
+                .andWhere('party_id_to', ownerId);
+        };
+    */
+
     /**
      * Update a contact in database
      * @param {Object} contact - The contact entity that contains updated data
