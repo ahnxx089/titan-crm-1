@@ -91,23 +91,24 @@ var contactApi = function (knex) {
                     res.json({
                         'contacts': contacts
                     });
-                 });
-                 }
-                 }
+                });
+            }
+        }
 
-                 // GET /api/contacts?phoneNum=
-                 else if (req.query.hasOwnProperty('phoneNumber') 
-                        
-                          var getContactByPhoneNumber = function (req, res) {
-                         var contactId = req params.id;
-                         contactController.getContactByPhoneNumber(contactId)
-                             .then(function (contact) {
-                                 res.json(contact);
-                             });
-                     };
-                 };
+        // GET /api/contacts?phoneNum=
+        else if (req.query.hasOwnProperty('phoneNumber')) {
+
+            var getContactByPhoneNumber = function (req, res) {
+                var contactId = req.params.id;
+                contactController.getContactByPhoneNumber(contactId)
+                    .then(function (contact) {
+                        res.json(contact);
+                    });
+            };
+        }
+    };
+
     // GET /api/contacts/:id
-    //Muhammad 
     var getContactById = function (req, res) {
         var contactId = req.params.id;
         contactController.getContactById(contactId)
