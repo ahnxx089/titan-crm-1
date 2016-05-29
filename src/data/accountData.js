@@ -58,7 +58,7 @@ var accountData = function (knex) {
         //If converting a contact/organization into a lead/account, take the partyId of the newly converted party. 
         //Then add an entry to the party_role table, using the above partyId value in the party_id column,
         //and "account" as the value in the role_type_id column.
-        knex.insert({
+        return knex.insert({
             party_id: account.partyId,
             role_type_id: 'ACCOUNT',
             created_date: account.createdDate,
@@ -67,6 +67,7 @@ var accountData = function (knex) {
     };
     
     var addAccountPartyRelationship = function (account, user, contact) {
+
         //Check if the user is converting a lead 
         //at an organization  into a contact (and thus converting the
         //organization into an account), or creating a new account from scratch.
@@ -79,7 +80,7 @@ var accountData = function (knex) {
         //NOTE: right now, no upper-layer functions actually send in a contact 
         //object when calling this function
         if(contact) {
-            knex.insert({
+            return knex.insert({
                     party_id_from: contact.partyId,
                     party_id_to: account.partyId,
                     role_type_id_from: 'CONTACT',
@@ -103,7 +104,7 @@ var accountData = function (knex) {
         //as Created_Date. Party_Id_To may be set to "admin" or the partyId of the user who made the change, 
         //if we want to create this functionality. This last bit is optional.
         else {
-            knex.insert({
+            return knex.insert({
                 party_id_from: account.partyId,
                 party_id_to: user.partyId,
                 role_type_id_from: 'ACCOUNT',
@@ -123,17 +124,25 @@ var accountData = function (knex) {
 
     
     var addAccount = function (account, user, contact) {
-        //Not fully sure yet that I can do this, but will write it down here anyway for now.
         //Call all of the previous addAccount___ methods. 
-        var result;
-        result = addAccountParty(account);
-        result += addAccountOrg(account);
-        result += addAccountPartySupplementalData(account, user, contact); //I STRONGLY SUSPECT THAT THIS SHOULD BE CONTACT OR LEAD
-        //Deleting account-related fields from the contact/lead's p_s_d entry would happen here
-        result += addAccountContactMech(account); //this may not be fully functional
-        result += addAccountPartyRole(account);
-        result += addAccountPartyRelationship(account, user, contact);
-        return result;
+        var promise = addAccountParty(account)
+                        .then(function(accountResults) {
+                            return (accountResults += addAccountOrg(account));
+                        })
+                        .then(function(accountResults) {
+                            return (accountResults += addAccountPartySupplementalData(account));
+                        })
+                        .then(function(accountResults) {
+                            return (accountResults += addAccountContactMechData(account));
+                        })
+                        .then(function(accountResults) {
+                            return (accountResults += addAccountPartyRole(account));
+                        })
+                        .then(function(accountResults) {
+                            return (addAccountPartyRelationship(account, user, contact));
+                        });
+        
+        return promise;
     };
     
     /** 

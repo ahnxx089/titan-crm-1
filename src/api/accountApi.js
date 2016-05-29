@@ -33,6 +33,11 @@ var accountApi = function (knex) {
                res.json({partyId: partyId}); 
             });
         }
+        
+        //if( result === null) {
+        //    res.json({message: "No permission to access this"});
+        //    }
+    
     };
 
     /* getAccountsByIdentity use the value of req.user for passing API methoads by authentication.

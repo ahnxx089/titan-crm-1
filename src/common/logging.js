@@ -17,7 +17,7 @@ module.exports = function() {
         level: 'info',
         filename: './src/logs/info.log',
         maxsize: 10*1024*1024*1024, // 10 MB in bytes
-        //humanReadableUnhandledException: true
+        humanReadableUnhandledException: true
     });
     // All error messages should be logged inside /logs/error.log
     winston.add(winston.transports.File, {

@@ -10,15 +10,15 @@
 /* jshint maxparams: false */
 
 var validation = require('../common/validation')();
-var Organization = require('../entities/organization')();
+var Organization = require('../entities/organization');
 
 // Constructor
 //
-function Account(partyId, createdDate, updatedDate, orgName, officeSiteName, annualRevenue,
-                numEmployees, tickerSymbol, comments,  logoImgURL,
-                      partyParentId, industryEnumId, ownershipEnumId, importantNote, primaryPostalAddressId, primaryTelecomNumberId, primaryEmailId) {
+function Account(partyId, partyTypeId, currencyUomId, description, statusId, createdBy, createdDate, updatedDate, 
+        orgName, officeSiteName, annualRevenue, numEmployees, tickerSymbol, comments,  logoImgURL,
+    partyParentId, industryEnumId, ownershipEnumId, importantNote, primaryPostalAddressId, primaryTelecomNumberId, primaryEmailId) {
     // Call the parent constructor first
-    Organization.call(this, partyId, createdDate, updatedDate, orgName, officeSiteName, annualRevenue, numEmployees, tickerSymbol, comments, logoImgURL);
+    Organization.call(this, partyId, partyTypeId, currencyUomId, description, statusId, createdBy, createdDate, updatedDate, orgName, officeSiteName, annualRevenue, numEmployees, tickerSymbol, comments, logoImgURL);
     
     // Properties specific to Account 
     this.partyParentId = partyParentId;
