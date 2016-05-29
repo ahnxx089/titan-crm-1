@@ -34,7 +34,7 @@ var contactController = function (knex) {
     var addContactMechCallback = function (addContactMechPromises, partyId) {
         if (addContactMechPromises.length > 1) {
             var promise = addContactMechPromises.pop();
-            promise.then(function (contactMechId) {
+            return promise.then(function (contactMechId) {
                 return contactMechController.linkContactMechToParty(partyId, contactMechId)
                     .then(function () {
                         return addContactMechCallback(partyId);
@@ -42,8 +42,11 @@ var contactController = function (knex) {
             });
         } else {
             var promise = addContactMechPromises.pop();
-            promise.then(function (contactMechId) {
-                return contactMechController.linkContactMechToParty(partyId, contactMechId);
+            return promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId)
+                .then(function () {
+                    return partyId;
+                });
             });
         }
     };
@@ -64,7 +67,7 @@ var contactController = function (knex) {
         // SELECT * FROM security_group_permission WHERE permission_id LIKE "%CONTACT_CREATE%"
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
 
-        if (true /*hasPermission !== -1*/ ) {
+        if (true /*hasPermission !== -1*/) {
             var now = (new Date()).toISOString();
             // Convert the received objects into entities (protect the data layer)
             //
@@ -185,9 +188,6 @@ var contactController = function (knex) {
                 if (addContactMechPromises.length > 0) {
                     return promise.then(function (partyId) {
                         return addContactMechCallback(addContactMechPromises, partyId);
-                            /*.then (function() {
-                                return partyId;
-                            });*/
                     });
                 } else {
 
