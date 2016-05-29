@@ -23,7 +23,7 @@ var authController = function (knex) {
      * @param {Object} userId - User Id of the user to verify
      * @param {Object} password - Password of the user to verify
      * @param {Object} res - API's response object, needed because of an async call
-     * @return {Object} authResult - The verification result (plus token if verification is successful)
+     * @return {Object} authResult - The verification result (plus token if verification is successful) 
      */
     var verifyLoginCredentials = function (userId, password, res) {
         // Validate the received inputs

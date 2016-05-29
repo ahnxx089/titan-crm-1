@@ -33,9 +33,13 @@ var contactApi = function (knex) {
         var resultsForThisUser = contactController.addContact(contact, user);
 
         if (resultsForThisUser === null) {
+//<<<<<<< HEAD
+            //res.json({ message: 'You do not have permission to add contacts!' });
+//=======
             res.json({
                 message: 'You do not have permission to add contacts!'
             });
+//>>>>>>> 1b2524a9a566c03fc981659b163e9bfe8ca20a74
         } else {
             resultsForThisUser.then(function (contactPartyId) {
                 res.json({
@@ -96,22 +100,19 @@ var contactApi = function (knex) {
         }
 
         // GET /api/contacts?phoneNum=
-        //
-        //else if (INSERT LOGIC HERE){
-        //     var getContactByPhoneNum = function (req, res) {
-        //
-        //    };  
-        //}
+        else if (req.query.hasOwnProperty('phoneNumber')) {
 
-        // If the request did not properly pass any of the various if tests
-        // above, it is not a valid query, make the reponse null.
-        else {
-            res.json(null);
+            var getContactByPhoneNumber = function (req, res) {
+                var contactId = req.params.id;
+                contactController.getContactByPhoneNumber(contactId)
+                    .then(function (contact) {
+                        res.json(contact);
+                    });
+            };
         }
     };
 
     // GET /api/contacts/:id
-    //Muhammad 
     var getContactById = function (req, res) {
         var contactId = req.params.id;
         contactController.getContactById(contactId)

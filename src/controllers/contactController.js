@@ -12,8 +12,9 @@
 var winston = require('winston');
 var Contact = require('../entities/contact');
 var User = require('../entities/user');
-var ContactMechController = require('../controllers/contactMechController');
 var ContactMech = require('../entities/contactMech');
+
+
 var _ = require('lodash');
 
 var contactController = function (knex) {
@@ -21,10 +22,35 @@ var contactController = function (knex) {
     //
     var contactData = require('../data/contactData')(knex);
     var contactMechData = require('../data/contactMechData')(knex);
+    var contactMechController = require('../controllers/contactMechController')(knex);
 
     // CONTROLLER METHODS
     // ==========================================
     //
+
+
+
+
+    var addContactMechCallback = function (addContactMechPromises, partyId) {
+        if (addContactMechPromises.length > 1) {
+            var promise = addContactMechPromises.pop();
+            return promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId)
+                    .then(function () {
+                        return addContactMechCallback(partyId);
+                    });
+            });
+        } else {
+            var promise = addContactMechPromises.pop();
+            return promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId)
+                .then(function () {
+                    return partyId;
+                });
+            });
+        }
+    };
+
 
     /**
      * Add a new contact  
@@ -47,6 +73,7 @@ var contactController = function (knex) {
             //
             // Contact mechanisms
             var contactMechEntities = [];
+            
             if (contact.emailAddress) {
                 var emailContactMech = new ContactMech(
                     null,
@@ -104,6 +131,8 @@ var contactController = function (knex) {
                 );
                 contactMechEntities.push(addressContactMech);
             }
+            
+
 
             // Contact entity
             var contactEntity = new Contact(
@@ -120,8 +149,11 @@ var contactController = function (knex) {
                 contact.middleName,
                 contact.lastName,
                 contact.birthDate,
-                contact.comments
+                contact.comments,
+                contact.contactMechs
             );
+
+            
 
 
             // Validate the contact and user data before going ahead
@@ -136,45 +168,44 @@ var contactController = function (knex) {
 
             if (validationErrors.length === 0) {
                 // Pass on the entities with info to be added to the data layer
-                var promise = contactData.addContact(contactEntity, user)
-                    .then(function (partyId) {
-                        var addContactMechPromises = [];
-                        for (var i = 0; i < contactMechEntities.length; i++) {
-                            addContactMechPromises.push(
-                                ContactMechController.addContactMech(addContactMechPromises[i])
-                            );
-                                
-                        }
-                        addContactMechCallback(addContactMechPromises, partyId);
-                        return partyId;
-                    });
+                var promise = contactData.addContact(contactEntity, user);
+
+                var addContactMechPromises = [];
+                var mechPromise;
+                for (var i = 0; i < contactMechEntities.length; i++) {
+                    mechPromise = contactMechController.addContactMech(contactMechEntities[i]);
+                    // Make sure we have promise,
+                    // and not array of errors
+                    if ('then' in mechPromise) {
+                        addContactMechPromises.push(mechPromise);
+                    }
+                }
+
                 promise.catch(function (error) {
                     winston.error(error);
                 });
-                return promise;
+
+                if (addContactMechPromises.length > 0) {
+                    return promise.then(function (partyId) {
+                        return addContactMechCallback(addContactMechPromises, partyId);
+                    });
+                } else {
+
+
+                    return promise;
+                }
+
+
             } else {
                 return validationErrors;
             }
+
         } else {
             // user does not have permissions of a contact owner, return null
             return null;
         }
     };
-    
-    var addContactMechCallback = function(addContactMechPromises, partyId) {
-        if (addContactMechPromises.length > 0) {
-            var promise = addContactMechPromises.pop();
-            promise.then(function(contactMechId) {
-                return ContactMechController.linkContactMechToParty(partyId, contactMechId)
-                .then(function() {
-                    return addContactMechCallback(partyId);
-                });
-            });
-        }
-        else {
-            return partyId;
-        }
-    };
+
 
     /**
      * Gets one contact by its id

@@ -58,7 +58,7 @@ var accountData = function (knex) {
         //If converting a contact/organization into a lead/account, take the partyId of the newly converted party. 
         //Then add an entry to the party_role table, using the above partyId value in the party_id column,
         //and "account" as the value in the role_type_id column.
-        knex.insert({
+        return knex.insert({
             party_id: account.partyId,
             role_type_id: 'ACCOUNT',
             created_date: account.createdDate,
@@ -66,48 +66,54 @@ var accountData = function (knex) {
         }).into('party_role');
     };
     
-    var addAccountPartyRelationship = function (account, contact, user) {
-        //Check if the user is creating a new account from scratch, or converting a lead 
-        //at an organization  into a contact (and thus converting the organization into an account). 
+    var addAccountPartyRelationship = function (account, user, contact) {
+
+        //Check if the user is converting a lead 
+        //at an organization  into a contact (and thus converting the
+        //organization into an account), or creating a new account from scratch.
         
-        //If it is the first case, then the value of Role_Type_Id_From should be set directly to "account". 
-        //Role_Type_Id_To should then be set to "account_manager". From_Date should be set to the same value 
-        //as Created_Date. Party_Id_To may be set to "admin" or the partyId of the user who made the change, 
-        //if we want to create this functionality. This last bit is optional.
-        if(contact || user) {
-            knex.insert({
-                    party_id_from: account.partyId,
-                    party_id_to: user.partyId,
-                    role_type_id_from: 'ACCOUNT',
-                    role_type_id_to: 'ACCOUNT_MANAGER',
+        //If it is the first case, then the value of Role_Type_Id_From should be set to "contact". 
+        //Role_Type_Id_To should then be set to "account". From_Date should be set to the datetime when the 
+        //organization was converted. Party_Id_To should then be set to the new partyId of the account
+        //(which should have been created by addAccountParty above). 
+        
+        //NOTE: right now, no upper-layer functions actually send in a contact 
+        //object when calling this function
+        if(contact) {
+            return knex.insert({
+                    party_id_from: contact.partyId,
+                    party_id_to: account.partyId,
+                    role_type_id_from: 'CONTACT',
+                    role_type_id_to: 'ACCOUNT', 
                     from_date: account.createdDate,
                     thru_date: null, 
                     status_id: null, 
                     relationship_name: null, 
-                    security_group_id: 'ACCOUNT_OWNER',
+                    security_group_id: null,
                     priority_type_id: null,
                     party_relationship_type_id: 'CONTACT_REL_INV',
                     created_date: account.createdDate,
-                    updated_date: account.updatedDate
+                    updated_date: account.updatedDate    
                 }).into('party_relationship');
         }
             
         
-        //If it is the second case, then the value of Role_Type_Id_From should be set to "contact". 
-        //Role_Type_Id_To should then be set to "account". From_Date should be set to the datetime when the 
-        //organization was converted. Party_Id_To should then be set to the new partyId of the account
-        //(which should have been created by addAccountParty above). 
+        
+        //If it is the second case, then the value of Role_Type_Id_From should be set directly to "account". 
+        //Role_Type_Id_To should then be set to "account_manager". From_Date should be set to the same value 
+        //as Created_Date. Party_Id_To may be set to "admin" or the partyId of the user who made the change, 
+        //if we want to create this functionality. This last bit is optional.
         else {
-            knex.insert({
-                party_id_from: contact.partyId,
-                party_id_to: account.partyId,
-                role_type_id_from: 'CONTACT',
-                role_type_id_to: 'ACCOUNT', 
+            return knex.insert({
+                party_id_from: account.partyId,
+                party_id_to: user.partyId,
+                role_type_id_from: 'ACCOUNT',
+                role_type_id_to: 'ACCOUNT_MANAGER',
                 from_date: account.createdDate,
                 thru_date: null, 
                 status_id: null, 
                 relationship_name: null, 
-                security_group_id: null,
+                security_group_id: 'ACCOUNT_OWNER',
                 priority_type_id: null,
                 party_relationship_type_id: 'CONTACT_REL_INV',
                 created_date: account.createdDate,
@@ -117,19 +123,29 @@ var accountData = function (knex) {
     };
 
     
-    var addAccount = function (account, contact, user) {
-        //Not fully sure yet that I can do this, but will write it down here anyway for now.
+    var addAccount = function (account, user, contact) {
         //Call all of the previous addAccount___ methods. 
-        addAccountParty(account);
-        addAccountOrg(account);
-        addAccountPartySupplementalData(account); //I STRONGLY SUSPECT THAT THIS SHOULD BE CONTACT OR LEAD
-        //Deleting account-related fields from the contact/lead's p_s_d entry would happen here
-        addAccountContactMech(account); //this may not be fully functional
-        addAccountPartyRole(account);
-        addAccountPartyRelationship(account, contact, user);
+        var promise = addAccountParty(account)
+                        .then(function(accountResults) {
+                            return (accountResults += addAccountOrg(account));
+                        })
+                        .then(function(accountResults) {
+                            return (accountResults += addAccountPartySupplementalData(account));
+                        })
+                        .then(function(accountResults) {
+                            return (accountResults += addAccountContactMechData(account));
+                        })
+                        .then(function(accountResults) {
+                            return (accountResults += addAccountPartyRole(account));
+                        })
+                        .then(function(accountResults) {
+                            return (addAccountPartyRelationship(account, user, contact));
+                        });
+        
+        return promise;
     };
     
-    /**
+    /** 
      * Gets all accounts associated with an owner from database
      * @param {Number} ownerId - This is the party_id of the owner
      * @return {Object} promise - Fulfillment value is a raw data object

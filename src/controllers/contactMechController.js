@@ -224,7 +224,7 @@ var contactMechController = function (knex) {
 
         var promise = contactMechData.linkContactMechToParty(partyId, contactMechId)
             .then(function (result) {
-                return result;
+                return partyId;
             });
         promise.catch(function (error) {
             // Log the error
