@@ -14,6 +14,7 @@
 
 var winston = require('winston');
 var Lead = require('../entities/lead');
+var _ = require('lodash');
 
 var leadController = function (knex) {
     // Get a reference to data layer module
@@ -44,72 +45,74 @@ var leadController = function (knex) {
      * @return {Object} validationErrors - An array that has all the validation error message
      */
     var addLead = function (lead, user) {
-        //var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
-        //if (hasPermission !== -1)
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
+        if (hasPermission !== -1) {
 
             var leadEntity = new Lead(
-            // ok to put dummy data here, eg, null and birthDate
-            null,
-            lead.partyTypeId,
-            lead.preferredCurrencyUomId,
-            lead.description,
-            lead.statusId,
-            user.userId,
-            //            'admin', // single quotes are must. For testing only
-            (new Date()).toISOString(), (new Date()).toISOString(),
+                // ok to put dummy data here, eg, null and birthDate
+                null,
+                lead.partyTypeId,
+                lead.preferredCurrencyUomId,
+                lead.description,
+                lead.statusId,
+                user.userId,
+                //            'admin', // single quotes are must. For testing only
+                (new Date()).toISOString(), (new Date()).toISOString(),
 
-            lead.salutation,
-            lead.firstName,
-            lead.middleName,
-            lead.lastName,
-            //            lead.birthDate,
-            (new Date()).toISOString(), // for testing only
-            lead.comments,
+                lead.salutation,
+                lead.firstName,
+                lead.middleName,
+                lead.lastName,
+                //            lead.birthDate,
+                (new Date()).toISOString(), // for testing only
+                lead.comments,
 
-            lead.parentPartyId,
-            lead.companyName,
-            lead.annualRevenue,
-            lead.numEmployees,
+                lead.parentPartyId,
+                lead.companyName,
+                lead.annualRevenue,
+                lead.numEmployees,
 
-            lead.industryEnumId,
-            lead.ownershipEnumId,
-            lead.tickerSymbol,
-            lead.importantNote,
-            lead.primaryPostalAddressId,
-            lead.primaryTelecomNumberId,
-            lead.primaryEmailId,
+                lead.industryEnumId,
+                lead.ownershipEnumId,
+                lead.tickerSymbol,
+                lead.importantNote,
+                lead.primaryPostalAddressId,
+                lead.primaryTelecomNumberId,
+                lead.primaryEmailId,
 
-            lead.roleTypeId,
+                lead.roleTypeId,
 
-            /*
-            lead.contactMechId,
-            lead.contactMechPurposeTypeId,
-            lead.fromDate,
-            lead.thruDate,
-            */
-            null,
-            null, (new Date()).toISOString(), // for testing only
-            null, // for testing only
-            lead.verified,
-            lead.comments
+                /*
+                lead.contactMechId,
+                lead.contactMechPurposeTypeId,
+                lead.fromDate,
+                lead.thruDate,
+                */
+                null,
+                null, (new Date()).toISOString(), // for testing only
+                null, // for testing only
+                lead.verified,
+                lead.comments
 
-        );
+            );
 
-        // Validate the data before going ahead
-        var validationErrors = leadEntity.validateForInsert();
-        if (validationErrors.length === 0) {
-            // Pass on the entity to be added to the data layer
-            var promise = leadData.addLead(leadEntity)
-                .then(function (partyId) {
-                    return partyId;
+            // Validate the data before going ahead
+            var validationErrors = leadEntity.validateForInsert();
+            if (validationErrors.length === 0) {
+                // Pass on the entity to be added to the data layer
+                var promise = leadData.addLead(leadEntity)
+                    .then(function (partyId) {
+                        return partyId;
+                    });
+                promise.catch(function (error) {
+                    winston.error(error);
                 });
-            promise.catch(function (error) {
-                winston.error(error);
-            });
-            return promise;
-        } else {
-            return validationErrors;
-        }
+                return promise;
+            } else {
+                return validationErrors;
+            }
+        } else 
+            return null;
     };
 
     // Lucas's taking this
@@ -185,66 +188,71 @@ var leadController = function (knex) {
      * @param {String?} userId - Unique id of logged-in user (owner)
      * @return {Object} promise - Fulfillment value is an array of lead entities
      */
-    var getLeadsByOwner = function (userId) {
-        //var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
-        //if (hasPermission !== -1)
+    // 2:49 May 29 changed param, from userId to user
+    var getLeadsByOwner = function (user) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
+        // if found
+        if (hasPermission !== -1){
+            var userId = user.userId;
+            var promise = leadData.getLeadsByOwner(userId)
+                .then(function (leads) {
+                    var leadEntities = [];
+                    for (var i = 0; i < leads.length; i++) {
+                        var lead = new Lead(
+                            // this is the order in which values show
+                            // the order in which keys show, is determined by knex
+                            leads[i].party_id,
+                            leads[i].party_type_id,
+                            leads[i].preferred_currency_uom_Id,
+                            leads[i].description,
+                            leads[i].statusId,
+                            leads[i].created_by,
 
-        var promise = leadData.getLeadsByOwner(userId)
-            .then(function (leads) {
-                var leadEntities = [];
-                for (var i = 0; i < leads.length; i++) {
-                    var lead = new Lead(
-                        // this is the order in which values show
-                        // the order in which keys show, is determined by knex
-                        leads[i].party_id,
-                        leads[i].party_type_id,
-                        leads[i].preferred_currency_uom_Id,
-                        leads[i].description,
-                        leads[i].statusId,
-                        leads[i].created_by,
+                            leads[i].created_date,
+                            leads[i].updated_date,
 
-                        leads[i].created_date,
-                        leads[i].updated_date,
+                            leads[i].salutation,
+                            leads[i].first_name,
+                            leads[i].middle_name,
+                            leads[i].last_name,
+                            leads[i].birth_date,
+                            leads[i].comments,
 
-                        leads[i].salutation,
-                        leads[i].first_name,
-                        leads[i].middle_name,
-                        leads[i].last_name,
-                        leads[i].birth_date,
-                        leads[i].comments,
+                            leads[i].parent_party_id,
+                            leads[i].company_name,
+                            leads[i].annual_revenue,
+                            leads[i].num_employees,
 
-                        leads[i].parent_party_id,
-                        leads[i].company_name,
-                        leads[i].annual_revenue,
-                        leads[i].num_employees,
+                            leads[i].industry_enum_id,
+                            leads[i].ownership_enum_id,
+                            leads[i].ticker_symbol,
+                            leads[i].important_note,
+                            leads[i].primary_postal_address_id,
+                            leads[i].primary_telecom_number_id,
+                            leads[i].primary_email_id,
 
-                        leads[i].industry_enum_id,
-                        leads[i].ownership_enum_id,
-                        leads[i].ticker_symbol,
-                        leads[i].important_note,
-                        leads[i].primary_postal_address_id,
-                        leads[i].primary_telecom_number_id,
-                        leads[i].primary_email_id,
+                            leads[i].role_type_id,
 
-                        leads[i].role_type_id,
+                            leads[i].contact_mech_id,
+                            leads[i].contact_mech_purpose_type_id,
+                            leads[i].from_date,
+                            leads[i].thru_date,
+                            leads[i].verified,
+                            leads[i].comments
 
-                        leads[i].contact_mech_id,
-                        leads[i].contact_mech_purpose_type_id,
-                        leads[i].from_date,
-                        leads[i].thru_date,
-                        leads[i].verified,
-                        leads[i].comments
-
-                    );
-                    leadEntities.push(lead);
-                }
-                return leadEntities;
+                        );
+                        leadEntities.push(lead);
+                    }
+                    return leadEntities;
+                });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
             });
-        promise.catch(function (error) {
-            // Log the error
-            winston.error(error);
-        });
-        return promise;
+            return promise;
+        }
+        else
+            return null;
     };
 
     // Lucas's taking this
@@ -258,52 +266,52 @@ var leadController = function (knex) {
             .then(function(leads) {
                 var leadEntity;
                 if(leads.length > 0) {
-                // Map the retrieved result set to corresponding entity
-                leadEntity = new Lead(
-                    // this is the order in which values show
-                    // the order in which keys show, is determined by knex
-                    leads[0].party_id,
-                    //
-                    leads[0].party_type_id,
-                    leads[0].preferred_currency_uom_Id,
-                    leads[0].description,
-                    leads[0].statusId,
-                    leads[0].created_by,
-                    //
-                    leads[0].created_date,
-                    leads[0].updated_date,
+                    // Map the retrieved result set to corresponding entity
+                    leadEntity = new Lead(
+                        // this is the order in which values show
+                        // the order in which keys show, is determined by knex
+                        leads[0].party_id,
+                        //
+                        leads[0].party_type_id,
+                        leads[0].preferred_currency_uom_Id,
+                        leads[0].description,
+                        leads[0].statusId,
+                        leads[0].created_by,
+                        //
+                        leads[0].created_date,
+                        leads[0].updated_date,
 
-                    leads[0].salutation,
-                    leads[0].first_name,
-                    leads[0].middle_name,
-                    leads[0].last_name,
-                    leads[0].birth_date,
-                    leads[0].comments,
+                        leads[0].salutation,
+                        leads[0].first_name,
+                        leads[0].middle_name,
+                        leads[0].last_name,
+                        leads[0].birth_date,
+                        leads[0].comments,
 
 
-                    leads[0].parent_party_id,
-                    leads[0].company_name,
-                    leads[0].annual_revenue,
-                    leads[0].num_employees,
+                        leads[0].parent_party_id,
+                        leads[0].company_name,
+                        leads[0].annual_revenue,
+                        leads[0].num_employees,
 
-                    leads[0].industry_enum_id,
-                    leads[0].ownership_enum_id,
-                    leads[0].ticker_symbol,
-                    leads[0].important_note,
-                    leads[0].primary_postal_address_id,
-                    leads[0].primary_telecom_number_id,
-                    leads[0].primary_email_id,
+                        leads[0].industry_enum_id,
+                        leads[0].ownership_enum_id,
+                        leads[0].ticker_symbol,
+                        leads[0].important_note,
+                        leads[0].primary_postal_address_id,
+                        leads[0].primary_telecom_number_id,
+                        leads[0].primary_email_id,
 
-                    leads[0].role_type_id,
+                        leads[0].role_type_id,
 
-                    leads[0].contact_mech_id,
-                    leads[0].contact_mech_purpose_type_id,
-                    leads[0].from_date,
-                    leads[0].thru_date,
-                    leads[0].verified,
-                    leads[0].comments
-                );
-            }
+                        leads[0].contact_mech_id,
+                        leads[0].contact_mech_purpose_type_id,
+                        leads[0].from_date,
+                        leads[0].thru_date,
+                        leads[0].verified,
+                        leads[0].comments
+                    );
+                }
                 return leadEntity;
             });
         promise.catch(function (error) {
