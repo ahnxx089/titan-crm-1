@@ -91,25 +91,21 @@ var contactApi = function (knex) {
                     res.json({
                         'contacts': contacts
                     });
-                });
-            }
-        }
+                 });
+                 }
+                 }
 
-        // GET /api/contacts?phoneNum=
-        //
-        //else if (INSERT LOGIC HERE){
-        //     var getContactByPhoneNum = function (req, res) {
-        //
-        //    };  
-        //}
-
-        // If the request did not properly pass any of the various if tests
-        // above, it is not a valid query, make the reponse null.
-        else {
-            res.json(null);
-        }
-    };
-
+                 // GET /api/contacts?phoneNum=
+                 else if (req.query.hasOwnProperty('phoneNumber') 
+                        
+                          var getContactByPhoneNumber = function (req, res) {
+                         var contactId = req params.id;
+                         contactController.getContactByPhoneNumber(contactId)
+                             .then(function (contact) {
+                                 res.json(contact);
+                             });
+                     };
+                 };
     // GET /api/contacts/:id
     //Muhammad 
     var getContactById = function (req, res) {
