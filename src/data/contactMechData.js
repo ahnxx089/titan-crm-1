@@ -196,11 +196,11 @@ var contactMechData = function (knex) {
             });
     };
 
-    var linkContactMechToParty = function (partyId, contactMechId) {
+    var linkContactMechToParty = function (partyId, contactMechId, purposeTypeId) {
         return knex.insert({
                 party_id: partyId,
                 contact_mech_id: contactMechId,
-                contact_mech_purpose_type_id: 'GENERAL_LOCATION', //need to fix
+                contact_mech_purpose_type_id: purposeTypeId,
                 from_date: (new Date()).toISOString(),
                 thru_date: null,
                 verified: null,
