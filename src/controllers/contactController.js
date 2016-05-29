@@ -150,13 +150,7 @@ var contactController = function (knex) {
                 contact.contactMechs
             );
 
-            for (var i = 0; i < contactEntity.contactMechs.length; i++) {
-                contactMechEntities.push(new ContactMech(
-                    null,
-                    contactEntity.contactMechs[i].contactMechTypeId,
-                    contactEntity.contactMechs[i].infoString
-                ));
-            }
+            
 
 
             // Validate the contact and user data before going ahead
@@ -190,7 +184,7 @@ var contactController = function (knex) {
 
                 if (addContactMechPromises.length > 0) {
                     return promise.then(function (partyId) {
-                        return addContactMechCallback(addContactMechPromises, partyId)
+                        return addContactMechCallback(addContactMechPromises, partyId);
                             /*.then (function() {
                                 return partyId;
                             });*/
