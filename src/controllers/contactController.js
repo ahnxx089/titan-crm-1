@@ -67,7 +67,7 @@ var contactController = function (knex) {
         // SELECT * FROM security_group_permission WHERE permission_id LIKE "%CONTACT_CREATE%"
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
 
-        if (true /*hasPermission !== -1*/) {
+        if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
             // Convert the received objects into entities (protect the data layer)
             //
