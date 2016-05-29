@@ -251,8 +251,10 @@ var leadController = function(knex) {
     var getLeadById = function (leadId) {
         var promise = leadData.getLeadById(leadId)
             .then(function(leads) {
+                var leadEntity;
+                if(leads.length > 0) {
                 // Map the retrieved result set to corresponding entity
-                var leadEntity = new Lead(
+                leadEntity = new Lead(
                     // this is the order in which values show
                     // the order in which keys show, is determined by knex
                     leads[0].party_id,
@@ -296,6 +298,7 @@ var leadController = function(knex) {
                     leads[0].verified,
                     leads[0].comments
                 );
+            }
                 return leadEntity;
             });
             promise.catch(function(error) {
