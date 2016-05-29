@@ -83,6 +83,30 @@ var contactMechData = function (knex) {
             .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id');
     };
 
+
+    /**
+     * Gets all contact mechanisms from database
+     * @partyId
+     * @return {Object} promise - Fulfillment value is an array of raw data objects
+     */
+    var getContactMechsByParty = function (partyId) {
+        return knex.select('contact_mech.contact_mech_id', 'contact_mech.contact_mech_type_id', 'contact_mech.info_string',
+                'contact_mech.created_date', 'contact_mech.updated_date', 'telecom_number.country_code',
+                'telecom_number.area_code', 'telecom_number.contact_number', 'telecom_number.ask_for_name',
+                'postal_address.to_name', 'postal_address.attn_name', 'postal_address.address1',
+                'postal_address.address2', 'postal_address.directions', 'postal_address.city',
+                'postal_address.postal_code', 'postal_address.country_geo_id', 'postal_address.state_province_geo_id')
+            .from('party_contact_mech')
+            .leftJoin('contact_mech', 'party_contact_mech.contact_mech_id', '=', 'contact_mech.contact_mech_id')
+            .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
+            .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')
+            .where({
+                party_id: partyId
+            });
+    };
+
+
+
     /**
      * Gets one contact mechanism by its id from database
      * @param {Number} contactMechId - Unique id of the contact to be fetched
@@ -216,6 +240,7 @@ var contactMechData = function (knex) {
         addContactMechToTelecomTable: addContactMechToTelecomTable,
         addContactMechToPostalTable: addContactMechToPostalTable,
         getContactMechs: getContactMechs,
+        getContactMechsByParty: getContactMechsByParty,
         getContactMechById: getContactMechById,
         updateContactMech: updateContactMech,
         deleteContactMech: deleteContactMech,

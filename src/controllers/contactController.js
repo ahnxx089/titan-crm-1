@@ -206,7 +206,12 @@ var contactController = function (knex) {
         }
     };
 
-
+    //Under Construction
+    attachContactMechsToContact = function (contactArray) {
+        
+    };
+    
+    
     /**
      * Gets one contact by its id
      * @param {Number} contactId - Unique id of the contact to be fetched

@@ -120,6 +120,45 @@ var contactMechController = function (knex) {
         });
         return promise;
     };
+    
+    var getContactMechsByParty = function (partyId) {
+        var promise = contactMechData.getContactMechsByParty(partyId)
+            .then(function (contactMechs) {
+                // Map the retrieved result set to corresponding entities
+                var contactMechEntities = [];
+                for (var i = 0; i < contactMechs.length; i++) {
+                    var contactMech = new ContactMech(
+                        contactMechs[i].contactMechId,
+                        contactMechs[i].contactMechTypeId,
+                        contactMechs[i].infoString,
+                        contactMechs[i].createdDate,
+                        contactMechs[i].updatedDate,
+                        contactMechs[i].countryCode,
+                        contactMechs[i].areaCode,
+                        contactMechs[i].contactNumber,
+                        contactMechs[i].askForName,
+                        contactMechs[i].toName,
+                        contactMechs[i].attnName,
+                        contactMechs[i].address1,
+                        contactMechs[i].address2,
+                        contactMechs[i].directions,
+                        contactMechs[i].city,
+                        contactMechs[i].stateProvinceGeoId,
+                        contactMechs[i].zipOrPostalCode,
+                        contactMechs[i].countryGeoId
+                    );
+
+                    contactMechEntities.push(contactMech);
+                }
+                return contactMechEntities;
+            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
+        return promise;
+    };
+    
 
     var getContactMechById = function (contactMechId) {
         var promise = contactMechData.getContactMechById(contactMechId)
@@ -237,6 +276,7 @@ var contactMechController = function (knex) {
     return {
         addContactMech: addContactMech,
         getContactMechs: getContactMechs,
+        getContactMechsByParty: getContactMechsByParty,
         getContactMechById: getContactMechById,
         updateContactMech: updateContactMech,
         deleteContactMech: deleteContactMech,
