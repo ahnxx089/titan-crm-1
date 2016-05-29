@@ -11,6 +11,7 @@
 var winston = require('winston');
 var Case = require('../entities/case');
 var User = require('../entities/user');
+var _ = require('lodash');
 
 var caseController = function (knex) {
     // Get a reference to data layer module
@@ -45,12 +46,8 @@ var caseController = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of case entities
      */
     var getCasesByOwner = function (user) {
-        
-        // PENDING SATURDAY'S CREATION OF MORE FLEXIBLE CHECKING OF SECURITY, FOR NOW
-        // JUST SHORT-CIRCUIT CHECKING SECURITY PERMISSION, GET ON TO DATA LAYER
-        var hasPermission = true;
-
-        if (hasPermission) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CASE_CREATE');
+        if (hasPermission !== -1) {
             // user has permission, proceed to the data layer
             var promise = caseData.getCasesByOwner(user.userId)
                 .then(function (cases) {
@@ -82,12 +79,12 @@ var caseController = function (knex) {
                 // Log the error
                 winston.error(error);
             });
-            return promise;            
+            return promise;
         } else {
             // user does not have permissions of a contact owner, return null
             return null;
         }
-        
+
     };
 
     /** 
@@ -95,7 +92,7 @@ var caseController = function (knex) {
      * @param {String} SOME ARGUMENT - DESCRIPTION OF THAT ARGUMENT
      * @return {Object} promise - Fulfillment value is an array of case entities
      */
-    var getCasesByAdvanced = function ( ) {
+    var getCasesByAdvanced = function () {
 
     };
 
@@ -106,8 +103,8 @@ var caseController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateCase = function (caseId, case_) {
-        
-        
+
+
     };
 
     /**

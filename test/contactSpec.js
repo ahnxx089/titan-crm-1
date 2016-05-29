@@ -14,8 +14,9 @@ var Contact = require('../src/entities/contact');
 
 describe('Contact module ', function () {
 
-    // Test of addContact where a user has security permission to add a contact
-    it('contactController.addContact allows a user with permission to add a Contact', function (done) {
+    // REVISE AFTER FINISH addContact NEW METHODOLOGY
+    // Test contactController.addContact where a user has security permission to add a contact
+    xit('contactController.addContact allows a user with permission to add a Contact', function (done) {
 
         // party_id = 3 is fullAdminABC, who has permission
         var user = {
@@ -33,21 +34,6 @@ describe('Contact module ', function () {
         };
         var contact = {
             partyId: null,
-<<<<<<< HEAD
-            partyTypeId: "PERSON",
-            preferredCurrencyUomId: "USD",
-            description: "addContact test",
-            statusId: "PARTY_ENABLED",
-            createdBy: "admin",
-            createdDate: "",
-            updatedDate: "",
-            salutation: "Mrs.",
-            firstName: "Doubt",
-            middleName: "",
-            lastName: "Fire",
-            birthDate: "2016-05-10 14:00:00",
-            comments: "testing addContact",
-=======
             partyTypeId: 'PERSON',
             preferredCurrencyUomId: 'USD',
             description: 'addContact test',
@@ -55,13 +41,12 @@ describe('Contact module ', function () {
             createdBy: 'admin',
             createdDate: '',
             updatedDate: '',
-            salutation: 'Mrs.',
-            firstName: 'Butter',
-            middleName: '',
-            lastName: 'Worth',
+            salutation: 'Mr.',
+            firstName: 'Ronald',
+            middleName: 'Bilious',
+            lastName: 'Weasley',
             birthDate: '2016-05-10 14:00:00',
             comments: 'testing addContact',
->>>>>>> 03cb3fc51a4088cd556d3e47bc1ae9ca26906389
             contactMechs: []
         };
         var userSecurityPerm = 'FULLADMIN';
@@ -88,70 +73,134 @@ describe('Contact module ', function () {
         }
     });
 
-    // Two tests of contactController.getContactsByOwner where a user has security permission
-    it('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
+    // Test contactController.getContactsByOwner where a user has security permission
+    // (but does not actually own any contacts)
+    xit('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
 
-        // Test 1 out of 3:
-        // party_id = 14 is contactOwnerDEF, who has permission to own Contacts (but does not happen to
-        // actually own any, that is the next test.)
-        var ownerId = 14;
-        var userSecurityPerm = ['CONTACT_OWNER']; // from user_login_security_group_table
+        // user contactOwnerDEF has permission to own Contacts (but does not actually own any)
+        var user = {
+            userId: 'contactOwnerDEF',
+            password: '$2a$08$H/jGQdzkk1YrMJh92vtZH.sblwGrgnbOpKYhwxrHmdaFRe7h6E4/q',
+            passwordHint: null,
+            enabled: 1,
+            disabledDate: null,
+            partyId: 14,
+            createdDate: '2016-05-25T16:11:12.000Z',
+            updatedDate: '2016-05-25T16:11:12.000Z',
+            securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_CONTACT_CREATE', 'CRMSFA_CONTACT_DEACTIVATE', 'CRMSFA_CONTACT_REASSIGN', 'CRMSFA_CONTACT_UPDATE', 'CRMSFA_CONTACT_VIEW'],
+            iat: 1464484514,
+            exp: 1464570914
+        };
 
         // when a user has Contact owner rights, the controller returns an object.  The object will
         // be empty if the user does not actually own any contacts, but user had permission is what
         // matters for this test.
-        var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
-        // THE RESULT IS A PROMISE
+        var resultsForThisUser = contactController.getContactsByOwner(user);
 
-        expect(typeof resultsForThisUser === 'object').toBeTruthy();
-
-
-        // Test 2 out of 3:
-        // party_id = 13 is contactOwnerABC, who has permission to own Contacts and happens to own two
-        var ownerId = 13;
-        var userSecurityPerm = ['CONTACT_OWNER']; // from user_login_security_group_table
-
-        // when a user has Contact owner rights, the controller returns an object.
-        var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
-
-        // Call done to finish the async function
         resultsForThisUser.then(function (contacts) {
             var typeOfContacts = Object.prototype.toString.call(contacts);
             // Check whether the return value is an array
             expect(typeOfContacts).toBe('[object Array]');
-
-            //expect(typeof resultsForThisUser === 'object').toBeTruthy();
+            // Call done to finish the async function
             done();
         });
     });
 
-    // One test of contactController.getContactsByOwner where a user lacks security permission
+    // Test contactController.getContactsByOwner where a user has security permission
+    // and actually owns some contacts (kind of repetitive of previous test...)
+    xit('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user', function (done) {
+
+        // user contactOwnerDEF has permission to own Contacts (but does not actually own any)
+        var user = {
+            userId: 'contactOwnerABC',
+            password: '$2a$08$iTaPqQ/4W8LSDNBDT18opegvSxo4kWC8SjWNojHP/lhN7eOSTYHJu',
+            passwordHint: null,
+            enabled: 1,
+            disabledDate: null,
+            partyId: 13,
+            createdDate: '2016-05-25T16:07:11.000Z',
+            updatedDate: '2016-05-25T16:07:11.000Z',
+            securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_CONTACT_CREATE', 'CRMSFA_CONTACT_DEACTIVATE', 'CRMSFA_CONTACT_REASSIGN', 'CRMSFA_CONTACT_UPDATE', 'CRMSFA_CONTACT_VIEW'],
+            iat: 1464484484,
+            exp: 1464570884
+        };
+
+        // when a user has Contact owner rights, the controller returns an object.
+        var resultsForThisUser = contactController.getContactsByOwner(user);
+
+        resultsForThisUser.then(function (contacts) {
+            var typeOfContacts = Object.prototype.toString.call(contacts);
+            // Check whether the return value is an array
+            expect(typeOfContacts).toBe('[object Array]');
+            // Call done to finish the async function
+            done();
+        });
+    });
+
+    // Test of contactController.getContactsByOwner where a user lacks security permission
     xit('contactController.getContactsByOwner DENIES a user without permission to own Contact(s) to get the party_id of (any) Contacts', function (done) {
-        // party_id = 17 is leadOwnerDEF, who has permission to own Leads, but not Contacts
-        var ownerId = 17;
-        var userSecurityPerm = ['LEAD_OWNER']; // from user_login_security_group_table
+        // leadOwnerDEF has permission to own Leads, but not Contacts
+        var user = {
+            userId: 'leadOwnerDEF',
+            password: '$2a$08$Y/fQPgblCV2ZK6UtopnyveZpn.VoY1ZP4oPK6R3JOuzTi9FU42Hiu',
+            passwordHint: null,
+            enabled: 1,
+            disabledDate: null,
+            partyId: 18,
+            createdDate: '2016-05-28T03:34:11.000Z',
+            updatedDate: '2016-05-28T03:34:11.000Z',
+            securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_LEAD_DEACTIVATE', 'CRMSFA_LEAD_DELETE', 'CRMSFA_LEAD_REASSIGN', 'CRMSFA_LEAD_UPDATE', 'CRMSFA_LEAD_VIEW', 'CRMSFA_OPP_CREATE', 'CRMSFA_OPP_UPDATE', 'CRMSFA_OPP_VIEW'],
+            iat: 1464484584,
+            exp: 1464570984
+        };
 
-        var resultsForThisUser = contactController.getContactsByOwner(ownerId, userSecurityPerm);
+        var resultsForThisUser = contactController.getContactsByOwner(user);
 
-        // when a user lacks Contact owner rights, the controller returns null. 
-        expect(resultsForThisUser === null).toBeTruthy();
-        // Call done to finish the async function
-        done();
+        // hand as in the Api layer, with an IF ELSE block to interpret whether the output
+        // is a promise or is null (cannot use .then on a null)
+        if (resultsForThisUser === null) {
+            expect(resultsForThisUser === null).toBeTruthy();
+            // Call done to finish the async function
+            done();
+        } else {
+            var typeOfContacts = Object.prototype.toString.call(contacts);
+            // Check whether the return value is an array
+            expect(typeOfContacts).toBe('[object Array]');
+            // Call done to finish the async function
+            done();
+        }
     });
 
     // Test of contactController.getContactsByIdentity where a user has contact tasks permissions
     xit('contactController.getContactsByIdentity allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
 
         // this search looks for any first name containing "w" OR last name containing "e"
-        var firstName = 'w';
-        var lastName = 'e';
-        var userSecurePerm = 'CRMSFA_CONTACT_TASKS';
+        var query = {
+            firstName: 'w',
+            lastName: 'e'
+        };
+        var user = {
+            userId: 'crmsfaContactTasksABC',
+            password: '$2a$08$CB.AAzCvAM7ghsIgD9HurePO3BsLDAJ0tBGIPHLhv9ijyay1E24O2',
+            passwordHint: null,
+            enabled: 1,
+            disabledDate: null,
+            partyId: 15,
+            createdDate: '2016-05-25T16:14:33.000Z',
+            updatedDate: '2016-05-25T16:14:33.000Z',
+            securityPermissions: ['CRMSFA_ACTS_VIEW', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_CONTACTS_VIEW', 'CRMSFA_CONTACT_CREATE', 'CRMSFA_CONTACT_DEACTIVATE', 'CRMSFA_CONTACT_REASSIGN', 'CRMSFA_CONTACT_UPDATE', 'CRMSFA_CONTACT_VIEW', 'CRMSFA_VIEW', 'PARTYMGR_CME_CREATE', 'PARTYMGR_CME_DELETE', 'PARTYMGR_CME_UPDATE', 'PARTYMGR_GRP_UPDATE', 'PARTYMGR_NOTE', 'PARTYMGR_PCM_CREATE', 'PARTYMGR_PCM_DELETE', 'PARTYMGR_PCM_UPDATE', 'PARTYMGR_REL_CREATE', 'PARTYMGR_REL_UPDATE', 'PARTYMGR_ROLE_CREATE', 'PARTYMGR_ROLE_DELETE', 'PARTYMGR_SRC_CREATE', 'PARTYMGR_STS_UPDATE', 'WORKEFFORTMGR_ADMIN'],
+            iat: 1464484540,
+            exp: 1464570940
+        };
 
-        var resultsForUser = contactController.getContactsByIdentity(firstName, lastName, userSecurePerm);
-        expect(typeof resultsForUser === 'object').toBeTruthy();
-
-        // Call done to finish the async function
-        done();
+        var resultsForUser = contactController.getContactsByIdentity(query, user);
+        resultsForUser.then(function (contacts) {
+            var typeOfContacts = Object.prototype.toString.call(contacts);
+            // Check whether the return value is an array
+            expect(typeOfContacts).toBe('[object Array]');
+            // Call done to finish the async function
+            done();
+        });
     });
 
     xit('getContactById returns a valid contact entity', function (done) {
