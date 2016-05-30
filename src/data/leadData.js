@@ -88,6 +88,7 @@ var leadData = function (knex) {
                         primary_postal_address_id: lead.primaryPostalAddressId,
                         primary_telecom_number_id: lead.primaryTelecomNumberId,
                         primary_email_id: lead.primaryEmailId
+                
                     })
             .then(function () {
                 return knex('party_role')
@@ -209,13 +210,52 @@ var leadData = function (knex) {
      * @param {Number} leadId - Unique id (actually partyId) of the lead to be deleted
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */
-    var deleteLead = function (leadId) {
-        return knex('party')
+var deleteLead = function (leadId) {
+        return knex('party_contact_mech')
             .where({
                 party_id: leadId
             })
-            .del();
-    };
+            .del()
+            .then(function(partyLinkRows){
+            return knex ('contact_mech')
+            .where({
+                party_id: leadId
+                   })
+            .del()
+            .then(function(contactMechRows){
+                return knex('party_role')
+                .where({
+                    party_id: leadId
+                    
+                })
+                .del()
+                .then(function(partyRoleRows){
+                     return knex('party_supplemental_data')
+                .where({
+                         party_id: leadId                
+                })
+                .del()
+                .then(function(partySuppRows){
+                    return knex ('person')
+                    .where({party_id: leadId
+                           
+                           })
+                .del()
+                    .then(function(personRows){
+                        return knex('party')
+                        .where({party_id: leadId  
+                    })
+                    .del()
+                    .then(function(partyRows){
+                        return partyRows + personRows + partyRoleRows + partySuppRows + contactMechRows + partyLinkRows;
+                    });
+                    
+                     });
+                });
+            });
+        });        
+    });
+};
 
     return {
         addLead: addLead,

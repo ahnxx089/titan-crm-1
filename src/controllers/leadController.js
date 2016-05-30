@@ -348,7 +348,7 @@ var leadController = function(knex) {
      * @return {Object} promise - Fulfillment value is number of rows deleted
     */
     var deleteLead = function (leadId) {
-    var promise = leadData.deleteParty(leadId)
+    var promise = leadData.deleteLead(leadId)
             .then(function(result) {
                 return result;
             });

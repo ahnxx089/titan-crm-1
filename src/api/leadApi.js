@@ -167,7 +167,7 @@ var leadApi = function (knex) {
     var leadId = req.params.id;
         leadController.deleteLead(leadId)
 		      .then(function(result){
-		          res.json({updated:result});
+		          res.json({deleted:result});
 	});
 
     };
@@ -175,13 +175,13 @@ var leadApi = function (knex) {
     return {
         middleware: middleware,
         addLead: addLead,
-//        getLeads: getLeads,
-        getLeadsByOwner: getLeadsByOwner,
-//        getLeadsByIdentity: getLeadsByIdentity,
-//        getLeadsByPhoneNumber: getLeadsByPhoneNumber,
+        getLeads: getLeads,
+//      getLeadsByOwner: getLeadsByOwner,
+//      getLeadsByIdentity: getLeadsByIdentity,
+//      getLeadsByPhoneNumber: getLeadsByPhoneNumber,
         getLeadById: getLeadById,
-//        updateLead: updateLead,
-//        deleteLead: deleteLead
+        updateLead: updateLead,
+        deleteLead: deleteLead
     };
 };
 
