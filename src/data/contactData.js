@@ -116,7 +116,8 @@ var contactData = function (knex) {
 
     /** 
      * Gets all contacts from database by identity (first or last name matching)
-     * @param {Number} firstName - firstName of  to be fetched
+     * @param {String} firstName - firstName of  to be fetched
+     * @param {String} lastName - lastName of  to be fetched
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getContactsByIdentity = function (firstName, lastName) {
@@ -125,8 +126,6 @@ var contactData = function (knex) {
         return knex.select('person.party_id', 'person.first_name', 'person.last_name')
             .from('party_relationship')
             .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
-            .whereIn('role_type_id_to', ['PERSON_ROLE', 'SALES_REP', 'ACCOUNT_MANAGER'])
-            .andWhere('party_relationship_type_id', 'RESPONSIBLE_FOR')
             .andWhere('role_type_id_from', 'CONTACT')
             .andWhere('first_name', 'like', firstNameLike)
             .orWhere('last_name', 'like', lastNameLike);

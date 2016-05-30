@@ -13,8 +13,6 @@ var winston = require('winston');
 var Contact = require('../entities/contact');
 var User = require('../entities/user');
 var ContactMech = require('../entities/contactMech');
-
-
 var _ = require('lodash');
 
 var contactController = function (knex) {
@@ -27,9 +25,6 @@ var contactController = function (knex) {
     // CONTROLLER METHODS
     // ==========================================
     //
-
-
-
 
     var addContactMechCallback = function (addContactMechPromises, contactMechEntities, partyId) {
         if (addContactMechPromises.length > 1) {
@@ -54,7 +49,6 @@ var contactController = function (knex) {
             });
         }
     };
-
 
     /**
      * Add a new contact  
@@ -213,7 +207,6 @@ var contactController = function (knex) {
             return null;
         }
     };
-
 
     /**
      * Gets one contact by its id
