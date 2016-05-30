@@ -113,8 +113,8 @@ var leadController = function (knex) {
             }
         } else {
             return null;
-        } 
-            
+        }
+
     };
 
     // Lucas's taking this
@@ -194,7 +194,7 @@ var leadController = function (knex) {
     var getLeadsByOwner = function (user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
         // if found
-        if (hasPermission !== -1){
+        if (hasPermission !== -1) {
             var userId = user.userId;
             var promise = leadData.getLeadsByOwner(userId)
                 .then(function (leads) {
@@ -252,11 +252,10 @@ var leadController = function (knex) {
                 winston.error(error);
             });
             return promise;
-        }
-        else{
+        } else {
             return null;
         }
-            
+
     };
 
     // Lucas's taking this
@@ -267,9 +266,9 @@ var leadController = function (knex) {
      */
     var getLeadById = function (leadId) {
         var promise = leadData.getLeadById(leadId)
-            .then(function(leads) {
+            .then(function (leads) {
                 var leadEntity;
-                if(leads.length > 0) {
+                if (leads.length > 0) {
                     // Map the retrieved result set to corresponding entity
                     leadEntity = new Lead(
                         // this is the order in which values show
@@ -368,8 +367,8 @@ var leadController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */
     var deleteLead = function (leadId) {
-    var promise = leadData.deleteLead(leadId)
-            .then(function(result){
+        var promise = leadData.deleteLead(leadId)
+            .then(function (result) {
                 return result;
             });
         promise.catch(function (error) {
@@ -381,12 +380,12 @@ var leadController = function (knex) {
     };
 
     return {
-        //getLeads: getLeads,
+        getLeads: getLeads,
         getLeadById: getLeadById,
         getLeadsByOwner: getLeadsByOwner,
         addLead: addLead,
-        //updateLead: updateLead,
-        //deleteLead: deleteLead
+        updateLead: updateLead,
+        deleteLead: deleteLead
     };
 };
 
