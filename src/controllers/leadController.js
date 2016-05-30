@@ -111,8 +111,10 @@ var leadController = function (knex) {
             } else {
                 return validationErrors;
             }
-        } else 
+        } else {
             return null;
+        } 
+            
     };
 
     // Lucas's taking this
@@ -251,8 +253,10 @@ var leadController = function (knex) {
             });
             return promise;
         }
-        else
+        else{
             return null;
+        }
+            
     };
 
     // Lucas's taking this
