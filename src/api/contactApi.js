@@ -68,9 +68,7 @@ var contactApi = function (knex) {
                 });
             } else {
                 resultsForThisUser.then(function (contacts) {
-                    res.json({
-                        'contacts': contacts
-                    });
+                    res.json(contacts);
                 });
             }
         }
@@ -93,9 +91,7 @@ var contactApi = function (knex) {
                 });
             } else {
                 resultsForUser.then(function (contacts) {
-                    res.json({
-                        'contacts': contacts
-                    });
+                    res.json(contacts);
                 });
             }
         }

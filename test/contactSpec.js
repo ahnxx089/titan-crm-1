@@ -14,7 +14,7 @@ var Contact = require('../src/entities/contact');
 
 describe('Contact module ', function () {
 
-    // REVISE AFTER FINISH addContact NEW METHODOLOGY
+    // DINESH MUST REVISE THIS AFTER FINISH addContact NEW METHODOLOGY FOR contact mechanisms
     // Test contactController.addContact where a user has security permission to add a contact
     xit('contactController.addContact allows a user with permission to add a Contact', function (done) {
 
@@ -74,7 +74,7 @@ describe('Contact module ', function () {
     });
 
     // Test contactController.getContactsByOwner where a user has security permission
-    // (but does not actually own any contacts)
+    // (but does not actually own any contacts) -- TEST HAS PASSED
     xit('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
 
         // user contactOwnerDEF has permission to own Contacts (but does not actually own any)
@@ -93,8 +93,8 @@ describe('Contact module ', function () {
         };
 
         // when a user has Contact owner rights, the controller returns an object.  The object will
-        // be empty if the user does not actually own any contacts, but user had permission is what
-        // matters for this test.
+        // be empty if the user does not actually own any contacts, but the facts that user had 
+        // permission to create (and therefore own) contacts is what is being tested here.
         var resultsForThisUser = contactController.getContactsByOwner(user);
 
         resultsForThisUser.then(function (contacts) {
@@ -106,11 +106,11 @@ describe('Contact module ', function () {
         });
     });
 
-    // Test contactController.getContactsByOwner where a user has security permission
-    // and actually owns some contacts (kind of repetitive of previous test...)
+    // Test contactController.getContactsByOwner where user owns a contact, does it return the correct
+    // contact?  Check the first one on the returned collection -- TEST PASSED
     xit('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user', function (done) {
 
-        // user contactOwnerDEF has permission to own Contacts (but does not actually own any)
+        // user contactOwnerDEF has permission to own Contacts (and owns at least one)
         var user = {
             userId: 'contactOwnerABC',
             password: '$2a$08$iTaPqQ/4W8LSDNBDT18opegvSxo4kWC8SjWNojHP/lhN7eOSTYHJu',
@@ -129,15 +129,13 @@ describe('Contact module ', function () {
         var resultsForThisUser = contactController.getContactsByOwner(user);
 
         resultsForThisUser.then(function (contacts) {
-            var typeOfContacts = Object.prototype.toString.call(contacts);
-            // Check whether the return value is an array
-            expect(typeOfContacts).toBe('[object Array]');
+            expect(contacts[0].partyId === 25).toBeTruthy();
             // Call done to finish the async function
             done();
         });
     });
 
-    // Test of contactController.getContactsByOwner where a user lacks security permission
+    // Test contactController.getContactsByOwner where user lacks security permission -- TEST PASSED
     xit('contactController.getContactsByOwner DENIES a user without permission to own Contact(s) to get the party_id of (any) Contacts', function (done) {
         // leadOwnerDEF has permission to own Leads, but not Contacts
         var user = {
@@ -171,7 +169,7 @@ describe('Contact module ', function () {
         }
     });
 
-    // Test of contactController.getContactsByIdentity where a user has contact tasks permissions
+    // Test of contactController.getContactsByIdentity where user has security permission -- TEST PASSED
     xit('contactController.getContactsByIdentity allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
 
         // this search looks for any first name containing "w" OR last name containing "e"
