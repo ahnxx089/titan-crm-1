@@ -12,14 +12,15 @@ var validation = require('../common/validation')();
 
 // Constructor
 //
-function ContactMech(contactMechId, contactMechTypeId, infoString, createdDate,
-    updatedDate, countryCode, areaCode, contactNumber, askForName,
+function ContactMech(contactMechId, contactMechTypeId, contactMechPurposeTypeId, infoString,
+    createdDate, updatedDate, countryCode, areaCode, contactNumber, askForName,
     toName, attnName, address1, address2, directions, city, stateProvinceGeoId,
     zipOrPostalCode, countryGeoId) {
 
     // Properties
     this.contactMechId = contactMechId;
     this.contactMechTypeId = contactMechTypeId;
+    this.contactMechPurposeTypeId = contactMechPurposeTypeId;
     this.infoString = infoString;
     this.createdDate = createdDate;
     this.updatedDate = updatedDate;
@@ -39,6 +40,8 @@ function ContactMech(contactMechId, contactMechTypeId, infoString, createdDate,
 
 }
 
+ContactMech.prototype.constructor = ContactMech;
+
 // Methods - VALIDATIONS YET TO BE COMPLETED
 //
 ContactMech.prototype.validateForInsert = function () {
@@ -46,6 +49,7 @@ ContactMech.prototype.validateForInsert = function () {
     // Perform general validations
     var validations = [
             this.validateContactMechTypeId(true),
+            //this.validateContactMechPurposeTypeId(true),
             this.validateInfoString(false)
     ];
 
@@ -95,6 +99,7 @@ ContactMech.prototype.validateForUpdate = function () {
     var validations = [
             this.contactMechId(true),
             this.validateContactMechTypeId(true),
+            //this.validateContactMechPurposeTypeId(true),
             this.validateInfoString(false)
     ];
 
@@ -149,6 +154,13 @@ ContactMech.prototype.validateContactMechId = function (isRequired) {
 ContactMech.prototype.validateContactMechTypeId = function (isRequired) {
     this.contactMechTypeId = validation.sanitizeInput(this.contactMechTypeId);
     var validationResult = validation.validateString(this.contactMechTypeId, isRequired, 20, 'contactMechTypeId');
+    return validationResult;
+};
+
+// contact_mech_purpose_type_id is varchar(20)
+ContactMech.prototype.validateContactMechPurposeTypeId = function (isRequired) {
+    this.contactMechPurposeTypeId = validation.sanitizeInput(this.contactMechPurposeTypeId);
+    var validationResult = validation.validateString(this.contactMechPurposeTypeId, isRequired, 20, 'contactMechPurposeTypeId');
     return validationResult;
 };
 

@@ -120,7 +120,10 @@ var leadData = function (knex) {
                         comments: '',
                         created_date: lead.createdDate,
                         updated_date: lead.updatedDate
-            });
+                    })
+             .then(function() {
+                   return res[0]
+                    });
             });
             });
             });

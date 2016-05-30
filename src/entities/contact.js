@@ -18,7 +18,7 @@ var ContactMech = require('../entities/contactMech');
 //
 function Contact(partyId, partyTypeId, currencyUomId, description,
     statusId, createdBy, createdDate, updatedDate, salutation, firstName,
-    middleName, lastName, birthDate, comments, contactMechs) {
+    middleName, lastName, birthDate, comments) {
 
     // Call the parent constructor (Person), making sure
     // that "this" is set correctly during the call
@@ -26,9 +26,8 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
         statusId, createdBy, createdDate, updatedDate,
         salutation, firstName, middleName, lastName, birthDate, comments);
 
-    // this array will contain the contact mechanisms and will be 
-    // dealt with in the controller layer.
-    this.contactMechs = contactMechs;
+    // 
+   
 }
 
 // Inherit from Person

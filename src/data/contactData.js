@@ -7,8 +7,7 @@
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
-
-//var PersonData = require('./personData.js');
+/* jshint maxlen:1000 */
 
 var contactData = function (knex) {
 
@@ -71,9 +70,9 @@ var contactData = function (knex) {
                                         party_relationship_type_id: 'RESPONSIBLE_FOR',
                                         created_date: contact.createdDate,
                                         updated_date: contact.updatedDate
-                                    }).then(function() {
+                                    }).then(function () {
                                         // return new Contact's party_id up to API layer
-                                        return passAlongPartyId; 
+                                        return passAlongPartyId;
                                     });
                             });
                     });
@@ -104,7 +103,7 @@ var contactData = function (knex) {
         // The ownership is all contained within the party_relationship table alone;
         // however, the party table is joined so that column party.party_id of the
         // contact can be passed by this function back to the controller layer.
-        return knex.select('party.party_id', 'party.description', 'person.first_name', 'person.last_name')
+        return knex.select('party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date', 'person.salutation', 'person.first_name', 'person.middle_name', 'person.last_name', 'person.birth_date', 'person.comments')
             .from('party_relationship')
             .innerJoin('party', 'party.party_id', 'party_relationship.party_id_from')
             .innerJoin('person', 'party.party_id', 'person.party_id')
@@ -116,17 +115,17 @@ var contactData = function (knex) {
 
     /** 
      * Gets all contacts from database by identity (first or last name matching)
-     * @param {Number} firstName - firstName of  to be fetched
+     * @param {String} firstName - firstName of  to be fetched
+     * @param {String} lastName - lastName of  to be fetched
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getContactsByIdentity = function (firstName, lastName) {
         var firstNameLike = '%' + firstName + '%';
         var lastNameLike = '%' + lastName + '%';
-        return knex.select('person.party_id', 'person.first_name', 'person.last_name')
+        return knex.select('party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date', 'person.salutation', 'person.first_name', 'person.middle_name', 'person.last_name', 'person.birth_date', 'person.comments')
             .from('party_relationship')
             .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
-            .whereIn('role_type_id_to', ['PERSON_ROLE', 'SALES_REP', 'ACCOUNT_MANAGER'])
-            .andWhere('party_relationship_type_id', 'RESPONSIBLE_FOR')
+            .innerJoin('party', 'party.party_id', 'person.party_id')
             .andWhere('role_type_id_from', 'CONTACT')
             .andWhere('first_name', 'like', firstNameLike)
             .orWhere('last_name', 'like', lastNameLike);
@@ -173,7 +172,9 @@ var contactData = function (knex) {
                                             .where({
                                                 party_id: contact.partyId
                                             })
-                                            .update({first_name: contact.firstName})
+                                            .update({
+                                                first_name: contact.firstName
+                                            })
                                             .then(function (partyRows) {
                                                 return partyRows + personRows + roleRows + relationshipRows + partyLinkRows;
                                             });

@@ -19,12 +19,7 @@ var leadApi = function (knex) {
     // Get a reference to data layer module
     var leadController = require('../controllers/leadController')(knex);
     
-    // Set up a middleware to validate incoming requests
-    var middleware = function (req, res, next) {
-        next();
-    };
-    
-    
+
     // API methods
     //
     /**
@@ -44,23 +39,35 @@ var leadApi = function (knex) {
      * @param {Object} req - The request from presentation layer (ARC)
      * @param {Object} res - The response to presentation layer (ARC)
      */
+    // good at 2:35PM May 29
     var addLead = function (req, res) {
         // lead and user here are striped params from request
         var lead = req.body;
         var user = req.user;
-        var result = leadController.addLead(lead, user);
-//        var result = leadController.addLead(lead); // for testing only
+        console.log("user in add is " + user);
 
-        // An array in result means it's array of validation errors
-        if( Object.prototype.toString.call(result) === '[object Array]' ) {
-            res.json(result);
-        }
-        // An object in result means it's a promise
-        // (which is returned only if validation succeeds)
-        else {
-            result.then(function(partyId) {
-               res.json({partyId: partyId}); 
+//        var result = leadController.addLead(lead, user); // changed var name later
+//        var result = leadController.addLead(lead); // obsolete
+
+        var resultsForThisUser = leadController.addLead(lead, user);
+
+        
+        if (resultsForThisUser === null) {
+            res.json({
+                message: 'You do not have permission to add leads!'
             });
+        } else {
+            // An array in result means it's array of validation errors
+            if( Object.prototype.toString.call(resultsForThisUser) === '[object Array]' ) {
+                res.json(resultsForThisUser);
+            }
+            // An object in result means it's a promise
+            // (which is returned only if validation succeeds)
+            else {
+                resultsForThisUser.then(function(partyId) {
+                   res.json({partyId: partyId}); 
+                });
+            }
         }
     };
     
@@ -116,13 +123,36 @@ var leadApi = function (knex) {
     // To retrieve existing leads from database based on their creater
     // IN use now.
     // GET /api/leads/?owner=
+    
+    // TODO
+    // This getLeadsByOwner works fine! 
+    // Inspired by Eric's way of doing multiple insertions in addAccount in accountData.js,
+    // I might stop returning this method at the end of this file and calling this method directly
+    // instead I will call this methods from the now obselete getLeads method, (making it invisible to the ARC)
+    // once Divine has his getLeadsByIdentity and getLeadsByPhoneNumber working. Otherwise, it's just not worth. 
+    // The getLeads method then will call getLeadsByOwner or getLeadsByIdentity or getLeadsByPhoneNumber, 
+    // depending on the received parameter(s). 
+    
     var getLeadsByOwner = function (req, res) {
-        var ownerId = req.query.owner;
-        //console.log(ownerId); // this prints "admin" to terminal console, not browser console
-        leadController.getLeadsByOwner(ownerId)
-            .then(function (lead) {
+        // if there's /?owner, ownerId is what follows
+//        var ownerId = req.query.owner;
+//        console.log("ownerid in byOwner is " + ownerId);
+        
+        var user = req.user;
+        // this prints "admin" to terminal console, not browser console
+        console.log("user in byOwner is " + user);
+        console.log("userId in byOwner is " + user.userId);
+
+        var resultForThisUser = leadController.getLeadsByOwner(user); // this param was changed from ownerId to user
+        if(resultForThisUser === null) {
+            res.json({
+                'message': 'You do not have permission to own or view contacts!'
+            });
+        } else {
+            resultForThisUser.then(function (lead) {
                 res.json(lead);
             });
+        }
     };
     
     // Not implemented now. 
@@ -173,7 +203,6 @@ var leadApi = function (knex) {
     };
 
     return {
-        middleware: middleware,
         addLead: addLead,
         getLeads: getLeads,
 //      getLeadsByOwner: getLeadsByOwner,
@@ -182,6 +211,7 @@ var leadApi = function (knex) {
         getLeadById: getLeadById,
         updateLead: updateLead,
         deleteLead: deleteLead
+
     };
 };
 
