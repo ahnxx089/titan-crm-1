@@ -25,14 +25,26 @@ var contactApi = function (knex) {
 
         var resultsForThisUser = contactController.addContact(contact, user);
 
+        /* Intepret the possible outcomes from the controller layer:
+            1.  User does not have permission to add a Contact
+            2.  User does have permission, but supplied data is not validated
+            3.  User does have permission, and a promise is returned
+        */
+        // null result means user does not have permission to add a Contact
         if (resultsForThisUser === null) {
             res.json({
                 message: 'You do not have permission to add contacts!'
             });
-        } else {
-            resultsForThisUser.then(function (contactPartyId) {
+        }
+        // An array in result means it's array of validation errors
+        else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
+            res.json(resultsForThisUser);
+        }
+        // An object in result means it's a promise (returned only if validation succeeds)
+        else {
+            resultsForThisUser.then(function (partyId) {
                 res.json({
-                    contactPartyId: contactPartyId
+                    partyId: partyId
                 });
             });
         }

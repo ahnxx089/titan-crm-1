@@ -8,8 +8,6 @@
 
 /* jshint camelcase: false */
 
-//var PersonData = require('./personData.js');
-
 var contactData = function (knex) {
 
     /**
