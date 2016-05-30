@@ -7,6 +7,7 @@
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
+/* jshint maxlen:1000 */
 
 var contactData = function (knex) {
 

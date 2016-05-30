@@ -11,7 +11,6 @@
 
 var winston = require('winston');
 var Contact = require('../entities/contact');
-var User = require('../entities/user');
 var ContactMech = require('../entities/contactMech');
 var _ = require('lodash');
 
