@@ -132,6 +132,7 @@ var accountData = function (knex) {
         //Call all of the previous addAccount___ methods. 
         return addAccountParty(account)
                         .then(function(accountResults) {
+                            account.partyId = accountResults;
                             return addAccountOrg(account)
                                 .then(function(PartyResults) {
                                     return addAccountPartySupplementalData(account)
@@ -146,7 +147,85 @@ var accountData = function (knex) {
                                     });
                             });
                     });
-                        
+//          return knex('party')
+//            .returning('party_id') // for passing along to person table
+//            .insert({
+//                party_type_id: account.partyTypeId,
+//                preferred_currency_uom_id: account.preferredCurrencyUomId,
+//                description: account.description,
+//                status_id: account.statusId,
+//                created_by: account.createdBy,
+//                created_date: account.createdDate,
+//                updated_date: account.updatedDate
+//            })
+//            .then(function (passAlongPartyId) {
+//                return knex('organization')
+//                    .returning('party_id') // for passing along to party_role table
+//                    .insert({
+//                        party_id: passAlongPartyId,
+//                        organization_name: account.orgName,
+//                        office_site_name: account.officeSiteName,
+//                        annual_revenue: account.annualRevenue,
+//                        num_employees: account.numEmployees,
+//                        ticker_symbol: account.tickerSymbol,
+//                        comments: account.comments,
+//                        logo_image_url: account.logoImgURL,
+//                        created_date: account.createdDate,
+//                        updated_date: account.updatedDate
+//                    })
+//                    .then(function () {
+//                        return knex('party_supplemental_data')
+//                            .returning('party_id')
+//                            .insert({
+//                                party_id: passAlongPartyId,
+//                                //parent_party_id: account.parentPartyId,
+//                                //Put in company name here maybe?
+//                                annual_revenue: account.annualRevenue,
+//                                currency_uom_id: account.preferredCurrencyUomId,
+//                                num_employees: account.numEmployees,
+//                                industry_enum_id: account.industryEnumId,
+//                                ownership_enum_id: account.ownershipEnumId,
+//                                ticker_symbol: account.tickerSymbol,
+//                                important_note: account.importantNote,
+//                                primary_postal_address_id: account.primaryPostalAddressId,
+//                                primary_telecom_number_id: account.primaryTelecomNumberId,
+//                                primary_email_id: account.primaryEmailId,
+//                                created_date: account.createdDate, //this may be incorrect and need to be changed
+//                                updated_date: account.updatedDate
+//                        })
+//                        .then(function () {
+//                            return knex('party_role')
+//                                .returning('party_id') // for passing along to party_relationship table
+//                                .insert({
+//                                    party_id: passAlongPartyId,
+//                                    role_type_id: 'ACCOUNT',
+//                                    created_date: account.createdDate,
+//                                    updated_date: account.updatedDate
+//                                })
+//                                .then(function () {
+//                                    return knex('party_relationship')
+//                                        .returning('party_id')
+//                                        .insert({
+//                                            party_id_from: passAlongPartyId,
+//                                            party_id_to: user.partyId,
+//                                            role_type_id_from: 'ACCOUNT',
+//                                            role_type_id_to: 'ACCOUNT_OWNER',
+//                                            from_date: account.createdDate,
+//                                            thru_date: null,
+//                                            status_id: 'PARTY_ENABLED',
+//                                            party_relationship_type_id: 'RESPONSIBLE_FOR',
+//                                            created_date: account.createdDate,
+//                                            updated_date: account.updatedDate
+//                                        }).then(function () {
+//                                            // return new Contact's party_id up to API layer
+//                                            return passAlongPartyId;
+//                                        });
+//                                });
+//                        });
+//                });
+                    
+                   
+//        });              
                         
 //        promise.catch(function (error) {
 //                winston.error(error);
