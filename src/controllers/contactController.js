@@ -121,8 +121,8 @@ var contactController = function (knex) {
                     contact.address2,
                     contact.directions,
                     contact.city,
-                    contact.zipOrPostalCode,
                     contact.stateProvinceGeoId,
+                    contact.zipOrPostalCode,
                     contact.countryGeoId
                 );
                 contactMechEntities.push(addressContactMech);

@@ -165,18 +165,6 @@ var contactData = function (knex) {
                 .andWhere('first_name', 'like', '')
                 .andWhere('last_name', 'like', '');
         }
-
-        /*// OLD CODE I WAS USING, DELETE ONCE CONFIRMED THE ABOVE IS WORKING AS PLANNED.
-        var firstNameLike = '%' + firstName + '%';
-        var lastNameLike = '%' + lastName + '%';
-        return knex.select(columnsToSelect)
-            .from('party_relationship')
-            .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
-            .innerJoin('party', 'party.party_id', 'person.party_id')
-            .andWhere('role_type_id_from', 'CONTACT')
-            .andWhere('first_name', 'like', firstNameLike)
-            .orWhere('last_name', 'like', lastNameLike);
-        */
     };
 
     /**
