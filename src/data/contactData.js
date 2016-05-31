@@ -123,6 +123,7 @@ var contactData = function (knex) {
     var getContactsByIdentity = function (firstName, lastName) {
         var columnsToSelect = ['party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date', 'person.salutation', 'person.first_name', 'person.middle_name', 'person.last_name', 'person.birth_date', 'person.comments'];
 
+        // search is by lastName only
         if (firstName.length === 0 && lastName.length > 0) {
             var lastNameLike = '%' + lastName + '%';
             return knex.select(columnsToSelect)
@@ -132,6 +133,7 @@ var contactData = function (knex) {
                 .andWhere('role_type_id_from', 'CONTACT')
                 .andWhere('last_name', 'like', lastNameLike);
         }
+        // search is by firstName only
         if (firstName.length > 0 && lastName.length === 0) {
             var firstNameLike = '%' + firstName + '%';
             return knex.select(columnsToSelect)
@@ -141,6 +143,7 @@ var contactData = function (knex) {
                 .andWhere('role_type_id_from', 'CONTACT')
                 .andWhere('first_name', 'like', firstNameLike);
         }
+        // search is by firstName and lastName both (more restrictive than previous two)
         if (firstName.length > 0 && lastName.length > 0) {
             var firstNameLike = '%' + firstName + '%';
             var lastNameLike = '%' + lastName + '%';
@@ -151,7 +154,9 @@ var contactData = function (knex) {
                 .andWhere('role_type_id_from', 'CONTACT')
                 .andWhere('first_name', 'like', firstNameLike)
                 .andWhere('last_name', 'like', lastNameLike);
-        } else {
+        }
+        // search is for empty strings, return an empty result
+        else {
             return knex.select(columnsToSelect)
                 .from('party_relationship')
                 .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')

@@ -78,11 +78,15 @@ var contactApi = function (knex) {
         // getContactsByIdentity: ELSE IF ensures there is only one response to API layer!
         //                        See: http://www.ofssam.com/forums/showthread.php?tid=43 
         //
-        // *** DINESH, REPAIR THIS COMMENT ONCE WORKING DOWN BELOW ***
-        //  If both a firstName and lastNa, returning any contacts this user owns matching whichever
-        //  supplied portion of either the firstName or lastName.  Corresponds to:
-        //  WHERE person.first_name LIKE "%firstName%" OR person.last_name LIKE "%lastName%"
+        //  If only (portion of) firstName supplied and lastName is ignored, searches equiv to:
+        //  WHERE person.first_name LIKE "%firstName%" 
         //
+        //  If only (portion of) lastName supplied and firstName is ignored, searches equiv to:
+        //  WHERE person.last_name LIKE "%lastName%" 
+        //
+        //  If both (portions of) firstName and lastName supplied, searches equiv to:
+        //  WHERE person.first_name LIKE "%firstName%" AND person.last_name LIKE "%lastName%"
+        //        
         else if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
 
             var resultsForUser = contactController.getContactsByIdentity(req.query, req.user);
