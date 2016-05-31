@@ -12,14 +12,15 @@ var validation = require('../common/validation')();
 
 // Constructor
 //
-function ContactMech(contactMechId, contactMechTypeId, infoString, createdDate,
-    updatedDate, countryCode, areaCode, contactNumber, askForName,
+function ContactMech(contactMechId, contactMechTypeId, contactMechPurposeTypeId, infoString,
+    createdDate, updatedDate, countryCode, areaCode, contactNumber, askForName,
     toName, attnName, address1, address2, directions, city, stateProvinceGeoId,
     zipOrPostalCode, countryGeoId) {
 
     // Properties
     this.contactMechId = contactMechId;
     this.contactMechTypeId = contactMechTypeId;
+    this.contactMechPurposeTypeId = contactMechPurposeTypeId;
     this.infoString = infoString;
     this.createdDate = createdDate;
     this.updatedDate = updatedDate;
@@ -48,6 +49,7 @@ ContactMech.prototype.validateForInsert = function () {
     // Perform general validations
     var validations = [
             this.validateContactMechTypeId(true),
+            //this.validateContactMechPurposeTypeId(true),
             this.validateInfoString(false)
     ];
 
@@ -55,15 +57,15 @@ ContactMech.prototype.validateForInsert = function () {
     if (this.infoString === 'POSTAL_ADDRESS') {
         //validations only applicable to postal addresses
         validations.concat([
-            this.validateToName(true),
-            this.validateAttnName(true),
-            this.validateAddress1(true),
-            this.validateAddress2(true),
-            this.validateDirections(true),
-            this.validateCity(true),
-            this.validatePostalCode(true),
-            this.validateProvinceGeoId(true),
-            this.validateCountryGeoId(true)
+            this.validateToName(false),
+            this.validateAttnName(false),
+            this.validateAddress1(false),
+            this.validateAddress2(false),
+            this.validateDirections(false),
+            this.validateCity(false),
+            this.validatePostalCode(false),
+            this.validateProvinceGeoId(false),
+            this.validateCountryGeoId(false)
         ]);
     }
     
@@ -97,6 +99,7 @@ ContactMech.prototype.validateForUpdate = function () {
     var validations = [
             this.contactMechId(true),
             this.validateContactMechTypeId(true),
+            //this.validateContactMechPurposeTypeId(true),
             this.validateInfoString(false)
     ];
 
@@ -104,15 +107,15 @@ ContactMech.prototype.validateForUpdate = function () {
     if (this.infoString === 'POSTAL_ADDRESS') {
         //validations only applicable to postal addresses
         validations.concat([
-            this.validateToName(true),
-            this.validateAttnName(true),
-            this.validateAddress1(true),
-            this.validateAddress2(true),
-            this.validateDirections(true),
-            this.validateCity(true),
-            this.validatePostalCode(true),
-            this.validateProvinceGeoId(true),
-            this.validateCountryGeoId(true)
+            this.validateToName(false),
+            this.validateAttnName(false),
+            this.validateAddress1(false),
+            this.validateAddress2(false),
+            this.validateDirections(false),
+            this.validateCity(false),
+            this.validatePostalCode(false),
+            this.validateProvinceGeoId(false),
+            this.validateCountryGeoId(false)
         ]);
     }
     
@@ -151,6 +154,13 @@ ContactMech.prototype.validateContactMechId = function (isRequired) {
 ContactMech.prototype.validateContactMechTypeId = function (isRequired) {
     this.contactMechTypeId = validation.sanitizeInput(this.contactMechTypeId);
     var validationResult = validation.validateString(this.contactMechTypeId, isRequired, 20, 'contactMechTypeId');
+    return validationResult;
+};
+
+// contact_mech_purpose_type_id is varchar(20)
+ContactMech.prototype.validateContactMechPurposeTypeId = function (isRequired) {
+    this.contactMechPurposeTypeId = validation.sanitizeInput(this.contactMechPurposeTypeId);
+    var validationResult = validation.validateString(this.contactMechPurposeTypeId, isRequired, 20, 'contactMechPurposeTypeId');
     return validationResult;
 };
 

@@ -7,8 +7,8 @@
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
-
-//var PersonData = require('./personData.js');
+/* jshint maxlen:1000 */
+/* jshint shadow:true */
 
 var contactData = function (knex) {
 
@@ -71,9 +71,9 @@ var contactData = function (knex) {
                                         party_relationship_type_id: 'RESPONSIBLE_FOR',
                                         created_date: contact.createdDate,
                                         updated_date: contact.updatedDate
-                                    }).then(function() {
+                                    }).then(function () {
                                         // return new Contact's party_id up to API layer
-                                        return passAlongPartyId; 
+                                        return passAlongPartyId;
                                     });
                             });
                     });
@@ -104,7 +104,7 @@ var contactData = function (knex) {
         // The ownership is all contained within the party_relationship table alone;
         // however, the party table is joined so that column party.party_id of the
         // contact can be passed by this function back to the controller layer.
-        return knex.select('party.party_id', 'party.description', 'person.first_name', 'person.last_name')
+        return knex.select('party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date', 'person.salutation', 'person.first_name', 'person.middle_name', 'person.last_name', 'person.birth_date', 'person.comments')
             .from('party_relationship')
             .innerJoin('party', 'party.party_id', 'party_relationship.party_id_from')
             .innerJoin('person', 'party.party_id', 'person.party_id')
@@ -116,20 +116,55 @@ var contactData = function (knex) {
 
     /** 
      * Gets all contacts from database by identity (first or last name matching)
-     * @param {Number} firstName - firstName of  to be fetched
+     * @param {String} firstName - firstName of Contact to be fetched (can be empty string)
+     * @param {String} lastName - lastName of Contact to be fetched (can be empty string)
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getContactsByIdentity = function (firstName, lastName) {
-        var firstNameLike = '%' + firstName + '%';
-        var lastNameLike = '%' + lastName + '%';
-        return knex.select('person.party_id', 'person.first_name', 'person.last_name')
-            .from('party_relationship')
-            .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
-            .whereIn('role_type_id_to', ['PERSON_ROLE', 'SALES_REP', 'ACCOUNT_MANAGER'])
-            .andWhere('party_relationship_type_id', 'RESPONSIBLE_FOR')
-            .andWhere('role_type_id_from', 'CONTACT')
-            .andWhere('first_name', 'like', firstNameLike)
-            .orWhere('last_name', 'like', lastNameLike);
+        var columnsToSelect = ['party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date', 'person.salutation', 'person.first_name', 'person.middle_name', 'person.last_name', 'person.birth_date', 'person.comments'];
+
+        // search is by lastName only
+        if (firstName.length === 0 && lastName.length > 0) {
+            var lastNameLike = '%' + lastName + '%';
+            return knex.select(columnsToSelect)
+                .from('party_relationship')
+                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+                .innerJoin('party', 'party.party_id', 'person.party_id')
+                .andWhere('role_type_id_from', 'CONTACT')
+                .andWhere('last_name', 'like', lastNameLike);
+        }
+        // search is by firstName only
+        if (firstName.length > 0 && lastName.length === 0) {
+            var firstNameLike = '%' + firstName + '%';
+            return knex.select(columnsToSelect)
+                .from('party_relationship')
+                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+                .innerJoin('party', 'party.party_id', 'person.party_id')
+                .andWhere('role_type_id_from', 'CONTACT')
+                .andWhere('first_name', 'like', firstNameLike);
+        }
+        // search is by firstName and lastName both (more restrictive than previous two)
+        if (firstName.length > 0 && lastName.length > 0) {
+            var firstNameLike = '%' + firstName + '%';
+            var lastNameLike = '%' + lastName + '%';
+            return knex.select(columnsToSelect)
+                .from('party_relationship')
+                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+                .innerJoin('party', 'party.party_id', 'person.party_id')
+                .andWhere('role_type_id_from', 'CONTACT')
+                .andWhere('first_name', 'like', firstNameLike)
+                .andWhere('last_name', 'like', lastNameLike);
+        }
+        // search is for empty strings, return an empty result
+        else {
+            return knex.select(columnsToSelect)
+                .from('party_relationship')
+                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+                .innerJoin('party', 'party.party_id', 'person.party_id')
+                .andWhere('role_type_id_from', 'CONTACT')
+                .andWhere('first_name', 'like', '')
+                .andWhere('last_name', 'like', '');
+        }
     };
 
     /**
@@ -137,50 +172,78 @@ var contactData = function (knex) {
      * @param {Object} contact - The contact entity that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateContact = function (contact) {
+    var updateContact = function (contact, user) {
         //Update the properties shared with Person
         //var numRows = PersonData.updatePerson(contact);
 
         //Update the unique properies of Contact
-        return knex('party_contact_mech')
+        return knex('party_relationship')
             .where({
-                party_id: contact.partyId
+                party_id_from: contact.partyId
             })
-            .update({})
-            .then(function (partyLinkRows) {
-                return knex('party_relationship')
+            .orWhere({
+                party_id_to: contact.partyId
+            })
+            .update({
+                party_id_from: contact.partyId,
+                party_id_to: user.partyId,
+                role_type_id_from: 'CONTACT',
+                role_type_id_to: 'PERSON_ROLE',
+                from_date: contact.createdDate,
+                thru_date: null,
+                status_id: 'PARTY_ENABLED',
+                party_relationship_type_id: 'RESPONSIBLE_FOR',
+                created_date: contact.createdDate,
+                updated_date: contact.updatedDate
+            })
+            .then(function (relationshipRows) {
+                return knex('party_role')
                     .where({
-                        party_id_from: contact.partyId
+                        party_id: contact.partyId
                     })
-                    .orWhere({
-                        party_id_to: contact.partyId
+                    .update({
+                        party_id: contact.partId,
+                        role_type_id: 'CONTACT',
+                        created_date: contact.createdDate,
+                        updated_date: contact.updatedDate
                     })
-                    .update({})
-                    .then(function (relationshipRows) {
-                        return knex('party_role')
+                    .then(function (roleRows) {
+                        return knex('person')
                             .where({
                                 party_id: contact.partyId
                             })
-                            .update({})
-                            .then(function (roleRows) {
-                                return knex('person')
+                            .update({
+                                party_id: contact.partyId,
+                                salutation: contact.salutation,
+                                first_name: contact.firstName,
+                                middle_name: contact.middleName,
+                                last_name: contact.lastName,
+                                birth_date: contact.birthDate,
+                                comments: contact.comments,
+                                created_date: contact.createdDate,
+                                updated_date: contact.updatedDate
+                            })
+                            .then(function (personRows) {
+                                return knex('party')
                                     .where({
                                         party_id: contact.partyId
                                     })
-                                    .update({})
-                                    .then(function (personRows) {
-                                        return knex('party')
-                                            .where({
-                                                party_id: contact.partyId
-                                            })
-                                            .update({first_name: contact.firstName})
-                                            .then(function (partyRows) {
-                                                return partyRows + personRows + roleRows + relationshipRows + partyLinkRows;
-                                            });
+                                    .update({
+                                        party_type_id: contact.partyTypeId,
+                                        preferred_currency_uom_id: contact.preferredCurrencyUomId,
+                                        description: contact.description,
+                                        status_id: contact.statusId,
+                                        //created_by: contact.createdBy,
+                                        created_date: contact.createdDate,
+                                        updated_date: contact.updatedDate
+                                    })
+                                    .then(function (partyRows) {
+                                        return partyRows + personRows + roleRows + relationshipRows;
                                     });
                             });
                     });
             });
+
 
         //This function does *not* handle any ContactMechs associated with this Contact
     };

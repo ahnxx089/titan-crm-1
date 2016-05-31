@@ -14,13 +14,6 @@ var contactApi = function (knex) {
     //
     var contactController = require('../controllers/contactController')(knex);
 
-    // MIDDLEWARE IS DEACTIVATED FOR NOW...
-    // Set up middleware to validate incoming requests
-    //
-    var middleware = function (req, res, next) {
-        next();
-    };
-
     // API methods
     // ==========================================
     //
@@ -32,18 +25,26 @@ var contactApi = function (knex) {
 
         var resultsForThisUser = contactController.addContact(contact, user);
 
+        /* Intepret the possible outcomes from the controller layer:
+            1.  User does not have permission to add a Contact
+            2.  User does have permission, but supplied data is not validated
+            3.  User does have permission, and a promise is returned
+        */
+        // null result means user does not have permission to add a Contact
         if (resultsForThisUser === null) {
-//<<<<<<< HEAD
-            //res.json({ message: 'You do not have permission to add contacts!' });
-//=======
             res.json({
                 message: 'You do not have permission to add contacts!'
             });
-//>>>>>>> 1b2524a9a566c03fc981659b163e9bfe8ca20a74
-        } else {
-            resultsForThisUser.then(function (contactPartyId) {
+        }
+        // An array in result means it's array of validation errors
+        else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
+            res.json(resultsForThisUser);
+        }
+        // An object in result means it's a promise (returned only if validation succeeds)
+        else {
+            resultsForThisUser.then(function (partyId) {
                 res.json({
-                    contactPartyId: contactPartyId
+                    partyId: partyId
                 });
             });
         }
@@ -67,9 +68,7 @@ var contactApi = function (knex) {
                 });
             } else {
                 resultsForThisUser.then(function (contacts) {
-                    res.json({
-                        'contacts': contacts
-                    });
+                    res.json(contacts);
                 });
             }
         }
@@ -79,10 +78,15 @@ var contactApi = function (knex) {
         // getContactsByIdentity: ELSE IF ensures there is only one response to API layer!
         //                        See: http://www.ofssam.com/forums/showthread.php?tid=43 
         //
-        //  The search is inclusive, returning any contacts this user owns matching whichever
-        //  supplied portion of either the firstName or lastName.  Corresponds to:
-        //  WHERE person.first_name LIKE "%firstName%" OR person.last_name LIKE "%lastName%"
+        //  If only (portion of) firstName supplied and lastName is ignored, searches equiv to:
+        //  WHERE person.first_name LIKE "%firstName%" 
         //
+        //  If only (portion of) lastName supplied and firstName is ignored, searches equiv to:
+        //  WHERE person.last_name LIKE "%lastName%" 
+        //
+        //  If both (portions of) firstName and lastName supplied, searches equiv to:
+        //  WHERE person.first_name LIKE "%firstName%" AND person.last_name LIKE "%lastName%"
+        //        
         else if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
 
             var resultsForUser = contactController.getContactsByIdentity(req.query, req.user);
@@ -92,9 +96,7 @@ var contactApi = function (knex) {
                 });
             } else {
                 resultsForUser.then(function (contacts) {
-                    res.json({
-                        'contacts': contacts
-                    });
+                    res.json(contacts);
                 });
             }
         }
@@ -125,8 +127,9 @@ var contactApi = function (knex) {
     // PUT /api/contacts/:id
     var updateContact = function (req, res) {
         var contactId = req.params.id;
+        var user = req.user;
         var contact = req.body;
-        contactController.updateContact(contactId, contact)
+        contactController.updateContact(contactId, contact, user)
             .then(function (result) {
                 res.json({
                     updated: result
@@ -146,7 +149,6 @@ var contactApi = function (knex) {
     };
 
     return {
-        middleware: middleware,
         addContact: addContact,
         getContacts: getContacts,
         getContactById: getContactById,
