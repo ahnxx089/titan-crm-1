@@ -11,45 +11,50 @@
 the newly created entry in that table, then deleting the account-related fields in the new entry. 
 This is referring to #4 on slide 18.
 */
+var winston = require('winston');
 
-var contactMechData = require('../data/contactMechData')();
-var orgData = require('../data/organizationData')();
-var partyData = require('../data/partyData')();
 
 var accountData = function (knex) {
+    var contactMechData = require('../data/contactMechData')(knex);
+    var orgData = require('../data/organizationData')(knex);
+    var partyData = require('../data/partyData')(knex);
     
     var addAccountParty = function (account) {
-        partyData.addParty(account);
+        return partyData.addParty(account);
+//        promise.catch(function (error) {
+//                winston.error(error);
+//            });
+//        return promise;
     };
     
     var addAccountOrg = function (account) {
-        orgData.addOrganization(account);
+        return orgData.addOrganization(account);
     };
     
     var addAccountPartySupplementalData = function (account) {
         //EMPTY FOR NOW - UNCLEAR ON WHAT MUST GO HERE THAT 
         //WOULDN'T GO INTO orgData.addOrganization
         return knex.insert({
-                party_id: account.partyId,
-                parent_party_id: account.parentPartyId,
-                //Put in company name here maybe?
-                annual_revenue: account.annualRevenue,
-                currency_uom_id: account.preferredCurrencyUomId,
-                num_employees: account.numEmployees,
-                industry_enum_id: account.industryEnumId,
-                ownership_enum_id: account.ownershipEnumId,
-                ticker_symbol: account.tickerSymbol,
-                important_note: account.importantNote,
-                primary_postal_address_id: account.primaryPostalAddressId,
-                primary_telecom_number_id: account.primaryTelecomNumberId,
-                primary_email_id: account.primaryEmailId,
-                created_date: account.createdDate, //this may be incorrect and need to be changed
-                updated_date: account.updatedDate
-            }).into('party_supplemental_data');
+            party_id: account.partyId,
+            parent_party_id: account.parentPartyId,
+            //Put in company name here maybe?
+            annual_revenue: account.annualRevenue,
+            currency_uom_id: account.preferredCurrencyUomId,
+            num_employees: account.numEmployees,
+            industry_enum_id: account.industryEnumId,
+            ownership_enum_id: account.ownershipEnumId,
+            ticker_symbol: account.tickerSymbol,
+            important_note: account.importantNote,
+            primary_postal_address_id: account.primaryPostalAddressId,
+            primary_telecom_number_id: account.primaryTelecomNumberId,
+            primary_email_id: account.primaryEmailId,
+            created_date: account.createdDate, //this may be incorrect and need to be changed
+            updated_date: account.updatedDate
+        }).into('party_supplemental_data');
     };
     
     var addAccountContactMech = function (account) {
-        contactMechData.addContactMech(account);
+        return contactMechData.addContactMech(account);
     };
     
     var addAccountPartyRole = function (account) {
@@ -125,24 +130,28 @@ var accountData = function (knex) {
     
     var addAccount = function (account, user, contact) {
         //Call all of the previous addAccount___ methods. 
-        var promise = addAccountParty(account)
+        return addAccountParty(account)
                         .then(function(accountResults) {
-                            return (accountResults += addAccountOrg(account));
-                        })
-                        .then(function(accountResults) {
-                            return (accountResults += addAccountPartySupplementalData(account));
-                        })
-                        .then(function(accountResults) {
-                            return (accountResults += addAccountContactMechData(account));
-                        })
-                        .then(function(accountResults) {
-                            return (accountResults += addAccountPartyRole(account));
-                        })
-                        .then(function(accountResults) {
-                            return (addAccountPartyRelationship(account, user, contact));
-                        });
-        
-        return promise;
+                            return addAccountOrg(account)
+                                .then(function(PartyResults) {
+                                    return addAccountPartySupplementalData(account)
+                                        .then(function(PartySupplementalDataResults) {
+                                            return addAccountContactMech(account)
+                                                .then(function(ContactMechResults) {
+                                                    return addAccountPartyRole(account)
+                                                        .then(function(PartyRoleResults){
+                                                            return addAccountPartyRelationship(account);
+                                                    });
+                                            });
+                                    });
+                            });
+                    });
+                        
+                        
+//        promise.catch(function (error) {
+//                winston.error(error);
+//            });
+//        return promise;
     };
     
     /** 
@@ -156,7 +165,7 @@ var accountData = function (knex) {
         'important_note', 'primary_postal_address', 'primary_telecom_number_id', 'primary_email_id',
         'created_date', 'updated_date', 'organization.logo_image_url')
             .from('party_supplemental_data')
-            .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
+            //.innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
             .innerJoin('party_relationship', 'party_supplemental_data.party_id', 'party_relationship.party_id_from')
             .where('party_relationship.party_id_to', ownerId)
             .andWhere('party_relationship.role_type_id_from', 'account')
@@ -207,9 +216,16 @@ var accountData = function (knex) {
      */
     var deleteAccount = function (accountId) {};
     
-    return {};
+    return {
+        addAccount: addAccount,
+        getAccountsByOwner: getAccountsByOwner,
+        getAccountById: getAccountById,
+        getAccountByPhoneNumber: getAccountByPhoneNumber,
+        updateAccount: updateAccount,
+        deleteAccount: deleteAccount      
+    };
     
-    
+
 };
 
 module.exports = accountData;
