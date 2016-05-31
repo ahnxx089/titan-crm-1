@@ -40,7 +40,7 @@ var leadData = function (knex) {
 
 
         //NOTE TO LUCAS AND DIVINE: Below changes to this function were made by Eric to resolve errors crashing the app
-        // Thank you from Lucas. 
+        //Thank you from Lucas. 
 
         return knex('party')
             .returning('party_id')
@@ -84,10 +84,10 @@ var leadData = function (knex) {
                         industry_enum_id: lead.industryEnumId,
                         ownership_enum_id: lead.ownershipEnumId,
                         ticker_symbol: lead.tickerSymbol,
-                        important_note: lead.importantNote,
-                        primary_postal_address_id: lead.primaryPostalAddressId,
-                        primary_telecom_number_id: lead.primaryTelecomNumberId,
-                        primary_email_id: lead.primaryEmailId
+                        important_note: lead.importantNote
+//                        primary_postal_address_id: lead.primaryPostalAddressId,
+//                        primary_telecom_number_id: lead.primaryTelecomNumberId,
+//                        primary_email_id: lead.primaryEmailId
                     })
             .then(function () {
                 return knex('party_role')
@@ -98,33 +98,34 @@ var leadData = function (knex) {
                         created_date: lead.createdDate,
                         updated_date: lead.updatedDate
                     })
-            .then(function() {
-                 return knex('contact_mech')
-                    .returning('contact_mech_id')
-                    .insert({
-                        contact_mech_type_id: 'EMAIL_ADDRESS',
-                        info_string: lead.primaryEmailId,
-                        created_date: lead.createdDate,
-                        updated_date: lead.updatedDate
-                    })
-             .then(function(cm_id) {
-                 return knex('party_contact_mech')
-                     .insert({
-                        party_id: res[0],
-                        contact_mech_id: cm_id,
-                        contact_mech_purpose_type_id: 'PRIMARY_EMAIL',
-                        from_date: lead.createdDate,
-                        thru_date: null,
-                        verified: 0,
-                        comments: '',
-                        created_date: lead.createdDate,
-                        updated_date: lead.updatedDate
-                    })
+//            .then(function() {
+//                 return knex('contact_mech')
+//                    .returning('contact_mech_id')
+//                    .insert({
+//                        contact_mech_type_id: 'EMAIL_ADDRESS',
+//                        info_string: lead.primaryEmailId,
+//                        created_date: lead.createdDate,
+//                        updated_date: lead.updatedDate
+//                    })
+                
+//             .then(function(cm_id) {
+//                 return knex('party_contact_mech')
+//                     .insert({
+//                        party_id: res[0],
+//                        contact_mech_id: cm_id,
+//                        contact_mech_purpose_type_id: 'PRIMARY_EMAIL',
+//                        from_date: lead.createdDate,
+//                        thru_date: null,
+//                        verified: 0,
+//                        comments: '',
+//                        created_date: lead.createdDate,
+//                        updated_date: lead.updatedDate
+//                    })
              .then(function() {
-                   return res[0]
+                   return res[0];
                     });
-            });
-            });
+//            });
+//            });
             });
             });
             });
