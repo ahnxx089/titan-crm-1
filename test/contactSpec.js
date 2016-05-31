@@ -172,7 +172,7 @@ describe('Contact module ', function () {
     // Test of contactController.getContactsByIdentity where user has security permission -- TEST PASSED
     xit('contactController.getContactsByIdentity allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
 
-        // this search looks for any first name containing "w" OR last name containing "e"
+        // this search looks for any first name containing "w" AND last name containing "e"
         var query = {
             firstName: 'w',
             lastName: 'e'
