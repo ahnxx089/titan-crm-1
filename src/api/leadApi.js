@@ -146,7 +146,7 @@ var leadApi = function (knex) {
         var resultForThisUser = leadController.getLeadsByOwner(user); // this param was changed from ownerId to user
         if(resultForThisUser === null) {
             res.json({
-                'message': 'You do not have permission to own or view contacts!'
+                'message': 'You do not have permission to own or view leads!'
             });
         } else {
             resultForThisUser.then(function (lead) {
