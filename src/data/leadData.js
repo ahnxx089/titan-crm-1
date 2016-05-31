@@ -15,17 +15,17 @@
 
 var leadData = function (knex) {
 
-    
+
     // DATA METHODS
     /**
      * Methods in XXXdata.js are called from Controller layer,
      * They accept lead entities from controllers, and insert them into database.
      * They also query the database based on the creteria from controllers, and giving back (queried) columns to controllers. 
-    */
+     */
     // ==========================================
     //
-    
-    
+
+
     // Lucas's taking this
     /**
      * Add a new lead in database
@@ -149,13 +149,13 @@ var leadData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getLeadById = function (id) {
-//        return knex.select('party_id', 'salutation', 'first_name', 'middle_name', 
-//                           'last_name', 'birth_date', 'comments', 'created_date', 'updated_date')
-//            .from('person')
-//            .where({
-//                party_id: id
-//            });
-        
+        //        return knex.select('party_id', 'salutation', 'first_name', 'middle_name', 
+        //                           'last_name', 'birth_date', 'comments', 'created_date', 'updated_date')
+        //            .from('person')
+        //            .where({
+        //                party_id: id
+        //            });
+
         return knex.from('person')
             .innerJoin('party', 'person.party_id', 'party.party_id')
             .innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id')
@@ -164,7 +164,7 @@ var leadData = function (knex) {
             .where('person.party_id', id);
     };
 
-    
+
     // Lucas's taking this
     /**
      * Gets leads by its owner (the one by whom they are created) from database
@@ -174,14 +174,14 @@ var leadData = function (knex) {
     var getLeadsByOwner = function (ownerId) {
         return knex.from('person')
             .innerJoin('party', 'person.party_id', 'party.party_id')
-            .innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id')            
+            .innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id')
             .innerJoin('party_role', 'person.party_id', 'party_role.party_id')
             .innerJoin('party_contact_mech', 'person.party_id', 'party_contact_mech.party_id')
             .where('party.created_by', ownerId);
     };
 
-    
-    
+
+
     // WARNING
     // updateLead, deleteLead ARE NOT FULLY IMPLEMENTED! See beginning for more detail. 
 
@@ -204,7 +204,7 @@ var leadData = function (knex) {
             });
     };
 
-    
+
     // Divine: Follow my example of adding leads. 
     // You need to delete the leads from Party_supplemental_data, Person and serveral other tables, 
     // before deleting (the rest of) that lead in Party table
@@ -214,20 +214,61 @@ var leadData = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */
     var deleteLead = function (leadId) {
-        return knex('party')
+        return knex('party_contact_mech')
             .where({
                 party_id: leadId
             })
-            .del();
+            .del()
+            .then(function (partyLinkRows) {
+                return knex('contact_mech')
+                    .where({
+                        party_id: leadId
+                    })
+                    .del()
+                    .then(function (contactMechRows) {
+                        return knex('party_role')
+                            .where({
+                                party_id: leadId
+
+                            })
+                            .del()
+                            .then(function (partyRoleRows) {
+                                return knex('party_supplemental_data')
+                                    .where({
+                                        party_id: leadId
+                                    })
+                                    .del()
+                                    .then(function (partySuppRows) {
+                                        return knex('person')
+                                            .where({
+                                                party_id: leadId
+
+                                            })
+                                            .del()
+                                            .then(function (personRows) {
+                                                return knex('party')
+                                                    .where({
+                                                        party_id: leadId
+                                                    })
+                                                    .del()
+                                                    .then(function (partyRows) {
+                                                        return partyRows + personRows + partyRoleRows + partySuppRows + contactMechRows + partyLinkRows;
+                                                    });
+
+                                            });
+                                    });
+                            });
+                    });
+            });
     };
 
     return {
         addLead: addLead,
         getLeadsByOwner: getLeadsByOwner,
-//        getLeads: getLeads,
+        getLeads: getLeads,
         getLeadById: getLeadById,
-//        updateLead: updateLead,
-//        deleteLead: deleteLead
+        updateLead: updateLead,
+        deleteLead: deleteLead
     };
 
 };

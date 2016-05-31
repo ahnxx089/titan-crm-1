@@ -11,45 +11,50 @@
 the newly created entry in that table, then deleting the account-related fields in the new entry. 
 This is referring to #4 on slide 18.
 */
+var winston = require('winston');
 
-var contactMechData = require('../data/contactMechData')();
-var orgData = require('../data/organizationData')();
-var partyData = require('../data/partyData')();
 
 var accountData = function (knex) {
+    var contactMechData = require('../data/contactMechData')(knex);
+    var orgData = require('../data/organizationData')(knex);
+    var partyData = require('../data/partyData')(knex);
     
     var addAccountParty = function (account) {
-        partyData.addParty(account);
+        return partyData.addParty(account);
+//        promise.catch(function (error) {
+//                winston.error(error);
+//            });
+//        return promise;
     };
     
     var addAccountOrg = function (account) {
-        orgData.addOrganization(account);
+        return orgData.addOrganization(account);
     };
     
     var addAccountPartySupplementalData = function (account) {
         //EMPTY FOR NOW - UNCLEAR ON WHAT MUST GO HERE THAT 
         //WOULDN'T GO INTO orgData.addOrganization
         return knex.insert({
-                party_id: account.partyId,
-                parent_party_id: account.parentPartyId,
-                //Put in company name here maybe?
-                annual_revenue: account.annualRevenue,
-                currency_uom_id: account.preferredCurrencyUomId,
-                num_employees: account.numEmployees,
-                industry_enum_id: account.industryEnumId,
-                ownership_enum_id: account.ownershipEnumId,
-                ticker_symbol: account.tickerSymbol,
-                important_note: account.importantNote,
-                primary_postal_address_id: account.primaryPostalAddressId,
-                primary_telecom_number_id: account.primaryTelecomNumberId,
-                primary_email_id: account.primaryEmailId,
-                created_date: account.createdDate, //this may be incorrect and need to be changed
-                updated_date: account.updatedDate
-            }).into('party_supplemental_data');
+            party_id: account.partyId,
+            parent_party_id: account.parentPartyId,
+            //Put in company name here maybe?
+            annual_revenue: account.annualRevenue,
+            currency_uom_id: account.preferredCurrencyUomId,
+            num_employees: account.numEmployees,
+            industry_enum_id: account.industryEnumId,
+            ownership_enum_id: account.ownershipEnumId,
+            ticker_symbol: account.tickerSymbol,
+            important_note: account.importantNote,
+            primary_postal_address_id: account.primaryPostalAddressId,
+            primary_telecom_number_id: account.primaryTelecomNumberId,
+            primary_email_id: account.primaryEmailId,
+            created_date: account.createdDate, //this may be incorrect and need to be changed
+            updated_date: account.updatedDate
+        }).into('party_supplemental_data');
     };
     
     var addAccountContactMech = function (account) {
-        contactMechData.addContactMech(account);
+        return contactMechData.addContactMech(account);
     };
     
     var addAccountPartyRole = function (account) {
@@ -125,24 +130,107 @@ var accountData = function (knex) {
     
     var addAccount = function (account, user, contact) {
         //Call all of the previous addAccount___ methods. 
-        var promise = addAccountParty(account)
+        return addAccountParty(account)
                         .then(function(accountResults) {
-                            return (accountResults += addAccountOrg(account));
-                        })
-                        .then(function(accountResults) {
-                            return (accountResults += addAccountPartySupplementalData(account));
-                        })
-                        .then(function(accountResults) {
-                            return (accountResults += addAccountContactMechData(account));
-                        })
-                        .then(function(accountResults) {
-                            return (accountResults += addAccountPartyRole(account));
-                        })
-                        .then(function(accountResults) {
-                            return (addAccountPartyRelationship(account, user, contact));
-                        });
-        
-        return promise;
+                            account.partyId = accountResults;
+                            return addAccountOrg(account)
+                                .then(function(PartyResults) {
+                                    return addAccountPartySupplementalData(account)
+                                        .then(function(PartySupplementalDataResults) {
+                                            return addAccountContactMech(account)
+                                                .then(function(ContactMechResults) {
+                                                    return addAccountPartyRole(account)
+                                                        .then(function(PartyRoleResults){
+                                                            return addAccountPartyRelationship(account);
+                                                    });
+                                            });
+                                    });
+                            });
+                    });
+//          return knex('party')
+//            .returning('party_id') // for passing along to person table
+//            .insert({
+//                party_type_id: account.partyTypeId,
+//                preferred_currency_uom_id: account.preferredCurrencyUomId,
+//                description: account.description,
+//                status_id: account.statusId,
+//                created_by: account.createdBy,
+//                created_date: account.createdDate,
+//                updated_date: account.updatedDate
+//            })
+//            .then(function (passAlongPartyId) {
+//                return knex('organization')
+//                    .returning('party_id') // for passing along to party_role table
+//                    .insert({
+//                        party_id: passAlongPartyId,
+//                        organization_name: account.orgName,
+//                        office_site_name: account.officeSiteName,
+//                        annual_revenue: account.annualRevenue,
+//                        num_employees: account.numEmployees,
+//                        ticker_symbol: account.tickerSymbol,
+//                        comments: account.comments,
+//                        logo_image_url: account.logoImgURL,
+//                        created_date: account.createdDate,
+//                        updated_date: account.updatedDate
+//                    })
+//                    .then(function () {
+//                        return knex('party_supplemental_data')
+//                            .returning('party_id')
+//                            .insert({
+//                                party_id: passAlongPartyId,
+//                                //parent_party_id: account.parentPartyId,
+//                                //Put in company name here maybe?
+//                                annual_revenue: account.annualRevenue,
+//                                currency_uom_id: account.preferredCurrencyUomId,
+//                                num_employees: account.numEmployees,
+//                                industry_enum_id: account.industryEnumId,
+//                                ownership_enum_id: account.ownershipEnumId,
+//                                ticker_symbol: account.tickerSymbol,
+//                                important_note: account.importantNote,
+//                                primary_postal_address_id: account.primaryPostalAddressId,
+//                                primary_telecom_number_id: account.primaryTelecomNumberId,
+//                                primary_email_id: account.primaryEmailId,
+//                                created_date: account.createdDate, //this may be incorrect and need to be changed
+//                                updated_date: account.updatedDate
+//                        })
+//                        .then(function () {
+//                            return knex('party_role')
+//                                .returning('party_id') // for passing along to party_relationship table
+//                                .insert({
+//                                    party_id: passAlongPartyId,
+//                                    role_type_id: 'ACCOUNT',
+//                                    created_date: account.createdDate,
+//                                    updated_date: account.updatedDate
+//                                })
+//                                .then(function () {
+//                                    return knex('party_relationship')
+//                                        .returning('party_id')
+//                                        .insert({
+//                                            party_id_from: passAlongPartyId,
+//                                            party_id_to: user.partyId,
+//                                            role_type_id_from: 'ACCOUNT',
+//                                            role_type_id_to: 'ACCOUNT_OWNER',
+//                                            from_date: account.createdDate,
+//                                            thru_date: null,
+//                                            status_id: 'PARTY_ENABLED',
+//                                            party_relationship_type_id: 'RESPONSIBLE_FOR',
+//                                            created_date: account.createdDate,
+//                                            updated_date: account.updatedDate
+//                                        }).then(function () {
+//                                            // return new Contact's party_id up to API layer
+//                                            return passAlongPartyId;
+//                                        });
+//                                });
+//                        });
+//                });
+                    
+                   
+//        });              
+                        
+//        promise.catch(function (error) {
+//                winston.error(error);
+//            });
+//        return promise;
     };
     
     /** 
@@ -156,7 +244,7 @@ var accountData = function (knex) {
         'important_note', 'primary_postal_address', 'primary_telecom_number_id', 'primary_email_id',
         'created_date', 'updated_date', 'organization.logo_image_url')
             .from('party_supplemental_data')
-            .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
+            //.innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
             .innerJoin('party_relationship', 'party_supplemental_data.party_id', 'party_relationship.party_id_from')
             .where('party_relationship.party_id_to', ownerId)
             .andWhere('party_relationship.role_type_id_from', 'account')
@@ -174,7 +262,7 @@ var accountData = function (knex) {
         'created_date', 'updated_date', 'organization.logo_image_url')
             .from('party_supplemental_data')
             .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
-            .innerJoin('party_role', 'party_supplemental_data.party_id', 'party_role.party_id')
+            .innerJoin('party_role', 'party_supplemental_data.party_id',  'party_role.party_id')
             .where({party_id: accountId})
             .andWhere('party_role.role_type_id', 'account');
     };
@@ -187,19 +275,71 @@ var accountData = function (knex) {
         //TELECOM_NUMBER is the value of the contactmechtypeId where we want to join table entries
         //Is there really a telecom_number table in our titan_crm database? contactData mentions that there 
         //is, but I haven't seen one anywhere...
-        
-        
+        return knex.select('contact_mech.contact_mech_id','telecom_number.contact_mech_id')
+            .from('party_supplemental_data')
+            .innerJoin('contact_mech', 'party_supplemental_data.party_id', 'contact_mech.contact_mech_id' )
+            .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id' )
+            .where({telecom_number: phoneNumber})
     };
     
-    
+     var getAccountByIdentity = function (accountId, accountName) {
+        var accountNameLike = '%' + accountName + '%';
+        var acccountIdLike = '%' + accountId + '%';
+        return knex.select('organization.party_id', 'organization.organization_name')
+            .from('party_supplemental_data')
+            .innerJoin('organization', 'party_supplemental_data.party_id','organization.party_id')
+            .innerJoin('party_role', 'party_supplemental_data.party_id', 'party_role.party_id')
+            .where({party_id: accountId})
+            .orWhere('organization_name', 'like', accountNameLike)       
+    };
+
 
     /**
      * Update an account in database
      * @param {Object} account - The account entity that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateAccount = function (account) {};
-
+    var updateAccount = function (account) {
+        return knex('party_supplemental_data')
+            .where({
+                party_id: account.partyId
+            })
+            .update({})
+            .then(function (supplementPart) {
+                return knex('party_relationship')
+                    .where({
+                        party_id_from: account.partyId
+                    })
+                    .orWhere({
+                        party_id_to: account.partyId
+                    })
+                    .update({})
+                    .then(function (relationshipPart) {
+                        return knex('party_role')
+                            .where({
+                                party_id: account.partyId
+                            })
+                            .update({})
+                            .then(function (organizationPart) {
+                                return knex('organization')
+                                    .where({
+                                        party_id: account.partyId
+                                    })
+                                    .update({})
+                                    .then(function (personPart) {
+                                        return knex('party')
+                                            .where({
+                                                party_id: account.partyId
+                                            })
+                                            .update({})
+                                            .then(function (partyPart) {
+                                                return partyPart + personPart + organizationPart + relationshipPart + supplementPart;
+                                            });
+                                    });
+                            });
+                    });
+            });
+    };
     /**
      * Delete an account from database
      * @param {Number} accountId - Unique id of the account to be deleted
@@ -207,9 +347,16 @@ var accountData = function (knex) {
      */
     var deleteAccount = function (accountId) {};
     
-    return {};
+    return {
+        addAccount: addAccount,
+        getAccountsByOwner: getAccountsByOwner,
+        getAccountById: getAccountById,
+        getAccountByPhoneNumber: getAccountByPhoneNumber,
+        updateAccount: updateAccount,
+        deleteAccount: deleteAccount      
+    };
     
-    
+
 };
 
 module.exports = accountData;

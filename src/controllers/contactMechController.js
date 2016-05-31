@@ -51,7 +51,7 @@ var contactMechController = function (knex) {
             // Pass on the entity to be added to the data layer
             var promise;
 
-            if (this.contactMechTypeId === 'TELECOM_NUMBER') {
+            if (contactMech.contactMechTypeId === 'TELECOM_NUMBER') {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
                     .then(function (contactMechId) {
                         contactMechEntity.contactMechId = contactMechId;
@@ -60,9 +60,10 @@ var contactMechController = function (knex) {
                                 return contactMechId;
                             });
                     });
-            } else if (this.contactMechTypeId === 'POSTAL_ADDRESS') {
+            } else if (contactMech.contactMechTypeId === 'POSTAL_ADDRESS') {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
                     .then(function (contactMechId) {
+                        contactMechEntity.contactMechId = contactMechId;
                         return contactMechData.addContactMechToPostalTable(contactMechEntity)
                             .then(function (input) {
                                 return contactMechId;
@@ -121,6 +122,45 @@ var contactMechController = function (knex) {
         });
         return promise;
     };
+
+    var getContactMechsByParty = function (partyId) {
+        var promise = contactMechData.getContactMechsByParty(partyId)
+            .then(function (contactMechs) {
+                // Map the retrieved result set to corresponding entities
+                var contactMechEntities = [];
+                for (var i = 0; i < contactMechs.length; i++) {
+                    var contactMech = new ContactMech(
+                        contactMechs[i].contactMechId,
+                        contactMechs[i].contactMechTypeId,
+                        contactMechs[i].infoString,
+                        contactMechs[i].createdDate,
+                        contactMechs[i].updatedDate,
+                        contactMechs[i].countryCode,
+                        contactMechs[i].areaCode,
+                        contactMechs[i].contactNumber,
+                        contactMechs[i].askForName,
+                        contactMechs[i].toName,
+                        contactMechs[i].attnName,
+                        contactMechs[i].address1,
+                        contactMechs[i].address2,
+                        contactMechs[i].directions,
+                        contactMechs[i].city,
+                        contactMechs[i].stateProvinceGeoId,
+                        contactMechs[i].zipOrPostalCode,
+                        contactMechs[i].countryGeoId
+                    );
+
+                    contactMechEntities.push(contactMech);
+                }
+                return contactMechEntities;
+            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
+        return promise;
+    };
+
 
     var getContactMechById = function (contactMechId) {
         var promise = contactMechData.getContactMechById(contactMechId)
@@ -238,6 +278,7 @@ var contactMechController = function (knex) {
     return {
         addContactMech: addContactMech,
         getContactMechs: getContactMechs,
+        getContactMechsByParty: getContactMechsByParty,
         getContactMechById: getContactMechById,
         updateContactMech: updateContactMech,
         deleteContactMech: deleteContactMech,
