@@ -329,7 +329,7 @@ var contactController = function (knex) {
      * @param {Object} contact - The object that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateContact = function (contactId, contact) {
+    var updateContact = function (contactId, contact, user) {
         //Convert contact to entity
         var contactEntity = new Contact(
             contactId,
@@ -339,7 +339,7 @@ var contactController = function (knex) {
             contact.statusId,
             contact.createdBy,
             contact.createdDate,
-            contact.updatedDate,
+            (new Date()).toISOString(), //contact.updatedDate,
             contact.salutation,
             contact.firstName,
             contact.middleName,
@@ -352,10 +352,10 @@ var contactController = function (knex) {
         var validationErrors = contactEntity.validateForUpdate();
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
-            var promise = contactData.updateContact(contact)
-                .then(function (numRows) {
-                    return numRows;
-                });
+            var promise = contactData.updateContact(contactEntity, user)
+                //.then(function (numRows) {
+                //    return numRows;
+                //});
 
             promise.catch(function (error) {
                 winston.error(error);

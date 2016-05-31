@@ -136,52 +136,78 @@ var contactData = function (knex) {
      * @param {Object} contact - The contact entity that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateContact = function (contact) {
+    var updateContact = function (contact, user) {
         //Update the properties shared with Person
         //var numRows = PersonData.updatePerson(contact);
 
         //Update the unique properies of Contact
-        return knex('party_contact_mech')
+        return knex('party_relationship')
             .where({
-                party_id: contact.partyId
+                party_id_from: contact.partyId
             })
-            .update({})
-            .then(function (partyLinkRows) {
-                return knex('party_relationship')
+            .orWhere({
+                party_id_to: contact.partyId
+            })
+            .update({
+                party_id_from: contact.partyId,
+                party_id_to: user.partyId,
+                role_type_id_from: 'CONTACT',
+                role_type_id_to: 'PERSON_ROLE',
+                from_date: contact.createdDate,
+                thru_date: null,
+                status_id: 'PARTY_ENABLED',
+                party_relationship_type_id: 'RESPONSIBLE_FOR',
+                created_date: contact.createdDate,
+                updated_date: contact.updatedDate
+            })
+            .then(function (relationshipRows) {
+                return knex('party_role')
                     .where({
-                        party_id_from: contact.partyId
+                        party_id: contact.partyId
                     })
-                    .orWhere({
-                        party_id_to: contact.partyId
+                    .update({
+                        party_id: contact.partId,
+                        role_type_id: 'CONTACT',
+                        created_date: contact.createdDate,
+                        updated_date: contact.updatedDate
                     })
-                    .update({})
-                    .then(function (relationshipRows) {
-                        return knex('party_role')
+                    .then(function (roleRows) {
+                        return knex('person')
                             .where({
                                 party_id: contact.partyId
                             })
-                            .update({})
-                            .then(function (roleRows) {
-                                return knex('person')
+                            .update({
+                                party_id: contact.partyId,
+                                salutation: contact.salutation,
+                                first_name: contact.firstName,
+                                middle_name: contact.middleName,
+                                last_name: contact.lastName,
+                                birth_date: contact.birthDate,
+                                comments: contact.comments,
+                                created_date: contact.createdDate,
+                                updated_date: contact.updatedDate
+                            })
+                            .then(function (personRows) {
+                                return knex('party')
                                     .where({
                                         party_id: contact.partyId
                                     })
-                                    .update({})
-                                    .then(function (personRows) {
-                                        return knex('party')
-                                            .where({
-                                                party_id: contact.partyId
-                                            })
-                                            .update({
-                                                first_name: contact.firstName
-                                            })
-                                            .then(function (partyRows) {
-                                                return partyRows + personRows + roleRows + relationshipRows + partyLinkRows;
-                                            });
+                                    .update({
+                                        party_type_id: contact.partyTypeId,
+                                        preferred_currency_uom_id: contact.preferredCurrencyUomId,
+                                        description: contact.description,
+                                        status_id: contact.statusId,
+                                        //created_by: contact.createdBy,
+                                        created_date: contact.createdDate,
+                                        updated_date: contact.updatedDate
+                                    })
+                                    .then(function (partyRows) {
+                                        return partyRows + personRows + roleRows + relationshipRows;
                                     });
                             });
                     });
             });
+
 
         //This function does *not* handle any ContactMechs associated with this Contact
     };

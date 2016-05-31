@@ -122,8 +122,9 @@ var contactApi = function (knex) {
     // PUT /api/contacts/:id
     var updateContact = function (req, res) {
         var contactId = req.params.id;
+        var user = req.user;
         var contact = req.body;
-        contactController.updateContact(contactId, contact)
+        contactController.updateContact(contactId, contact, user)
             .then(function (result) {
                 res.json({
                     updated: result
