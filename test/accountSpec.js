@@ -33,7 +33,7 @@ describe('Account module', function () {
            });
     });
     it('getAccountsByOwner returns a valid array of accounts', function (done) {
-        accountController.getAccountsByOwner(admin).then(function (accounts) {
+        accountController.getAccountsByOwner("admin").then(function (accounts) {
             //The thing I'm still uncertain of here is whether anything needs 
             //to be tested regarding the ownerId/userId. It's redundant to 
             //check whether the userId being used actually exists in the database...
