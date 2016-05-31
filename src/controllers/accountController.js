@@ -16,7 +16,7 @@ var ContactMechController = require('../controllers/contactMechController');
 var accountController = function (knex) {
     // Get a reference to data layer module
     //
-    var accountData = require('../data/organizationData')(knex);
+    var accountData = require('../data/accountData')(knex);
 
 
     // CONTROLLER METHODS
@@ -36,7 +36,7 @@ var accountController = function (knex) {
         //if (hasSecurityPermissions !== -1) { the below code }
         
         var contactMechPromises = [];
-        if (account.primaryEmailAddress) {
+        if (account.primaryEmailAddressId) {
             var emailContactMech = new ContactMech(
                 null, 
                 'EMAIL_ADDRESS',
@@ -75,18 +75,15 @@ var accountController = function (knex) {
         // Validate the data before going ahead
         var validationErrors = accountEntity.validateForInsert(); 
         //MUST I ALSO VALIDATE THE USER CREDENTIALS AS WELL? I'M PASSING IT TO THE DB...
-        var userEntity = userController.getUserById(user.userId);
+        //var userEntity = userController.getUserById(user.userId);
         if(validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
             //IF THIS PROMISE DOESN'T PULL THE USER'S PROPERTIES AS EXPECTED, JUST SWITCH USERENTITY TO USER
-            var promise = accountData.addAccount(accountEntity, userEntity)
+            var promise = accountData.addAccount(accountEntity, user)
 
                 .then(function(partyId) {
                    
                     return partyId; 
-                });
-                promise.catch(function(error) {
-                    winston.error(error);
                 });
             promise.catch(function (error) {
                 winston.error(error);
@@ -98,7 +95,7 @@ var accountController = function (knex) {
     
     
         var addContactMechCallback = function(partyId) {
-            if (ContactMechPromises.length > 0) {
+            if (contactMechPromises.length > 0) {
                 var promise = contactMechPromises.pop();
                 promise.then(function(contactMechId) {
                     ContactMechController.linkContactMechToParty(partyId, contactMechId)
