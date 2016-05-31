@@ -11,10 +11,7 @@
 
 var winston = require('winston');
 var Contact = require('../entities/contact');
-var User = require('../entities/user');
 var ContactMech = require('../entities/contactMech');
-
-
 var _ = require('lodash');
 
 var contactController = function (knex) {
@@ -27,9 +24,6 @@ var contactController = function (knex) {
     // CONTROLLER METHODS
     // ==========================================
     //
-
-
-
 
     var addContactMechCallback = function (addContactMechPromises, contactMechEntities, partyId) {
         if (addContactMechPromises.length > 1) {
@@ -48,13 +42,12 @@ var contactController = function (knex) {
             var purposeTypeId = contactMech.contactMechPurposeTypeId;
             return promise.then(function (contactMechId) {
                 return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
-                .then(function () {
-                    return partyId;
-                });
+                    .then(function () {
+                        return partyId;
+                    });
             });
         }
     };
-
 
     /**
      * Add a new contact  
@@ -64,20 +57,15 @@ var contactController = function (knex) {
      */
     var addContact = function (contact, user) {
 
-        // Check user's security permission to add contacts:  At least one of this user's 
-        // user_login_security_group.permission_group_id entries (group permissions)
-        // must include 'CRMSFA_CONTACT_CREATE'.  To determine which of the 17 possible groups
-        // have this permission, you can query the db:
-        // SELECT * FROM security_group_permission WHERE permission_id LIKE "%CONTACT_CREATE%"
-        var hasPermission = 1; // _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
-
+        // Check user's security permission to add contacts
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
             // Convert the received objects into entities (protect the data layer)
             //
             // Contact mechanisms
             var contactMechEntities = [];
-            
+
             if (contact.emailAddress) {
                 var emailContactMech = new ContactMech(
                     null,
@@ -139,8 +127,6 @@ var contactController = function (knex) {
                 );
                 contactMechEntities.push(addressContactMech);
             }
-            
-
 
             // Contact entity
             var contactEntity = new Contact(
@@ -160,9 +146,6 @@ var contactController = function (knex) {
                 contact.comments,
                 contact.contactMechs
             );
-
-            
-
 
             // Validate the contact and user data before going ahead
             var validationErrors = [];
@@ -188,7 +171,6 @@ var contactController = function (knex) {
                         addContactMechPromises.push(mechPromise);
                     }
                 }
-
                 promise.catch(function (error) {
                     winston.error(error);
                 });
@@ -198,16 +180,11 @@ var contactController = function (knex) {
                         return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
                     });
                 } else {
-
-
                     return promise;
                 }
-
-
             } else {
                 return validationErrors;
             }
-
         } else {
             // user does not have permissions of a contact owner, return null
             return null;
