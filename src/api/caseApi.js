@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////
-// RESTful API module for contacts.
+// RESTful API module for cases.
 //
 // @file:    caseApi.js
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>
@@ -11,13 +11,6 @@ var caseApi = function (knex) {
     //
     var caseController = require('../controllers/caseController')(knex);
 
-    // MIDDLEWARE IS DEACTIVATED FOR NOW...
-    // Set up middleware to validate incoming requests
-    //
-    var middleware = function (req, res, next) {
-        next();
-    };
-
     // API methods
     // ==========================================
     //
@@ -26,7 +19,7 @@ var caseApi = function (knex) {
 
     };
 
-    // GET /api/contacts
+    // GET /api/cases
     // 
     // Methods:  there are specific methods for getting Cases on this route /api/cases/ 
     //
@@ -37,19 +30,12 @@ var caseApi = function (knex) {
 
         // GET /api/cases?owner
         //
-        // getCasesByOwner:  an IF block triggers it if a query by owner has been made
+        // getCasesByOwner:  The default if no query string for advanced search
         // 
-        if (req.query.hasOwnProperty('owner')) {
-
-            //var ownerId = req.user.partyId;
-            //var userSecurityPerm = req.user.securityPermissions;
-            //var resultsForThisUser = caseController.getCasesByOwner(ownerId, userSecurityPerm);
-            
-            var user = req.user; // pass along the User object to the controller 
-            var resultsForThisUser = caseController.getCasesByOwner(user);
-
+        if (Object.keys(req.query).length === 0) {
+            var resultsForThisUser = caseController.getCasesByOwner(req.user);
             if (resultsForThisUser === null) {
-                res.json('You do not have permission to own contacts!');
+                res.json('You do not have permission to get cases!');
             } else {
                 resultsForThisUser.then(function (case_) {
                     res.json(case_);
@@ -57,9 +43,9 @@ var caseApi = function (knex) {
             }
         }
 
-        // GET /api/contacts?<MAYBE A QUERY STRING OF SOME KIND TO TRIGGER ADVANCED SEARCH?>
+        // GET /api/cases?<MAYBE A QUERY STRING OF SOME KIND TO TRIGGER ADVANCED SEARCH?>
         //
-        // getContactsByAdvancedSearch: 
+        // getCasesByAdvancedSearch: 
         //
         /* DUK JIN, THE ELSE IF BLOCK IS COMMENTED OUT FOR NOW, ACTIVATE WHEN YOU ARE READY.
             ELSE IF ensures there is only one response to API layer!
@@ -93,7 +79,6 @@ var caseApi = function (knex) {
     };
 
     return {
-        middleware: middleware,
         addCase: addCase,
         getCases: getCases,
         getCaseById: getCaseById,

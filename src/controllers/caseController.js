@@ -84,7 +84,6 @@ var caseController = function (knex) {
             // user does not have permissions of a contact owner, return null
             return null;
         }
-
     };
 
     /** 

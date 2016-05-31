@@ -26,6 +26,7 @@ var contactMechController = function (knex) {
         var contactMechEntity = new ContactMech(
             contactMech.contactMechId,
             contactMech.contactMechTypeId,
+            contactMech.contactMechPurposeTypeId,
             contactMech.infoString,
             contactMech.createdDate,
             contactMech.updatedDate,
@@ -220,9 +221,9 @@ var contactMechController = function (knex) {
         return promise;
     };
 
-    var linkContactMechToParty = function (partyId, contactMechId) {
+    var linkContactMechToParty = function (partyId, contactMechId, purposeTypeId) {
 
-        var promise = contactMechData.linkContactMechToParty(partyId, contactMechId)
+        var promise = contactMechData.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
             .then(function (result) {
                 return partyId;
             });
