@@ -8,6 +8,7 @@
 
 /* jshint camelcase: false */
 /* jshint maxlen:1000 */
+/* jshint shadow:true */
 
 var contactData = function (knex) {
 
@@ -115,20 +116,62 @@ var contactData = function (knex) {
 
     /** 
      * Gets all contacts from database by identity (first or last name matching)
-     * @param {String} firstName - firstName of  to be fetched
-     * @param {String} lastName - lastName of  to be fetched
+     * @param {String} firstName - firstName of Contact to be fetched (can be empty string)
+     * @param {String} lastName - lastName of Contact to be fetched (can be empty string)
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getContactsByIdentity = function (firstName, lastName) {
+        var columnsToSelect = ['party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date', 'person.salutation', 'person.first_name', 'person.middle_name', 'person.last_name', 'person.birth_date', 'person.comments'];
+
+        if (firstName.length === 0 && lastName.length > 0) {
+            var lastNameLike = '%' + lastName + '%';
+            return knex.select(columnsToSelect)
+                .from('party_relationship')
+                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+                .innerJoin('party', 'party.party_id', 'person.party_id')
+                .andWhere('role_type_id_from', 'CONTACT')
+                .andWhere('last_name', 'like', lastNameLike);
+        }
+        if (firstName.length > 0 && lastName.length === 0) {
+            var firstNameLike = '%' + firstName + '%';
+            return knex.select(columnsToSelect)
+                .from('party_relationship')
+                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+                .innerJoin('party', 'party.party_id', 'person.party_id')
+                .andWhere('role_type_id_from', 'CONTACT')
+                .andWhere('first_name', 'like', firstNameLike);
+        }
+        if (firstName.length > 0 && lastName.length > 0) {
+            var firstNameLike = '%' + firstName + '%';
+            var lastNameLike = '%' + lastName + '%';
+            return knex.select(columnsToSelect)
+                .from('party_relationship')
+                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+                .innerJoin('party', 'party.party_id', 'person.party_id')
+                .andWhere('role_type_id_from', 'CONTACT')
+                .andWhere('first_name', 'like', firstNameLike)
+                .andWhere('last_name', 'like', lastNameLike);
+        } else {
+            return knex.select(columnsToSelect)
+                .from('party_relationship')
+                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+                .innerJoin('party', 'party.party_id', 'person.party_id')
+                .andWhere('role_type_id_from', 'CONTACT')
+                .andWhere('first_name', 'like', '')
+                .andWhere('last_name', 'like', '');
+        }
+
+        /*// OLD CODE I WAS USING, DELETE ONCE CONFIRMED THE ABOVE IS WORKING AS PLANNED.
         var firstNameLike = '%' + firstName + '%';
         var lastNameLike = '%' + lastName + '%';
-        return knex.select('party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date', 'person.salutation', 'person.first_name', 'person.middle_name', 'person.last_name', 'person.birth_date', 'person.comments')
+        return knex.select(columnsToSelect)
             .from('party_relationship')
             .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
             .innerJoin('party', 'party.party_id', 'person.party_id')
             .andWhere('role_type_id_from', 'CONTACT')
             .andWhere('first_name', 'like', firstNameLike)
             .orWhere('last_name', 'like', lastNameLike);
+        */
     };
 
     /**

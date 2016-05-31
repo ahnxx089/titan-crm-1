@@ -78,7 +78,8 @@ var contactApi = function (knex) {
         // getContactsByIdentity: ELSE IF ensures there is only one response to API layer!
         //                        See: http://www.ofssam.com/forums/showthread.php?tid=43 
         //
-        //  The search is inclusive, returning any contacts this user owns matching whichever
+        // *** DINESH, REPAIR THIS COMMENT ONCE WORKING DOWN BELOW ***
+        //  If both a firstName and lastNa, returning any contacts this user owns matching whichever
         //  supplied portion of either the firstName or lastName.  Corresponds to:
         //  WHERE person.first_name LIKE "%firstName%" OR person.last_name LIKE "%lastName%"
         //
