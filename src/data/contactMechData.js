@@ -31,7 +31,7 @@ var contactMechData = function (knex) {
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
     var addContactMechToPostalTable = function (contactMech) {
-        return knex.inster({
+        return knex.insert({
                 contact_mech_id: contactMech.contactMechId,
                 to_name: contactMech.toName,
                 attn_name: contactMech.attnName,
@@ -55,7 +55,7 @@ var contactMechData = function (knex) {
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
     var addContactMechToTelecomTable = function (contactMech) {
-        return knex.inster({
+        return knex.insert({
                 contact_mech_id: contactMech.contactMechId,
                 country_code: contactMech.countryCode,
                 area_code: contactMech.areaCode,

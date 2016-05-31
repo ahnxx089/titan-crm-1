@@ -51,7 +51,7 @@ var contactMechController = function (knex) {
             // Pass on the entity to be added to the data layer
             var promise;
 
-            if (this.contactMechTypeId === 'TELECOM_NUMBER') {
+            if (contactMech.contactMechTypeId === 'TELECOM_NUMBER') {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
                     .then(function (contactMechId) {
                         contactMechEntity.contactMechId = contactMechId;
@@ -60,9 +60,10 @@ var contactMechController = function (knex) {
                                 return contactMechId;
                             });
                     });
-            } else if (this.contactMechTypeId === 'POSTAL_ADDRESS') {
+            } else if (contactMech.contactMechTypeId === 'POSTAL_ADDRESS') {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
                     .then(function (contactMechId) {
+                        contactMechEntity.contactMechId = contactMechId;
                         return contactMechData.addContactMechToPostalTable(contactMechEntity)
                             .then(function (input) {
                                 return contactMechId;
@@ -121,7 +122,7 @@ var contactMechController = function (knex) {
         });
         return promise;
     };
-    
+
     var getContactMechsByParty = function (partyId) {
         var promise = contactMechData.getContactMechsByParty(partyId)
             .then(function (contactMechs) {
@@ -159,7 +160,7 @@ var contactMechController = function (knex) {
         });
         return promise;
     };
-    
+
 
     var getContactMechById = function (contactMechId) {
         var promise = contactMechData.getContactMechById(contactMechId)

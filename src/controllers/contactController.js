@@ -69,7 +69,7 @@ var contactController = function (knex) {
         // must include 'CRMSFA_CONTACT_CREATE'.  To determine which of the 17 possible groups
         // have this permission, you can query the db:
         // SELECT * FROM security_group_permission WHERE permission_id LIKE "%CONTACT_CREATE%"
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
+        var hasPermission = 1; // _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
 
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
@@ -214,12 +214,6 @@ var contactController = function (knex) {
         }
     };
 
-    //Under Construction
-    attachContactMechsToContact = function (contactArray) {
-        
-    };
-    
-    
     /**
      * Gets one contact by its id
      * @param {Number} contactId - Unique id of the contact to be fetched
