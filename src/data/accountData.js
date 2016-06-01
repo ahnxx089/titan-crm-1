@@ -348,13 +348,53 @@ var accountData = function (knex) {
      * @param {Number} accountId - Unique id of the account to be deleted
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */
-    var deleteAccount = function (accountId) {};
+    var deleteAccount = function (accountId) {
+        return knex('party_supplemental_data')
+            .where({
+                party_id: accountId
+            })
+            .del()
+            .then(function (supplementPart) {
+                return knex('party_relationship')
+                    .where({
+                        party_id_from: accountId
+                    })
+                    .orWhere({
+                        party_id_to: accountId
+                    })
+                    .del()
+                    .then(function (relationshipPart) {
+                        return knex('party_role')
+                            .where({
+                                party_id: accountId
+                            })
+                            .del()
+                            .then(function (organizationPart) {
+                                return knex('organization')
+                                    .where({
+                                        party_id: accountId
+                                    })
+                                    .del()
+                                    .then(function (personPart) {
+                                        return knex('party')
+                                            .where({
+                                                party_id: accountId
+                                            })
+                                            .del()
+                                            .then(function (partyPart) {
+                                                return partyPart + personPart + organizationPart + relationshipPart + supplementPart;
+                                            });
+                                    });
+                            });
+                    });
+            });};
     
     return {
         addAccount: addAccount,
         getAccountsByOwner: getAccountsByOwner,
         getAccountById: getAccountById,
         getAccountByPhoneNumber: getAccountByPhoneNumber,
+        getAccountByIdentity: getAccountByIdentity,
         updateAccount: updateAccount,
         deleteAccount: deleteAccount      
     };
