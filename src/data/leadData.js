@@ -34,13 +34,11 @@ var leadData = function (knex) {
      */
     var addLead = function (lead) {
         // this achieves goals mentioned on slide # 17
-        // #1, 2, 3, 5, 6: good
-        // part of 4
-        // #7 is not implemented at this moment
+        // #1, 2, 3, 4, 5, 6: good
+        // #7 is NOT implemented at this moment. Lucas has no plan on doing this in the near future. 
 
 
         //NOTE TO LUCAS AND DIVINE: Below changes to this function were made by Eric to resolve errors crashing the app
-        //Thank you from Lucas. 
 
         return knex('party')
             .returning('party_id')
