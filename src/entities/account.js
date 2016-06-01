@@ -16,7 +16,7 @@ var Organization = require('../entities/organization');
 //
 function Account(partyId, partyTypeId, currencyUomId, description, statusId, createdBy, createdDate, updatedDate, 
         orgName, officeSiteName, annualRevenue, numEmployees, tickerSymbol, comments,  logoImgURL,
-    partyParentId, industryEnumId, ownershipEnumId, importantNote, primaryPostalAddressId, primaryTelecomNumberId, primaryEmailId) {
+    partyParentId, industryEnumId, ownershipEnumId, importantNote, primaryPostalAddress, primaryTelecomNumber, primaryEmail) {
     // Call the parent constructor first
     Organization.call(this, partyId, partyTypeId, currencyUomId, description, statusId, createdBy, createdDate, updatedDate, orgName, officeSiteName, annualRevenue, numEmployees, tickerSymbol, comments, logoImgURL);
     
@@ -25,9 +25,9 @@ function Account(partyId, partyTypeId, currencyUomId, description, statusId, cre
     this.industryEnumId = industryEnumId;
     this.ownershipEnumId = ownershipEnumId;
     this.importantNote = importantNote;
-    this.primaryPostalAddressId = primaryPostalAddressId;
-    this.primaryTelecomNumberId = primaryTelecomNumberId;
-    this.primaryEmailId = primaryEmailId;
+    this.primaryPostalAddress = primaryPostalAddress;
+    this.primaryTelecomNumber = primaryTelecomNumber;
+    this.primaryEmail = primaryEmail;
 }
 
 Account.prototype = Object.create(Organization.prototype);
@@ -44,9 +44,9 @@ Account.prototype.validateForInsert = function () {
         this.validateIndustryEnumId(false),
         this.validateOwnershipEnumId(false),
         this.validateImportantNote(false),
-        this.validatePrimaryPostalAddressId(false),
-        this.validatePrimaryTelecomNumberId(false),
-        this.validatePrimaryEmailId(false)
+        this.validatePrimaryPostalAddress(false),
+        this.validatePrimaryTelecomNumber(false),
+        this.validatePrimaryEmail(false)
     ];
     
     for (var i = 0; i < validation.length; i++) {
@@ -67,9 +67,9 @@ Account.prototype.validateForUpdate = function () {
         this.validateIndustryEnumId(false),
         this.validateOwnershipEnumId(false),
         this.validateImportantNote(false),
-        this.validatePrimaryPostalAddressId(false),
-        this.validatePrimaryTelecomNumberId(false),
-        this.validatePrimaryEmailId(false)
+        this.validatePrimaryPostalAddress(false),
+        this.validatePrimaryTelecomNumber(false),
+        this.validatePrimaryEmail(false)
     ];
     
     for (var i = 0; i < specificvalidations.length; i++) {
@@ -107,19 +107,19 @@ Account.prototype.validateImportantNote = function(isRequired) {
     return validationResult;
 };
 
-Account.prototype.validatePrimaryPostalAddressId = function(isRequired) {
+Account.prototype.validatePrimaryPostalAddress = function(isRequired) {
     this.primaryPostalAddressId = validation.sanitizeInput(this.primaryPostalAddressId);
     var validationResult = validation.validateString(this.primaryPostalAddressId, isRequired, 20, 'primaryPostalAddressId');
     return validationResult;
 };
 
-Account.prototype.validatePrimaryTelecomNumberId = function(isRequired) {
+Account.prototype.validatePrimaryTelecomNumber = function(isRequired) {
     this.primaryTelecomNumberId = validation.sanitizeInput(this.primaryTelecomNumberId);
     var validationResult = validation.validateString(this.primaryTelecomNumberId, isRequired, 20, 'primaryTelecomNumberId');
     return validationResult;
 };
 
-Account.prototype.validatePrimaryEmailId = function(isRequired) {
+Account.prototype.validatePrimaryEmail = function(isRequired) {
     this.primaryEmailId = validation.sanitizeInput(this.primaryEmailId);
     var validationResult = validation.validateString(this.primaryEmailId, isRequired, 20, 'primaryEmailId');
     return validationResult;
