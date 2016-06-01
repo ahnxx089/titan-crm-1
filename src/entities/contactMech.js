@@ -34,8 +34,8 @@ function ContactMech(contactMechId, contactMechTypeId, contactMechPurposeTypeId,
     this.address2 = address2;
     this.directions = directions;
     this.city = city;
-    this.zipOrPostalCode = zipOrPostalCode;
     this.stateProvinceGeoId = stateProvinceGeoId;
+    this.zipOrPostalCode = zipOrPostalCode;
     this.countryGeoId = countryGeoId;
 
 }
@@ -49,8 +49,10 @@ ContactMech.prototype.validateForInsert = function () {
     // Perform general validations
     var validations = [
             this.validateContactMechTypeId(true),
-            //this.validateContactMechPurposeTypeId(true),
-            this.validateInfoString(false)
+            this.validateContactMechPurposeTypeId(true),
+            this.validateInfoString(false),
+            this.validateCreatedDate(true),
+            this.validateUpdatedDate(true)
     ];
 
     // Perform validations specific to postal addresses
@@ -71,7 +73,7 @@ ContactMech.prototype.validateForInsert = function () {
     
     // Perform validations specific to telecom numbers
     if (this.contactMechTypeId === 'TELECOM_NUMBER') {
-        //validations only applicable to postal addresses
+        //validations only applicable to telecom numbers
         validations = validations.concat([
             this.validateCountryCode(false),
             this.validateAreaCode(false),
@@ -99,8 +101,10 @@ ContactMech.prototype.validateForUpdate = function () {
     var validations = [
             this.contactMechId(true),
             this.validateContactMechTypeId(true),
-            //this.validateContactMechPurposeTypeId(true),
-            this.validateInfoString(false)
+            this.validateContactMechPurposeTypeId(true),
+            this.validateInfoString(false),
+            this.validateCreatedDate(true),
+            this.validateUpdatedDate(true)
     ];
 
     // Perform validations specific to postal addresses
@@ -146,7 +150,7 @@ ContactMech.prototype.validateForUpdate = function () {
 // contact_mech_id type is int(11)
 ContactMech.prototype.validateContactMechId = function (isRequired) {
     this.contactMechId = validation.sanitizeInput(this.contactMechId);
-    var validationResult = validation.validateString(this.contactMechId, isRequired, 11, 'contactMechId');
+    var validationResult = validation.validateInt(this.contactMechId, isRequired, 11, 'contactMechId');
     return validationResult;
 };
 
@@ -176,6 +180,20 @@ ContactMech.prototype.validateInfoString = function (isRequired) {
 ContactMech.prototype.validateToName = function (isRequired) {
     this.toName = validation.sanitizeInput(this.toName);
     var validationResult = validation.validateString(this.toName, isRequired, 100, 'toName');
+    return validationResult;
+};
+
+// created_date is date
+ContactMech.prototype.validateCreatedDate = function(isRequired) {
+    this.createdDate = validation.sanitizeInput(this.createdDate);
+    var validationResult = validation.validateDate(this.createdDate, isRequired, 'createdDate');
+    return validationResult;
+};
+
+// updated_date is date
+ContactMech.prototype.validateUpdatedDate = function(isRequired) {
+    this.updatedDate = validation.sanitizeInput(this.updatedDate);
+    var validationResult = validation.validateDate(this.updatedDate, isRequired, 'updatedDate');
     return validationResult;
 };
 

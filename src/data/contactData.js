@@ -173,10 +173,6 @@ var contactData = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContact = function (contact, user) {
-        //Update the properties shared with Person
-        //var numRows = PersonData.updatePerson(contact);
-
-        //Update the unique properies of Contact
         return knex('party_relationship')
             .where({
                 party_id_from: contact.partyId
@@ -274,24 +270,23 @@ var contactData = function (knex) {
                                 party_id: contactId
                             })
                             .del()
-
-                        .then(function (roleRows) {
-                            return knex('person')
-                                .where({
-                                    party_id: contactId
-                                })
-                                .del()
-                                .then(function (personRows) {
-                                    return knex('party')
-                                        .where({
-                                            party_id: contactId
-                                        })
-                                        .del()
-                                        .then(function (partyRows) {
-                                            return partyRows + personRows + roleRows + relationshipRows + partyLinkRows;
-                                        });
-                                });
-                        });
+                            .then(function (roleRows) {
+                                return knex('person')
+                                    .where({
+                                        party_id: contactId
+                                    })
+                                    .del()
+                                    .then(function (personRows) {
+                                        return knex('party')
+                                            .where({
+                                                party_id: contactId
+                                            })
+                                            .del()
+                                            .then(function (partyRows) {
+                                                return partyRows + personRows + roleRows + relationshipRows + partyLinkRows;
+                                            });
+                                    });
+                            });
                     });
             });
 

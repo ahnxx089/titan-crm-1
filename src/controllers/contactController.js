@@ -25,11 +25,23 @@ var contactController = function (knex) {
     // ==========================================
     //
 
+    /**
+     * For each promise delivered by addContactMech,
+     * create entry in party_contact_mech table
+     * and chain all promises together with .then()
+     * @param {object} addContactMechPromises - An array of promises returned by addContactMech
+     * @param {object} contactMechEntities - An array containing the contactMechs used to generate the first array
+     * @param {object} partyId - The partyId of the contact to be linked to these contactMechs
+     * @return {object} addContactMechPromises - Fulfillment value is the fulfillment value of the last promise in the array
+     */
     var addContactMechCallback = function (addContactMechPromises, contactMechEntities, partyId) {
+        var promise;
+        var contactMech;
+        var purposeTypeId;
         if (addContactMechPromises.length > 1) {
-            var promise = addContactMechPromises.pop();
-            var contactMech = contactMechEntities.pop();
-            var purposeTypeId = contactMech.contactMechPurposeTypeId;
+            promise = addContactMechPromises.pop();
+            contactMech = contactMechEntities.pop();
+            purposeTypeId = contactMech.contactMechPurposeTypeId;
             return promise.then(function (contactMechId) {
                 return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
                     .then(function () {
@@ -37,9 +49,9 @@ var contactController = function (knex) {
                     });
             });
         } else {
-            var promise = addContactMechPromises.pop();
-            var contactMech = contactMechEntities.pop();
-            var purposeTypeId = contactMech.contactMechPurposeTypeId;
+            promise = addContactMechPromises.pop();
+            contactMech = contactMechEntities.pop();
+            purposeTypeId = contactMech.contactMechPurposeTypeId;
             return promise.then(function (contactMechId) {
                 return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
                     .then(function () {
@@ -217,8 +229,6 @@ var contactController = function (knex) {
                         contacts[0].birth_date,
                         contacts[0].comments
                     );
-                } else {
-                    contactEntity = new Contact();
                 }
                 return contactEntity;
             });
@@ -285,7 +295,7 @@ var contactController = function (knex) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
         if (hasPermission !== -1) {
             // user has permission, proceed towards data layer
-           
+
             /* The two immediately following IF statements deal with two issues and resolves them 
                 consistently in order to give the data layer inputs it does not have to think about
                 in order to act on:
@@ -315,7 +325,7 @@ var contactController = function (knex) {
                 To deal with these issues consistently, the following two IF blocks set firstName
                 or lastName to an empty string.
                 */
-            
+
             // Declare variables to hold incoming query properties.  NOTE:  While debugging I see
             // that this very act of assigning an undefined property to a variable makes that
             // variable into an empty string.  For example, I sent in a query for which
@@ -323,16 +333,16 @@ var contactController = function (knex) {
             // made variable lastName === "" instead of undefined.  So the if block might be redundant.
             // But I'm playing it safe and using the if blocks to enforce that "undefined" is not
             // passed to the data layer.  The data layer will only ever get strings, for sure.
-            var firstName = query.firstName; 
+            var firstName = query.firstName;
             var lastName = query.lastName;
-            
+
             if (firstName === undefined) {
                 firstName = '';
             }
             if (lastName === undefined) {
                 lastName = '';
             }
-            
+
             var promise = contactData.getContactsByIdentity(firstName, lastName)
                 .then(function (contacts) {
 
@@ -385,8 +395,7 @@ var contactController = function (knex) {
             contact.description,
             contact.statusId,
             contact.createdBy,
-            contact.createdDate,
-            (new Date()).toISOString(), //contact.updatedDate,
+            contact.createdDate, (new Date()).toISOString(), //contact.updatedDate,
             contact.salutation,
             contact.firstName,
             contact.middleName,
@@ -400,9 +409,9 @@ var contactController = function (knex) {
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
             var promise = contactData.updateContact(contactEntity, user);
-                //.then(function (numRows) {
-                //    return numRows;
-                //});
+            //.then(function (numRows) {
+            //    return numRows;
+            //});
 
             promise.catch(function (error) {
                 winston.error(error);

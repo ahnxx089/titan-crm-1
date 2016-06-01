@@ -28,8 +28,8 @@ var contactMechController = function (knex) {
             contactMech.contactMechTypeId,
             contactMech.contactMechPurposeTypeId,
             contactMech.infoString,
-            contactMech.createdDate,
-            contactMech.updatedDate,
+            (new Date()).toISOString(), //created date
+            (new Date()).toISOString(), //updated date
             contactMech.countryCode,
             contactMech.areaCode,
             contactMech.contactNumber,
@@ -85,6 +85,10 @@ var contactMechController = function (knex) {
         }
     };
 
+    /**
+     * Get all contact mechanisms in the database
+     * @return {object) promise - An array of JSON objects representing contact mechanisms
+     */
     var getContactMechs = function () {
         var promise = contactMechData.getContactMechs()
             .then(function (contactMechs) {
@@ -123,6 +127,11 @@ var contactMechController = function (knex) {
         return promise;
     };
 
+    /**
+     * Get a list of contact mechanisms associated with a particular party
+     * @param {number} partyId - unique ID of the party
+     * @return {object} - array of contact mechanisms
+     */
     var getContactMechsByParty = function (partyId) {
         var promise = contactMechData.getContactMechsByParty(partyId)
             .then(function (contactMechs) {
@@ -210,7 +219,7 @@ var contactMechController = function (knex) {
             contactMech.contactMechTypeId,
             contactMech.infoString,
             contactMech.createdDate,
-            contactMech.updatedDate,
+            (new Date()).toISOString(), //updated date
             contactMech.countryCode,
             contactMech.areaCode,
             contactMech.contactNumber,
