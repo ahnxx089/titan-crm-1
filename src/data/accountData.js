@@ -125,23 +125,31 @@ var accountData = function (knex) {
     var addAccount = function (account, user, contact) {
         //Call all of the previous addAccount___ methods. 
         return addAccountParty(account)
-                        .then(function(accountResults) {
-                            account.partyId = accountResults;
-                            return addAccountOrg(account)
-                                .then(function(PartyResults) {
-                                    return addAccountPartySupplementalData(account)
-                                        .then(function(PartySupplementalDataResults) {
-                                            //previously had the addAccountContactMech function call here. Removed for now, with the controller handling that logic.
-                                            return addAccountPartyRole(account)
-                                                .then(function(PartyRoleResults){
-                                                    console.log("account.partyId is " + account.partyId);
-                                                    console.log("user.partyId is " + user.partyId);
-                                                    return addAccountPartyRelationship(account, user);
+            .then(function (accountResults) {
+                account.partyId = parseInt(accountResults[0]);
+                var typeofResults = Object.prototype.toString.call(accountResults);
+                var typeofPartyId = Object.prototype.toString.call(account.partyId);
+                console.log('typeofPartyId is ' + typeofPartyId);
+                return addAccountOrg(account)
+                    .then(function (OrgResults) {
+                        console.log(OrgResults);
+                        return addAccountPartySupplementalData(account)
+                            .then(function (PartySupplementalDataResults) {
+                                //previously had the addAccountContactMech function call here. Removed for now, with the controller handling that logic.
+                                console.log('PSDResults is ' + PartySupplementalDataResults);
+                                return addAccountPartyRole(account)
+                                    .then(function (PartyRoleResults) {
+                                        console.log('PartyRoleResults is ' + PartyRoleResults);
+                                        return addAccountPartyRelationship(account, user, contact)
+                                            .then(function (partyId) {
+                                                console.log(partyId[0]);
+                                                return partyId;
                                             });
-                                            
                                     });
+
                             });
                     });
+            });
 //          return knex('party')
 //            .returning('party_id') // for passing along to person table
 //            .insert({
@@ -274,7 +282,7 @@ var accountData = function (knex) {
             .from('party_supplemental_data')
             .innerJoin('contact_mech', 'party_supplemental_data.party_id', 'contact_mech.contact_mech_id' )
             .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id' )
-            .where({telecom_number: phoneNumber})
+            .where({telecom_number: phoneNumber});
     };
     
      var getAccountByIdentity = function (accountId, accountName) {
@@ -285,7 +293,7 @@ var accountData = function (knex) {
             .innerJoin('organization', 'party_supplemental_data.party_id','organization.party_id')
             .innerJoin('party_role', 'party_supplemental_data.party_id', 'party_role.party_id')
             .where({party_id: accountId})
-            .orWhere('organization_name', 'like', accountNameLike)       
+            .orWhere('organization_name', 'like', accountNameLike) ;      
     };
 
 

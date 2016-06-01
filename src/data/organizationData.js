@@ -6,6 +6,7 @@
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
+var winston = require('winston');
 
 var orgData = function (knex) {
     

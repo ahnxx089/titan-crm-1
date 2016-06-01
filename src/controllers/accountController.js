@@ -11,17 +11,40 @@ var winston = require('winston');
 var Account = require('../entities/account');
 var userController = require('../controllers/userController');
 var contactInfoHelper = require('../controllers/helpers/contactInfoHelper');
-var addContactMechCallback = require('../controllers/helpers/addContactMechCallbackHelper');
 
 var accountController = function (knex) {
     // Get a reference to data layer module
     //
     var accountData = require('../data/accountData')(knex);
     var contactMechController = require('../controllers/contactMechController')(knex);
-
+    
     // CONTROLLER METHODS
     // ==========================================
     //
+
+    var addContactMechCallback = function (addContactMechPromises, contactMechEntities, partyId) {
+        if (addContactMechPromises.length > 1) {
+            var promise = addContactMechPromises.pop();
+            var contactMech = contactMechEntities.pop();
+            var purposeTypeId = contactMech.contactMechPurposeTypeId;
+            return promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
+                    .then(function () {
+                        return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
+                    });
+            });
+        } else {
+            var promise = addContactMechPromises.pop();
+            var contactMech = contactMechEntities.pop();
+            var purposeTypeId = contactMech.contactMechPurposeTypeId;
+            return promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
+                    .then(function () {
+                        return partyId;
+                    });
+            });
+        }
+    };
     /**
      * Add a new account
      * @param {Object} account - The new account to be added
@@ -36,9 +59,6 @@ var accountController = function (knex) {
         //if (hasSecurityPermissions !== -1) { the below code }
         var now = (new Date()).toISOString();
         var contactMechEntities = contactInfoHelper(account);
-        console.log(contactMechEntities);
-        var typeofCME = Object.prototype.toString.call(contactMechEntities);
-        console.log("contactMechEntities type should be an array: " + typeofCME);
         // Convert the received object into an entity
         var accountEntity = new Account(
             null,
@@ -73,8 +93,9 @@ var accountController = function (knex) {
         //var userEntity = userController.getUserById(user.userId);
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
-            
-            var promise = accountData.addAccount(accountEntity, user);
+            var typeofNumField = Object.prototype.toString.call(accountEntity.annualRevenue);
+            console.log(typeofNumField);
+            var promise2 = accountData.addAccount(accountEntity, user).then(function (results) {return results;});
 
             var addContactMechPromises = [];
             var mechPromise;
@@ -86,21 +107,22 @@ var accountController = function (knex) {
                     addContactMechPromises.push(mechPromise);
                 }
             }
-            promise.catch(function (error) {
+            promise2.catch(function (error) {
                 winston.error(error);
             });
-
+            
             if (addContactMechPromises.length > 0) {
-                return promise.then(function (partyId) {
+                return promise2.then(function (partyId) {
+                    console.log(partyId);
                     return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
                 });
             } else {
-                return promise;
+                return promise2;
             }
-            promise.catch(function (error) {
+            promise2.catch(function (error) {
                 winston.error(error);
             });
-            return promise;
+            return promise2;
         } else {
             return validationErrors;
         }
