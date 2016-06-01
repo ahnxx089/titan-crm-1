@@ -25,7 +25,9 @@ var caseData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getCaseById = function (id) {
-
+        return knex.select('case_id', 'case_type_id', 'case_category_id', 'status_id', 'from_party_id', 'priority', 'case_date', 'response_required_date', 'case_name', 'description', 'resolution_id', 'created_by', 'created_date', 'updated_date')
+            .from('case_')
+            .where({case_id: id});
     };
 
     /** 

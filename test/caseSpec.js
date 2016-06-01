@@ -109,5 +109,14 @@ describe('Case module ', function () {
             done();
         }
     });
+    
+    it('caseController.getCaseById returns a valid case object', function(done) {
+        caseController.getCaseById(1).then(function (testCase) {
+            expect(testCase instanceof Case).toBeTruthy();
+            // Call done to finish the async function
+            done();
+        });
+        
+    });
 
 });
