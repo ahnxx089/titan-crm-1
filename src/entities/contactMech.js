@@ -54,9 +54,9 @@ ContactMech.prototype.validateForInsert = function () {
     ];
 
     // Perform validations specific to postal addresses
-    if (this.infoString === 'POSTAL_ADDRESS') {
+    if (this.contactMechTypeId === 'POSTAL_ADDRESS') {
         //validations only applicable to postal addresses
-        validations.concat([
+        validations = validations.concat([
             this.validateToName(false),
             this.validateAttnName(false),
             this.validateAddress1(false),
@@ -70,13 +70,13 @@ ContactMech.prototype.validateForInsert = function () {
     }
     
     // Perform validations specific to telecom numbers
-    if (this.infoString === 'TELECOM_NUMBER') {
+    if (this.contactMechTypeId === 'TELECOM_NUMBER') {
         //validations only applicable to postal addresses
-        validations.concat([
+        validations = validations.concat([
             this.validateCountryCode(false),
             this.validateAreaCode(false),
             this.validateContactNumber(true),
-            this.validateaskForName(false)
+            this.validateAskForName(false)
         ]);
     }
 
