@@ -176,7 +176,7 @@ var leadData = function (knex) {
             .innerJoin('party', 'person.party_id', 'party.party_id')
             .innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id')
             .innerJoin('party_role', 'person.party_id', 'party_role.party_id')
-            .innerJoin('party_contact_mech', 'person.party_id', 'party_contact_mech.party_id')
+//            .innerJoin('party_contact_mech', 'person.party_id', 'party_contact_mech.party_id')
             .where('party.created_by', ownerId);
     };
 

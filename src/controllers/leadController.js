@@ -274,8 +274,6 @@ var leadController = function (knex) {
                     lead.lastName = leads[i].last_name;
                     lead.birthDate = leads[i].birth_date;
                     lead.comments = leads[i].comments;
-                    //                    lead.createdDate = leads[i].created_date;
-                    //                    lead.updatedDate = leads[i].updated_date;
 
                     lead.parentPartyId = leads[i].parent_party_id;
                     lead.companyName = leads[i].company_name;
@@ -356,18 +354,15 @@ var leadController = function (knex) {
                             leads[i].ownership_enum_id,
                             leads[i].ticker_symbol,
                             leads[i].important_note,
-                            leads[i].primary_postal_address_id,
-                            leads[i].primary_telecom_number_id,
-                            leads[i].primary_email_id,
 
-                            leads[i].role_type_id,
-
-                            leads[i].contact_mech_id,
-                            leads[i].contact_mech_purpose_type_id,
-                            leads[i].from_date,
-                            leads[i].thru_date,
-                            leads[i].verified,
-                            leads[i].comments
+                            leads[i].role_type_id//,
+//
+//                            leads[i].contact_mech_id,
+//                            leads[i].contact_mech_purpose_type_id,
+//                            leads[i].from_date,
+//                            leads[i].thru_date,
+//                            leads[i].verified,
+//                            leads[i].comments
 
                         );
                         leadEntities.push(lead);
@@ -427,18 +422,17 @@ var leadController = function (knex) {
                         leads[0].ownership_enum_id,
                         leads[0].ticker_symbol,
                         leads[0].important_note,
-                        leads[0].primary_postal_address_id,
-                        leads[0].primary_telecom_number_id,
-                        leads[0].primary_email_id,
 
-                        leads[0].role_type_id,
+                        leads[0].role_type_id//,
 
-                        leads[0].contact_mech_id,
-                        leads[0].contact_mech_purpose_type_id,
-                        leads[0].from_date,
-                        leads[0].thru_date,
-                        leads[0].verified,
-                        leads[0].comments
+//                        leads[0].contact_mech_id,
+//                        leads[0].contact_mech_purpose_type_id,
+//                        leads[0].from_date,
+//                        leads[0].thru_date,
+//                        leads[0].verified,
+//                        leads[0].comments
+                        
+                        //TODO: display related contactMechs in an array
                     );
                 }
                 return leadEntity;
