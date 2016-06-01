@@ -257,7 +257,7 @@ var accountData = function (knex) {
         'created_date', 'updated_date', 'organization.logo_image_url')
             .from('party_supplemental_data')
             .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
-            .innerJoin('party_role', 'party_supplemental_data.party_id', 'party_role.party_id')
+            .innerJoin('party_role', 'party_supplemental_data.party_id',  'party_role.party_id')
             .where({party_id: accountId})
             .andWhere('party_role.role_type_id', 'account');
     };
@@ -270,19 +270,71 @@ var accountData = function (knex) {
         //TELECOM_NUMBER is the value of the contactmechtypeId where we want to join table entries
         //Is there really a telecom_number table in our titan_crm database? contactData mentions that there 
         //is, but I haven't seen one anywhere...
-        
-        
+        return knex.select('contact_mech.contact_mech_id','telecom_number.contact_mech_id')
+            .from('party_supplemental_data')
+            .innerJoin('contact_mech', 'party_supplemental_data.party_id', 'contact_mech.contact_mech_id' )
+            .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id' )
+            .where({telecom_number: phoneNumber})
     };
     
-    
+     var getAccountByIdentity = function (accountId, accountName) {
+        var accountNameLike = '%' + accountName + '%';
+        var acccountIdLike = '%' + accountId + '%';
+        return knex.select('organization.party_id', 'organization.organization_name')
+            .from('party_supplemental_data')
+            .innerJoin('organization', 'party_supplemental_data.party_id','organization.party_id')
+            .innerJoin('party_role', 'party_supplemental_data.party_id', 'party_role.party_id')
+            .where({party_id: accountId})
+            .orWhere('organization_name', 'like', accountNameLike)       
+    };
+
 
     /**
      * Update an account in database
      * @param {Object} account - The account entity that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateAccount = function (account) {};
-
+    var updateAccount = function (account) {
+        return knex('party_supplemental_data')
+            .where({
+                party_id: account.partyId
+            })
+            .update({})
+            .then(function (supplementPart) {
+                return knex('party_relationship')
+                    .where({
+                        party_id_from: account.partyId
+                    })
+                    .orWhere({
+                        party_id_to: account.partyId
+                    })
+                    .update({})
+                    .then(function (relationshipPart) {
+                        return knex('party_role')
+                            .where({
+                                party_id: account.partyId
+                            })
+                            .update({})
+                            .then(function (organizationPart) {
+                                return knex('organization')
+                                    .where({
+                                        party_id: account.partyId
+                                    })
+                                    .update({})
+                                    .then(function (personPart) {
+                                        return knex('party')
+                                            .where({
+                                                party_id: account.partyId
+                                            })
+                                            .update({})
+                                            .then(function (partyPart) {
+                                                return partyPart + personPart + organizationPart + relationshipPart + supplementPart;
+                                            });
+                                    });
+                            });
+                    });
+            });
+    };
     /**
      * Delete an account from database
      * @param {Number} accountId - Unique id of the account to be deleted

@@ -21,7 +21,6 @@ var contactApi = function (knex) {
     var addContact = function (req, res) {
         var contact = req.body;
         var user = req.user;
-        var userSecurityPerm = req.user.securityPermissions;
 
         var resultsForThisUser = contactController.addContact(contact, user);
 

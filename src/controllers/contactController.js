@@ -143,8 +143,7 @@ var contactController = function (knex) {
                 contact.middleName,
                 contact.lastName,
                 contact.birthDate,
-                contact.comments,
-                contact.contactMechs
+                contact.comments
             );
 
             // Validate the contact and user data before going ahead
