@@ -10,7 +10,7 @@
 // NOT COMPLETED! 
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
 // getLeads is not finished, not used. Lucas will look at it later. 
-// deleteLead and updateLead are wrong. 
+// deleteLead and updateLead are (maybe not) wrong. 
 
 var winston = require('winston');
 var Lead = require('../entities/lead');
@@ -78,7 +78,6 @@ var leadController = function (knex) {
     var addLead = function (lead, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
         if (hasPermission !== -1) {
-            
             var now = (new Date()).toISOString();
             // Contact mechanisms
             var contactMechEntities = [];
@@ -106,11 +105,13 @@ var leadController = function (knex) {
                 contactMechEntities.push(webContactMech);
             }
             if (lead.contactNumber) {
+//                var info = lead.countryCode + ' ' + lead.areaCode + ' ' + lead.contactNumber + ' ' + lead.askForName;
                 var phoneContactMech = new ContactMech(
                     null,
                     'TELECOM_NUMBER',
                     'PRIMARY_PHONE',
                     null, // null info string
+//                    info,
                     now,
                     now,
                     lead.countryCode,
@@ -121,11 +122,14 @@ var leadController = function (knex) {
                 contactMechEntities.push(phoneContactMech);
             }
             if (lead.countryGeoId) {
+//                var info = lead.toName + ' ' + lead.attnName + ' ' + lead.address1 + ' ' + lead.address2 + ' ' + lead.directions
+//                    + ' ' + lead.city + ' ' + lead.stateProvinceGeoId + ' ' + lead.zipOrPostalCode + ' ' + lead.countryGeoId;
                 var addressContactMech = new ContactMech(
                     null,
                     'POSTAL_ADDRESS',
                     'PRIMARY_LOCATION',
                     null, // null info string
+//                    info,
                     now,
                     now,
                     null,
@@ -150,12 +154,13 @@ var leadController = function (knex) {
                 // Single quotes are must.
                 null,
                 lead.partyTypeId,
-                lead.preferredCurrencyUomId,
+                lead.currencyUomId,
                 lead.description,
                 lead.statusId,
                 user.userId,
                 //            'admin', // For testing only
-                (new Date()).toISOString(), (new Date()).toISOString(),
+                (new Date()).toISOString(),
+                (new Date()).toISOString(),
                 // for party
                 lead.salutation,
                 lead.firstName,
@@ -182,7 +187,7 @@ var leadController = function (knex) {
 //                lead.primaryEmailId,
                 
                 
-                lead.roleTypeId,
+                lead.roleTypeId
 
                 /*
                 lead.contactMechId,
@@ -190,11 +195,12 @@ var leadController = function (knex) {
                 lead.fromDate,
                 lead.thruDate,
                 */
-                null,
-                null, (new Date()).toISOString(), // for testing only
-                null, // for testing only
-                lead.verified,
-                lead.comments
+                
+//                null,
+//                null, (new Date()).toISOString(), // for testing only
+//                null, // for testing only
+//                lead.verified,
+//                lead.comments
 
             );
 
@@ -217,25 +223,27 @@ var leadController = function (knex) {
                     }
                 }
                 // above
+                
+                // this catch necessary?
+                mechPromise.catch(function (error) {
+                    winston.error(error);
+                });
                 promise.catch(function (error) {
                     winston.error(error);
                 });
                 
                 if (addContactMechPromises.length > 0) {
+                    // there should not be any potential errors in here
                     return promise.then(function (partyId) {
                         return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
+                    });
+                    // but for safety, add a .catch block here anyway (this is never reachable)
+                    promise.catch(function (error) {
+                        winston.error(error);
                     });
                 } else {
                     return promise;
                 }
-                
-//                promise.then(function (partyId) {
-//                        return partyId;
-//                    });
-//                promise.catch(function (error) {
-//                    winston.error(error);
-//                });
-//                return promise;
             } else {
                 return validationErrors;
             }
@@ -245,7 +253,7 @@ var leadController = function (knex) {
     };
 
     // Lucas's taking this
-    // Not finished, nor used. 
+    // NOT finished, NOR used. 
     /**
      * Gets all leads
      * @return {Object} promise - Fulfillment value is an array of lead entities
@@ -257,10 +265,11 @@ var leadController = function (knex) {
                 var leadEntities = [];
                 for (var i = 0; i < leads.length; i++) {
                     var lead = new Lead(); // this is the Lead constructor
+                    // open injection here vs closed constructor in GETs below
                     lead.partyId = leads[i].party_id;
 
                     lead.partyTypeId = leads[i].party_type_id;
-                    lead.preferredCurrencyUomId = leads[i].preferred_currency_uom_id;
+                    lead.currencyUomId = leads[i].preferred_currency_uom_id;
                     lead.description = leads[i].description;
                     lead.statusId = leads[i].status_id;
                     lead.createdBy = leads[i].created_by;
@@ -274,8 +283,6 @@ var leadController = function (knex) {
                     lead.lastName = leads[i].last_name;
                     lead.birthDate = leads[i].birth_date;
                     lead.comments = leads[i].comments;
-                    //                    lead.createdDate = leads[i].created_date;
-                    //                    lead.updatedDate = leads[i].updated_date;
 
                     lead.parentPartyId = leads[i].parent_party_id;
                     lead.companyName = leads[i].company_name;
@@ -286,18 +293,18 @@ var leadController = function (knex) {
                     lead.ownershipEnumId = leads[i].ownership_enum_id;
                     lead.tickerSymbol = leads[i].ticker_symbol;
                     lead.importantNote = leads[i].important_note;
-                    lead.primaryPostalAddressId = leads[i].primary_postal_address_id;
-                    lead.primaryTelecomNumberId = leads[i].primary_telecom_number_id;
-                    lead.primaryEmailId = leads[i].primary_email_id;
+//                    lead.primaryPostalAddressId = leads[i].primary_postal_address_id;
+//                    lead.primaryTelecomNumberId = leads[i].primary_telecom_number_id;
+//                    lead.primaryEmailId = leads[i].primary_email_id;
 
                     lead.roleTypeId = leads[i].role_type_id;
 
-                    lead.contactMechId = leads[i].contact_mech_id;
-                    lead.contactMechPurposeTypeId = leads[i].contact_mech_purpose_type_id;
-                    lead.fromDate = leads[i].from_date;
-                    lead.thruDate = leads[i].thru_date;
-                    lead.verified = leads[i].verified;
-                    lead.pc_comments = leads[i].comments;
+//                    lead.contactMechId = leads[i].contact_mech_id;
+//                    lead.contactMechPurposeTypeId = leads[i].contact_mech_purpose_type_id;
+//                    lead.fromDate = leads[i].from_date;
+//                    lead.thruDate = leads[i].thru_date;
+//                    lead.verified = leads[i].verified;
+//                    lead.pc_comments = leads[i].comments;
 
                     leadEntities.push(lead);
                 }
@@ -351,24 +358,13 @@ var leadController = function (knex) {
                             leads[i].company_name,
                             leads[i].annual_revenue,
                             leads[i].num_employees,
-
                             leads[i].industry_enum_id,
                             leads[i].ownership_enum_id,
                             leads[i].ticker_symbol,
                             leads[i].important_note,
-                            leads[i].primary_postal_address_id,
-                            leads[i].primary_telecom_number_id,
-                            leads[i].primary_email_id,
 
-                            leads[i].role_type_id,
-
-                            leads[i].contact_mech_id,
-                            leads[i].contact_mech_purpose_type_id,
-                            leads[i].from_date,
-                            leads[i].thru_date,
-                            leads[i].verified,
-                            leads[i].comments
-
+                            leads[i].role_type_id//,
+                            
                         );
                         leadEntities.push(lead);
                     }
@@ -394,8 +390,36 @@ var leadController = function (knex) {
         var promise = leadData.getLeadById(leadId)
             .then(function (leads) {
                 var leadEntity;
+                var partyContactMechs = [];
                 if (leads.length > 0) {
                     // Map the retrieved result set to corresponding entity
+                    for(var i = 0; i < leads.length; i++){
+                        var newPartyContactMech = new ContactMech(
+                            leads[i].contact_mech_id,
+                            leads[i].contact_mech_type_id,
+                            leads[i].contact_mech_purpose_type_id,
+                            leads[i].info_string,
+                            leads[i].created_date,
+                            leads[i].updated_date,
+                            
+                            leads[i].country_code,
+                            leads[i].area_code,
+                            leads[i].contact_number,
+                            leads[i].ask_for_name,
+                            leads[i].to_name,
+                            leads[i].attn_name,
+                            leads[i].address1,
+                            leads[i].address2,
+                            leads[i].directions,
+                            leads[i].city,
+                            leads[i].state_province_geo_id,
+                            leads[i].postal_code,
+                            leads[i].country_geo_id
+                        );
+                        partyContactMechs.push(newPartyContactMech);
+                    }
+//                    console.log('type of party id is '+  typeof leads[0].party_id); // number
+                    
                     leadEntity = new Lead(
                         // this is the order in which values show
                         // the order in which keys show, is determined by knex
@@ -406,39 +430,29 @@ var leadController = function (knex) {
                         leads[0].description,
                         leads[0].statusId,
                         leads[0].created_by,
-                        //
                         leads[0].created_date,
                         leads[0].updated_date,
-
+                        //
                         leads[0].salutation,
                         leads[0].first_name,
                         leads[0].middle_name,
                         leads[0].last_name,
                         leads[0].birth_date,
                         leads[0].comments,
-
-
+                        //
                         leads[0].parent_party_id,
                         leads[0].company_name,
                         leads[0].annual_revenue,
                         leads[0].num_employees,
-
                         leads[0].industry_enum_id,
                         leads[0].ownership_enum_id,
                         leads[0].ticker_symbol,
                         leads[0].important_note,
-                        leads[0].primary_postal_address_id,
-                        leads[0].primary_telecom_number_id,
-                        leads[0].primary_email_id,
-
+                        //
                         leads[0].role_type_id,
-
-                        leads[0].contact_mech_id,
-                        leads[0].contact_mech_purpose_type_id,
-                        leads[0].from_date,
-                        leads[0].thru_date,
-                        leads[0].verified,
-                        leads[0].comments
+                        //
+                        partyContactMechs
+                        
                     );
                 }
                 return leadEntity;
@@ -463,7 +477,7 @@ var leadController = function (knex) {
         var leadEntity = new Lead(
             leadId,
             lead.partyTypeId,
-            lead.preferredCurrencyUomId,
+            lead.currencyUomId,
             lead.description,
             lead.statusId,
             lead.createdBy,
