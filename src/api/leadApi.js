@@ -14,11 +14,11 @@
 // getLeadsByIdentity, getLeadsByPhoneNumber, updateLead, deleteLead are not tested. 
 
 var leadApi = function (knex) {
-    
-    
+
+
     // Get a reference to data layer module
     var leadController = require('../controllers/leadController')(knex);
-    
+
 
     // API methods
     //
@@ -29,7 +29,7 @@ var leadApi = function (knex) {
      * @param {Object} req - The request
      * @param {Object} res - The resource/response
      * @return {Object} promise - Fulfillment value is id of new party
-    */
+     */
     // ==========================================
 
     // Lucas's taking this
@@ -46,32 +46,34 @@ var leadApi = function (knex) {
         var user = req.user;
         console.log('user in add is ' + user);
 
-//        var result = leadController.addLead(lead, user); // changed var name later
-//        var result = leadController.addLead(lead); // obsolete
+        //        var result = leadController.addLead(lead, user); // changed var name later
+        //        var result = leadController.addLead(lead); // obsolete
 
         var resultsForThisUser = leadController.addLead(lead, user);
 
-        
+
         if (resultsForThisUser === null) {
             res.json({
                 message: 'You do not have permission to add leads!'
             });
         } else {
             // An array in result means it's array of validation errors
-            if( Object.prototype.toString.call(resultsForThisUser) === '[object Array]' ) {
+            if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
             // An object in result means it's a promise
             // (which is returned only if validation succeeds)
             else {
-                resultsForThisUser.then(function(partyId) {
-                   res.json({partyId: partyId}); 
+                resultsForThisUser.then(function (partyId) {
+                    res.json({
+                        partyId: partyId
+                    });
                 });
             }
         }
     };
-    
-    
+
+
     // Lucas's taking PART of this
     // Credit: Dinesh
     // NOT in use now! (WHY?)
@@ -109,7 +111,7 @@ var leadApi = function (knex) {
         }
 
         // This is a good place to add other route handings blocks
-        
+
         // If the request did not properly pass any of the various if tests
         // above, it is not a valid query, make the reponse null.
         else {
@@ -117,13 +119,13 @@ var leadApi = function (knex) {
         }
     };
 
-    
-    
+
+
     // Lucas is taking this
     // To retrieve existing leads from database based on their creater
     // IN use now.
     // GET /api/leads/?owner=
-    
+
     // TODO
     // This getLeadsByOwner works fine! 
     // Inspired by Eric's way of doing multiple insertions in addAccount in accountData.js,
@@ -132,19 +134,19 @@ var leadApi = function (knex) {
     // once Divine has his getLeadsByIdentity and getLeadsByPhoneNumber working. Otherwise, it's just not worth. 
     // The getLeads method then will call getLeadsByOwner or getLeadsByIdentity or getLeadsByPhoneNumber, 
     // depending on the received parameter(s). 
-    
+
     var getLeadsByOwner = function (req, res) {
         // if there's /?owner, ownerId is what follows
-//        var ownerId = req.query.owner;
-//        console.log("ownerid in byOwner is " + ownerId);
-        
+        //        var ownerId = req.query.owner;
+        //        console.log("ownerid in byOwner is " + ownerId);
+
         var user = req.user;
         // this prints "admin" to terminal console, not browser console
         console.log('user in byOwner is ' + user);
         console.log('userId in byOwner is ' + user.userId);
 
         var resultForThisUser = leadController.getLeadsByOwner(user); // this param was changed from ownerId to user
-        if(resultForThisUser === null) {
+        if (resultForThisUser === null) {
             res.json({
                 'message': 'You do not have permission to own or view contacts!'
             });
@@ -154,21 +156,21 @@ var leadApi = function (knex) {
             });
         }
     };
-    
+
     // Not implemented now. 
     // GET /api/leads/?leadId=&firstName=&lastName=&companyName=
     var getLeadsByIdentity = function (req, res) {
 
     };
-    
+
     // Possibly not implemented or used now. 
     // GET /api/leads/?phoneNumber=
     var getLeadsByPhoneNumber = function (req, res) {
         var leadId = req.params.id;
         leadController.getLeadByPhoneNumber(leadId)
-		      .then(function(lead) {
-		          res.json(lead);
-        });
+            .then(function (lead) {
+                res.json(lead);
+            });
     };
 
     // Lucas's taking this
@@ -176,29 +178,33 @@ var leadApi = function (knex) {
     var getLeadById = function (req, res) {
         var leadId = req.params.id;
         leadController.getLeadById(leadId)
-            .then(function(lead) {
+            .then(function (lead) {
                 res.json(lead);
             });
     };
-    
+
     // PUT /api/leads/:id
     var updateLead = function (req, res) {
-       var leadId = req.params.id;
-	   var lead = req.body;
-	       leadController.updateLead(leadId, lead)
-		          .then(function(result){
-		              res.json({updated:result});
-	});
+        var leadId = req.params.id;
+        var lead = req.body;
+        leadController.updateLead(leadId, lead)
+            .then(function (result) {
+                res.json({
+                    updated: result
+                });
+            });
 
     };
-    
+
     // DELETE /api/leads/:id
     var deleteLead = function (req, res) {
-    var leadId = req.params.id;
+        var leadId = req.params.id;
         leadController.deleteLead(leadId)
-		      .then(function(result){
-		          res.json({deleted:result});
-	});
+            .then(function (result) {
+                res.json({
+                    deleted: result
+                });
+            });
 
     };
 
