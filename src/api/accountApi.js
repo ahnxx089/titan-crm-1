@@ -45,9 +45,7 @@ var accountApi = function (knex) {
        This forum are really helpful to me. http://www.ofssam.com/forums/showthread.php?tid=37*/
     // GET /api/accounts/?identity=
     var getAccountsByIdentity = function (req, res) {
-        var identityId = req.user.partyId;
-        var userSecurityPerm = req.user.securityPermissions;
-        accountController.getAccountsByIdentity(identityId, userSecurityPerm)
+        accountController.getAccountsByIdentity(req.query, req.user)
         .then(function (accounts){
             res.json(accounts);
         });
@@ -75,9 +73,7 @@ var accountApi = function (knex) {
     */
     // GET /api/accounts/?phoneNumber=
     var getAccountByPhoneNumber = function (req, res) {
-        var phoneNumberId = req.user.partyId;
-        var userSecurityPerm = req.user.securityPermissions;
-        accountController.getAccountByPhoneNumber(phoneNumberId, userSecurityPerm)
+        accountController.getAccountByPhoneNumber(req.query, req.user)
         .then(function (accounts){
             res.json(accounts);
         });
@@ -86,8 +82,8 @@ var accountApi = function (knex) {
 
     // GET /api/accounts/:id
     var getAccountById = function (req, res) {
-         var partyId = req.params.id;
-        accountController.getAccountById(partyId)
+         var accountId = req.params.id;
+        accountController.getAccountById(accountId)
             .then(function(party) {
                 res.json(party);
             });
@@ -95,9 +91,9 @@ var accountApi = function (knex) {
     
     // PUT /api/accounts/:id
     var updateAccount = function (req, res) {
-        var partyId = req.params.id;
+        var accountId = req.params.id;
         var accounts = req.body;
-        accountController.updateAccount(partyId, accounts)
+        accountController.updateAccount(accountId, accounts)
             .then(function(result) {
                res.json({updated: result}); 
             });
@@ -105,8 +101,8 @@ var accountApi = function (knex) {
     
     // DELETE /api/accounts/:id
     var deleteAccount = function (req, res) {
-        var partyId = req.params.id;
-        accountController.deleteAccount(partyId)
+        var accountId = req.params.id;
+        accountController.deleteAccount(accountId)
             .then(function(result) {
                res.json({deleted: result}); 
             });
@@ -115,10 +111,10 @@ var accountApi = function (knex) {
     return {
         addAccount: addAccount,
         getAccountsByIdentity: getAccountsByIdentity,
-        getAccountsByOwner: getAccountsByOwner,
-        getAccounts: getAccounts,
+        //getAccountsByOwner: getAccountsByOwner,
+        //getAccounts: getAccounts,
         getAccountByPhoneNumber: getAccountByPhoneNumber,
-        getAccountById: getAccountById,
+        //getAccountById: getAccountById,
         updateAccount: updateAccount,
         deleteAccount: deleteAccount
     };

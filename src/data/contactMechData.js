@@ -39,7 +39,7 @@ var contactMechData = function (knex) {
                 address2: contactMech.address2,
                 directions: contactMech.directions,
                 city: contactMech.city,
-                postal_code: contactMech.postalCode,
+                postal_code: contactMech.zipOrPostalCode,
                 country_geo_id: contactMech.countryGeoId,
                 state_province_geo_id: contactMech.stateProvinceGeoId,
                 created_date: (new Date()).toISOString(),
