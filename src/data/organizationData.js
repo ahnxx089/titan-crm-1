@@ -17,6 +17,7 @@ var orgData = function (knex) {
      */
     var addOrganization = function (organization) {
         return knex.insert({
+            party_id: organization.partyId,
             organization_name: organization.orgName,
             office_site_name: organization.officeSiteName,
             annual_revenue: organization.annualRevenue,

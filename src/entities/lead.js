@@ -38,9 +38,11 @@ function Lead(partyId, /*PK, SHARED #1 */
                ownershipEnumId, /*FK #9, enumeration.enum_id */ 
                tickerSymbol, 
                importantNote,
-               primaryPostalAddressId, /*FK #10, contact_mech.contact_mech_id */
-               primaryTelecomNumberId, /*FK #11, contact_mech.contact_mech_id */
-               primaryEmailId, /*FK #12, contact_mech.contact_mech_id */
+               
+//               primaryPostalAddressId, /*FK #10, contact_mech.contact_mech_id */
+//               primaryTelecomNumberId, /*FK #11, contact_mech.contact_mech_id */
+//               primaryEmailId, /*FK #12, contact_mech.contact_mech_id */
+               
                // Use SHARED #1,3,6,7
                // for party_supplemental_data. 
                
@@ -61,6 +63,7 @@ function Lead(partyId, /*PK, SHARED #1 */
                // How am I supposed to refer to null values?
                // for party_relationship. Several (less useful or interesting) and nullable fields were omitted. 
                
+               // some other fileds are optional and not included in this constructor but in contactMech constructor
               ) {
 
     Person.call(this, partyId, partyTypeId, currencyUomId, description,
@@ -78,9 +81,9 @@ function Lead(partyId, /*PK, SHARED #1 */
     this.ownershipEnumId = ownershipEnumId;
     this.tickerSymbol = tickerSymbol;
     this.importantNote = importantNote; 
-    this.primaryPostalAddressId = primaryPostalAddressId;
-    this.primaryTelecomNumberId = primaryTelecomNumberId;
-    this.primaryEmailId = primaryEmailId;
+//    this.primaryPostalAddressId = primaryPostalAddressId;
+//    this.primaryTelecomNumberId = primaryTelecomNumberId;
+//    this.primaryEmailId = primaryEmailId;
     this.roleTypeId = roleTypeId;
     
     this.contactMechId = contactMechId;
@@ -120,9 +123,9 @@ Lead.prototype.validateForInsert = function () {
         this.validateOwnershipEnumId(false),
         this.validateTickerSymbol(false),
         this.validateImportantNote(false), 
-        this.validatePrimaryPostalAddressId(false),
-        this.validatePrimaryTelecomNumberId(false),
-        this.validatePrimaryEmailId(false), 
+//        this.validatePrimaryPostalAddressId(false),
+//        this.validatePrimaryTelecomNumberId(false),
+//        this.validatePrimaryEmailId(false), 
         this.validateRoleTypeId(true)
     ]; 
     

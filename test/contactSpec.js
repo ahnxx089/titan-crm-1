@@ -7,6 +7,7 @@
 
 /* jshint shadow:true */
 /* jshint jasmine:true */
+/* jshint maxlen:1000 */
 
 var knex = require('../src/config/knexConfig')().getConfig();
 var contactController = require('../src/controllers/contactController')(knex);
@@ -14,63 +15,66 @@ var Contact = require('../src/entities/contact');
 
 describe('Contact module ', function () {
 
-    // DINESH MUST REVISE THIS AFTER FINISH addContact NEW METHODOLOGY FOR contact mechanisms
     // Test contactController.addContact where a user has security permission to add a contact
     xit('contactController.addContact allows a user with permission to add a Contact', function (done) {
 
-        // party_id = 3 is fullAdminABC, who has permission
+        // user contactOwnerDEF has permission to create Contacts
         var user = {
-            userId: 'fullAdminABC',
-            password: '$2a$08$sJPUoxXV5fkcdgf9Ga8yeubPQ8WAzJVJVCUW3LrD0vgI9HsHQqkNO',
+            userId: 'contactOwnerDEF',
+            password: '$2a$08$H/jGQdzkk1YrMJh92vtZH.sblwGrgnbOpKYhwxrHmdaFRe7h6E4/q',
             passwordHint: null,
             enabled: 1,
             disabledDate: null,
-            partyId: 3,
-            createdDate: '2016-05-25T15:28:01.000Z',
-            updatedDate: '2016-05-25T15:28:01.000Z',
-            securityPermissions: ['CONTACT_OWNER', 'CONTACT_OWNER', 'CONTACT_OWNER'],
-            iat: 1464416683,
-            exp: 1464503083
+            partyId: 14,
+            createdDate: '2016-05-25T16:11:12.000Z',
+            updatedDate: '2016-05-25T16:11:12.000Z',
+            securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_CONTACT_CREATE', 'CRMSFA_CONTACT_DEACTIVATE', 'CRMSFA_CONTACT_REASSIGN', 'CRMSFA_CONTACT_UPDATE', 'CRMSFA_CONTACT_VIEW'],
+            iat: 1464484514,
+            exp: 1464570914
         };
         var contact = {
-            partyId: null,
             partyTypeId: 'PERSON',
             preferredCurrencyUomId: 'USD',
             description: 'addContact test',
             statusId: 'PARTY_ENABLED',
             createdBy: 'admin',
-            createdDate: '',
-            updatedDate: '',
             salutation: 'Mr.',
-            firstName: 'Ronald',
-            middleName: 'Bilious',
-            lastName: 'Weasley',
-            birthDate: '2016-05-10 14:00:00',
-            comments: 'testing addContact',
-            contactMechs: []
+            firstName: 'Pete',
+            middleName: '',
+            lastName: 'Davis',
+            birthDate: '',
+            comments: 'all four contact mechs coming in....',
+            emailAddress: 'pete.davis@gmail.com',
+            webAddress: 'www.snl.com',
+            countryCode: '1',
+            areaCode: '212',
+            contactNumber: '123-4567',
+            askForName: 'Petey',
+            toName: 'Pete Davis',
+            attnName: 'Pete Davis',
+            address1: '1045 Maple Ave.',
+            address2: '',
+            directions: 'use Google maps',
+            city: 'Ventura',
+            stateProvinceGeoId: 'CA',
+            zipOrPostalCode: '90210',
+            countryGeoId: 'USA'
         };
-        var userSecurityPerm = 'FULLADMIN';
 
-        var resultsForThisUser = contactController.addContact(contact, user, userSecurityPerm);
+        var resultsForThisUser = contactController.addContact(contact, user);
 
-        // Per contactApi.addContact the controller level returns a promise if the POST works;
-        // if it fails (e.g., no permission), it returns null.  Recycle here the same IF ELSE
-        // block used in contactApi.addContact to interpret these two possibilities.
-        if (resultsForThisUser === null) {
+        // The controller returns a promise, therefore the expect() and done() must be put in a 
+        // .then() clause so that the promise can be fulfilled. Otherwise the adding of the Contact
+        // does not actually happen before the expect() is reached and the done() executes.
+        resultsForThisUser.then(function (contact) {
+            // Get types of returned objects
+            var typeofContact = Object.prototype.toString.call(contact);
+            // Check whether the return value is an array
+            expect(typeofContact).toBe('[object Array]');
+            // Call done to finish the async function
             done();
-        } else {
-            // The controller returns a promise, therefore the expect() and done() must be put in a 
-            // .then() clause so that the promise can be fulfilled. Othersise the adding of the Contact
-            // does not actually happen before the expect() is reached and the done() executes.
-            resultsForThisUser.then(function (contact) {
-                // Get types of returned objects
-                var typeofContact = Object.prototype.toString.call(contact);
-                // Check whether the return value is an array
-                expect(typeofContact).toBe('[object Array]');
-                // Call done to finish the async function
-                done();
-            });
-        }
+        });
+
     });
 
     // Test contactController.getContactsByOwner where a user has security permission
@@ -161,7 +165,7 @@ describe('Contact module ', function () {
             // Call done to finish the async function
             done();
         } else {
-            var typeOfContacts = Object.prototype.toString.call(contacts);
+            var typeOfContacts = Object.prototype.toString.call(resultsForThisUser);
             // Check whether the return value is an array
             expect(typeOfContacts).toBe('[object Array]');
             // Call done to finish the async function
@@ -172,7 +176,7 @@ describe('Contact module ', function () {
     // Test of contactController.getContactsByIdentity where user has security permission -- TEST PASSED
     xit('contactController.getContactsByIdentity allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
 
-        // this search looks for any first name containing "w" OR last name containing "e"
+        // this search looks for any first name containing "w" AND last name containing "e"
         var query = {
             firstName: 'w',
             lastName: 'e'

@@ -21,7 +21,6 @@ var contactApi = function (knex) {
     var addContact = function (req, res) {
         var contact = req.body;
         var user = req.user;
-        var userSecurityPerm = req.user.securityPermissions;
 
         var resultsForThisUser = contactController.addContact(contact, user);
 
@@ -78,10 +77,15 @@ var contactApi = function (knex) {
         // getContactsByIdentity: ELSE IF ensures there is only one response to API layer!
         //                        See: http://www.ofssam.com/forums/showthread.php?tid=43 
         //
-        //  The search is inclusive, returning any contacts this user owns matching whichever
-        //  supplied portion of either the firstName or lastName.  Corresponds to:
-        //  WHERE person.first_name LIKE "%firstName%" OR person.last_name LIKE "%lastName%"
+        //  If only (portion of) firstName supplied and lastName is ignored, searches equiv to:
+        //  WHERE person.first_name LIKE "%firstName%" 
         //
+        //  If only (portion of) lastName supplied and firstName is ignored, searches equiv to:
+        //  WHERE person.last_name LIKE "%lastName%" 
+        //
+        //  If both (portions of) firstName and lastName supplied, searches equiv to:
+        //  WHERE person.first_name LIKE "%firstName%" AND person.last_name LIKE "%lastName%"
+        //        
         else if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
 
             var resultsForUser = contactController.getContactsByIdentity(req.query, req.user);
@@ -122,8 +126,9 @@ var contactApi = function (knex) {
     // PUT /api/contacts/:id
     var updateContact = function (req, res) {
         var contactId = req.params.id;
+        var user = req.user;
         var contact = req.body;
-        contactController.updateContact(contactId, contact)
+        contactController.updateContact(contactId, contact, user)
             .then(function (result) {
                 res.json({
                     updated: result

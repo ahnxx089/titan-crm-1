@@ -21,8 +21,9 @@ var leadController = function (knex) {
     // Get a reference to data layer module
     //
     var leadData = require('../data/leadData')(knex);
-
-
+    var contactMechData = require('../data/contactMechData')(knex);
+    var contactMechController = require('../controllers/contactMechController')(knex);
+    
     // CONTROLLER METHODS
     //
     /**
@@ -36,6 +37,35 @@ var leadController = function (knex) {
     // ==========================================
     //
 
+    
+    var addContactMechCallback = function (addContactMechPromises, contactMechEntities, partyId) {
+        // if there are more than one contactMech to be added
+        if (addContactMechPromises.length > 1) {
+            var promise = addContactMechPromises.pop();
+            var contactMech = contactMechEntities.pop();
+            var purposeTypeId = contactMech.contactMechPurposeTypeId;
+            return promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
+                    .then(function () {
+                        return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
+                    });
+            });
+        } 
+        // else: base case, only one contactMech to be added
+        else {
+            var promise = addContactMechPromises.pop();
+            var contactMech = contactMechEntities.pop();
+            var purposeTypeId = contactMech.contactMechPurposeTypeId;
+            return promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
+                    .then(function () {
+                        return partyId;
+                    });
+            });
+        }
+    };
+    
+    
     // Lucas's taking this
     /**
      * Create a new lead entity, validate, pass it to leadData to create a new lead if valid. Otherwise return errors. 
@@ -48,18 +78,85 @@ var leadController = function (knex) {
     var addLead = function (lead, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
         if (hasPermission !== -1) {
+            
+            var now = (new Date()).toISOString();
+            // Contact mechanisms
+            var contactMechEntities = [];
 
+            if (lead.emailAddress) {
+                var emailContactMech = new ContactMech(
+                    null,
+                    'EMAIL_ADDRESS',
+                    'PRIMARY_EMAIL',
+                    lead.emailAddress,
+                    now,
+                    now
+                );
+                contactMechEntities.push(emailContactMech);
+            }
+            if (lead.webAddress) {
+                var webContactMech = new ContactMech(
+                    null,
+                    'WEB_ADDRESS',
+                    'PRIMARY_WEB_URL',
+                    lead.webAddress,
+                    now,
+                    now
+                );
+                contactMechEntities.push(webContactMech);
+            }
+            if (lead.contactNumber) {
+                var phoneContactMech = new ContactMech(
+                    null,
+                    'TELECOM_NUMBER',
+                    'PRIMARY_PHONE',
+                    null, // null info string
+                    now,
+                    now,
+                    lead.countryCode,
+                    lead.areaCode,
+                    lead.contactNumber,
+                    lead.askForName
+                );
+                contactMechEntities.push(phoneContactMech);
+            }
+            if (lead.countryGeoId) {
+                var addressContactMech = new ContactMech(
+                    null,
+                    'POSTAL_ADDRESS',
+                    'PRIMARY_LOCATION',
+                    null, // null info string
+                    now,
+                    now,
+                    null,
+                    null,
+                    null,
+                    null,
+                    lead.toName,
+                    lead.attnName,
+                    lead.address1,
+                    lead.address2,
+                    lead.directions,
+                    lead.city,
+                    lead.stateProvinceGeoId,
+                    lead.zipOrPostalCode,
+                    lead.countryGeoId
+                );
+                contactMechEntities.push(addressContactMech);
+            }
+            
             var leadEntity = new Lead(
                 // ok to put dummy data here, eg, null and birthDate
+                // Single quotes are must.
                 null,
                 lead.partyTypeId,
                 lead.preferredCurrencyUomId,
                 lead.description,
                 lead.statusId,
                 user.userId,
-                //            'admin', // single quotes are must. For testing only
+                //            'admin', // For testing only
                 (new Date()).toISOString(), (new Date()).toISOString(),
-
+                // for party
                 lead.salutation,
                 lead.firstName,
                 lead.middleName,
@@ -67,7 +164,7 @@ var leadController = function (knex) {
                 //            lead.birthDate,
                 (new Date()).toISOString(), // for testing only
                 lead.comments,
-
+                // for person
                 lead.parentPartyId,
                 lead.companyName,
                 lead.annualRevenue,
@@ -77,10 +174,14 @@ var leadController = function (knex) {
                 lead.ownershipEnumId,
                 lead.tickerSymbol,
                 lead.importantNote,
-                lead.primaryPostalAddressId,
-                lead.primaryTelecomNumberId,
-                lead.primaryEmailId,
+                // for party_supplemental_data (partially). 
 
+                
+//                lead.primaryPostalAddressId,
+//                lead.primaryTelecomNumberId,
+//                lead.primaryEmailId,
+                
+                
                 lead.roleTypeId,
 
                 /*
@@ -101,21 +202,46 @@ var leadController = function (knex) {
             var validationErrors = leadEntity.validateForInsert();
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
-                var promise = leadData.addLead(leadEntity)
-                    .then(function (partyId) {
-                        return partyId;
-                    });
+                // insert new lead, get the promise first
+                var promise = leadData.addLead(leadEntity);
+                
+                // below: to add contactMech
+                var addContactMechPromises = [];
+                var mechPromise;
+                for (var i = 0; i < contactMechEntities.length; i++) {
+                    mechPromise = contactMechController.addContactMech(contactMechEntities[i]);
+                    // Make sure we have promise,
+                    // and not array of errors
+                    if ('then' in mechPromise) {
+                        addContactMechPromises.push(mechPromise);
+                    }
+                }
+                // above
                 promise.catch(function (error) {
                     winston.error(error);
                 });
-                return promise;
+                
+                if (addContactMechPromises.length > 0) {
+                    return promise.then(function (partyId) {
+                        return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
+                    });
+                } else {
+                    return promise;
+                }
+                
+//                promise.then(function (partyId) {
+//                        return partyId;
+//                    });
+//                promise.catch(function (error) {
+//                    winston.error(error);
+//                });
+//                return promise;
             } else {
                 return validationErrors;
             }
         } else {
             return null;
         }
-
     };
 
     // Lucas's taking this
@@ -256,7 +382,6 @@ var leadController = function (knex) {
         } else {
             return null;
         }
-
     };
 
     // Lucas's taking this

@@ -59,7 +59,7 @@ Account.prototype.validateForInsert = function () {
 
 Account.prototype.validateForUpdate = function () {
     // Call Organization's validation function
-    var errors = [Organization.prototype.validateForUpdate.call(this)];
+    var errors = Organization.prototype.validateForUpdate.call(this);
     // Account-specific validation code
     
     var specificvalidations = [
