@@ -10,18 +10,41 @@
 var winston = require('winston');
 var Account = require('../entities/account');
 var userController = require('../controllers/userController');
-var ContactMech = require('../entities/contactMech');
-var ContactMechController = require('../controllers/contactMechController');
+var contactInfoHelper = require('../controllers/helpers/contactInfoHelper');
 
 var accountController = function (knex) {
     // Get a reference to data layer module
     //
     var accountData = require('../data/accountData')(knex);
-
-
+    var contactMechController = require('../controllers/contactMechController')(knex);
+    
     // CONTROLLER METHODS
     // ==========================================
     //
+
+    var addContactMechCallback = function (addContactMechPromises, contactMechEntities, partyId) {
+        if (addContactMechPromises.length > 1) {
+            var promise = addContactMechPromises.pop();
+            var contactMech = contactMechEntities.pop();
+            var purposeTypeId = contactMech.contactMechPurposeTypeId;
+            return promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
+                    .then(function () {
+                        return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
+                    });
+            });
+        } else {
+            var promise = addContactMechPromises.pop();
+            var contactMech = contactMechEntities.pop();
+            var purposeTypeId = contactMech.contactMechPurposeTypeId;
+            return promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
+                    .then(function () {
+                        return partyId;
+                    });
+            });
+        }
+    };
     /**
      * Add a new account
      * @param {Object} account - The new account to be added
@@ -34,19 +57,8 @@ var accountController = function (knex) {
         //each one having an array of granular permissions pulled from the database, e.g. secPermissions = [ 'Contact_Owner': [1, 2, 3], 'FullAdmin': [...], ...];. 
         //So only someone with permission CRMSFA_ACCOUNT_CREATE to add a new Account, in this example.
         //if (hasSecurityPermissions !== -1) { the below code }
-        
-        var contactMechPromises = [];
-        if (account.primaryEmailAddressId) {
-            var emailContactMech = new ContactMech(
-                null, 
-                'EMAIL_ADDRESS',
-                contact.primaryEmailAddress,
-                (new Date()).toISOString(),
-                (new Date()).toISOString()
-            );
-            contactMechPromises.push(emailContactMech);
-        } //do similar if blocks to check for other contact mechanisms and read them in. 
-
+        var now = (new Date()).toISOString();
+        var contactMechEntities = contactInfoHelper(account);
         // Convert the received object into an entity
         var accountEntity = new Account(
             null,
@@ -55,8 +67,8 @@ var accountController = function (knex) {
             account.description,
             account.statusId,
             user.userId,
-            (new Date()).toISOString(),
-            (new Date()).toISOString(),
+            now,
+            now,
             account.orgName,
             account.officeSiteName,
             account.annualRevenue,
@@ -68,48 +80,53 @@ var accountController = function (knex) {
             account.industryEnumId,
             account.ownershipEnumId,
             account.importantNote,
-            account.primaryPostalAddressId,
+            account.primaryPostalAddress,
+            account.primaryTelecomNumber,
+            account.primaryEmail,
+            account.primaryPostalAddressId, //creating new properties on the account object, for database write purposes only
             account.primaryTelecomNumberId,
             account.primaryEmailId
         );
         // Validate the data before going ahead
-        var validationErrors = accountEntity.validateForInsert(); 
+        var validationErrors = accountEntity.validateForInsert();
         //MUST I ALSO VALIDATE THE USER CREDENTIALS AS WELL? I'M PASSING IT TO THE DB...
         //var userEntity = userController.getUserById(user.userId);
-        if(validationErrors.length === 0) {
+        if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
-            //IF THIS PROMISE DOESN'T PULL THE USER'S PROPERTIES AS EXPECTED, JUST SWITCH USERENTITY TO USER
-            var promise = accountData.addAccount(accountEntity, user)
+            var typeofNumField = Object.prototype.toString.call(accountEntity.annualRevenue);
+            console.log(typeofNumField);
+            var promise2 = accountData.addAccount(accountEntity, user).then(function (results) {return results;});
 
-                .then(function(partyId) {
-                   
-                    return partyId; 
-                });
-            promise.catch(function (error) {
+            var addContactMechPromises = [];
+            var mechPromise;
+            for (var i = 0; i < contactMechEntities.length; i++) {
+                mechPromise = contactMechController.addContactMech(contactMechEntities[i]);
+                // Make sure we have promise,
+                // and not array of errors
+                if ('then' in mechPromise) {
+                    addContactMechPromises.push(mechPromise);
+                }
+            }
+            promise2.catch(function (error) {
                 winston.error(error);
             });
-            return promise;
+            
+            if (addContactMechPromises.length > 0) {
+                return promise2.then(function (partyId) {
+                    console.log(partyId);
+                    return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
+                });
+            } else {
+                return promise2;
+            }
+            promise2.catch(function (error) {
+                winston.error(error);
+            });
+            return promise2;
         } else {
             return validationErrors;
         }
-    
-    
-        var addContactMechCallback = function(partyId) {
-            if (contactMechPromises.length > 0) {
-                var promise = contactMechPromises.pop();
-                promise.then(function(contactMechId) {
-                    ContactMechController.linkContactMechToParty(partyId, contactMechId)
-                    .then(function() {
-                        addContactMechCallback(partyId);
-                    })
-
-                })
-            }
-            else {
-                return;
-            }
-        };
-};
+    };
     /**
      * Gets all account.
      * @return {Object} promise - Fulfillment value is an array of account entities
@@ -235,7 +252,7 @@ var accountController = function (knex) {
                 );
                 ownedAccounts.push(accountEntity);
             }
-        })
+        });
         promise.catch(function(error) {
             // Log the error
             winston.error(error);
@@ -248,34 +265,41 @@ var accountController = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
 
-    var getAccountByPhoneNumber = function (phoneNumberId, userSecurityPerm) {
-        var promise = accountData.getAccountByPhoneNumber(phoneNumberId);
-        Account.find(phoneNumberId, function (err, accounts) {
-                if (err) {
-                    console.log('Account phoneNumber did not find' + err);
-                } 
-                // ERIC, I COMMENTED THIS ELSE IF BLOCK OUT DUE TO req NOT DEFINED,
-                // TRYING TO GET THE APP TO NOT CRASH, NOT SURE IF THIS IS DOING IT 
-                //else if (accounts) {
-                //    req.account = accounts;
-                //}
-
-            })
+    var getAccountByPhoneNumber = function (query, user) {
+        var phoneNumber = query.phoneNumber;
+        var promise = accountData.getAccountByPhoneNumber(phoneNumber)
             .then(function (accounts) {
                 // Map the retrieved result set to corresponding entity
-                var accountEntity = new Account(
-                    accounts[0].party_id,
-                    accounts[0].organization_name,
-                    accounts[0].office_site_name,
-                    accounts[0].annual_revenue,
-                    accounts[0].num_employees,
-                    accounts[0].ticker_symbol,
-                    accounts[0].comments,
-                    accounts[0].logo_image_url,
-                    accounts[0].created_date,
-                    accounts[0].updated_date
-                );
-                return accountEntity;
+               var phoneAccounts = [];
+                for (var i = 0; i < accounts.length; i++) {
+                    var accountEntity = new Account(
+                        accounts[i].party_id,
+                        accounts[i].party_type_id,
+                        accounts[i].preferred_currency_uom_id,
+                        accounts[i].description,
+                        accounts[i].status_id,
+                        accounts[i].created_by,
+                        accounts[i].created_date,
+                        accounts[i].updated_date,
+                        accounts[i].organization_name,
+                        accounts[i].office_site_name,
+                        accounts[i].annual_revenue,
+                        accounts[i].num_employees,
+                        accounts[i].ticker_symbol,
+                        accounts[i].comments,
+                        accounts[i].logo_image_url,
+                        accounts[i].party_parent_id,
+                        accounts[i].industry_enum_id,
+                        accounts[i].ownership_enum_id,
+                        accounts[i].important_note,
+                        accounts[i].primary_postal_address_id,
+                        accounts[i].primary_telecom_number_id,
+                        accounts[i].primary_email_id
+                        
+                    );
+                    phoneAccounts.push(accountEntity);  
+                }
+                return phoneAccounts;    
             });
         promise.catch(function (error) {
             // Log the error
@@ -289,24 +313,23 @@ var accountController = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     
-    var getAccountsByIdentity = function (identityId, userSecurityPerm) {
-        var promise = accountData.getAccountsByIdentity(identityId);
-        Account.find(identityId, function (err, accounts) {
-                if (err) {
-                    console.log('Account Identity did not find' + err);
-                } 
-                // ERIC, I COMMENTED THIS ELSE IF BLOCK OUT DUE TO req NOT DEFINED,
-                // TRYING TO GET THE APP TO NOT CRASH, NOT SURE IF THIS IS DOING IT 
-                //else if (accounts) {
-                //   req.accounts = accounts;
-                //}
-
-            })
+    var getAccountByIdentity = function (query, user) {
+        var accountId = query.accountId;
+        var accountName = query.accountName; 
+        var promise = accountData.getAccountByIdentity(accountId, accountName)
+        
             .then(function (accounts) {
                 var identityAccounts = [];
                 for (var i = 0; i < accounts.length; i++) {
                     var accountEntity = new Account(
                         accounts[i].party_id,
+                        accounts[i].party_type_id,
+                        accounts[i].preferred_currency_uom_id,
+                        accounts[i].description,
+                        accounts[i].status_id,
+                        accounts[i].created_by,
+                        accounts[i].created_date,
+                        accounts[i].updated_date,
                         accounts[i].organization_name,
                         accounts[i].office_site_name,
                         accounts[i].annual_revenue,
@@ -314,18 +337,24 @@ var accountController = function (knex) {
                         accounts[i].ticker_symbol,
                         accounts[i].comments,
                         accounts[i].logo_image_url,
-                        accounts[i].created_date,
-                        accounts[i].updated_date
+                        accounts[i].party_parent_id,
+                        accounts[i].industry_enum_id,
+                        accounts[i].ownership_enum_id,
+                        accounts[i].important_note,
+                        accounts[i].primary_postal_address_id,
+                        accounts[i].primary_telecom_number_id,
+                        accounts[i].primary_email_id
+                        
                     );
-                    identityAccounts.push(accountEntity);   // ERIC, I EDITED THIS TO SEE IF
-                                                            // WAS CAUSING APP CRASH
+                    identityAccounts.push(accountEntity);  
                 }
+                return identityAccounts;    
+            });
                 promise.catch(function (error) {
                     // Log the error
                     winston.error(error);
                 });
-                return identityAccounts;
-            });
+                return promise;
     };
 
     /**
@@ -375,10 +404,17 @@ var accountController = function (knex) {
      * @param {Object} account - The object that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateAccount = function (partyId, account) {
+    var updateAccount = function (accountId, account) {
         // Convert the received object into an entity
         var accountEntity = new Account(
-            partyId,
+            accountId,
+            account.partyTypeId,
+            account.currencyUomId,
+            account.description,
+            account.statusId,
+            account.createdBy,
+            account.createdDate,
+            (new Date()).toISOString(), //account.updateDate
             account.orgName,
             account.officeSiteName,
             account.annualRevenue,
@@ -386,15 +422,21 @@ var accountController = function (knex) {
             account.tickerSymbol,
             account.comments,
             account.logoImgURL,
-            null, (new Date()).toISOString()
+            account.partyParentId,
+            account.industryEnumId,
+            account.ownershipEnumId,
+            account.importantNote,
+            account.primaryPostalAddress,
+            account.primaryTelecomNumber,
+            account.primaryEmail
         );
         // Validate the data before going ahead
         var validationErrors = accountEntity.validateForUpdate();
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
             var promise = accountData.updateAccount(accountEntity)
-                .then(function (partyId) {
-                    return partyId;
+                .then(function (accountId) {
+                    return accountId;
                 });
             promise.catch(function (error) {
                 winston.error(error);
@@ -407,11 +449,11 @@ var accountController = function (knex) {
 
     /**
      * Delete a Account
-     * @param {Number} partyId - Unique id of the account to be deleted
+     * @param {Number} accountId - Unique id of the account to be deleted
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */
-    var deleteAccount = function (partyId) {
-        var promise = accountData.deleteAccount(partyId)
+    var deleteAccount = function (accountId) {
+        var promise = accountData.deleteAccount(accountId)
             .then(function (result) {
                 return result;
             });
@@ -423,8 +465,8 @@ var accountController = function (knex) {
     };
 
     return {
-        addAccount: addAccount,
-        getAccounts: getAccounts,
+        //addAccount: addAccount,
+        //getAccounts: getAccounts,
         getAccountById: getAccountById,
         updateAccount: updateAccount,
         deleteAccount: deleteAccount

@@ -37,7 +37,6 @@ function ContactMech(contactMechId, contactMechTypeId, contactMechPurposeTypeId,
     this.stateProvinceGeoId = stateProvinceGeoId;
     this.zipOrPostalCode = zipOrPostalCode;
     this.countryGeoId = countryGeoId;
-
 }
 
 ContactMech.prototype.constructor = ContactMech;

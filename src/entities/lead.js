@@ -16,9 +16,12 @@
 
 var validation = require('../common/validation')();
 var Person = require('../entities/person');
+var ContactMech = require('../entities/contactMech');
+
 // Constructor
 // Lead is a Person, which is a Party
 // Party -> Person -> Lead
+// not all specified parameters in ARC are passed or used here in this constructor
 function Lead(partyId, /*PK, SHARED #1 */
                partyTypeId, /*FK #2, party_type.party_type_id, in this case a PERSON */
                currencyUomId, /*FK #3, uom.uom_id */
@@ -28,7 +31,7 @@ function Lead(partyId, /*PK, SHARED #1 */
                createdDate, updatedDate, /* SHARED 6,7 */
                // for Party
                
-               salutation, firstName, middleName, lastName, birthDate, p_comments, 
+               salutation, firstName, middleName, lastName, birthDate, comments, 
                // Use SHARED #1,6,7
                // for Person
                
@@ -50,12 +53,13 @@ function Lead(partyId, /*PK, SHARED #1 */
                // Use SHARED #1,6,7
                // for party_role
                
-               contactMechId, /*FK #14, contact_mech.contact_mech_id */
-               contactMechPurposeTypeId, /*FK #15, contact_mech_purpose_type.contact_mech_purpose_type_id */
-               fromDate,
-               thruDate,
-               verified,
-               pc_comments
+               partyContactMechs
+//               contactMechId, /*FK #14, contact_mech.contact_mech_id */
+//               contactMechPurposeTypeId, /*FK #15, contact_mech_purpose_type.contact_mech_purpose_type_id */
+//               fromDate,
+//               thruDate,
+//               verified,
+//               pc_comments
                // Use SHARED #1,6,7
                
                // I DONT UNDERSTAND party_id_to, and party_id_from. 
@@ -68,7 +72,7 @@ function Lead(partyId, /*PK, SHARED #1 */
 
     Person.call(this, partyId, partyTypeId, currencyUomId, description,
                statusId, createdBy, createdDate, updatedDate,
-               salutation, firstName, middleName, lastName, birthDate, p_comments
+               salutation, firstName, middleName, lastName, birthDate, comments
                );
     
     // Lead-specific Properties
@@ -86,12 +90,13 @@ function Lead(partyId, /*PK, SHARED #1 */
 //    this.primaryEmailId = primaryEmailId;
     this.roleTypeId = roleTypeId;
     
-    this.contactMechId = contactMechId;
-    this.contactMechPurposeTypeId = contactMechPurposeTypeId;
-    this.fromDate = fromDate;
-    this.thruDate = thruDate;
-    this.verified = verified;
-    this.pc_comments = pc_comments;
+    this.partyContactMechs = partyContactMechs;
+//    this.contactMechId = contactMechId;
+//    this.contactMechPurposeTypeId = contactMechPurposeTypeId;
+//    this.fromDate = fromDate;
+//    this.thruDate = thruDate;
+//    this.verified = verified;
+//    this.pc_comments = pc_comments;
     // these 6 are not validated
 }
 
@@ -220,6 +225,7 @@ Person.prototype.validateImportantNote = function(isRequired) {
     return validationResult;
 };
 
+/*
 // primaryPostalAddressId is int(11)
 Person.prototype.validatePrimaryPostalAddressId = function(isRequired) {
     this.primaryPostalAddressId = validation.sanitizeInput(this.primaryPostalAddressId);
@@ -249,6 +255,7 @@ Person.prototype.validatePrimaryEmailId = function(isRequired) {
     }
     return validationResult;
 };
+*/
 
 // roleTypeId is varchar(20)
 Person.prototype.validateRoleTypeId = function(isRequired) {
