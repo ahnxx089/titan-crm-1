@@ -119,7 +119,6 @@ var contactApi = function (knex) {
         contactController.getContactById(contactId)
             .then(function (contact) {
                 res.json(contact);
-                //Or should this be:  res.json(lead);
             });
     };
 
