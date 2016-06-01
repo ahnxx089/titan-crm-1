@@ -32,7 +32,7 @@ var quoteController = function (knex) {
 
     };
 
-    /* DINESH IS THINKING ABOUT THE NEXT TWO FUNCTIONS updateQuote AND updateQuoteItem AND SO THEY
+    /* DINESH IS STILL THINKING ABOUT THE NEXT TWO FUNCTIONS updateQuote AND updateQuoteItem AND SO THEY
         MIGHT CHANGE SUBSTANTIALLY, BUT HE WILL NOT MAKE CHANGES THAT AFFECT OTHER FUNCTIONALITIES
         WITHOUT TALKING TO THEIR AUTHORS.  HE IS CONTEMPLATING MAKING AN ITEM ENTITY AND MAYBE
         EVEN AN OPTION ENTITY, BUT THEIR CREATION SHOULD NOT AFFECT THE OTHER FUNCTIONALITIES 
@@ -44,19 +44,19 @@ var quoteController = function (knex) {
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateQuote = function (quoteId, item, user) {
+    var updateQuote = function (user) {
         
-        // IMPLEMENT SECURIY CHECKING ONCE NEW GROUP IS ADDED TO DB
-        /*// Check user's security permission to own contacts
+        // Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
-            // proceed towards data layer
+            // TEMPORARILY RETURNING JUST A NONSENSE STRING THAT THE API LAYER WILL NOT
+            // DO ANYTHING WITH, FOR NOW JUST TESTING NEW SECURITY GROUP
+            return 'Nobody will see this string.'
         }   
         else {
             // user does not have permissions to add a quote, return null
             return null;
-        }*/
-
+        }
     };
 
     /**

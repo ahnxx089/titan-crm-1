@@ -138,9 +138,8 @@ var router = function (knex) {
         .get(quoteApi.getQuotes)
         .post(quoteApi.addQuote)
         .put(quoteApi.updateQuote);
-    //apiRouter.route('/quotes/:id')
-    //    .get(quoteApi.getQuoteById);
-    
+    apiRouter.route('/quotes/:id')
+        .get(quoteApi.getQuoteById);
     
     return apiRouter;
 };
