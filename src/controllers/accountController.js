@@ -465,8 +465,8 @@ var accountController = function (knex) {
     };
 
     return {
-        addAccount: addAccount,
-        getAccounts: getAccounts,
+        //addAccount: addAccount,
+        //getAccounts: getAccounts,
         getAccountById: getAccountById,
         updateAccount: updateAccount,
         deleteAccount: deleteAccount
