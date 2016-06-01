@@ -138,8 +138,8 @@ var leadController = function (knex) {
                     lead.address2,
                     lead.directions,
                     lead.city,
-                    lead.zipOrPostalCode,
                     lead.stateProvinceGeoId,
+                    lead.zipOrPostalCode,
                     lead.countryGeoId
                 );
                 contactMechEntities.push(addressContactMech);
