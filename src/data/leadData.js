@@ -190,21 +190,54 @@ var leadData = function (knex) {
      * @param {Object} lead - The lead entity that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateLead = function (lead) {
-        return knex('party')
+    var updateLead = function (leadId) {
+        return knex('party_contact_mech')
             .where({
-                party_id: lead.partyId
+                party_id: leadId
             })
-            .update({
-                party_type_id: lead.partyTypeId,
-                preferred_currency_uom_id: lead.preferredCurrencyUomId,
-                description: lead.description,
-                status_id: lead.statusId,
-                updated_date: (new Date()).toISOString()
+            .update()
+            .then(function (partyLinkRows) {
+                return knex('contact_mech')
+                    .where({
+                        party_id: leadId
+                    })
+                    .update()
+                    .then(function (contactMechRows) {
+                        return knex('party_role')
+                            .where({
+                                party_id: leadId
+
+                            })
+                            .update()
+                            .then(function (partyRoleRows) {
+                                return knex('party_supplemental_data')
+                                    .where({
+                                        party_id: leadId
+                                    })
+                                    .update()
+                                    .then(function (partySuppRows) {
+                                        return knex('person')
+                                            .where({
+                                                party_id: leadId
+
+                                            })
+                                            .update()
+                                            .then(function (personRows) {
+                                                return knex('party')
+                                                    .where({
+                                                        party_id: leadId
+                                                    })
+                                                    .update()
+                                                    .then(function (partyRows) {
+                                                        return partyRows + personRows + partyRoleRows + partySuppRows + contactMechRows + partyLinkRows;
+                                                    });
+
+                                            });
+                                    });
+                            });
+                    });
             });
     };
-
-
     // Divine: Follow my example of adding leads. 
     // You need to delete the leads from Party_supplemental_data, Person and serveral other tables, 
     // before deleting (the rest of) that lead in Party table

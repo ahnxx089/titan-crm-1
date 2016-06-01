@@ -451,7 +451,7 @@ var leadController = function (knex) {
     };
 
 
-    // Divine: your implementation of update and delete below are wrong. Should not use new Party() or .deleteParty()
+    
     /**
      * Update a lead in database
      * @param {Number} leadId - Unique id of the lead to be updated
@@ -459,32 +459,40 @@ var leadController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateLead = function (leadId, lead) {
-        //        var leadEntity = new Party(
-        //                partyId,
-        //                lead.partyTypeId,
-        //                lead.preferredCurrencyUomId,
-        //                lead.description,
-        //                lead.statusId,
-        //                null,
-        //                null,
-        //                (new Date()).toISOString()
-        //        );
-        //        // Validate the data before going ahead
-        //        var validationErrors = leadEntity.validateForUpdate();
-        //        if(validationErrors.length === 0) {
-        //            // Pass on the entity to be added to the data layer
-        //            var promise = leadData.updateLead(leadEntity)
-        //                .then(function(partyId) {
-        //                   return partyId; 
-        //                });
-        //                promise.catch(function(error) {
-        //                    winston.error(error);
-        //                });
-        //            return promise;
-        //        }
-        //        else {
-        //            return null;
-        //        }
+        //Converty lead to an entity
+        var leadEntity = new Lead(
+            leadId,
+            lead.partyTypeId,
+            lead.preferredCurrencyUomId,
+            lead.description,
+            lead.statusId,
+            lead.createdBy,
+            lead.createdDate,
+            lead.updatedDate,
+            lead.salutation,
+            lead.firstName,
+            lead.middleName,
+            lead.lastName,
+            lead.birthDate,
+            lead.p_comments
+        );
+
+        // Validate the data before going ahead
+
+        var validationErrors = leadEntity.validateForUpdate();
+        if (validationErrors.length === 0) {
+            // Pass on the entity to be added to the data layer
+            var promise = leadData.updateLead(leadEntity)
+                .then(function (leadId) {
+                    return leadId;
+                });
+            promise.catch(function (error) {
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            return null;
+        }
     };
 
     /**
