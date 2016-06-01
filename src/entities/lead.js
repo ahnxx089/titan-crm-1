@@ -16,9 +16,12 @@
 
 var validation = require('../common/validation')();
 var Person = require('../entities/person');
+var ContactMech = require('../entities/contactMech');
+
 // Constructor
 // Lead is a Person, which is a Party
 // Party -> Person -> Lead
+// not all specified parameters in ARC are passed or used here in this constructor
 function Lead(partyId, /*PK, SHARED #1 */
                partyTypeId, /*FK #2, party_type.party_type_id, in this case a PERSON */
                currencyUomId, /*FK #3, uom.uom_id */
@@ -46,10 +49,11 @@ function Lead(partyId, /*PK, SHARED #1 */
                // Use SHARED #1,3,6,7
                // for party_supplemental_data. 
                
-               roleTypeId /*FK #13, role_type.role_type, in this case a LEAD */
+               roleTypeId, /*FK #13, role_type.role_type, in this case a LEAD */
                // Use SHARED #1,6,7
                // for party_role
                
+               partyContactMechs
 //               contactMechId, /*FK #14, contact_mech.contact_mech_id */
 //               contactMechPurposeTypeId, /*FK #15, contact_mech_purpose_type.contact_mech_purpose_type_id */
 //               fromDate,
@@ -86,6 +90,7 @@ function Lead(partyId, /*PK, SHARED #1 */
 //    this.primaryEmailId = primaryEmailId;
     this.roleTypeId = roleTypeId;
     
+    this.partyContactMechs = partyContactMechs;
 //    this.contactMechId = contactMechId;
 //    this.contactMechPurposeTypeId = contactMechPurposeTypeId;
 //    this.fromDate = fromDate;

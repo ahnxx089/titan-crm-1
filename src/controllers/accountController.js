@@ -10,18 +10,41 @@
 var winston = require('winston');
 var Account = require('../entities/account');
 var userController = require('../controllers/userController');
-var ContactMech = require('../entities/contactMech');
-var ContactMechController = require('../controllers/contactMechController');
+var contactInfoHelper = require('../controllers/helpers/contactInfoHelper');
 
 var accountController = function (knex) {
     // Get a reference to data layer module
     //
     var accountData = require('../data/accountData')(knex);
-
-
+    var contactMechController = require('../controllers/contactMechController')(knex);
+    
     // CONTROLLER METHODS
     // ==========================================
     //
+
+    var addContactMechCallback = function (addContactMechPromises, contactMechEntities, partyId) {
+        if (addContactMechPromises.length > 1) {
+            var promise = addContactMechPromises.pop();
+            var contactMech = contactMechEntities.pop();
+            var purposeTypeId = contactMech.contactMechPurposeTypeId;
+            return promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
+                    .then(function () {
+                        return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
+                    });
+            });
+        } else {
+            var promise = addContactMechPromises.pop();
+            var contactMech = contactMechEntities.pop();
+            var purposeTypeId = contactMech.contactMechPurposeTypeId;
+            return promise.then(function (contactMechId) {
+                return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
+                    .then(function () {
+                        return partyId;
+                    });
+            });
+        }
+    };
     /**
      * Add a new account
      * @param {Object} account - The new account to be added
@@ -34,19 +57,8 @@ var accountController = function (knex) {
         //each one having an array of granular permissions pulled from the database, e.g. secPermissions = [ 'Contact_Owner': [1, 2, 3], 'FullAdmin': [...], ...];. 
         //So only someone with permission CRMSFA_ACCOUNT_CREATE to add a new Account, in this example.
         //if (hasSecurityPermissions !== -1) { the below code }
-        
-        var contactMechPromises = [];
-        if (account.primaryEmailAddressId) {
-            var emailContactMech = new ContactMech(
-                null, 
-                'EMAIL_ADDRESS',
-                contact.primaryEmailAddress,
-                (new Date()).toISOString(),
-                (new Date()).toISOString()
-            );
-            contactMechPromises.push(emailContactMech);
-        } //do similar if blocks to check for other contact mechanisms and read them in. 
-
+        var now = (new Date()).toISOString();
+        var contactMechEntities = contactInfoHelper(account);
         // Convert the received object into an entity
         var accountEntity = new Account(
             null,
@@ -55,8 +67,8 @@ var accountController = function (knex) {
             account.description,
             account.statusId,
             user.userId,
-            (new Date()).toISOString(),
-            (new Date()).toISOString(),
+            now,
+            now,
             account.orgName,
             account.officeSiteName,
             account.annualRevenue,
@@ -68,48 +80,53 @@ var accountController = function (knex) {
             account.industryEnumId,
             account.ownershipEnumId,
             account.importantNote,
-            account.primaryPostalAddressId,
+            account.primaryPostalAddress,
+            account.primaryTelecomNumber,
+            account.primaryEmail,
+            account.primaryPostalAddressId, //creating new properties on the account object, for database write purposes only
             account.primaryTelecomNumberId,
             account.primaryEmailId
         );
         // Validate the data before going ahead
-        var validationErrors = accountEntity.validateForInsert(); 
+        var validationErrors = accountEntity.validateForInsert();
         //MUST I ALSO VALIDATE THE USER CREDENTIALS AS WELL? I'M PASSING IT TO THE DB...
         //var userEntity = userController.getUserById(user.userId);
-        if(validationErrors.length === 0) {
+        if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
-            //IF THIS PROMISE DOESN'T PULL THE USER'S PROPERTIES AS EXPECTED, JUST SWITCH USERENTITY TO USER
-            var promise = accountData.addAccount(accountEntity, user)
+            var typeofNumField = Object.prototype.toString.call(accountEntity.annualRevenue);
+            console.log(typeofNumField);
+            var promise2 = accountData.addAccount(accountEntity, user).then(function (results) {return results;});
 
-                .then(function(partyId) {
-                   
-                    return partyId; 
-                });
-            promise.catch(function (error) {
+            var addContactMechPromises = [];
+            var mechPromise;
+            for (var i = 0; i < contactMechEntities.length; i++) {
+                mechPromise = contactMechController.addContactMech(contactMechEntities[i]);
+                // Make sure we have promise,
+                // and not array of errors
+                if ('then' in mechPromise) {
+                    addContactMechPromises.push(mechPromise);
+                }
+            }
+            promise2.catch(function (error) {
                 winston.error(error);
             });
-            return promise;
+            
+            if (addContactMechPromises.length > 0) {
+                return promise2.then(function (partyId) {
+                    console.log(partyId);
+                    return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
+                });
+            } else {
+                return promise2;
+            }
+            promise2.catch(function (error) {
+                winston.error(error);
+            });
+            return promise2;
         } else {
             return validationErrors;
         }
-    
-    
-        var addContactMechCallback = function(partyId) {
-            if (contactMechPromises.length > 0) {
-                var promise = contactMechPromises.pop();
-                promise.then(function(contactMechId) {
-                    ContactMechController.linkContactMechToParty(partyId, contactMechId)
-                    .then(function() {
-                        addContactMechCallback(partyId);
-                    })
-
-                })
-            }
-            else {
-                return;
-            }
-        };
-};
+    };
     /**
      * Gets all account.
      * @return {Object} promise - Fulfillment value is an array of account entities

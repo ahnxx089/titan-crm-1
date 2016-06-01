@@ -47,7 +47,7 @@ var leadData = function (knex) {
             .insert({
                 // ok to put dummy data here
                 party_type_id: lead.partyTypeId,
-                preferred_currency_uom_id: lead.preferredCurrencyUomId,
+                preferred_currency_uom_id: lead.currencyUomId,
                 description: lead.description,
                 status_id: lead.statusId,
                 created_by: lead.createdBy,
@@ -76,7 +76,7 @@ var leadData = function (knex) {
                         parent_party_id: lead.parentPartyId,
                         company_name: lead.companyName,
                         annual_revenue: lead.annualRevenue,
-                        currency_uom_id: lead.preferredCurrencyUomId, // the same
+                        currency_uom_id: lead.currencyUomId, // the same. Was renamed.
                         num_employees: lead.numEmployees,
                         created_date: lead.createdDate,
                         updated_date: lead.updatedDate, 
@@ -144,7 +144,7 @@ var leadData = function (knex) {
 
     // Lucas's taking this
     /**
-     * Gets one lead by its id from database
+     * Gets one lead by its id from database. This GET will JOIN more than 3 tables and contain many details. 
      * @param {Number} partyId - Unique id of the party (grandparent of lead) to be fetched
      * @return {Object} promise - Fulfillment value is a raw data object
      */
@@ -156,12 +156,43 @@ var leadData = function (knex) {
         //                party_id: id
         //            });
 
-        return knex.from('person')
+        return knex.select('person.party_id', 'person.salutation', 'person.first_name', 'person.middle_name',
+                           'person.last_name', 'person.birth_date', 'person.comments', 'person.created_date', 'person.updated_date',
+                           'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 
+                           'party.created_by', 
+                           'party_supplemental_data.parent_party_id', 'party_supplemental_data.company_name', 
+                           'party_supplemental_data.annual_revenue', 'party_supplemental_data.num_employees',
+                           'party_supplemental_data.industry_enum_id', 'party_supplemental_data.ownership_enum_id',
+                           'party_supplemental_data.ticker_symbol', 'party_supplemental_data.important_note',
+                           'party_role.role_type_id',
+                           'party_contact_mech.contact_mech_id', 'party_contact_mech.contact_mech_purpose_type_id', 
+                           'party_contact_mech.from_date', 'party_contact_mech.thru_date', 'party_contact_mech.verified',
+                           'party_contact_mech.comments',
+                           'contact_mech.contact_mech_id', 'contact_mech.contact_mech_type_id', 'contact_mech.info_string',
+                           'telecom_number.country_code', 'telecom_number.area_code', 'telecom_number.contact_number', 'telecom_number.ask_for_name',
+                           'postal_address.to_name', 'postal_address.attn_name', 'postal_address.address1',
+                           'postal_address.address2', 'postal_address.directions', 'postal_address.city',
+                           'postal_address.postal_code', 'postal_address.country_geo_id', 'postal_address.state_province_geo_id'
+                          )
+            .from('person')
             .innerJoin('party', 'person.party_id', 'party.party_id')
             .innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id')
             .innerJoin('party_role', 'person.party_id', 'party_role.party_id')
             .innerJoin('party_contact_mech', 'person.party_id', 'party_contact_mech.party_id')
+            .leftJoin('contact_mech', 'party_contact_mech.contact_mech_id', '=', 'contact_mech.contact_mech_id')
+            .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
+            .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')
             .where('person.party_id', id);
+        
+//        return knex.from('person')
+//            .innerJoin('party', 'person.party_id', 'party.party_id')
+//            .innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id')
+//            .innerJoin('party_role', 'person.party_id', 'party_role.party_id')
+//            .innerJoin('party_contact_mech', 'person.party_id', 'party_contact_mech.party_id')
+//            .leftJoin('contact_mech', 'party_contact_mech.contact_mech_id', '=', 'contact_mech.contact_mech_id')
+//            .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
+//            .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')
+//            .where('person.party_id', id);
     };
 
 

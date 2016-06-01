@@ -15,7 +15,7 @@ var winston = require('winston');
 
 
 var accountData = function (knex) {
-    var contactMechData = require('../data/contactMechData')(knex);
+    var contactMechController = require('../data/contactMechData')(knex);
     var orgData = require('../data/organizationData')(knex);
     var partyData = require('../data/partyData')(knex);
     
@@ -36,7 +36,7 @@ var accountData = function (knex) {
         //WOULDN'T GO INTO orgData.addOrganization
         return knex.insert({
             party_id: account.partyId,
-            parent_party_id: account.parentPartyId,
+            //parent_party_id: account.parentPartyId,
             //Put in company name here maybe?
             annual_revenue: account.annualRevenue,
             currency_uom_id: account.preferredCurrencyUomId,
@@ -45,16 +45,16 @@ var accountData = function (knex) {
             ownership_enum_id: account.ownershipEnumId,
             ticker_symbol: account.tickerSymbol,
             important_note: account.importantNote,
-            primary_postal_address_id: account.primaryPostalAddressId,
-            primary_telecom_number_id: account.primaryTelecomNumberId,
-            primary_email_id: account.primaryEmailId,
+            primary_postal_address_id: null, //account.primaryPostalAddressId,
+            primary_telecom_number_id: null, //account.primaryTelecomNumberId,
+            primary_email_id: null, //account.primaryEmailId,
             created_date: account.createdDate, //this may be incorrect and need to be changed
             updated_date: account.updatedDate
         }).into('party_supplemental_data');
     };
     
     var addAccountContactMech = function (account) {
-        return contactMechData.addContactMech(account);
+        return contactMechController.addContactMech(account);
     };
     
     var addAccountPartyRole = function (account) {
@@ -92,10 +92,7 @@ var accountData = function (knex) {
                     role_type_id_to: 'ACCOUNT', 
                     from_date: account.createdDate,
                     thru_date: null, 
-                    status_id: null, 
-                    relationship_name: null, 
-                    security_group_id: null,
-                    priority_type_id: null,
+                    status_id: null,
                     party_relationship_type_id: 'CONTACT_REL_INV',
                     created_date: account.createdDate,
                     updated_date: account.updatedDate    
@@ -113,14 +110,11 @@ var accountData = function (knex) {
                 party_id_from: account.partyId,
                 party_id_to: user.partyId,
                 role_type_id_from: 'ACCOUNT',
-                role_type_id_to: 'ACCOUNT_MANAGER',
+                role_type_id_to: 'PERSON_ROLE',
                 from_date: account.createdDate,
                 thru_date: null, 
                 status_id: null, 
-                relationship_name: null, 
-                security_group_id: 'ACCOUNT_OWNER',
-                priority_type_id: null,
-                party_relationship_type_id: 'CONTACT_REL_INV',
+                party_relationship_type_id: 'RESPONSIBLE_FOR',
                 created_date: account.createdDate,
                 updated_date: account.updatedDate
             }).into('party_relationship');
@@ -131,22 +125,31 @@ var accountData = function (knex) {
     var addAccount = function (account, user, contact) {
         //Call all of the previous addAccount___ methods. 
         return addAccountParty(account)
-                        .then(function(accountResults) {
-                            account.partyId = accountResults;
-                            return addAccountOrg(account)
-                                .then(function(PartyResults) {
-                                    return addAccountPartySupplementalData(account)
-                                        .then(function(PartySupplementalDataResults) {
-                                            return addAccountContactMech(account)
-                                                .then(function(ContactMechResults) {
-                                                    return addAccountPartyRole(account)
-                                                        .then(function(PartyRoleResults){
-                                                            return addAccountPartyRelationship(account);
-                                                    });
+            .then(function (accountResults) {
+                account.partyId = parseInt(accountResults[0]);
+                var typeofResults = Object.prototype.toString.call(accountResults);
+                var typeofPartyId = Object.prototype.toString.call(account.partyId);
+                console.log('typeofPartyId is ' + typeofPartyId);
+                return addAccountOrg(account)
+                    .then(function (OrgResults) {
+                        console.log(OrgResults);
+                        return addAccountPartySupplementalData(account)
+                            .then(function (PartySupplementalDataResults) {
+                                //previously had the addAccountContactMech function call here. Removed for now, with the controller handling that logic.
+                                console.log('PSDResults is ' + PartySupplementalDataResults);
+                                return addAccountPartyRole(account)
+                                    .then(function (PartyRoleResults) {
+                                        console.log('PartyRoleResults is ' + PartyRoleResults);
+                                        return addAccountPartyRelationship(account, user, contact)
+                                            .then(function (partyId) {
+                                                console.log(partyId[0]);
+                                                return partyId;
                                             });
                                     });
+
                             });
                     });
+            });
 //          return knex('party')
 //            .returning('party_id') // for passing along to person table
 //            .insert({
@@ -279,7 +282,7 @@ var accountData = function (knex) {
             .from('party_supplemental_data')
             .innerJoin('contact_mech', 'party_supplemental_data.party_id', 'contact_mech.contact_mech_id' )
             .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id' )
-            .where({telecom_number: phoneNumber})
+            .where({telecom_number: phoneNumber});
     };
     
      var getAccountByIdentity = function (accountId, accountName) {
@@ -290,7 +293,7 @@ var accountData = function (knex) {
             .innerJoin('organization', 'party_supplemental_data.party_id','organization.party_id')
             .innerJoin('party_role', 'party_supplemental_data.party_id', 'party_role.party_id')
             .where({party_id: accountId})
-            .orWhere('organization_name', 'like', accountNameLike)       
+            .orWhere('organization_name', 'like', accountNameLike) ;      
     };
 
 

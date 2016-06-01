@@ -44,7 +44,7 @@ var leadApi = function (knex) {
         // lead and user here are striped params from request
         var lead = req.body;
         var user = req.user;
-        console.log('user in add is ' + user);
+//        console.log('user in add is ' + user);
 
         //        var result = leadController.addLead(lead, user); // changed var name later
         //        var result = leadController.addLead(lead); // obsolete
@@ -142,8 +142,8 @@ var leadApi = function (knex) {
 
         var user = req.user;
         // this prints "admin" to terminal console, not browser console
-        console.log('user in byOwner is ' + user);
-        console.log('userId in byOwner is ' + user.userId);
+//        console.log('user in byOwner is ' + user);
+//        console.log('userId in byOwner is ' + user.userId);
 
         var resultForThisUser = leadController.getLeadsByOwner(user); // this param was changed from ownerId to user
         if (resultForThisUser === null) {
