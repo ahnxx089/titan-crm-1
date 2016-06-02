@@ -16,7 +16,7 @@ function Case(caseId, caseTypeId, caseCategoryId, statusId, fromPartyId, priorit
     caseDate, responseRequiredDate, caseName, description, resolutionId,
     createdBy, createdDate, updatedDate) {
 
-    console.log('in case entity constructor ');
+//    console.log('in case entity constructor ');
 
     // Properties
     this.caseId = caseId;
@@ -38,7 +38,7 @@ function Case(caseId, caseTypeId, caseCategoryId, statusId, fromPartyId, priorit
 // Methods
 //
 Case.prototype.validateForInsert = function () {
-    console.log('in case entity validate insert ');
+//    console.log('in case entity validate insert ');
 
     // Perform validations
     var validations = [

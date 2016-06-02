@@ -11,32 +11,78 @@
 var winston = require('winston');
 var Case = require('../entities/case');
 var User = require('../entities/user');
+var Note = require('../entities/note');
 var _ = require('lodash');
 
 var caseController = function (knex) {
     // Get a reference to data layer module
     //
     var caseData = require('../data/caseData')(knex);
-
+    var noteData = require('../data/noteData')(knex);
+    var noteController = require('../controllers/noteController')(knex);
+    
     // CONTROLLER METHODS
     // ==========================================
     //
 
+    
+    
+    /**
+     * For each (and the only) promise delivered by addNote,
+     * create entry in case_note table
+     * and chain all promises together with .then()
+     * @param {object} addNotePromises - An array of promises each of which is returned by noteController.addNote
+     * @param {object} intenalNoteEntity - The single internal note entity to be linked
+     * @param {object} caseId - The Id of the case to be linked to these notes
+     * @return {object} caseId - Fulfillment value is the id of the case that is linked
+     */
+    var addNoteCallback = function (addNotePromises, intenalNoteEntity, caseId) {
+        var promise;
+        
+        /*param 1*/
+        promise = addNotePromises.pop();
+        
+        /*param 2*/
+        
+        return promise.then(function (noteId) {
+            return noteController.linkNoteToCase(caseId, noteId)
+                .then(function () {
+                return caseId;
+            });
+        });
+        //}
+    };
+    
+    
+    
     /**
      * Add a new case  
-     * @param {Object} case - The new case to be added
+     * @param {Object} case_ - The new case to be added
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is id of new case
      */
     var addCase = function (case_, user) {
-        console.log('in case controller A');
+//        console.log('in case controller A');
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CASE_CREATE');
-        ///
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
-            var caseEntity = new Case(
-                // ok to put dummy data here, eg, null and birthDate
-                
+            // Convert the received objects into entities (protect the data layer)
+            //
+            // Notes
+            var intenalNoteEntity;
+            if (case_.intenalNote) {
+                intenalNoteEntity = new Note(
+                    null,
+                    case_.intenalNote, 
+                    case_.intenalNote, 
+                    now, 
+                    case_.fromPartyId, 
+                    now, 
+                    now
+                );
+            }
+            
+            var caseEntity = new Case(                
 //                case_.caseId,
                 null,
                 case_.caseTypeId,
@@ -57,19 +103,40 @@ var caseController = function (knex) {
 //                case_.createdDate,
 //                case_.updatedDate
             );
-            console.log('in case controller B');
+//            console.log('in case controller B');
 
             // Validate the data before going ahead
             var validationErrors = caseEntity.validateForInsert();
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer. Insert new case_, get the promise first
                 var promise = caseData.addCase(caseEntity);
-                promise.then(function (partyId) {
-                        return partyId;
-                    });
-                promise.catch(function (error) {
-                    winston.error(error);
-                });
+                
+                if(intenalNoteEntity){
+                    var addNotePromises = [];
+                    var notePromise;
+                    notePromise = noteController.addNote(intenalNoteEntity);
+                    // Make sure we have promise,
+                    // and not array of errors
+                    if ('then' in notePromise) {
+                        addNotePromises.push(notePromise);
+                    }
+                    if (addNotePromises.length > 0) {
+                        promise.then(function (caseId) {
+                            return addNoteCallback(addNotePromises, intenalNoteEntity, caseId);
+                        });
+                        promise.catch(function (error) {
+                            winston.error(error);
+                        });
+                    }
+                    else {
+                        promise.then(function (caseId) {
+                            return caseId;
+                        });
+                        promise.catch(function (error) {
+                            winston.error(error);
+                        });
+                    }
+                }
                 return promise;
             } else {
                 return validationErrors;
@@ -77,7 +144,6 @@ var caseController = function (knex) {
         } else {
             return null;
         }
-        ///
     };
 
     /**

@@ -16,19 +16,8 @@ var caseData = function (knex) {
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
     var addCase = function (case_, user) {
-        console.log('in case data add ');
+//        console.log('in case data add ');
 
-        
-        
-        return knex('case_')
-            .returning('case_id')
-            .insert({
-            case_type_id: case_.caseTypeId, case_category_id: case_.caseCategoryId,             
-            status_id: case_.statusId, from_party_id: case_.fromPartyId, priority: case_.priority,
-            case_date: case_.caseDate, response_required_date: case_.responseRequiredDate,
-            case_name: case_.caseName, description:case_.description, resolution_id: case_.resolutionId,
-            created_by: case_.createdBy, created_date: case_.createdDate, updated_date: case_.updatedDate
-        })
         
         /*
         return knex('case_')
@@ -39,17 +28,42 @@ var caseData = function (knex) {
             case_date: case_.caseDate, response_required_date: case_.responseRequiredDate,
             case_name: case_.caseName, description:case_.description, resolution_id: case_.resolutionId,
             created_by: case_.createdBy, created_date: case_.createdDate, updated_date: case_.updatedDate
+        });
+        */
+        
+        
+        return knex('case_')
+            .returning('case_id')
+            .insert({
+            // for case_ table
+            case_type_id: case_.caseTypeId, case_category_id: case_.caseCategoryId,             
+            status_id: case_.statusId, from_party_id: case_.fromPartyId, priority: case_.priority,
+            case_date: case_.caseDate, response_required_date: case_.responseRequiredDate,
+            case_name: case_.caseName, description:case_.description, resolution_id: case_.resolutionId,
+            created_by: case_.createdBy, created_date: case_.createdDate, updated_date: case_.updatedDate
         }).then(function (res) {
+            // for case_role table
             return knex('case_role')
                 .insert({
                 case_id: res,
                 party_id: case_.fromPartyId, 
-                role_type_id: 'CONTACT', // HARD CODED
+                role_type_id: 'CONTACT', // HARD CODED. can be account as well
                 created_date: case_.createdDate,
                 updated_date: case_.updatedDate
+            }).then(function() {
+                return knex('case_status')
+                    .insert({
+                    case_id: res,
+                    status_id: case_.statusId,
+//                    status_datatime: case_.createdDate,
+                    created_date: case_.createdDate,
+                    updated_date: case_.updatedDate
+                }).then(function() {
+                    // this is CRUCIAL, as this will be the 3rd param of addNoteCallback()
+                    return res;
+                });
             });
         });
-        */
     };
 
     /**

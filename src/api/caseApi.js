@@ -18,9 +18,9 @@ var caseApi = function (knex) {
     var addCase = function (req, res) {
         var case_ = req.body;
         var user = req.user;
-        console.log('in case api A');
+//        console.log('in case api A');
         var resultsForThisUser = caseController.addCase(case_, user);
-        console.log('in case api B');
+//        console.log('in case api B');
         if (resultsForThisUser === null) {
             res.json({
                 message: 'You do not have permission to add cases!'
@@ -32,10 +32,10 @@ var caseApi = function (knex) {
         }
             // An object in result means it's a promise (which is returned only if validation succeeds)
         else {
-            resultsForThisUser.then(function (partyId) {
+            resultsForThisUser.then(function (caseId) {
                 res.json(
 //                        {partyId: partyId}
-                        partyId
+                    {caseId:caseId}
                         );
             });
         }
