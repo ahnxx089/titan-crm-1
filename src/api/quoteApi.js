@@ -38,11 +38,43 @@ var quoteApi = function (knex) {
         // addQuoteItem
         else if (req.query.hasOwnProperty('item')) {
 
+            // WAIT TO SEE HOW THE QuoteItem ENTITY IS DESIGNED, AND SHAPE ARGUMENTS OF
+            // quoteController.addQuoteItem ACCORDINGLY.  NEED TO PASS ON ALL THE VALUES
+            // FOR A QuoteItem, which if it contains the quote_id, then the only other
+            // thing needed is the user, for checking security permissions... probably...
+            
+            var resultsForThisUser = quoteController.addQuoteItem(req.body, req.user);
+
+            /* Intepret the possible outcomes from the controller layer:
+                1.  User does not have permission to add a Quote
+                2.  User does have permission, but supplied data is not validated
+                3.  User does have permission, and a promise is returned
+            */
+            // null result means user does not have permission to add an Item to a Quote
+            if (resultsForThisUser === null) {
+                res.json({
+                    message: 'You do not have permission to add a quote!'
+                });
+            }
+            // An array in result means it's array of validation errors
+            else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
+                res.json(resultsForThisUser);
+            }
+            // An object in result means it's a promise (returned only if validation succeeds)
+            else {
+                resultsForThisUser.then(function (quoteItemSeqId) {
+                    res.json({
+                        quoteItemSeqId: quoteItemSeqId
+                    });
+                });
+            }
+            
+            // DISCARD THIS ULTIMATELY, ONCE SURE IT IS WORKING:
             // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
-            res.json({
+            /*res.json({
                 'message': 'addQuoteItem functionality is under construction...',
                 'reachedOn': 'This was reached on POST route /api/quotes?item'
-            });
+            });*/
         }
 
         // POST /api/quotes?note

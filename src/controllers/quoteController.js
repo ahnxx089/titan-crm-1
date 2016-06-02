@@ -10,7 +10,8 @@
 /* jshint shadow:true */
 
 var winston = require('winston');
-var Quote = require('../entities/quotes');
+var Quote = require('../entities/quote');
+//var QuoteItem = require('../entities/quoteItem');  // COMMENT IN WHEN READY
 var _ = require('lodash');
 
 var quoteController = function (knex) {
@@ -40,19 +41,46 @@ var quoteController = function (knex) {
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var addQuoteItem = function (quoteId, quoteItemSeqId, optionInfo, user) {
-        
-        // IMPLEMENT SECURIY CHECKING ONCE NEW GROUP IS ADDED TO DB
-        /*// Check user's security permission to own contacts
+    // ADJUST THIS ARGUMENT LIST SOON ONCE NEW QuoteItem ENTITY IS AVAILABLE-- it could just be
+    // a single object that is all of req.body that came in to API,, or maybe req.body will
+    // have two parts in it or something . . . 
+    var addQuoteItem = function (item, user) {
+
+        // Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
             // proceed towards data layer
-        }   
-        else {
+            var now = (new Date()).toISOString();
+
+            // protect data layer, map to new QuoteItem entity
+            var quoteItemEntity; // = new QuoteItem(); // ONCE IT IS READY, comment in...
+
+            // Validate the quoteItem data before going ahead
+            var validationErrors = [];
+            var quoteItemValidationErrors = quoteItemEntity.validateForInsert();
+            //Errors are non-empty validation results
+            for (var i = 0; i < quoteItemValidationErrors.length; i++) {
+                if (quoteItemValidationErrors[i]) {
+                    validationErrors.push(quoteItemValidationErrors[i]);
+                }
+            }
+            if (validationErrors.length === 0) {
+                // Pass on the entity to be added to the data layer
+                var promise = quoteData.addQuoteItem(quoteItemEntity)
+                    .then(function (quoteItemSeqId) {
+                        return quoteItemSeqId;
+                    });
+                promise.catch(function (error) {
+                    winston.error(error);
+                });
+                return promise;
+            } else {
+                return validationErrors;
+            }
+        } else {
             // user does not have permissions to add a quote, return null
             return null;
-        }*/
-        
+        }
     };
 
     /**
@@ -66,15 +94,14 @@ var quoteController = function (knex) {
     // NEW SECURITY PERMISSION GROUP CRMSFA_QUOTE_TASKS WORKS, DINESH WILL RESTORE THE 
     // OTHER ARGUMENTS SOON...
     var updateQuote = function (user) {
-        
+
         // Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
             // TEMPORARILY RETURNING JUST A NONSENSE STRING THAT THE API LAYER WILL NOT
             // DO ANYTHING WITH, FOR NOW JUST TESTING NEW SECURITY GROUP
             return 'Nobody will see this string.';
-        }   
-        else {
+        } else {
             // user does not have permissions to add a quote, return null
             return null;
         }
@@ -89,7 +116,7 @@ var quoteController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateQuoteItem = function (quoteId, quoteItemSeqId, optionInfo, user) {
-        
+
         // IMPLEMENT SECURIY CHECKING ONCE NEW GROUP IS ADDED TO DB
         /*// Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
@@ -100,7 +127,7 @@ var quoteController = function (knex) {
             // user does not have permissions to add a quote, return null
             return null;
         }*/
-        
+
     };
 
     /**
@@ -111,7 +138,7 @@ var quoteController = function (knex) {
      * @return {Object} promise - Fulfillment value is note_id of new note
      */
     var addQuoteNote = function (quoteId, quoteNote, user) {
-        
+
     };
 
     /**
@@ -121,7 +148,7 @@ var quoteController = function (knex) {
      * @return {Object} promise - Fulfillment value is a quote entity
      */
     var getQuoteById = function (quoteId, user) {
-        
+
     };
 
     /**
@@ -129,7 +156,7 @@ var quoteController = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of quote entities
      */
     var getQuoteByOwner = function (user) {
-        
+
     };
 
     return {

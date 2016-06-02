@@ -28,19 +28,8 @@ var quoteData = function (knex) {
      * @param {Object} optionInfo - option to update the item with <-- TAKE AS OBJECT?  NEED ENTITY?
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var addQuoteItem = function (quoteId, quoteItemSeqId, optionInfo) {
-        
-        // IMPLEMENT SECURIY CHECKING ONCE NEW GROUP IS ADDED TO DB
-        /*// Check user's security permission to own contacts
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
-        if (hasPermission !== -1) {
-            // proceed towards data layer
-        }   
-        else {
-            // user does not have permissions to add a quote, return null
-            return null;
-        }*/
-        
+    var addQuoteItem = function (quoteItem) {
+        // ADD KNEX STATEMENTS IN HERE...
     };
 
     /**
