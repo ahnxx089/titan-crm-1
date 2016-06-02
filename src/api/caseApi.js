@@ -34,9 +34,8 @@ var caseApi = function (knex) {
         else {
             resultsForThisUser.then(function (caseId) {
                 res.json(
-//                        {partyId: partyId}
                     {caseId:caseId}
-                        );
+                );
             });
         }
     };
