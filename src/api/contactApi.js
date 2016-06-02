@@ -111,6 +111,12 @@ var contactApi = function (knex) {
                     });
             };
         }
+        // no other GET routes, return error message so the app does not hang
+        else {
+            res.json({
+                'message': 'ERROR:  No such route to GET from...',
+            });
+        }
     };
 
     // GET /api/contacts/:id
