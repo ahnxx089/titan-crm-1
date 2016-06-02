@@ -50,4 +50,76 @@ describe('Account module', function () {
             done();
         });
     });
+    xit('accountController.getAccountByIdentity get the query of account name if the accountId owned', function (done) {
+
+        // Searchcing looks for any 
+        var query = {
+            accountId: 'Company',
+            accountName: 'apple'
+        };
+        
+        var user = {
+            userId: 'accountIdentityABC',
+            password: '$2a$08$C/#Q5zk21&42UP28utHY/utlwCZP6b6pUOgxqzJIopjWE4t5q2p1',
+            passwordHint: null,
+            enabled: 1,
+            disabledDate: null,
+            partyId: 11,
+            createdDate: '2016-05-30T14:12:40',
+            updatedDate: '2016-05-30T14:12:40',
+            securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_CONTACT_CREATE', 'CRMSFA_CONTACT_DEACTIVATE', 'CRMSFA_CONTACT_REASSIGN', 'CRMSFA_CONTACT_UPDATE', 'CRMSFA_CONTACT_VIEW'],
+            
+        }
+        var resultsForThisTest =
+        accountController.getAccountByIdentity(query, user);
+        
+        resultsForThisTest.then(function (accounts) {
+        var typeofAccounts = Object.prototype.toString.call(accounts);
+        // Check whether the return value is accounts array
+        expect(typeofAccounts).toBe('[object Array]');
+        // finsh
+         done();
+        });
+         xit('accountController.getAccountByPhoneNumber get the query of account phoneNumber', function (done) {
+
+        // Searchcing looks for any 
+        var query = {
+            phoneNumber : '123456789'
+        };
+        
+        var user = {
+            userId: 'accountPhoneNumberABC',
+            password: '$2a$08$GeQ55k^12*rqP2XZu24<15l3aWQ6w6uOPOZwqPIIN/2311arhGP',
+            passwordHint: null,
+            enabled: 1,
+            disabledDate: null,
+            partyId: 14,
+            createdDate: '2016-05-30T14:18:30',
+            updatedDate: '2016-05-30T14:18:30',
+            securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_CONTACT_CREATE', 'CRMSFA_CONTACT_DEACTIVATE', 'CRMSFA_CONTACT_REASSIGN', 'CRMSFA_CONTACT_UPDATE', 'CRMSFA_CONTACT_VIEW'],
+            
+        }
+        var resultsForThisTest =
+        accountController.getAccountByPhoneNumber(query, user);
+        
+        resultsForThisTest.then(function (accounts) {
+        var typeofAccounts = Object.prototype.toString.call(accounts);
+        // Check whether the return value is accounts array
+        expect(typeofAccounts).toBe('[object Array]');
+        // finsh
+         done();
+        });
+     xit('accountController.update account put the query', function (done) {
+         var accountId = 'Company';
+         var accounts = {};
+         var resultsForThisTest = accountController.updateAccount(accountId, accounts);
+         expect(resultsForThisTest).toBeTruthy();
+         done();
+     });
+      xit('accountController.delete account delete the query', function (done) {
+         var accountId = 'Company2';
+         var resultsForThisTest = accountController.deleteAccount(accountId);
+         expect(resultsForThisTest).toBeNull();
+         done();
+     });
 });

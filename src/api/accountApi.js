@@ -45,11 +45,17 @@ var accountApi = function (knex) {
        This forum are really helpful to me. http://www.ofssam.com/forums/showthread.php?tid=37*/
     // GET /api/accounts/?identity=
     var getAccountsByIdentity = function (req, res) {
-        accountController.getAccountsByIdentity(req.query, req.user)
-        .then(function (accounts){
+        var resultForThisAccount =
+        accountController.getAccountsByIdentity(req.query, req.user);
+        if( resultForThisAccount == null){
+            res.json({
+                'message': 'You do not have permission to own identiy by accounts!'
+            });
+        } else {
+            resultForThisAccount.then(function (accounts){
             res.json(accounts);
-        });
-        
+            });
+        } 
     };
     
     // GET /api/accounts/?owner=
@@ -73,11 +79,17 @@ var accountApi = function (knex) {
     */
     // GET /api/accounts/?phoneNumber=
     var getAccountByPhoneNumber = function (req, res) {
-        accountController.getAccountByPhoneNumber(req.query, req.user)
-        .then(function (accounts){
+        var user = req.user;
+        var resultForThisAccount = accountController.getAccountByPhoneNumber(req.query, req.user);
+        if(resultForThisAccount == null){
+             res.json({
+            'message': 'You do not have permission to own phonenumber by accounts!'
+        });
+        }else {
+        resultForThisAccount.then(function (accounts){
             res.json(accounts);
         });
-        
+        }
     };
 
     // GET /api/accounts/:id
