@@ -239,12 +239,12 @@ var accountData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getAccountsByOwner = function (ownerId) {
-        return knex.select('party_id', 'parent_party_id', 'company_name', 'annual_revenue',
-        'currency_uom_id', 'num_employees', 'industry_enum_id', 'ownership_enum_id', 'ticker_symbol',
-        'important_note', 'primary_postal_address', 'primary_telecom_number_id', 'primary_email_id',
-        'created_date', 'updated_date', 'organization.logo_image_url')
+        return knex.select('party_supplemental_data.party_id', 'parent_party_id', 'company_name', 'party_supplemental_data.annual_revenue',
+            'currency_uom_id', 'party_supplemental_data.num_employees', 'industry_enum_id', 'ownership_enum_id', 'party_supplemental_data.ticker_symbol',
+            'important_note', 'primary_postal_address_id', 'primary_telecom_number_id', 'primary_email_id',
+            'party_supplemental_data.created_date', 'party_supplemental_data.updated_date', 'organization.logo_image_url')
             .from('party_supplemental_data')
-            //.innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
+            .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
             .innerJoin('party_relationship', 'party_supplemental_data.party_id', 'party_relationship.party_id_from')
             .where('party_relationship.party_id_to', ownerId)
             .andWhere('party_relationship.role_type_id_from', 'account')

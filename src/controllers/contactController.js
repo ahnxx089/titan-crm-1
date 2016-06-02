@@ -195,7 +195,7 @@ var contactController = function (knex) {
      * @param {Number} contactId - Unique id of the contact to be fetched
      * @return {Object} promise - Fulfillment value is a contact entity
      */
-    var getContactById = function (contactId) {
+    var getContactById = function (contactId, user) {
         // Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
         if (hasPermission !== -1) {
@@ -233,7 +233,7 @@ var contactController = function (knex) {
         } else {
             // user does not have permissions of a contact owner, return null
             return null;
-        };
+        }
     };
 
     /**
