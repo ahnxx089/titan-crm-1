@@ -199,7 +199,7 @@ var accountController = function (knex) {
                         accounts[0].ticker_symbol,
                         accounts[0].comments,
                         accounts[0].logo_image_url,
-                        accounts[0].party_parent_id,
+                        accounts[0].parent_party_id,
                         accounts[0].industry_enum_id,
                         accounts[0].ownership_enum_id,
                         accounts[0].important_note,
@@ -468,6 +468,7 @@ var accountController = function (knex) {
         //addAccount: addAccount,
         //getAccounts: getAccounts,
         getAccountById: getAccountById,
+        getAccountsByOwner: getAccountsByOwner,
         updateAccount: updateAccount,
         deleteAccount: deleteAccount
     };

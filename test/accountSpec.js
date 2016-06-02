@@ -11,9 +11,9 @@ var accountController = require('../src/controllers/accountController')(knex);
 var Account = require('../src/entities/account');
 
 
-xdescribe('Account module', function () {
+describe('Account module', function () {
     
-    it('getAccounts returns all accounts in system as an array of Account objects', function (done) {
+    xit('getAccounts returns all accounts in system as an array of Account objects', function (done) {
            accountController.getAccounts().then(function(accounts) {
                // Get types of returned objects
                var typeofAccounts = Object.prototype.toString.call(accounts);
@@ -26,13 +26,13 @@ xdescribe('Account module', function () {
            });
     });
     it('getAccounts returns a valid account entity', function (done) {
-           accountController.getAccountById(2).then(function(account) {
+           accountController.getAccountById(70).then(function(account) {
                expect(account instanceof Account).toBeTruthy();
                // Call done to finish the async function
                done();
            });
     });
-    it('getAccountsByOwner returns a valid array of accounts', function (done) {
+    xit('getAccountsByOwner returns a valid array of accounts', function (done) {
         accountController.getAccountsByOwner("admin").then(function (accounts) {
             //The thing I'm still uncertain of here is whether anything needs 
             //to be tested regarding the ownerId/userId. It's redundant to 
@@ -49,5 +49,5 @@ xdescribe('Account module', function () {
             expect(accounts[0] instanceof Account).toBeTruthy();
             done();
         });
-    })
+    });
 });

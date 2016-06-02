@@ -111,15 +111,20 @@ var contactApi = function (knex) {
                     });
             };
         }
+        // no other GET routes, return error message so the app does not hang
+        else {
+            res.json({
+                'message': 'ERROR:  No such route to GET from...',
+            });
+        }
     };
 
     // GET /api/contacts/:id
     var getContactById = function (req, res) {
         var contactId = req.params.id;
-        contactController.getContactById(contactId)
+        contactController.getContactById(contactId, req.user)
             .then(function (contact) {
                 res.json(contact);
-                //Or should this be:  res.json(lead);
             });
     };
 

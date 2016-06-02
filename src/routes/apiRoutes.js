@@ -122,6 +122,25 @@ var router = function (knex) {
         .put(caseApi.updateCase)
         .delete(caseApi.deleteCase);
 
+    
+    //TENTATIVE -- FOR QUOTES MODULE, DISCUSS WITH TEAM
+    //
+    // QUOTES
+    // ==========================================
+    //
+    // NOTE: all GET methods except getQuoteById are reached
+    // on the single route http://localhost:5000/api/quotes
+    // That includes findQuotes since it is a GET method
+    //    
+    var quoteApi = require('../api/quoteApi')(knex); 
+    
+    apiRouter.route('/quotes')
+        .get(quoteApi.getQuotes)
+        .post(quoteApi.addQuote)
+        .put(quoteApi.updateQuote);
+    apiRouter.route('/quotes/:id')
+        .get(quoteApi.getQuoteById);
+    
     return apiRouter;
 };
 

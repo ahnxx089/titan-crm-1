@@ -65,7 +65,11 @@ var caseApi = function (knex) {
 
     // GET /api/cases/:id
     var getCaseById = function (req, res) {
-
+        var caseId = req.params.id;
+        caseController.getCaseById(caseId)
+            .then(function (case_) {
+                return res.json(case_);
+        });
     };
 
     // PUT /api/cases/:id

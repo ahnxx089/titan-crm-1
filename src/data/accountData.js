@@ -127,9 +127,6 @@ var accountData = function (knex) {
         return addAccountParty(account)
             .then(function (accountResults) {
                 account.partyId = parseInt(accountResults[0]);
-                var typeofResults = Object.prototype.toString.call(accountResults);
-                var typeofPartyId = Object.prototype.toString.call(account.partyId);
-                console.log('typeofPartyId is ' + typeofPartyId);
                 return addAccountOrg(account)
                     .then(function (OrgResults) {
                         console.log(OrgResults);
@@ -242,12 +239,12 @@ var accountData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getAccountsByOwner = function (ownerId) {
-        return knex.select('party_id', 'parent_party_id', 'company_name', 'annual_revenue',
-        'currency_uom_id', 'num_employees', 'industry_enum_id', 'ownership_enum_id', 'ticker_symbol',
-        'important_note', 'primary_postal_address', 'primary_telecom_number_id', 'primary_email_id',
-        'created_date', 'updated_date', 'organization.logo_image_url')
+        return knex.select('party_supplemental_data.party_id', 'parent_party_id', 'company_name', 'party_supplemental_data.annual_revenue',
+            'currency_uom_id', 'party_supplemental_data.num_employees', 'industry_enum_id', 'ownership_enum_id', 'party_supplemental_data.ticker_symbol',
+            'important_note', 'primary_postal_address_id', 'primary_telecom_number_id', 'primary_email_id',
+            'party_supplemental_data.created_date', 'party_supplemental_data.updated_date', 'organization.logo_image_url')
             .from('party_supplemental_data')
-            //.innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
+            .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
             .innerJoin('party_relationship', 'party_supplemental_data.party_id', 'party_relationship.party_id_from')
             .where('party_relationship.party_id_to', ownerId)
             .andWhere('party_relationship.role_type_id_from', 'account')
@@ -259,14 +256,15 @@ var accountData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getAccountById = function (accountId) {
-        return knex.select('party_id', 'parent_party_id', 'company_name', 'annual_revenue',
-        'currency_uom_id', 'num_employees', 'industry_enum_id', 'ownership_enum_id', 'ticker_symbol',
-        'important_note', 'primary_postal_address', 'primary_telecom_number_id', 'primary_email_id',
-        'created_date', 'updated_date', 'organization.logo_image_url')
-            .from('party_supplemental_data')
+        return knex.select('party.party_id', 'parent_party_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'organization.organization_name','party_supplemental_data.company_name', 'party_supplemental_data.annual_revenue',
+        'party_supplemental_data.currency_uom_id', 'party_supplemental_data.num_employees', 'party_supplemental_data.industry_enum_id', 'party_supplemental_data.ownership_enum_id', 'party_supplemental_data.ticker_symbol',
+        'party_supplemental_data.important_note', 'party_supplemental_data.primary_postal_address_id', 'party_supplemental_data.primary_telecom_number_id', 'party_supplemental_data.primary_email_id',
+        'party.created_date', 'party.updated_date', 'organization.logo_image_url')
+            .from('party')
+            .innerJoin('party_supplemental_data', 'party.party_id', 'party_supplemental_data.party_id')
             .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
             .innerJoin('party_role', 'party_supplemental_data.party_id',  'party_role.party_id')
-            .where({party_id: accountId})
+            .where('party.party_id', accountId)
             .andWhere('party_role.role_type_id', 'account');
     };
     /**

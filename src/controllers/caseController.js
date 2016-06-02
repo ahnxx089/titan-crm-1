@@ -38,7 +38,33 @@ var caseController = function (knex) {
      * @return {Object} promise - Fulfillment value is a case entity
      */
     var getCaseById = function (caseId) {
-
+        var promise = caseData.getCaseById(caseId)
+            .then(function (caseResult) {
+                var caseEntity;
+                if (caseResult.length > 0) {
+                    caseEntity = new Case(
+                        caseResult[0].case_id,
+                        caseResult[0].case_type_id,
+                        caseResult[0].case_category_id,
+                        caseResult[0].status_id,
+                        caseResult[0].from_party_id,
+                        caseResult[0].priority,
+                        caseResult[0].case_date,
+                        caseResult[0].response_required_date,
+                        caseResult[0].case_name,
+                        caseResult[0].description,
+                        caseResult[0].resolution_id,
+                        caseResult[0].created_by,
+                        caseResult[0].created_date,
+                        caseResult[0].updated_date
+                    );
+                }
+                return caseEntity;
+            });
+        promise.catch(function (errors) {
+            winston.error(errors);
+        });
+        return promise; //this return value is the caseEntity corresponding to specified caseId input
     };
 
     /**

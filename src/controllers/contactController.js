@@ -207,36 +207,45 @@ var contactController = function (knex) {
      * @param {Number} contactId - Unique id of the contact to be fetched
      * @return {Object} promise - Fulfillment value is a contact entity
      */
-    var getContactById = function (contactId) {
-        var promise = contactData.getContactById(contactId)
-            .then(function (contacts) {
-                var contactEntity;
-                if (contacts.length > 0) {
-                    // Map the retrieved result set to corresponding entity
-                    contactEntity = new Contact(
-                        contacts[0].party_id,
-                        contacts[0].party_type_id,
-                        contacts[0].currency_uom_id,
-                        contacts[0].description,
-                        contacts[0].status_id,
-                        contacts[0].created_by,
-                        contacts[0].created_date,
-                        contacts[0].updated_date,
-                        contacts[0].salutation,
-                        contacts[0].first_name,
-                        contacts[0].middle_name,
-                        contacts[0].last_name,
-                        contacts[0].birth_date,
-                        contacts[0].comments
-                    );
-                }
-                return contactEntity;
+    var getContactById = function (contactId, user) {
+        // Check user's security permission to own contacts
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
+        if (hasPermission !== -1) {
+            var promise = contactData.getContactById(contactId)
+                .then(function (contacts) {
+                    var contactEntity;
+                    if (contacts.length > 0) {
+                        // Map the retrieved result set to corresponding entity
+                        contactEntity = new Contact(
+                            contacts[0].party_id,
+                            contacts[0].party_type_id,
+                            contacts[0].currency_uom_id,
+                            contacts[0].description,
+                            contacts[0].status_id,
+                            contacts[0].created_by,
+                            contacts[0].created_date,
+                            contacts[0].updated_date,
+                            contacts[0].salutation,
+                            contacts[0].first_name,
+                            contacts[0].middle_name,
+                            contacts[0].last_name,
+                            contacts[0].birth_date,
+                            contacts[0].comments
+                        );
+                    } else {
+                        contactEntity = new Contact();
+                    }
+                    return contactEntity;
+                });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
             });
-        promise.catch(function (error) {
-            // Log the error
-            winston.error(error);
-        });
-        return promise;
+            return promise;
+        } else {
+            // user does not have permissions of a contact owner, return null
+            return null;
+        }
     };
 
     /**
