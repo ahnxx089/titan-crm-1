@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////
-// Data access layer module for contacts.
+// Data access layer module for cases.
 //
 // @file:    caseData.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
@@ -16,7 +16,40 @@ var caseData = function (knex) {
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
     var addCase = function (case_, user) {
+        console.log('in case data add ');
 
+        
+        
+        return knex('case_')
+            .returning('case_id')
+            .insert({
+            case_type_id: case_.caseTypeId, case_category_id: case_.caseCategoryId,             
+            status_id: case_.statusId, from_party_id: case_.fromPartyId, priority: case_.priority,
+            case_date: case_.caseDate, response_required_date: case_.responseRequiredDate,
+            case_name: case_.caseName, description:case_.description, resolution_id: case_.resolutionId,
+            created_by: case_.createdBy, created_date: case_.createdDate, updated_date: case_.updatedDate
+        })
+        
+        /*
+        return knex('case_')
+            .returning('case_id')
+            .insert({
+            case_type_id: case_.caseTypeId, case_category_id: case_.caseCategoryId,             
+            status_id: case_.statusId, from_party_id: case_.fromPartyId, priority: case_.priority,
+            case_date: case_.caseDate, response_required_date: case_.responseRequiredDate,
+            case_name: case_.caseName, description:case_.description, resolution_id: case_.resolutionId,
+            created_by: case_.createdBy, created_date: case_.createdDate, updated_date: case_.updatedDate
+        }).then(function (res) {
+            return knex('case_role')
+                .insert({
+                case_id: res,
+                party_id: case_.fromPartyId, 
+                role_type_id: 'CONTACT', // HARD CODED
+                created_date: case_.createdDate,
+                updated_date: case_.updatedDate
+            });
+        });
+        */
     };
 
     /**

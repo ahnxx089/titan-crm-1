@@ -29,7 +29,55 @@ var caseController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new case
      */
     var addCase = function (case_, user) {
+        console.log('in case controller A');
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CASE_CREATE');
+        ///
+        if (hasPermission !== -1) {
+            var now = (new Date()).toISOString();
+            var caseEntity = new Case(
+                // ok to put dummy data here, eg, null and birthDate
+                
+//                case_.caseId,
+                null,
+                case_.caseTypeId,
+                case_.caseCategoryId,
+                case_.statusId,
+                case_.fromPartyId,
+                case_.priority,
+//                case_.caseDate,
+                now,
+//                case_.responseRequiredDate,
+                now,
+                case_.caseName,
+                case_.description,
+                case_.resolutionId,
+                case_.createdBy,
+                now,
+                now
+//                case_.createdDate,
+//                case_.updatedDate
+            );
+            console.log('in case controller B');
 
+            // Validate the data before going ahead
+            var validationErrors = caseEntity.validateForInsert();
+            if (validationErrors.length === 0) {
+                // Pass on the entity to be added to the data layer. Insert new case_, get the promise first
+                var promise = caseData.addCase(caseEntity);
+                promise.then(function (partyId) {
+                        return partyId;
+                    });
+                promise.catch(function (error) {
+                    winston.error(error);
+                });
+                return promise;
+            } else {
+                return validationErrors;
+            }
+        } else {
+            return null;
+        }
+        ///
     };
 
     /**
@@ -107,7 +155,7 @@ var caseController = function (knex) {
             });
             return promise;
         } else {
-            // user does not have permissions of a contact owner, return null
+            // user does not have permissions of a case owner, return null
             return null;
         }
     };

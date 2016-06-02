@@ -101,11 +101,11 @@ function Lead(partyId, /*PK, SHARED #1 */
 }
 
 
-// Inherit from Person (and automatically implictly from Party, maybe?)
+// Inherit from Person (and automatically implictly from Party, maybe? YES!)
 //
 Lead.prototype = Object.create(Person.prototype);
 
-// Set the "constructor" property to refer to Person
+// Set the "constructor" property to refer to Lead
 Lead.prototype.constructor = Lead;
 
 

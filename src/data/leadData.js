@@ -181,6 +181,7 @@ var leadData = function (knex) {
             .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
             .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')
             .where('person.party_id', id);
+        // potential TODO: limit results to LEAD type (party_role.role_type_id)
         
 //        return knex.from('person')
 //            .innerJoin('party', 'person.party_id', 'party.party_id')

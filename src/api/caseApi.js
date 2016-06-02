@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////
 // RESTful API module for cases.
 //
-// @file:    caseApi.js
+// @file:   caseApi.js
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>
 /////////////////////////////////////////////////
 
@@ -16,7 +16,29 @@ var caseApi = function (knex) {
     //
     // POST /api/cases
     var addCase = function (req, res) {
+        var case_ = req.body;
+        var user = req.user;
+        console.log('in case api A');
+        var resultsForThisUser = caseController.addCase(case_, user);
+        console.log('in case api B');
+        if (resultsForThisUser === null) {
+            res.json({
+                message: 'You do not have permission to add cases!'
+            });
+        }
 
+        else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
+            res.json(resultsForThisUser);
+        }
+            // An object in result means it's a promise (which is returned only if validation succeeds)
+        else {
+            resultsForThisUser.then(function (partyId) {
+                res.json(
+//                        {partyId: partyId}
+                        partyId
+                        );
+            });
+        }
     };
 
     // GET /api/cases

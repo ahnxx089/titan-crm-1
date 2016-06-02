@@ -47,7 +47,6 @@ var leadApi = function (knex) {
 //        console.log('user in add is ' + user);
 
         //        var result = leadController.addLead(lead, user); // changed var name later
-        //        var result = leadController.addLead(lead); // obsolete
 
         var resultsForThisUser = leadController.addLead(lead, user);
 
@@ -173,6 +172,7 @@ var leadApi = function (knex) {
             });
     };
 
+    // Potential TODO: add security permission check here
     // Lucas's taking this
     // GET /api/leads/:id
     var getLeadById = function (req, res) {
