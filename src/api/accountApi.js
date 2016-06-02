@@ -111,10 +111,10 @@ var accountApi = function (knex) {
     return {
         addAccount: addAccount,
         getAccountsByIdentity: getAccountsByIdentity,
-        //getAccountsByOwner: getAccountsByOwner,
-        //getAccounts: getAccounts,
+        getAccountsByOwner: getAccountsByOwner,
+        getAccounts: getAccounts,
         getAccountByPhoneNumber: getAccountByPhoneNumber,
-        //getAccountById: getAccountById,
+        getAccountById: getAccountById,
         updateAccount: updateAccount,
         deleteAccount: deleteAccount
     };
