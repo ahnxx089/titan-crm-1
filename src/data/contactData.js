@@ -87,9 +87,10 @@ var contactData = function (knex) {
      */
     var getContactById = function (id) {
         //A party is a contact iff role_type_id in party_role is set to CONTACT
-        return knex.select('party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date')
+        return knex.select('party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date', 'person.salutation', 'person.first_name as first_name', 'person.middle_name', 'person.last_name', 'person.birth_date', 'person.comments')
             .from('party')
             .innerJoin('party_role', 'party_role.party_id', 'party.party_id')
+            .innerJoin('person', 'person.party_id', 'party.party_id')
             .where('party_role.role_type_id', 'CONTACT')
             .andWhere('party.party_id', id);
     };

@@ -27,6 +27,7 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
         salutation, firstName, middleName, lastName, birthDate, comments);
 
     // 
+    this.contactMechs = [];
    
 }
 

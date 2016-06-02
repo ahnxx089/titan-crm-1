@@ -11,6 +11,7 @@
 
 var knex = require('../src/config/knexConfig')().getConfig();
 var contactController = require('../src/controllers/contactController')(knex);
+var userController = require('../src/controllers/userController')(knex);
 var Contact = require('../src/entities/contact');
 
 describe('Contact module ', function () {
@@ -214,4 +215,73 @@ describe('Contact module ', function () {
         });
     });
 
+});
+
+describe('updateContact', function () {
+    it('returns null for invalid input', function (done) {
+        var contactId = 20;
+        var user = userController.getUserById('contactOwnerABC');
+        var contact = {};
+        var output = contactController.updateContact(contactId, contact, user);
+        expect(output).toBeNull();
+        done();
+    });
+
+    it('does not return null for valid input', function (done) {
+        var now = (new Date()).toISOString();
+        var contactId = 20;
+        //wanted to use getContact, but couldn't get it to work
+        var contact = new Contact(
+            contactId,
+            'PERSON',
+            'USD',
+            'blah',
+            'PARTY_ENABLED',
+            'fullAdminABC',
+            now,
+            now,
+            'Mr.',
+            'Agent',
+            'Francis',
+            'Smith',
+            now,
+            'nondescript'
+        );
+        var user = userController.getUserById('contactOwnerABC');
+        
+        var output = contactController.updateContact(contactId, contact, user);
+        expect(output).not.toBeNull();
+        done();
+    });
+
+    it('returns promise for valid input', function (done) {
+        var now = (new Date()).toISOString();
+        var contactId = 20;
+        //wanted to use getContact, but couldn't get it to work
+        var contact = new Contact(
+            contactId,
+            'PERSON',
+            'USD',
+            'blah',
+            'PARTY_ENABLED',
+            'fullAdminABC',
+            now,
+            now,
+            'Mr.',
+            'Agent',
+            'Francis',
+            'Smith',
+            now,
+            'nondescript'
+        );
+        var user = userController.getUserById('contactOwnerABC');
+        
+        var output = contactController.updateContact(contactId, contact, user);
+        expect('then' in output).toBeTruthy();
+        done();
+    });
+    
+    //need to test values changed in database
+    //but can't get getContact to work
+    
 });

@@ -387,6 +387,7 @@ var contactController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContact = function (contactId, contact, user) {
+        var now = (new Date()).toISOString();
         //Convert contact to entity
         var contactEntity = new Contact(
             contactId,
@@ -395,14 +396,14 @@ var contactController = function (knex) {
             contact.description,
             contact.statusId,
             contact.createdBy,
-            contact.createdDate, (new Date()).toISOString(), //contact.updatedDate,
+            contact.createdDate, 
+            now, //contact.updatedDate,
             contact.salutation,
             contact.firstName,
             contact.middleName,
             contact.lastName,
             contact.birthDate,
-            contact.comments,
-            contact.countryCode
+            contact.comments
         );
 
         var validationErrors = contactEntity.validateForUpdate();
