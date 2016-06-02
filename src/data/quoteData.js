@@ -21,11 +21,28 @@ var quoteData = function (knex) {
 
     };
 
-    /* DINESH IS THINKING ABOUT THE NEXT TWO FUNCTIONS updateQuote AND updateQuoteItem AND SO THEY
-        MIGHT CHANGE SUBSTANTIALLY, BUT HE WILL NOT MAKE CHANGES THAT AFFECT OTHER FUNCTIONALITIES
-        WITHOUT TALKING TO THEIR AUTHORS.  HE IS CONTEMPLATING MAKING AN ITEM ENTITY AND MAYBE
-        EVEN AN OPTION ENTITY, BUT THEIR CREATION SHOULD NOT AFFECT THE OTHER FUNCTIONALITIES 
-        ONE WAY OR THE OTHER.... */
+    /**
+     * Add a new item to a quote -- DINESH WILL REVISE INPUTS, THIS IS PRELIM THINKING FOR SKELETON
+     * @param {Number} quoteId - Unique quote_id of the quote to add an item to
+     * @param {Number} quoteItemSeqId - item seq id of the quote_id of the quote to add an item to
+     * @param {Object} optionInfo - option to update the item with <-- TAKE AS OBJECT?  NEED ENTITY?
+     * @return {Object} promise - Fulfillment value is number of rows updated
+     */
+    var addQuoteItem = function (quoteId, quoteItemSeqId, optionInfo) {
+        
+        // IMPLEMENT SECURIY CHECKING ONCE NEW GROUP IS ADDED TO DB
+        /*// Check user's security permission to own contacts
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
+        if (hasPermission !== -1) {
+            // proceed towards data layer
+        }   
+        else {
+            // user does not have permissions to add a quote, return null
+            return null;
+        }*/
+        
+    };
+
     /**
      * Update a quote in database by adding an item
      * @param {Number} quoteId - Unique quote_id of the quote to add an item to
@@ -99,6 +116,7 @@ var quoteData = function (knex) {
 
     return {
         addQuote: addQuote,
+        addQuoteItem: addQuoteItem,
         updateQuote: updateQuote,
         updateQuoteItem: updateQuoteItem,
         addQuoteNote: addQuoteNote,

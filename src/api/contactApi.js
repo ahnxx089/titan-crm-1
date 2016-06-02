@@ -116,7 +116,7 @@ var contactApi = function (knex) {
     // GET /api/contacts/:id
     var getContactById = function (req, res) {
         var contactId = req.params.id;
-        contactController.getContactById(contactId)
+        contactController.getContactById(contactId, req.user)
             .then(function (contact) {
                 res.json(contact);
             });

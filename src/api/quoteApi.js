@@ -17,7 +17,7 @@ var quoteApi = function (knex) {
     //
     // POST /api/quotes
     // 
-    // Methods:  addQuote, addQuoteNote
+    // Methods:  addQuote, addQuoteItem, addQuoteNote
     //
     var addQuote = function (req, res) {
 
@@ -26,10 +26,22 @@ var quoteApi = function (knex) {
         // addQuote:  the default if no property for adding a note
         if (Object.keys(req.query).length === 0) {
 
-            // NEXT THREE LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
+            // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
             res.json({
                 'message': 'addQuote functionality is under construction...',
                 'reachedOn': 'This was reached on POST route /api/quotes'
+            });
+        }
+
+        // POST /api/quotes?item
+        // 
+        // addQuoteItem
+        else if (req.query.hasOwnProperty('item')) {
+
+            // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
+            res.json({
+                'message': 'addQuoteItem functionality is under construction...',
+                'reachedOn': 'This was reached on POST route /api/quotes?item'
             });
         }
 
@@ -38,7 +50,7 @@ var quoteApi = function (knex) {
         // addQuoteNote 
         else if (req.query.hasOwnProperty('note')) {
 
-            // NEXT THREE LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
+            // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
             res.json({
                 'message': 'addQuoteNote functionality is under construction...',
                 'reachedOn': 'This was reached on POST route /api/quotes?note'
@@ -64,9 +76,9 @@ var quoteApi = function (knex) {
         // updateQuote:  the default if req has no property for updating an item
         if (Object.keys(req.query).length === 0) {
 
-
-            // VERY TEMPORARY CALL TO CONTROLLER JUST TO CONFIRM NEW SECURITY GROUP PERMISSION
-            // IS BEING CHECK FOR THIS USER-- REWRITE THIS FUNCTION CALL SOON!  I WILL NO
+            // ARGUMENT LIST HAS BEEN TEMPORARILY SHORTENED TO JUST user SOLELY TO CONFIRM THE 
+            // NEW SECURITY PERMISSION GROUP CRMSFA_QUOTE_TASKS WORKS, DINESH WILL RESTORE THE 
+            // OTHER ARGUMENTS SOON...
             var resultsForUser = quoteController.updateQuote(req.user);
             
             if (resultsForUser === null) {
@@ -87,7 +99,7 @@ var quoteApi = function (knex) {
         // updateQuoteItem
         else if (req.query.hasOwnProperty('item')) {
 
-            // NEXT THREE LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
+            // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
             res.json({
                 'message': 'updateQuoteItem functionality is under construction...',
                 'reachedOn': 'This was reached on PUT route /api/quotes?item'
@@ -114,7 +126,7 @@ var quoteApi = function (knex) {
         //
         if (Object.keys(req.query).length === 0) {
 
-            // NEXT THREE LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
+            // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
             res.json({
                 'message': 'getQuotesByOwner functionality is under construction...',
                 'reachedOn': 'This was reached on GET route /api/quotes'
@@ -126,7 +138,7 @@ var quoteApi = function (knex) {
         // findQuotes
         else if (req.query.hasOwnProperty('SOME_PROPERTY')) {
 
-            // NEXT THREE LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
+            // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
             res.json({
                 'message': 'findQuotes functionality is under construction...',
                 'reachedOn': 'This was reached on GET route /api/quotes?SOME_PROPERTY'

@@ -32,18 +32,39 @@ var quoteController = function (knex) {
 
     };
 
-    /* DINESH IS STILL THINKING ABOUT THE NEXT TWO FUNCTIONS updateQuote AND updateQuoteItem AND SO THEY
-        MIGHT CHANGE SUBSTANTIALLY, BUT HE WILL NOT MAKE CHANGES THAT AFFECT OTHER FUNCTIONALITIES
-        WITHOUT TALKING TO THEIR AUTHORS.  HE IS CONTEMPLATING MAKING AN ITEM ENTITY AND MAYBE
-        EVEN AN OPTION ENTITY, BUT THEIR CREATION SHOULD NOT AFFECT THE OTHER FUNCTIONALITIES 
-        ONE WAY OR THE OTHER.... */
     /**
-     * Update a quote in database by adding an item
+     * Add a new item to a quote -- DINESH WILL REVISE INPUTS, THIS IS PRELIM THINKING FOR SKELETON
      * @param {Number} quoteId - Unique quote_id of the quote to add an item to
+     * @param {Number} quoteItemSeqId - item seq id of the quote_id of the quote to add an item to
+     * @param {Object} optionInfo - option to update the item with <-- TAKE AS OBJECT?  NEED ENTITY?
+     * @param {Object} user - The logged in user
+     * @return {Object} promise - Fulfillment value is number of rows updated
+     */
+    var addQuoteItem = function (quoteId, quoteItemSeqId, optionInfo, user) {
+        
+        // IMPLEMENT SECURIY CHECKING ONCE NEW GROUP IS ADDED TO DB
+        /*// Check user's security permission to own contacts
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
+        if (hasPermission !== -1) {
+            // proceed towards data layer
+        }   
+        else {
+            // user does not have permissions to add a quote, return null
+            return null;
+        }*/
+        
+    };
+
+    /**
+     * Update a quote in database (equiv to Opentaps' Edit Quote)
+     * @param {Number} quoteId - Unique quote_id of the quote to upate
      * @param {Object} item - The object that contains the item to update quote with
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
+    // ARGUMENT LIST HAS BEEN TEMPORARILY SHORTENED TO JUST user SOLELY TO CONFIRM THE 
+    // NEW SECURITY PERMISSION GROUP CRMSFA_QUOTE_TASKS WORKS, DINESH WILL RESTORE THE 
+    // OTHER ARGUMENTS SOON...
     var updateQuote = function (user) {
         
         // Check user's security permission to own contacts
@@ -51,7 +72,7 @@ var quoteController = function (knex) {
         if (hasPermission !== -1) {
             // TEMPORARILY RETURNING JUST A NONSENSE STRING THAT THE API LAYER WILL NOT
             // DO ANYTHING WITH, FOR NOW JUST TESTING NEW SECURITY GROUP
-            return 'Nobody will see this string.'
+            return 'Nobody will see this string.';
         }   
         else {
             // user does not have permissions to add a quote, return null
@@ -113,6 +134,7 @@ var quoteController = function (knex) {
 
     return {
         addQuote: addQuote,
+        addQuoteItem: addQuoteItem,
         updateQuote: updateQuote,
         updateQuoteItem: updateQuoteItem,
         addQuoteNote: addQuoteNote,
