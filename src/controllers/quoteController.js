@@ -50,7 +50,7 @@ var quoteController = function (knex) {
             quote.createdByPartyId,
             now,
             now
-        )
+        );
         
         // Validate the quoteItem data before going ahead
         var validationErrors = [];
@@ -62,7 +62,7 @@ var quoteController = function (knex) {
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
-                var promise = var promise = quoteData.addQuote(quote);
+                var promise = quoteData.addQuote(quote)
                     .then(function (quoteId) {
                         return quoteData.addQuoteRole(quoteId);
                     });
@@ -148,17 +148,6 @@ var quoteController = function (knex) {
      */
     var updateQuoteItem = function (quoteId, quoteItemSeqId, optionInfo, user) {
 
-        // IMPLEMENT SECURIY CHECKING ONCE NEW GROUP IS ADDED TO DB
-        /*// Check user's security permission to own contacts
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
-        if (hasPermission !== -1) {
-            // proceed towards data layer
-        }   
-        else {
-            // user does not have permissions to add a quote, return null
-            return null;
-        }*/
-
     };
 
     /**
@@ -186,7 +175,6 @@ var quoteController = function (knex) {
      * Gets quotes owned by the user/owner
      * @return {Object} promise - Fulfillment value is an array of quote entities
      */
-
     var getQuotesByOwner = function (user) {
         // Check user's security permission to own quotes
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
@@ -225,6 +213,7 @@ var quoteController = function (knex) {
             return promise;
         } else {
             // user does not have permissions of a contact owner, return null
+            return;
         }
     };
 
