@@ -33,7 +33,7 @@ Party.prototype.validateForInsert = function() {
         this.validatePreferredCurrencyUomId(false),
         this.validateDescription(false),
         this.validateStatusId(true),
-        this.validateCreatedBy(true),
+        this.validateCreatedBy(true),//per DB design, this is nullable
         this.validateCreatedDate(true),
         this.validateUpdatedDate(true)
     ];

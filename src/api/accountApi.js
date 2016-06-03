@@ -60,7 +60,7 @@ var accountApi = function (knex) {
     
     // GET /api/accounts/?owner=
     var getAccountsByOwner = function (req, res) {
-        var ownerId = req.params.owner;
+        var ownerId = req.params.id;
         accountController.getAccountsByOwner(ownerId)
             .then(function (accounts) {
                 res.json(accounts);

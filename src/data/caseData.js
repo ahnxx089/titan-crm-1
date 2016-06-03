@@ -8,8 +8,11 @@
 /* jshint camelcase: false */
 /* jshint maxlen: false */
 
+//var _ = require('lodash'); // not used anymore
+
 var caseData = function (knex) {
 
+    // Lucas wrote this
     /**
      * Add a new case in the database:  
      * @param {Object} case_ - The new case entity to be added 
@@ -41,26 +44,42 @@ var caseData = function (knex) {
             case_date: case_.caseDate, response_required_date: case_.responseRequiredDate,
             case_name: case_.caseName, description:case_.description, resolution_id: case_.resolutionId,
             created_by: case_.createdBy, created_date: case_.createdDate, updated_date: case_.updatedDate
-        }).then(function (res) {
-            // for case_role table
-            return knex('case_role')
-                .insert({
-                case_id: res,
-                party_id: case_.fromPartyId, 
-                role_type_id: 'CONTACT', // HARD CODED. can be account as well
-                created_date: case_.createdDate,
-                updated_date: case_.updatedDate
-            }).then(function() {
-                return knex('case_status')
+        }).then(function (cid) {
+            return knex.select('role_type_id')
+                .from('party_role')
+                .where('party_id', case_.fromPartyId)
+                /*.then(function (rows) {
+                return _.map(rows, 'role_type_id');
+                // _.pluck, which is used in knex.org, is no longer supported in lodash v4+
+            })*/
+                .then(function (rtis) {
+//                console.log(rtis);
+//                Object.values() function is not supported Node yet
+                
+                // for case_role table
+                return knex('case_role')
                     .insert({
-                    case_id: res,
-                    status_id: case_.statusId,
-//                    status_datatime: case_.createdDate,
+                    case_id: cid,
+                    party_id: case_.fromPartyId, 
+                    role_type_id: rtis[0].role_type_id,
+                    // HARD CODED. can be account as well
+                    // I believe this design is wrong. 
+                    // This design is letting anyone in party_role table, regardless of his type, add a case.
+                    // However, Opentaps only allows a CONTACT or LEAD to do so.
                     created_date: case_.createdDate,
                     updated_date: case_.updatedDate
                 }).then(function() {
-                    // this is CRUCIAL, as this will be the 3rd param of addNoteCallback()
-                    return res;
+                    return knex('case_status')
+                        .insert({
+                        case_id: cid,
+                        status_id: case_.statusId,
+    //                    status_datatime: case_.createdDate,
+                        created_date: case_.createdDate,
+                        updated_date: case_.updatedDate
+                    }).then(function() {
+                        // this is CRUCIAL, as this will become the 3rd param of addNoteCallback()
+                        return cid;
+                    });
                 });
             });
         });
@@ -93,8 +112,14 @@ var caseData = function (knex) {
      * Gets all cases from database by advanced search
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
-    var getCasesByAdvanced = function () {
-
+    var getCasesByAdvanced = function (subject, priority, status, type) {
+        return knex.select('case_.case_id', 'case_.case_type_id', 'case_.case_category_id', 'case_.status_id', 'case_.from_party_id', 'case_.priority', 'case_.case_date', 'case_.response_required_date', 'case_.case_name', 'case_.description', 'case_.resolution_id', 'case_.created_by', 'case_.created_date', 'case_.updated_date')
+            .from('case_')
+            .innerJoin('status_item', 'case_.status_id', 'status_item.status_code')
+            .where('case_.case_name',subject)
+            .where('case_.priority', priority)
+            .where('status_item.status_code', status)
+            .where('case_.case_type_id', type);
     };
 
     /**

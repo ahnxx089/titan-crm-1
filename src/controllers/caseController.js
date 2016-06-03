@@ -10,7 +10,7 @@
 
 var winston = require('winston');
 var Case = require('../entities/case');
-var User = require('../entities/user');
+var User = require('../entities/user');// is this ever used?
 var Note = require('../entities/note');
 var _ = require('lodash');
 
@@ -24,9 +24,9 @@ var caseController = function (knex) {
     // CONTROLLER METHODS
     // ==========================================
     //
-
     
     
+    // Lucas wrote this
     /**
      * For each (and the only) promise delivered by addNote,
      * create entry in case_note table
@@ -55,6 +55,7 @@ var caseController = function (knex) {
     
     
     
+    // Lucas wrote this
     /**
      * Add a new case  
      * @param {Object} case_ - The new case to be added
@@ -82,7 +83,7 @@ var caseController = function (knex) {
                 );
             }
             
-            var caseEntity = new Case(                
+            var caseEntity = new Case(
 //                case_.caseId,
                 null,
                 case_.caseTypeId,
@@ -111,6 +112,7 @@ var caseController = function (knex) {
                 // Pass on the entity to be added to the data layer. Insert new case_, get the promise first
                 var promise = caseData.addCase(caseEntity);
                 
+                // if there is a field called internalNote
                 if(intenalNoteEntity){
                     var addNotePromises = [];
                     var notePromise;
@@ -128,6 +130,7 @@ var caseController = function (knex) {
                             winston.error(error);
                         });
                     }
+                    // if there isn't such internalNote
                     else {
                         promise.then(function (caseId) {
                             return caseId;
@@ -231,8 +234,54 @@ var caseController = function (knex) {
      * @param {String} SOME ARGUMENT - DESCRIPTION OF THAT ARGUMENT
      * @return {Object} promise - Fulfillment value is an array of case entities
      */
-    var getCasesByAdvanced = function () {
-
+    var getCasesByAdvanced = function (query, user) {
+        //Check security permission of user
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
+        if (hasPermission !== -1) {
+           /* /api/case?subject=
+              /api/case?priority=
+              /api/case?status=
+              /api/case?type=
+              If block set thease things
+           */
+            var subject = query.subject;
+            var priority = query.priority;
+            var status = query.status;
+            var type = query.type;
+            var promise = caseData.getCasesByAdvanced(subject, priority, status, type)
+                .then(function (cases) {
+                    
+                    var caseEntities = [];
+                    for (var i = 0; i < cases.length; i++) {
+                        var case_ = new Case(
+                            cases[i].case_id,
+                            cases[i].case_type_id,
+                            cases[i].case_category_id,
+                            cases[i].status_id,
+                            cases[i].from_party_id,
+                            cases[i].priority,
+                            cases[i].case_date,
+                            cases[i].response_required_date,
+                            cases[i].case_name,
+                            cases[i].description,
+                            cases[i].resolution_id,
+                            cases[i].created_by,
+                            cases[i].created_date,
+                            cases[i].updated_date
+                        );
+                        caseEntities.push(case_);
+                    }
+                    return caseEntities;
+                });
+                promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            // user does not have permissions of a case owner, return null
+            return null;
+        }
     };
 
     /**

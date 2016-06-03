@@ -72,8 +72,7 @@ var router = function (knex) {
         //.post(leadApi.updateLead)
         //.delete(leadApi.deleteLead);
     
-    
-//        getLeadsByOwner, getLeadsByIdentity, getLeadsByPhoneNumber are not implemented yet
+//    getLeadsByIdentity, getLeadsByPhoneNumber are not implemented yet
     
     
 
@@ -123,8 +122,6 @@ var router = function (knex) {
         .delete(caseApi.deleteCase);
 
     
-    //TENTATIVE -- FOR QUOTES MODULE, DISCUSS WITH TEAM
-    //
     // QUOTES
     // ==========================================
     //
@@ -137,9 +134,10 @@ var router = function (knex) {
     apiRouter.route('/quotes')
         .get(quoteApi.getQuotes)
         .post(quoteApi.addQuote)
-        .put(quoteApi.updateQuote);
+        .put(quoteApi.updateQuoteItem);
     apiRouter.route('/quotes/:id')
-        .get(quoteApi.getQuoteById);
+        .get(quoteApi.getQuoteById)
+        .put(quoteApi.updateQuote);
     
     return apiRouter;
 };

@@ -10,7 +10,7 @@
 /* jshint shadow:true */
 
 var quoteData = function (knex) {
-    
+
     /**
      * Add a new quote  
      * @param {Object} quote - The new quote to be added
@@ -22,35 +22,28 @@ var quoteData = function (knex) {
     };
 
     /**
-     * Add a new item to a quote -- DINESH WILL REVISE INPUTS, THIS IS PRELIM THINKING FOR SKELETON
-     * @param {Number} quoteId - Unique quote_id of the quote to add an item to
-     * @param {Number} quoteItemSeqId - item seq id of the quote_id of the quote to add an item to
-     * @param {Object} optionInfo - option to update the item with <-- TAKE AS OBJECT?  NEED ENTITY?
+     * Add a new item to a quote 
+     * @param {Object} quoteItem - quoteItem object
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var addQuoteItem = function (quoteItem) {
-        // ADD KNEX STATEMENTS IN HERE...
-    };
-
-    /**
-     * Update a quote in database by adding an item
-     * @param {Number} quoteId - Unique quote_id of the quote to add an item to
-     * @param {Object} item - The object that contains the item to update quote with
-     * @return {Object} promise - Fulfillment value is number of rows updated
-     */
-    var updateQuote = function (quoteId, item) {
-        
-        // IMPLEMENT SECURIY CHECKING ONCE NEW GROUP IS ADDED TO DB
-        /*// Check user's security permission to own contacts
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
-        if (hasPermission !== -1) {
-            // proceed towards data layer
-        }   
-        else {
-            // user does not have permissions to add a quote, return null
-            return null;
-        }*/
-
+        return knex('quote_item')
+            .insert({
+                quote_id: quoteItem.quoteId,
+                quote_item_seq_id: quoteItem.quoteItemSeqId,
+                product_id: quoteItem.productId,
+                quantity: quoteItem.quantity,
+                selected_amount: quoteItem.selectedAmount,
+                quote_unit_price: quoteItem.quoteUnitPrice,
+                estimated_delivery_date: quoteItem.estimatedDeliveryDate,
+                comments: quoteItem.comments,
+                is_promo: quoteItem.isPromo,
+                description: quoteItem.description,
+                created_date: quoteItem.createdDate,
+                updated_date: quoteItem.updatedDate
+            }).then(function () {
+                return quoteItem;
+            });
     };
 
     /**
@@ -61,18 +54,7 @@ var quoteData = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateQuoteItem = function (quoteId, quoteItemSeqId, optionInfo) {
-        
-        // IMPLEMENT SECURIY CHECKING ONCE NEW GROUP IS ADDED TO DB
-        /*// Check user's security permission to own contacts
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
-        if (hasPermission !== -1) {
-            // proceed towards data layer
-        }   
-        else {
-            // user does not have permissions to add a quote, return null
-            return null;
-        }*/
-        
+
     };
 
     /**
@@ -82,7 +64,7 @@ var quoteData = function (knex) {
      * @return {Object} promise - Fulfillment value is note_id of new note
      */
     var addQuoteNote = function (quoteId, quoteNote) {
-        
+
     };
 
     /**
@@ -92,14 +74,15 @@ var quoteData = function (knex) {
      * @return {Object} promise - Fulfillment value is a quote entity
      */
     var getQuoteById = function (quoteId, user) {
-        
+
     };
 
     /**
      * Gets quotes owned by the user/owner
      * @return {Object} promise - Fulfillment value is an array of quote entities
      */
-    var getQuoteByOwner = function (userPartyId) {
+
+    var getQuotesByOwner = function (userPartyId) {
         //Note by Eric - until I'm told otherwise, I will assume here that the "owner"
         //corresponds to the party id listed in the quote table's created_by_party_id field 
         //(and not the party_id or contact_party_id fields). 
@@ -115,6 +98,36 @@ var quoteData = function (knex) {
             .andWhere('quote_role.role_type_id', 'PERSON_ROLE');
             
     };
+    
+    /**
+     * Update a quote in database 
+     * @param {Object} quote - quote object to be updated
+     * @return {Object} promise - Fulfillment value is number of rows updated
+     */
+    var updateQuote = function (quote) {
+
+        return knex('quote')
+            .where({
+                quote_id: quote.quoteId
+            })
+            .update({
+                quote_type_id: quote.quoteTypeId,
+                party_id: quote.partyId,
+                issue_date: quote.issueDate,
+                status_id: quote.statusId,
+                currency_uom_id: quote.currencyUomId,
+                sales_channel_enum_id: quote.salesChannelEnumId,
+                valid_from_date: quote.validFromDate,
+                valid_thru_date: quote.validThruDate,
+                quote_name: quote.quoteName,
+                description: quote.description,
+                contact_party_id: quote.contactPartyId,
+                updated_date: quote.updatedDate
+            }).then(function () {
+                return quote;
+            });
+    };
+
 
     return {
         addQuote: addQuote,
@@ -123,7 +136,7 @@ var quoteData = function (knex) {
         updateQuoteItem: updateQuoteItem,
         addQuoteNote: addQuoteNote,
         getQuoteById: getQuoteById,
-        getQuoteByOwner: getQuoteByOwner,
+        getQuotesByOwner: getQuotesByOwner
     };
 };
 

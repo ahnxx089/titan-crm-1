@@ -6,8 +6,10 @@
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
+/* jshint shadow:true */
+/* jshint maxcomplexity: false */
 
-// NOT COMPLETED! 
+// WARNING! 
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
 // getLeads is not finished, not used. Lucas will look at it later. 
 // deleteLead and updateLead are (maybe not) wrong. 
@@ -18,7 +20,7 @@ var ContactMech = require('../entities/contactMech');
 var _ = require('lodash');
 
 var leadController = function (knex) {
-    // Get a reference to data layer module
+    // Get a reference to data layer module, and contactMechController
     //
     var leadData = require('../data/leadData')(knex);
     var contactMechData = require('../data/contactMechData')(knex);
@@ -38,24 +40,37 @@ var leadController = function (knex) {
     //
 
     
+    // Credit: Bill
+    /**
+     * For each promise delivered by contactMechController.addContactMech(),
+     * create entry in party_contact_mech table
+     * and chain all promises together with .then()
+     * @param {object} addContactMechPromises - An array of promises returned by addContactMech
+     * @param {object} contactMechEntities - An array containing the contactMechs used to generate the first array
+     * @param {Number} partyId - The partyId of the contact to be linked to these contactMechs
+     * @return {object} addContactMechPromises - Fulfillment value is the fulfillment value of the last promise in the array
+     */
     var addContactMechCallback = function (addContactMechPromises, contactMechEntities, partyId) {
+        var promise;
+        var contactMech;
+        var purposeTypeId;
         // if there are more than one contactMech to be added
         if (addContactMechPromises.length > 1) {
-            var promise = addContactMechPromises.pop();
-            var contactMech = contactMechEntities.pop();
-            var purposeTypeId = contactMech.contactMechPurposeTypeId;
+            promise = addContactMechPromises.pop();
+            contactMech = contactMechEntities.pop();
+            purposeTypeId = contactMech.contactMechPurposeTypeId;
             return promise.then(function (contactMechId) {
                 return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
                     .then(function () {
                         return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
                     });
             });
-        } 
+        }
         // else: base case, only one contactMech to be added
         else {
-            var promise = addContactMechPromises.pop();
-            var contactMech = contactMechEntities.pop();
-            var purposeTypeId = contactMech.contactMechPurposeTypeId;
+            promise = addContactMechPromises.pop();
+            contactMech = contactMechEntities.pop();
+            purposeTypeId = contactMech.contactMechPurposeTypeId;
             return promise.then(function (contactMechId) {
                 return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
                     .then(function () {
@@ -71,9 +86,10 @@ var leadController = function (knex) {
      * Create a new lead entity, validate, pass it to leadData to create a new lead if valid. Otherwise return errors. 
      * When leadData finished adding this lead, it will return a promise. If error, log the error. 
      * @param {Object} lead - The new lead (from API layer) to be added
-     * @param {Object? or String?} user - The current logged-in user
+     * @param {Object} user - The current logged-in user entity
      * @return {Object} promise - Fulfillment value is id of new lead
      * @return {Object} validationErrors - An array that has all the validation error message
+     * @return {Object} null - A null indicates current user does not have add lead permission
      */
     var addLead = function (lead, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
@@ -157,8 +173,7 @@ var leadController = function (knex) {
                 lead.currencyUomId,
                 lead.description,
                 lead.statusId,
-                user.userId,
-                //            'admin', // For testing only
+                user.userId, // use 'admin' for testing 
                 (new Date()).toISOString(),
                 (new Date()).toISOString(),
                 // for party
@@ -166,8 +181,8 @@ var leadController = function (knex) {
                 lead.firstName,
                 lead.middleName,
                 lead.lastName,
-                //            lead.birthDate,
-                (new Date()).toISOString(), // for testing only
+                // lead.birthDate,
+                (new Date()).toISOString(), 
                 lead.comments,
                 // for person
                 lead.parentPartyId,
@@ -195,12 +210,6 @@ var leadController = function (knex) {
                 lead.fromDate,
                 lead.thruDate,
                 */
-                
-//                null,
-//                null, (new Date()).toISOString(), // for testing only
-//                null, // for testing only
-//                lead.verified,
-//                lead.comments
 
             );
 
@@ -238,9 +247,9 @@ var leadController = function (knex) {
                         return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
                     });
                     // but for safety, add a .catch block here anyway (this is never reachable)
-                    promise.catch(function (error) {
+                    /*promise.catch(function (error) {
                         winston.error(error);
-                    });
+                    });*/
                 } else {
                     return promise;
                 }
@@ -321,10 +330,9 @@ var leadController = function (knex) {
     // Lucas's taking this
     /**
      * Gets all leads created by owner 
-     * @param {String?} userId - Unique id of logged-in user (owner)
+     * @param {Object} user - Passed user object. DIFFERENT FROM userId, which is a number, of logged-in user (owner)
      * @return {Object} promise - Fulfillment value is an array of lead entities
      */
-    // 2:49 May 29 changed param, from userId to user
     var getLeadsByOwner = function (user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
         // if found
