@@ -50,7 +50,7 @@ var quoteController = function (knex) {
             quote.createdByPartyId,
             now,
             now
-        )
+        );
         
         // Validate the quoteItem data before going ahead
         var validationErrors = [];
@@ -62,7 +62,7 @@ var quoteController = function (knex) {
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
-                var promise = var promise = quoteData.addQuote(quote);
+                var promise = quoteData.addQuote(quote)
                     .then(function (quoteId) {
                         return quoteData.addQuoteRole(quoteId);
                     });
