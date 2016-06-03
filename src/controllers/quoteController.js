@@ -11,14 +11,14 @@
 
 var winston = require('winston');
 var Quote = require('../entities/quote');
-var QuoteItem = require('../entities/quoteItem'); 
+var QuoteItem = require('../entities/quoteItem');
 var _ = require('lodash');
 
 var quoteController = function (knex) {
     // Get a reference to data layer module
     //
     var quoteData = require('../data/quoteData')(knex);
-    
+
     // CONTROLLER METHODS
     // ==========================================
     //
@@ -32,52 +32,53 @@ var quoteController = function (knex) {
     var addQuote = function (quote, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CASE_CREATE');
         if (hasPermission !== -1) {
-        var now = (new Date()).toISOString();
+            var now = (new Date()).toISOString();
 
-        var quoteEntity = new Quote(
-            null,
-            quote.quoteTypeId,
-            quote.partyId,
-            quote.issueDate,
-            quote.statusId,
-            quote.currencyUomId,
-            quote.salesChannelEnumId,
-            quote.validFromDate,
-            quote.validThruDate,
-            quote.quoteName,
-            quote.description,
-            quote.contactPartyId,
-            quote.createdByPartyId,
-            now,
-            now
-        )
-        
-        // Validate the quoteItem data before going ahead
-        var validationErrors = [];
-        var quoteValidationErrors = quoteEntity.validateForInsert();
-        for (var i = 0; i < quoteValidationErrors.length; i++) {
+            var quoteEntity = new Quote(
+                null,
+                quote.quoteTypeId,
+                quote.partyId,
+                quote.issueDate,
+                quote.statusId,
+                quote.currencyUomId,
+                quote.salesChannelEnumId,
+                quote.validFromDate,
+                quote.validThruDate,
+                quote.quoteName,
+                quote.description,
+                quote.contactPartyId,
+                quote.createdByPartyId,
+                now,
+                now
+            )
+
+            // Validate the quoteItem data before going ahead
+            var validationErrors = [];
+            var quoteValidationErrors = quoteEntity.validateForInsert();
+            for (var i = 0; i < quoteValidationErrors.length; i++) {
                 if (quoteValidationErrors[i]) {
                     validationErrors.push(quoteValidationErrors[i]);
                 }
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
-                var promise = var promise = quoteData.addQuote(quote);
-                    .then(function (quoteId) {
-                        return quoteData.addQuoteRole(quoteId);
+                var promise = quoteData.addQuote(quote);
+                .then(function (quoteId) {
+                    quoteData.addQuoteRole(quoteId).then(function () {
+                        return quoteId;
                     });
-                
+                });
+
                 promise.catch(function (error) {
                     winston.error(error);
                 });
-                
+
                 return promise;
-            }
-            else {  
+            } else {
                 return validationErrors;
             }
         }
-       return null;
+        return null;
     };
 
     /**
@@ -87,7 +88,7 @@ var quoteController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var addQuoteItem = function (quoteItem, user) {
-        
+
         // Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
@@ -108,7 +109,7 @@ var quoteController = function (knex) {
                 quoteItem.description,
                 now,
                 now
-            ); 
+            );
 
             // Validate the quoteItem data before going ahead
             var validationErrors = [];
@@ -203,14 +204,14 @@ var quoteController = function (knex) {
                             quotes[i].partyId,
                             quotes[i].issueDate,
                             quotes[i].statusId,
-                            quotes[i].currencyUomId, 
+                            quotes[i].currencyUomId,
                             quotes[i].salesChannelEnumId,
                             quotes[i].validFromDate,
                             quotes[i].validThruDate,
                             quotes[i].quoteName,
-                            quotes[i].description, 
-                            quotes[i].contactPartyId, 
-                            quotes[i].createdByPartyId, 
+                            quotes[i].description,
+                            quotes[i].contactPartyId,
+                            quotes[i].createdByPartyId,
                             quotes[i].createdDate,
                             quotes[i].updatedDate
                         );
@@ -260,7 +261,7 @@ var quoteController = function (knex) {
                 quote.createdByPartyId,
                 quote.createdDate,
                 now
-            ); 
+            );
 
             // Validate the quoteItem data before going ahead
             var validationErrors = [];

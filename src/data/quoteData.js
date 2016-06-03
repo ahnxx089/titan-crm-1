@@ -38,18 +38,21 @@ var quoteData = function (knex) {
                 created_date: quote.createdDate,
                 updated_date: quote.updatedDate
         })
-        .then(function (passQuoteId){
+        .then(function (){
             return knex('quote_role')
                 .returning('quote_id')
                 .insert({
                     quote_id: quote.quoteId,
-                    party_id: user.partyId,
+                    party_id: quote.partyId,
                     role_type_id: quote.roleTypeId,
                     created_date: quote.createdDate,
                     updated_date: quote.updatedDate
                 
             })
         })
+        .then(function (){
+            return quote;
+        });
     };
 
     /**
