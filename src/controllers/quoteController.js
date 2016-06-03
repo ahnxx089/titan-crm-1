@@ -34,6 +34,7 @@ var quoteController = function (knex) {
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
 
+<<<<<<< HEAD
             var quoteEntity = new Quote(
                 null,
                 quote.quoteTypeId,
@@ -56,16 +57,46 @@ var quoteController = function (knex) {
             var validationErrors = [];
             var quoteValidationErrors = quoteEntity.validateForInsert();
             for (var i = 0; i < quoteValidationErrors.length; i++) {
+=======
+        var quoteEntity = new Quote(
+            null,
+            quote.quoteTypeId,
+            quote.partyId,
+            quote.issueDate,
+            quote.statusId,
+            quote.currencyUomId,
+            quote.salesChannelEnumId,
+            quote.validFromDate,
+            quote.validThruDate,
+            quote.quoteName,
+            quote.description,
+            quote.contactPartyId,
+            quote.createdByPartyId,
+            now,
+            now
+        );
+        
+        // Validate the quoteItem data before going ahead
+        var validationErrors = [];
+        var quoteValidationErrors = quoteEntity.validateForInsert();
+        for (var i = 0; i < quoteValidationErrors.length; i++) {
+>>>>>>> bb07cb60b67c4d314844127794b7f995e084d6a2
                 if (quoteValidationErrors[i]) {
                     validationErrors.push(quoteValidationErrors[i]);
                 }
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
+<<<<<<< HEAD
                 var promise = quoteData.addQuote(quote);
                 .then(function (quoteId) {
                     quoteData.addQuoteRole(quoteId).then(function () {
                         return quoteId;
+=======
+                var promise = quoteData.addQuote(quote)
+                    .then(function (quoteId) {
+                        return quoteData.addQuoteRole(quoteId);
+>>>>>>> bb07cb60b67c4d314844127794b7f995e084d6a2
                     });
                 });
 
@@ -149,17 +180,6 @@ var quoteController = function (knex) {
      */
     var updateQuoteItem = function (quoteId, quoteItemSeqId, optionInfo, user) {
 
-        // IMPLEMENT SECURIY CHECKING ONCE NEW GROUP IS ADDED TO DB
-        /*// Check user's security permission to own contacts
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
-        if (hasPermission !== -1) {
-            // proceed towards data layer
-        }   
-        else {
-            // user does not have permissions to add a quote, return null
-            return null;
-        }*/
-
     };
 
     /**
@@ -187,7 +207,6 @@ var quoteController = function (knex) {
      * Gets quotes owned by the user/owner
      * @return {Object} promise - Fulfillment value is an array of quote entities
      */
-
     var getQuotesByOwner = function (user) {
         // Check user's security permission to own quotes
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
@@ -226,6 +245,7 @@ var quoteController = function (knex) {
             return promise;
         } else {
             // user does not have permissions of a contact owner, return null
+            return;
         }
     };
 
