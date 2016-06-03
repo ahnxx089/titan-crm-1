@@ -158,13 +158,18 @@ var quoteApi = function (knex) {
         //
         if (Object.keys(req.query).length === 0) {
 
-            // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
-            res.json({
-                'message': 'getQuotesByOwner functionality is under construction...',
-                'reachedOn': 'This was reached on GET route /api/quotes'
-            });
+            var resultsForThisUser = quoteController.getQuotesByOwner(req.user);
+            // IF ELSE block interprets controller returning an object or null
+            if (resultsForThisUser === null) {
+                res.json({
+                    'message': 'You do not have permission to own quotes!'
+                });
+            } else {
+                resultsForThisUser.then(function (quotes) {
+                    res.json(quotes);
+                });
+            }
         }
-
         // GET /api/quotes?SOME_PROPERTY
         // 
         // findQuotes
