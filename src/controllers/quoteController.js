@@ -34,7 +34,6 @@ var quoteController = function (knex) {
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
 
-<<<<<<< HEAD
             var quoteEntity = new Quote(
                 null,
                 quote.quoteTypeId,
@@ -51,55 +50,22 @@ var quoteController = function (knex) {
                 quote.createdByPartyId,
                 now,
                 now
-            )
+            );
 
             // Validate the quoteItem data before going ahead
             var validationErrors = [];
             var quoteValidationErrors = quoteEntity.validateForInsert();
             for (var i = 0; i < quoteValidationErrors.length; i++) {
-=======
-        var quoteEntity = new Quote(
-            null,
-            quote.quoteTypeId,
-            quote.partyId,
-            quote.issueDate,
-            quote.statusId,
-            quote.currencyUomId,
-            quote.salesChannelEnumId,
-            quote.validFromDate,
-            quote.validThruDate,
-            quote.quoteName,
-            quote.description,
-            quote.contactPartyId,
-            quote.createdByPartyId,
-            now,
-            now
-        );
-        
-        // Validate the quoteItem data before going ahead
-        var validationErrors = [];
-        var quoteValidationErrors = quoteEntity.validateForInsert();
-        for (var i = 0; i < quoteValidationErrors.length; i++) {
->>>>>>> bb07cb60b67c4d314844127794b7f995e084d6a2
                 if (quoteValidationErrors[i]) {
                     validationErrors.push(quoteValidationErrors[i]);
                 }
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
-<<<<<<< HEAD
-                var promise = quoteData.addQuote(quote);
-                .then(function (quoteId) {
-                    quoteData.addQuoteRole(quoteId).then(function () {
-                        return quoteId;
-=======
                 var promise = quoteData.addQuote(quote)
                     .then(function (quoteId) {
                         return quoteData.addQuoteRole(quoteId);
->>>>>>> bb07cb60b67c4d314844127794b7f995e084d6a2
                     });
-                });
-
                 promise.catch(function (error) {
                     winston.error(error);
                 });
@@ -108,8 +74,10 @@ var quoteController = function (knex) {
             } else {
                 return validationErrors;
             }
+        } else {
+            // user does not have permissions to add a quote, return null
+            return null;
         }
-        return null;
     };
 
     /**

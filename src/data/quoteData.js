@@ -37,22 +37,21 @@ var quoteData = function (knex) {
                 created_by_party_id: quote.createdByPartyId,
                 created_date: quote.createdDate,
                 updated_date: quote.updatedDate
-        })
-        .then(function (){
-            return knex('quote_role')
-                .returning('quote_id')
-                .insert({
-                    quote_id: quote.quoteId,
-                    party_id: quote.partyId,
-                    role_type_id: quote.roleTypeId,
-                    created_date: quote.createdDate,
-                    updated_date: quote.updatedDate
-                
             })
-        })
-        .then(function (){
-            return quote;
-        });
+            .then(function () {
+                return knex('quote_role')
+                    .returning('quote_id')
+                    .insert({
+                        quote_id: quote.quoteId,
+                        party_id: quote.partyId,
+                        role_type_id: quote.roleTypeId,
+                        created_date: quote.createdDate,
+                        updated_date: quote.updatedDate
+                    });
+            })
+            .then(function () {
+                return quote;
+            });
     };
 
     /**
@@ -115,24 +114,23 @@ var quoteData = function (knex) {
      * Gets quotes owned by the user/owner
      * @return {Object} promise - Fulfillment value is an array of quote entities
      */
-
     var getQuotesByOwner = function (userPartyId) {
         //Note by Eric - until I'm told otherwise, I will assume here that the "owner"
         //corresponds to the party id listed in the quote table's created_by_party_id field 
         //(and not the party_id or contact_party_id fields). 
-        
+
         return knex.select('quote_id', 'quote_type_id', 'party_id', 'issue_date', 'status_id',
-                           'currency_uom_id', 'sales_channel_enum_id', 'valid_from_date',
-                           'valid_thru_date', 'quote_name', 'description', 'contact_party_id', 
-                           'created_by_party_id', 'created_date', 'updated_date')
+                'currency_uom_id', 'sales_channel_enum_id', 'valid_from_date',
+                'valid_thru_date', 'quote_name', 'description', 'contact_party_id',
+                'created_by_party_id', 'created_date', 'updated_date')
             .from('quote')
             .innerJoin('quote_role', 'quote.quote_id', 'quote_role.quote_id')
             .where('quote.created_by_party_id', userPartyId)
             .andWhere('quote_role.party_id', userPartyId)
             .andWhere('quote_role.role_type_id', 'PERSON_ROLE');
-            
+
     };
-    
+
     /**
      * Update a quote in database 
      * @param {Object} quote - quote object to be updated
