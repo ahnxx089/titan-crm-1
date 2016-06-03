@@ -24,6 +24,28 @@ var quoteApi = function (knex) {
         // POST /api/quotes
         // 
         // addQuote:  the default if no property for adding a note
+        var quote = req.body;
+        var user = req.user;
+        var resultsForThisUser = quoteController.addQuote(quote,user);
+        
+        if( resultsForThisUser == null){
+            res.json({
+                message: 'You do not have permission to add quote!'
+            });
+        }
+        else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
+            res.json(resultsForThisUser);
+        }
+        // An object in result means it's a promise (which is returned only if validation succeeds)
+        else {
+            resultsForThisUser.then(function (quoteId) {
+                res.json(
+                    {quoteId:quoteId}
+                );
+            });
+        }
+    };
+        /*
         if (Object.keys(req.query).length === 0) {
 
             // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
@@ -31,12 +53,12 @@ var quoteApi = function (knex) {
                 'message': 'addQuote functionality is under construction...',
                 'reachedOn': 'This was reached on POST route /api/quotes'
             });
-        }
+        }*/
 
         // POST /api/quotes?item
         // 
         // addQuoteItem
-        else if (req.query.hasOwnProperty('item')) {
+        /*else if (req.query.hasOwnProperty('item')) {
 
             var resultsForThisUser = quoteController.addQuoteItem(req.body, req.user);
 
@@ -46,7 +68,7 @@ var quoteApi = function (knex) {
                 3.  User does have permission, and a promise is returned
             */
             // null result means user does not have permission to add an Item to a Quote
-            if (resultsForThisUser === null) {
+            /*if (resultsForThisUser === null) {
                 res.json({
                     message: 'You do not have permission to POST to this route!'
                 });
@@ -63,27 +85,27 @@ var quoteApi = function (knex) {
                     });
                 });
             }
-        }
+        }*/
 
         // POST /api/quotes?note
         // 
         // addQuoteNote 
-        else if (req.query.hasOwnProperty('note')) {
+        /*else if (req.query.hasOwnProperty('note')) {
 
             // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
             res.json({
                 'message': 'addQuoteNote functionality is under construction...',
                 'reachedOn': 'This was reached on POST route /api/quotes?note'
             });
-        }
+        }*/
 
         // no other POST routes, return error message so the app does not hang
-        else {
+        /*else {
             res.json({
                 'message': 'ERROR:  No such route to POST to...',
             });
         }
-    };
+    };*/
 
     // PUT /api/quotes
     // 
