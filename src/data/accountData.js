@@ -6,6 +6,7 @@
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
+/* jshint maxlen:1000 */
 
 /* TODO: add a method or two for copying a lead's party_supplemental_data values into 
 the newly created entry in that table, then deleting the account-related fields in the new entry. 
@@ -138,9 +139,8 @@ var accountData = function (knex) {
                                     .then(function (PartyRoleResults) {
                                         console.log('PartyRoleResults is ' + PartyRoleResults);
                                         return addAccountPartyRelationship(account, user, contact)
-                                            .then(function (partyId) {
-                                                console.log(partyId[0]);
-                                                return partyId;
+                                            .then(function (results) {
+                                                return account.partyId;
                                             });
                                     });
 

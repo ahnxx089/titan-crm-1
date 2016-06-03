@@ -6,34 +6,37 @@
 //          DukJin Ahn <ahnxx089@gmail.com>
 /////////////////////////////////////////////////
 
+/* jshint maxlen:1000 */
+
+
 var knex = require('../src/config/knexConfig')().getConfig();
 var accountController = require('../src/controllers/accountController')(knex);
 var Account = require('../src/entities/account');
 
 
 describe('Account module', function () {
-    
+
     xit('getAccounts returns all accounts in system as an array of Account objects', function (done) {
-           accountController.getAccounts().then(function(accounts) {
-               // Get types of returned objects
-               var typeofAccounts = Object.prototype.toString.call(accounts);
-               // Check whether the return value is an array
-               expect(typeofAccounts).toBe('[object Array]');
-               // Check whether the first element in returned array is of type Object
-               expect(accounts[0] instanceof Account).toBeTruthy();
-               // Call done to finish the async function
-               done();
-           });
+        accountController.getAccounts().then(function (accounts) {
+            // Get types of returned objects
+            var typeofAccounts = Object.prototype.toString.call(accounts);
+            // Check whether the return value is an array
+            expect(typeofAccounts).toBe('[object Array]');
+            // Check whether the first element in returned array is of type Object
+            expect(accounts[0] instanceof Account).toBeTruthy();
+            // Call done to finish the async function
+            done();
+        });
     });
-    it('getAccounts returns a valid account entity', function (done) {
-           accountController.getAccountById(70).then(function(account) {
-               expect(account instanceof Account).toBeTruthy();
-               // Call done to finish the async function
-               done();
-           });
+    xit('getAccounts returns a valid account entity', function (done) {
+        accountController.getAccountById(70).then(function (account) {
+            expect(account instanceof Account).toBeTruthy();
+            // Call done to finish the async function
+            done();
+        });
     });
     xit('getAccountsByOwner returns a valid array of accounts', function (done) {
-        accountController.getAccountsByOwner("admin").then(function (accounts) {
+        accountController.getAccountsByOwner('admin').then(function (accounts) {
             //The thing I'm still uncertain of here is whether anything needs 
             //to be tested regarding the ownerId/userId. It's redundant to 
             //check whether the userId being used actually exists in the database...
@@ -57,7 +60,7 @@ describe('Account module', function () {
             accountId: 'Company',
             accountName: 'apple'
         };
-        
+
         var user = {
             userId: 'accountIdentityABC',
             password: '$2a$08$C/#Q5zk21&42UP28utHY/utlwCZP6b6pUOgxqzJIopjWE4t5q2p1',
@@ -68,25 +71,26 @@ describe('Account module', function () {
             createdDate: '2016-05-30T14:12:40',
             updatedDate: '2016-05-30T14:12:40',
             securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_CONTACT_CREATE', 'CRMSFA_CONTACT_DEACTIVATE', 'CRMSFA_CONTACT_REASSIGN', 'CRMSFA_CONTACT_UPDATE', 'CRMSFA_CONTACT_VIEW'],
-            
-        }
+
+        };
         var resultsForThisTest =
-        accountController.getAccountByIdentity(query, user);
-        
+            accountController.getAccountByIdentity(query, user);
+
         resultsForThisTest.then(function (accounts) {
-        var typeofAccounts = Object.prototype.toString.call(accounts);
-        // Check whether the return value is accounts array
-        expect(typeofAccounts).toBe('[object Array]');
-        // finsh
-         done();
+            var typeofAccounts = Object.prototype.toString.call(accounts);
+            // Check whether the return value is accounts array
+            expect(typeofAccounts).toBe('[object Array]');
+            // finsh
+            done();
         });
-         xit('accountController.getAccountByPhoneNumber get the query of account phoneNumber', function (done) {
+    });
+    xit('accountController.getAccountByPhoneNumber get the query of account phoneNumber', function (done) {
 
         // Searchcing looks for any 
         var query = {
-            phoneNumber : '123456789'
+            phoneNumber: '123456789'
         };
-        
+
         var user = {
             userId: 'accountPhoneNumberABC',
             password: '$2a$08$GeQ55k^12*rqP2XZu24<15l3aWQ6w6uOPOZwqPIIN/2311arhGP',
@@ -97,29 +101,31 @@ describe('Account module', function () {
             createdDate: '2016-05-30T14:18:30',
             updatedDate: '2016-05-30T14:18:30',
             securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_CONTACT_CREATE', 'CRMSFA_CONTACT_DEACTIVATE', 'CRMSFA_CONTACT_REASSIGN', 'CRMSFA_CONTACT_UPDATE', 'CRMSFA_CONTACT_VIEW'],
-            
-        }
+
+        };
         var resultsForThisTest =
-        accountController.getAccountByPhoneNumber(query, user);
-        
+            accountController.getAccountByPhoneNumber(query, user);
+
         resultsForThisTest.then(function (accounts) {
-        var typeofAccounts = Object.prototype.toString.call(accounts);
-        // Check whether the return value is accounts array
-        expect(typeofAccounts).toBe('[object Array]');
-        // finsh
-         done();
+            var typeofAccounts = Object.prototype.toString.call(accounts);
+            // Check whether the return value is accounts array
+            expect(typeofAccounts).toBe('[object Array]');
+            // finsh
+            done();
         });
-     xit('accountController.update account put the query', function (done) {
-         var accountId = 'Company';
-         var accounts = {};
-         var resultsForThisTest = accountController.updateAccount(accountId, accounts);
-         expect(resultsForThisTest).toBeTruthy();
-         done();
-     });
-      xit('accountController.delete account delete the query', function (done) {
-         var accountId = 'Company2';
-         var resultsForThisTest = accountController.deleteAccount(accountId);
-         expect(resultsForThisTest).toBeNull();
-         done();
-     });
+
+        xit('accountController.update account put the query', function (done) {
+            var accountId = 'Company';
+            var accounts = {};
+            var resultsForThisTest = accountController.updateAccount(accountId, accounts);
+            expect(resultsForThisTest).toBeTruthy();
+            done();
+        });
+        xit('accountController.delete account delete the query', function (done) {
+            var accountId = 'Company2';
+            var resultsForThisTest = accountController.deleteAccount(accountId);
+            expect(resultsForThisTest).toBeNull();
+            done();
+        });
+    });
 });

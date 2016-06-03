@@ -18,7 +18,38 @@ var quoteData = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new contact
      */
     var addQuote = function (quote, user) {
-
+        return knex('quote')
+            .returning('quote_id')
+            //passing through
+            .insert({
+                quote_id: quote.quoteId,
+                quote_type_id: quote.quoteTypeId,
+                party_id: quote.partyId,
+                issue_date: quote.issueDate,
+                status_id: quote.statusId,
+                currency_uom_id: quote.currencyUomId,
+                sales_channel_enum_id: quote.salesChannelEnumId,
+                valid_from_date: quote.validFromDate,
+                valid_thru_date: quote.validThruDate,
+                quote_name: quote.quoteName,
+                description: quote.description,
+                contact_party_id: quote.contactPartyId,
+                created_by_party_id: quote.createdByPartyId,
+                created_date: quote.createdDate,
+                updated_date: quote.updatedDate
+        })
+        .then(function (passQuoteId){
+            return knex('quote_role')
+                .returning('quote_id')
+                .insert({
+                    quote_id: quote.quoteId,
+                    party_id: user.partyId,
+                    role_type_id: quote.roleTypeId,
+                    created_date: quote.createdDate,
+                    updated_date: quote.updatedDate
+                
+            })
+        })
     };
 
     /**
@@ -81,8 +112,22 @@ var quoteData = function (knex) {
      * Gets quotes owned by the user/owner
      * @return {Object} promise - Fulfillment value is an array of quote entities
      */
-    var getQuotesByOwner = function (user) {
 
+    var getQuotesByOwner = function (userPartyId) {
+        //Note by Eric - until I'm told otherwise, I will assume here that the "owner"
+        //corresponds to the party id listed in the quote table's created_by_party_id field 
+        //(and not the party_id or contact_party_id fields). 
+        
+        return knex.select('quote_id', 'quote_type_id', 'party_id', 'issue_date', 'status_id',
+                           'currency_uom_id', 'sales_channel_enum_id', 'valid_from_date',
+                           'valid_thru_date', 'quote_name', 'description', 'contact_party_id', 
+                           'created_by_party_id', 'created_date', 'updated_date')
+            .from('quote')
+            .innerJoin('quote_role', 'quote.quote_id', 'quote_role.quote_id')
+            .where('quote.created_by_party_id', userPartyId)
+            .andWhere('quote_role.party_id', userPartyId)
+            .andWhere('quote_role.role_type_id', 'PERSON_ROLE');
+            
     };
     
     /**
@@ -114,15 +159,14 @@ var quoteData = function (knex) {
             });
     };
 
-
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,
-        updateQuote: updateQuote,
         updateQuoteItem: updateQuoteItem,
         addQuoteNote: addQuoteNote,
         getQuoteById: getQuoteById,
-        getQuotesByOwner: getQuotesByOwner
+        getQuotesByOwner: getQuotesByOwner,
+        updateQuote: updateQuote
     };
 };
 
