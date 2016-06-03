@@ -11,7 +11,7 @@
 
 var winston = require('winston');
 var Quote = require('../entities/quote');
-//var QuoteItem = require('../entities/quoteItem');  // COMMENT IN WHEN READY
+var QuoteItem = require('../entities/quoteItem');  // COMMENT IN WHEN READY
 var _ = require('lodash');
 
 var quoteController = function (knex) {
@@ -34,26 +34,47 @@ var quoteController = function (knex) {
     };
 
     /**
-     * Add a new item to a quote -- DINESH WILL REVISE INPUTS, THIS IS PRELIM THINKING FOR SKELETON
-     * @param {Number} quoteId - Unique quote_id of the quote to add an item to
-     * @param {Number} quoteItemSeqId - item seq id of the quote_id of the quote to add an item to
-     * @param {Object} optionInfo - option to update the item with <-- TAKE AS OBJECT?  NEED ENTITY?
+     * Add a new item to a quote 
+     * @param {Object} quoteItem - entity containing existing quote_id to add an Item to
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    // ADJUST THIS ARGUMENT LIST SOON ONCE NEW QuoteItem ENTITY IS AVAILABLE-- it could just be
-    // a single object that is all of req.body that came in to API,, or maybe req.body will
-    // have two parts in it or something . . . 
-    var addQuoteItem = function (item, user) {
-
+    /* 
+        BASIC FUNCTIONALITY IS WORKING-- This will still need some work, though, since right
+        now it relies on the user to:
+        (1) provide a valid quoteId for an already existing Quote that was made with addQuote,
+            an issue which the UI might take care of since adding an Item to a Quote is only
+            possible from the screen for that Quote-- meaning, by the time this functionality 
+            is accessed, the proper quote_id will be incoming.
+        (2) provide a quoteItemSeqId that does not duplicate an existing Item for this Quote
+            already present as a row in table quote_item.  The easiest way for that to be
+            ensured is for quote_item.quote_item_seq_id to AUTOINCREMENT, but for some reason
+            it is not set up that way in the DB and it will not let met change it, discuss
+            this possibility with Anurag.       
+    */
+    var addQuoteItem = function (quoteItem, user) {
+        
         // Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
             // proceed towards data layer
             var now = (new Date()).toISOString();
 
-            // protect data layer, map to new QuoteItem entity
-            var quoteItemEntity; // = new QuoteItem(); // ONCE IT IS READY, comment in...
+            // QuoteItem entity
+            var quoteItemEntity = new QuoteItem(
+                quoteItem.quoteId,
+                quoteItem.quoteItemSeqId,
+                quoteItem.productId,
+                quoteItem.quantity,
+                quoteItem.selectedAmount,
+                quoteItem.quoteUnitPrice,
+                quoteItem.estimatedDeliveryDate,
+                quoteItem.comments,
+                quoteItem.isPromo,
+                quoteItem.description,
+                now,
+                now
+            ); 
 
             // Validate the quoteItem data before going ahead
             var validationErrors = [];
@@ -67,8 +88,8 @@ var quoteController = function (knex) {
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
                 var promise = quoteData.addQuoteItem(quoteItemEntity)
-                    .then(function (quoteItemSeqId) {
-                        return quoteItemSeqId;
+                    .then(function (quoteItemInserted) {
+                        return quoteItemInserted;
                     });
                 promise.catch(function (error) {
                     winston.error(error);

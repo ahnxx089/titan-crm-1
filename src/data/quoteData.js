@@ -10,7 +10,7 @@
 /* jshint shadow:true */
 
 var quoteData = function (knex) {
-    
+
     /**
      * Add a new quote  
      * @param {Object} quote - The new quote to be added
@@ -22,14 +22,28 @@ var quoteData = function (knex) {
     };
 
     /**
-     * Add a new item to a quote -- DINESH WILL REVISE INPUTS, THIS IS PRELIM THINKING FOR SKELETON
-     * @param {Number} quoteId - Unique quote_id of the quote to add an item to
-     * @param {Number} quoteItemSeqId - item seq id of the quote_id of the quote to add an item to
-     * @param {Object} optionInfo - option to update the item with <-- TAKE AS OBJECT?  NEED ENTITY?
+     * Add a new item to a quote 
+     * @param {Object} quoteItem - quoteItem object
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var addQuoteItem = function (quoteItem) {
-        // ADD KNEX STATEMENTS IN HERE...
+        return knex('quote_item')
+            .insert({
+                quote_id: quoteItem.quoteId,
+                quote_item_seq_id: quoteItem.quoteItemSeqId,
+                product_id: quoteItem.productId,
+                quantity: quoteItem.quantity,
+                selected_amount: quoteItem.selectedAmount,
+                quote_unit_price: quoteItem.quoteUnitPrice,
+                estimated_delivery_date: quoteItem.estimatedDeliveryDate,
+                comments: quoteItem.comments,
+                is_promo: quoteItem.isPromo,
+                description: quoteItem.description,
+                created_date: quoteItem.createdDate,
+                updated_date: quoteItem.updatedDate
+            }).then(function () {
+                return quoteItem;
+            });
     };
 
     /**
@@ -39,7 +53,7 @@ var quoteData = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateQuote = function (quoteId, item) {
-        
+
         // IMPLEMENT SECURIY CHECKING ONCE NEW GROUP IS ADDED TO DB
         /*// Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
@@ -61,7 +75,7 @@ var quoteData = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateQuoteItem = function (quoteId, quoteItemSeqId, optionInfo) {
-        
+
         // IMPLEMENT SECURIY CHECKING ONCE NEW GROUP IS ADDED TO DB
         /*// Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
@@ -72,7 +86,7 @@ var quoteData = function (knex) {
             // user does not have permissions to add a quote, return null
             return null;
         }*/
-        
+
     };
 
     /**
@@ -82,7 +96,7 @@ var quoteData = function (knex) {
      * @return {Object} promise - Fulfillment value is note_id of new note
      */
     var addQuoteNote = function (quoteId, quoteNote) {
-        
+
     };
 
     /**
@@ -92,7 +106,7 @@ var quoteData = function (knex) {
      * @return {Object} promise - Fulfillment value is a quote entity
      */
     var getQuoteById = function (quoteId, user) {
-        
+
     };
 
     /**
@@ -100,7 +114,7 @@ var quoteData = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of quote entities
      */
     var getQuoteByOwner = function (user) {
-        
+
     };
 
     return {
