@@ -10,7 +10,7 @@
 
 var winston = require('winston');
 var Case = require('../entities/case');
-var User = require('../entities/user');
+var User = require('../entities/user');// is this ever used?
 var Note = require('../entities/note');
 var _ = require('lodash');
 
@@ -24,9 +24,9 @@ var caseController = function (knex) {
     // CONTROLLER METHODS
     // ==========================================
     //
-
     
     
+    // Lucas wrote this
     /**
      * For each (and the only) promise delivered by addNote,
      * create entry in case_note table
@@ -55,6 +55,7 @@ var caseController = function (knex) {
     
     
     
+    // Lucas wrote this
     /**
      * Add a new case  
      * @param {Object} case_ - The new case to be added
@@ -82,7 +83,7 @@ var caseController = function (knex) {
                 );
             }
             
-            var caseEntity = new Case(                
+            var caseEntity = new Case(
 //                case_.caseId,
                 null,
                 case_.caseTypeId,
@@ -111,6 +112,7 @@ var caseController = function (knex) {
                 // Pass on the entity to be added to the data layer. Insert new case_, get the promise first
                 var promise = caseData.addCase(caseEntity);
                 
+                // if there is a field called internalNote
                 if(intenalNoteEntity){
                     var addNotePromises = [];
                     var notePromise;
@@ -128,6 +130,7 @@ var caseController = function (knex) {
                             winston.error(error);
                         });
                     }
+                    // if there isn't such internalNote
                     else {
                         promise.then(function (caseId) {
                             return caseId;

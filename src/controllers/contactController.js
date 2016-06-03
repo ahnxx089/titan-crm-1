@@ -31,7 +31,7 @@ var contactController = function (knex) {
      * and chain all promises together with .then()
      * @param {object} addContactMechPromises - An array of promises returned by addContactMech
      * @param {object} contactMechEntities - An array containing the contactMechs used to generate the first array
-     * @param {object} partyId - The partyId of the contact to be linked to these contactMechs
+     * @param {Number} partyId - The partyId of the contact to be linked to these contactMechs
      * @return {object} addContactMechPromises - Fulfillment value is the fulfillment value of the last promise in the array
      */
     var addContactMechCallback = function (addContactMechPromises, contactMechEntities, partyId) {

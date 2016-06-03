@@ -7,9 +7,8 @@
 
 /* jshint camelcase: false */
 
-// NOT COMPLETED! 
 // WARNING!
-// updateLead, deleteLead ARE NOT FULLY IMPLEMENTED! 
+// updateLead, deleteLead may not behave as expected! 
 // addLead, getLeadById, getLeadsByOwner are tested and functional. 
 // getLeads may need revision. It is not used now. Don't remove yet. 
 
@@ -35,11 +34,11 @@ var leadData = function (knex) {
     var addLead = function (lead) {
         // this achieves goals mentioned on slide # 17
         // #1, 2, 3, 4, 5, 6: good
-        // #7 is NOT implemented at this moment. Lucas has no plan on doing this in the near future. 
+        // #7(party_relationship) is NOT implemented at this moment. Lucas has no plan on doing this in the near future. 
 
 
         //NOTE TO LUCAS AND DIVINE: Below changes to this function were made by Eric to resolve errors crashing the app
-
+        //Thank you from Lucas and Divine.
         return knex('party')
             .returning('party_id')
             .insert({
@@ -96,34 +95,9 @@ var leadData = function (knex) {
                         created_date: lead.createdDate,
                         updated_date: lead.updatedDate
                     })
-//            .then(function() {
-//                 return knex('contact_mech')
-//                    .returning('contact_mech_id')
-//                    .insert({
-//                        contact_mech_type_id: 'EMAIL_ADDRESS',
-//                        info_string: lead.primaryEmailId,
-//                        created_date: lead.createdDate,
-//                        updated_date: lead.updatedDate
-//                    })
-                
-//             .then(function(cm_id) {
-//                 return knex('party_contact_mech')
-//                     .insert({
-//                        party_id: res[0],
-//                        contact_mech_id: cm_id,
-//                        contact_mech_purpose_type_id: 'PRIMARY_EMAIL',
-//                        from_date: lead.createdDate,
-//                        thru_date: null,
-//                        verified: 0,
-//                        comments: '',
-//                        created_date: lead.createdDate,
-//                        updated_date: lead.updatedDate
-//                    })
              .then(function() {
                    return res[0];
                     });
-//            });
-//            });
             });
             });
             });
@@ -133,7 +107,7 @@ var leadData = function (knex) {
     /**
      * Gets all leads from database
      * @return {Object} promise - Fulfillment value is an array of raw data objects
-     * THIS FUNCTION IS OBSOLETE. Need revision or removal. 
+     * THIS FUNCTION IS OBSOLETE. Need revision or removal. Possibly will be used once getLeads is to be implemeted in controller and API layer. 
      */
     var getLeads = function () {
         return knex.select('party_id', 'salutation', 'first_name', 'middle_name', 'last_name', 'birth_date', 'comments', 'created_date', 'updated_date')
@@ -147,13 +121,6 @@ var leadData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getLeadById = function (id) {
-        //        return knex.select('party_id', 'salutation', 'first_name', 'middle_name', 
-        //                           'last_name', 'birth_date', 'comments', 'created_date', 'updated_date')
-        //            .from('person')
-        //            .where({
-        //                party_id: id
-        //            });
-
         return knex.select('person.party_id', 'person.salutation', 'person.first_name', 'person.middle_name',
                            'person.last_name', 'person.birth_date', 'person.comments', 'person.created_date', 'person.updated_date',
                            'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 

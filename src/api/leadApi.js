@@ -5,12 +5,10 @@
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
-// NOT COMPLETED! 
+// Warning! 
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
-// We have a separate getLeadsByOwner, different from Dinesh's approach. It is working now. Need to consult Anurag for more detail. 
-//
-// getLeads is not called from anywhere. I don't know why. Will look later. 
-//
+// We have a separate wroking getLeadsByOwner, different from Dinesh's approach. Need to consult Anurag for more detail. 
+// getLeads is not called from anywhere. Do not remove it yet. 
 // getLeadsByIdentity, getLeadsByPhoneNumber, updateLead, deleteLead are not tested. 
 
 var leadApi = function (knex) {

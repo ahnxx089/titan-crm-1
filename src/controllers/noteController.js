@@ -169,10 +169,10 @@ var noteController = function (knex) {
 
     // this is for the mapping table: case_note
     var linkNoteToCase = function (caseId, noteId) {
-        var promise = noteData.linkNoteToCase(caseId, noteId)
-            .then(function (result) {
-                return caseId;
-            });
+        var promise = noteData.linkNoteToCase(caseId, noteId);
+//            .then(function (result) {
+//                return caseId;
+//            });
         promise.catch(function (error) {
             // Log the error
             winston.error(error);

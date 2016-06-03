@@ -14,6 +14,8 @@ var caseApi = function (knex) {
     // API methods
     // ==========================================
     //
+    
+    // Lucas wrote this
     // POST /api/cases
     var addCase = function (req, res) {
         var case_ = req.body;
@@ -26,11 +28,10 @@ var caseApi = function (knex) {
                 message: 'You do not have permission to add cases!'
             });
         }
-
         else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
             res.json(resultsForThisUser);
         }
-            // An object in result means it's a promise (which is returned only if validation succeeds)
+        // An object in result means it's a promise (which is returned only if validation succeeds)
         else {
             resultsForThisUser.then(function (caseId) {
                 res.json(

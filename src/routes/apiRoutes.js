@@ -72,8 +72,7 @@ var router = function (knex) {
         //.post(leadApi.updateLead)
         //.delete(leadApi.deleteLead);
     
-    
-//        getLeadsByOwner, getLeadsByIdentity, getLeadsByPhoneNumber are not implemented yet
+//    getLeadsByIdentity, getLeadsByPhoneNumber are not implemented yet
     
     
 
