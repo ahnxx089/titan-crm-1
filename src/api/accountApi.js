@@ -60,7 +60,8 @@ var accountApi = function (knex) {
     
     // GET /api/accounts/?owner=
     var getAccountsByOwner = function (req, res) {
-        var ownerId = req.params.id;
+        var ownerId = req.query.owner;
+        console.log(ownerId);
         accountController.getAccountsByOwner(ownerId)
             .then(function (accounts) {
                 res.json(accounts);
@@ -69,28 +70,71 @@ var accountApi = function (knex) {
     
     // GET /api/accounts
     var getAccounts = function (req, res) {
+        //If nothing is specified in the query string, use getAccountsByOwner as the default
+        if (Object.keys(req.query).length === 0) {
+
+            var resultsForThisUser = accountController.getAccountsByOwner(req.user);
+            // IF ELSE block interprets controller returning an object or null
+            if (resultsForThisUser === null) {
+                res.json({
+                    'message': 'You do not have permission to own contacts!'
+                });
+            } else {
+                resultsForThisUser.then(function (contacts) {
+                    res.json(accounts);
+                });
+            }
+        }
+        //If query strings are non-empty, use getAccountsByIdentity
+        else if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
+
+            var resultsForUser = contactController.getContactsByIdentity(req.query, req.user);
+            if (resultsForUser === null) {
+                res.json({
+                    'message': 'You do not have permission to get contacts by the supplied queries!'
+                });
+            } else {
+                resultsForUser.then(function (contacts) {
+                    res.json(contacts);
+                });
+            }
+        }
+        /*This function also same like the Identity. Identity need to first_name and last_name and Company_Name.
+      PhoneNumber also exist from user part. So, firstly, check out the primary key(user.partyID), and call the phoneNumber data.
+    */
+    // GET /api/accounts/?phoneNumber=
+        else if (req.query.hasOwnProperty('phoneNumber')) {
+            var resultForThisAccount = accountController.getAccountByPhoneNumber(req.query, req.user);
+            if(resultForThisAccount == null){
+                res.json({
+                    'message': 'You do not have permission to own phonenumber by accounts!'
+                });
+            }
+            else {
+                resultForThisAccount.then(function (accounts){
+                    res.json(accounts);
+                });
+            }
+        }
+        // Get Account By Identity - there is a continuing issue here where the method does effectively the same thing as GetAccountsByOwner
+        else {
+            var resultForThisAccount =
+        accountController.getAccountsByIdentity(req.query, req.user);
+            if( resultForThisAccount == null){
+                res.json({
+                    'message': 'You do not have permission to own identiy by accounts!'
+                });
+            } else {
+                resultForThisAccount.then(function (accounts){
+                    res.json(accounts);
+                });
+            }
         accountController.getAccounts()
             .then(function (accounts) {
                 res.json(accounts);
             });
-    };
-    /*This function also same like the Identity. Identity need to first_name and last_name and Company_Name.
-      PhoneNumber also exist from user part. So, firstly, check out the primary key(user.partyID), and call the phoneNumber data.
-    */
-    // GET /api/accounts/?phoneNumber=
-    var getAccountByPhoneNumber = function (req, res) {
-        var user = req.user;
-        var resultForThisAccount = accountController.getAccountByPhoneNumber(req.query, req.user);
-        if(resultForThisAccount == null){
-             res.json({
-            'message': 'You do not have permission to own phonenumber by accounts!'
-        });
-        }else {
-        resultForThisAccount.then(function (accounts){
-            res.json(accounts);
-        });
         }
-    };
+    }
 
     // GET /api/accounts/:id
     var getAccountById = function (req, res) {

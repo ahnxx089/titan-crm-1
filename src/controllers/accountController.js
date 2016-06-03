@@ -252,6 +252,7 @@ var accountController = function (knex) {
                 );
                 ownedAccounts.push(accountEntity);
             }
+            return ownedAccounts;
         });
         promise.catch(function(error) {
             // Log the error

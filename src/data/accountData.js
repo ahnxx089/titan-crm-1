@@ -246,8 +246,8 @@ var accountData = function (knex) {
             .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
             .innerJoin('party_relationship', 'party_supplemental_data.party_id', 'party_relationship.party_id_from')
             .where('party_relationship.party_id_to', ownerId)
-            .andWhere('party_relationship.role_type_id_from', 'account')
-            .andWhere('party_relationship.party_relationship_type_id', 'responsible_for');
+            .andWhere('party_relationship.role_type_id_from', 'ACCOUNT')
+            .andWhere('party_relationship.party_relationship_type_id', 'RESPONSIBLE_FOR');
     };
     /**
      * Gets one account by its id from database
