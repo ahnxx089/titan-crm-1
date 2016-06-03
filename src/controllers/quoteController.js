@@ -201,7 +201,7 @@ var quoteController = function (knex) {
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
-                var promise = quoteData.addQuoteItem(quoteEntity)
+                var promise = quoteData.updateQuote(quoteEntity)
                     .then(function (quoteUpdated) {
                         return quoteUpdated;
                     });
@@ -221,11 +221,11 @@ var quoteController = function (knex) {
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,
-        updateQuote: updateQuote,
         updateQuoteItem: updateQuoteItem,
         addQuoteNote: addQuoteNote,
         getQuoteById: getQuoteById,
-        getQuotesByOwner: getQuotesByOwner
+        getQuotesByOwner: getQuotesByOwner,
+        updateQuote: updateQuote
     };
 };
 

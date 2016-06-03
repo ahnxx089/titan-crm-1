@@ -5,6 +5,8 @@
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>
 /////////////////////////////////////////////////
 
+/* jshint maxlen:5000 */
+
 var request = require('request');
 var apiBaseUrl = 'http://localhost:5000/api/cases';
 

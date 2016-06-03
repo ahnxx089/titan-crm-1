@@ -149,11 +149,25 @@ var quoteApi = function (knex) {
     // PUT /api/quotes/:id
     var updateQuote = function (req, res) {
 
+        /* TEMPORARY NOTE FOR PRE-UI TESTING -- MINIMUM PAYLOAD REQUIRED:
+            The UI will ultimately use getQuoteById to populate a payload with all columns
+            of the quote you are about to update with this function.  For hand-testing with
+            ARC and the unit tests, for now you need to provide at least these minimum
+            properties (and validate-able values) in the payload (fill with your own
+            acceptable values, these are just one example)
+                {
+                    "quoteTypeId": "PRODUCT_QUOTE",
+                    "issueDate": "2016-06-03 02:07:00",
+                    "statusId": "QUOTE_REJECTED",
+                    "salesChannelEnumId":  "IND_GEN_SERVICES"
+                }
+        */
         var quoteId = req.params.id;
-        var quote = req.body;        
-        
+        var quote = req.body;
         var resultsForThisUser = quoteController.updateQuote(quoteId, quote, req.user);
-
+        
+        console.log('typeof resultsForThisUser is ', typeof resultsForThisUser);
+        
         /* Intepret the possible outcomes from the controller layer:
             1.  User does not have permission to add a Quote
             2.  User does have permission, but supplied data is not validated

@@ -114,15 +114,14 @@ var quoteData = function (knex) {
             });
     };
 
-
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,
-        updateQuote: updateQuote,
         updateQuoteItem: updateQuoteItem,
         addQuoteNote: addQuoteNote,
         getQuoteById: getQuoteById,
-        getQuotesByOwner: getQuotesByOwner
+        getQuotesByOwner: getQuotesByOwner,
+        updateQuote: updateQuote
     };
 };
 

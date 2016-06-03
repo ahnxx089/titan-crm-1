@@ -6,6 +6,8 @@
 //          DukJin Ahn <ahnxx089@gmail.com>
 /////////////////////////////////////////////////
 
+/* jshint maxlen:1000 */
+
 /*
 
 var request = require('request');
