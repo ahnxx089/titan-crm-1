@@ -52,8 +52,8 @@ var caseData = function (knex) {
                 return _.map(rows, 'role_type_id');
                 // _.pluck, which is used in knex.org, is no longer supported in lodash v4+
             })*/
-                .then(function (rtis) {
-//                console.log(rtis);
+                .then(function (rtids) {
+//                console.log(rtids);
 //                Object.values() function is not supported Node yet
                 
                 // for case_role table
@@ -61,7 +61,7 @@ var caseData = function (knex) {
                     .insert({
                     case_id: cid,
                     party_id: case_.fromPartyId, 
-                    role_type_id: rtis[0].role_type_id,
+                    role_type_id: rtids[0].role_type_id,
                     // HARD CODED. can be account as well
                     // I believe this design is wrong. 
                     // This design is letting anyone in party_role table, regardless of his type, add a case.
