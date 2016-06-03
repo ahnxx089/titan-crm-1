@@ -138,9 +138,8 @@ var accountData = function (knex) {
                                     .then(function (PartyRoleResults) {
                                         console.log('PartyRoleResults is ' + PartyRoleResults);
                                         return addAccountPartyRelationship(account, user, contact)
-                                            .then(function (partyId) {
-                                                console.log(partyId[0]);
-                                                return partyId;
+                                            .then(function (results) {
+                                                return account.partyId;
                                             });
                                     });
 

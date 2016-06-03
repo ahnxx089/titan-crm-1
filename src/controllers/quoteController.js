@@ -152,8 +152,46 @@ var quoteController = function (knex) {
      * Gets quotes owned by the user/owner
      * @return {Object} promise - Fulfillment value is an array of quote entities
      */
-    var getQuotesByOwner = function (user) {
 
+    var getQuotesByOwner = function (user) {
+        // Check user's security permission to own quotes
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
+        if (hasPermission !== -1) {
+            // user has permission, proceed to the data layer
+            var promise = quoteData.getQuotesByOwner(user.partyId)
+                .then(function (quotes) {
+                    // Map the retrieved result set to corresponding entities
+                    var quoteEntities = [];
+                    for (var i = 0; i < quotes.length; i++) {
+                        var quote = new Quote(
+                            quotes[i].quoteId,
+                            quotes[i].quoteTypeId,
+                            quotes[i].partyId,
+                            quotes[i].issueDate,
+                            quotes[i].statusId,
+                            quotes[i].currencyUomId, 
+                            quotes[i].salesChannelEnumId,
+                            quotes[i].validFromDate,
+                            quotes[i].validThruDate,
+                            quotes[i].quoteName,
+                            quotes[i].description, 
+                            quotes[i].contactPartyId, 
+                            quotes[i].createdByPartyId, 
+                            quotes[i].createdDate,
+                            quotes[i].updatedDate
+                        );
+                        quoteEntities.push(quote);
+                    }
+                    return quoteEntities;
+                });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            // user does not have permissions of a contact owner, return null
+        }
     };
 
     /**
