@@ -48,7 +48,7 @@ var quoteApi = function (knex) {
             // null result means user does not have permission to add an Item to a Quote
             if (resultsForThisUser === null) {
                 res.json({
-                    message: 'You do not have permission to add items to a quote!'
+                    message: 'You do not have permission to POST to this route!'
                 });
             }
             // An array in result means it's array of validation errors
@@ -57,9 +57,9 @@ var quoteApi = function (knex) {
             }
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
-                resultsForThisUser.then(function (quoteItemSeqId) {
+                resultsForThisUser.then(function (quoteItemInserted) {
                     res.json({
-                        quoteItemSeqId: quoteItemSeqId
+                        quoteItemInserted: quoteItemInserted
                     });
                 });
             }
@@ -85,53 +85,17 @@ var quoteApi = function (knex) {
         }
     };
 
-    // PUT /api/quotes/
+    // PUT /api/quotes
     // 
-    // Methods:  updateQuote, updateQuoteItem
+    // Method:  updateQuoteItem
     //
-    var updateQuote = function (req, res) {
+    var updateQuoteItem = function (req, res) {
 
-        // PUT /api/quotes
-        // 
-        // updateQuote:  the default if req has no property for updating an item
-        if (Object.keys(req.query).length === 0) {
-
-            // ARGUMENT LIST HAS BEEN TEMPORARILY SHORTENED TO JUST user SOLELY TO CONFIRM THE 
-            // NEW SECURITY PERMISSION GROUP CRMSFA_QUOTE_TASKS WORKS, DINESH WILL RESTORE THE 
-            // OTHER ARGUMENTS SOON...
-            var resultsForUser = quoteController.updateQuote(req.user);
-
-            if (resultsForUser === null) {
-                res.json({
-                    'message': 'You do not have permission to PUT to /api/quotes'
-                });
-            } else {
-                // TEMPORARY MESSAGE ONLY FOR SECURITY CHECKING, ULTIMATELY REPLACE WITH
-                // .then ON THE RETURNED PROMISE, AS IN OTHER MODULES' APIs
-                res.json({
-                    'message': 'Congratulations, you have permission to PUT to /api/quotes'
-                });
-            }
-        }
-
-        // PUT /api/quotes?item
-        // 
-        // updateQuoteItem
-        else if (req.query.hasOwnProperty('item')) {
-
-            // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
-            res.json({
-                'message': 'updateQuoteItem functionality is under construction...',
-                'reachedOn': 'This was reached on PUT route /api/quotes?item'
-            });
-        }
-
-        // no other PUT routes, return error message so the app does not hang
-        else {
-            res.json({
-                'message': 'ERROR:  No such route to PUT to...'
-            });
-        }
+        // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
+        res.json({
+            'message': 'updateQuoteItem functionality is under construction...',
+            'reachedOn': 'This was reached on PUT route /api/quotes?item'
+        });
     };
 
     // GET /api/quotes
@@ -182,11 +146,45 @@ var quoteApi = function (knex) {
         });
     };
 
+    // PUT /api/quotes/:id
+    var updateQuote = function (req, res) {
+
+        var quoteId = req.params.id;
+        var quote = req.body;        
+        
+        var resultsForThisUser = quoteController.updateQuote(quoteId, quote, req.user);
+
+        /* Intepret the possible outcomes from the controller layer:
+            1.  User does not have permission to add a Quote
+            2.  User does have permission, but supplied data is not validated
+            3.  User does have permission, and a promise is returned
+        */
+        // null result means user does not have permission to update a Quote
+        if (resultsForThisUser === null) {
+            res.json({
+                message: 'You do not have permission to PUT to this route!'
+            });
+        }
+        // An array in result means it's array of validation errors
+        else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
+            res.json(resultsForThisUser);
+        }
+        // An object in result means it's a promise (returned only if validation succeeds)
+        else {
+            resultsForThisUser.then(function (quoteUpdated) {
+                res.json({
+                    quoteUpdated: quoteUpdated
+                });
+            });
+        }
+    };
+
     return {
         addQuote: addQuote,
-        updateQuote: updateQuote,
+        updateQuoteItem: updateQuoteItem,
         getQuotes: getQuotes,
-        getQuoteById: getQuoteById
+        getQuoteById: getQuoteById,
+        updateQuote: updateQuote
     };
 };
 

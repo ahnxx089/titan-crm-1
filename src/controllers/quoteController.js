@@ -11,7 +11,7 @@
 
 var winston = require('winston');
 var Quote = require('../entities/quote');
-var QuoteItem = require('../entities/quoteItem');  // COMMENT IN WHEN READY
+var QuoteItem = require('../entities/quoteItem'); 
 var _ = require('lodash');
 
 var quoteController = function (knex) {
@@ -105,30 +105,6 @@ var quoteController = function (knex) {
     };
 
     /**
-     * Update a quote in database (equiv to Opentaps' Edit Quote)
-     * @param {Number} quoteId - Unique quote_id of the quote to upate
-     * @param {Object} item - The object that contains the item to update quote with
-     * @param {Object} user - The logged in user
-     * @return {Object} promise - Fulfillment value is number of rows updated
-     */
-    // ARGUMENT LIST HAS BEEN TEMPORARILY SHORTENED TO JUST user SOLELY TO CONFIRM THE 
-    // NEW SECURITY PERMISSION GROUP CRMSFA_QUOTE_TASKS WORKS, DINESH WILL RESTORE THE 
-    // OTHER ARGUMENTS SOON...
-    var updateQuote = function (user) {
-
-        // Check user's security permission to own contacts
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
-        if (hasPermission !== -1) {
-            // TEMPORARILY RETURNING JUST A NONSENSE STRING THAT THE API LAYER WILL NOT
-            // DO ANYTHING WITH, FOR NOW JUST TESTING NEW SECURITY GROUP
-            return 'Nobody will see this string.';
-        } else {
-            // user does not have permissions to add a quote, return null
-            return null;
-        }
-    };
-
-    /**
      * Update a quote item in database by adding an option
      * @param {Number} quoteId - Unique quote_id of the quote to add an item to
      * @param {Number} quoteItemSeqId - item seq id of the quote_id of the quote to add an item to
@@ -176,8 +152,70 @@ var quoteController = function (knex) {
      * Gets quotes owned by the user/owner
      * @return {Object} promise - Fulfillment value is an array of quote entities
      */
-    var getQuoteByOwner = function (user) {
+    var getQuotesByOwner = function (user) {
 
+    };
+
+    /**
+     * Update a quote in database (equiv to Opentaps' Edit Quote & Accept/Send/Finalize/Reject/Cancel)
+     * @param {Number} quoteId - Unique quote_id of the quote to update
+     * @param {Object} quote - The object that contains the item to update quote with
+     * @param {Object} user - The logged in user
+     * @return {Object} promise - Fulfillment value is number of rows updated
+     */
+    var updateQuote = function (quoteId, quote, user) {
+
+        // Check user's security permission to own contacts
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
+        if (hasPermission !== -1) {
+            // proceed towards data layer
+            var now = (new Date()).toISOString();
+
+            // QuoteItem entity
+            var quoteEntity = new Quote(
+                quoteId,
+                quote.quoteTypeId,
+                quote.partyId,
+                quote.issueDate,
+                quote.statusId,
+                quote.currencyUomId,
+                quote.salesChannelEnumId,
+                quote.validFromDate,
+                quote.validThruDate,
+                quote.quoteName,
+                quote.description,
+                quote.contactPartyId,
+                quote.createdByPartyId,
+                quote.createdDate,
+                now
+            ); 
+
+            // Validate the quoteItem data before going ahead
+            var validationErrors = [];
+            var quoteValidationErrors = quoteEntity.validateForUpdate();
+            //Errors are non-empty validation results
+            for (var i = 0; i < quoteValidationErrors.length; i++) {
+                if (quoteValidationErrors[i]) {
+                    validationErrors.push(quoteValidationErrors[i]);
+                }
+            }
+            if (validationErrors.length === 0) {
+                // Pass on the entity to be added to the data layer
+                var promise = quoteData.addQuoteItem(quoteEntity)
+                    .then(function (quoteUpdated) {
+                        return quoteUpdated;
+                    });
+                promise.catch(function (error) {
+                    winston.error(error);
+                });
+                return promise;
+            } else {
+                return validationErrors;
+            }
+        } else {
+            // user does not have permissions to add a quote, return null
+            return null;
+        }
     };
 
     return {
@@ -187,7 +225,7 @@ var quoteController = function (knex) {
         updateQuoteItem: updateQuoteItem,
         addQuoteNote: addQuoteNote,
         getQuoteById: getQuoteById,
-        getQuoteByOwner: getQuoteByOwner,
+        getQuotesByOwner: getQuotesByOwner
     };
 };
 
