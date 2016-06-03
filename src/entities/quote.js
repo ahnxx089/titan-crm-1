@@ -45,7 +45,7 @@ Quote.prototype.validateForInsert = function () {
         this.validateSalesChannelEnumId(true),
         this.validateValidFromDate(false),
         this.validateValidThruDate(false),
-        this.validateqQuoteName(false),
+        this.validateQuoteName(false),
         this.validateDescription(false),
         this.validateContactPartyId(false),
         this.validateCreatedByPartyId(true),
@@ -77,7 +77,7 @@ Quote.prototype.validateForUpdate = function () {
         this.validateSalesChannelEnumId(true),
         this.validateValidFromDate(false),
         this.validateValidThruDate(false),
-        this.validateqQuoteName(false),
+        this.validateQuoteName(false),
         this.validateDescription(false),
         this.validateContactPartyId(false),
         this.validateUpdatedDate(true)
