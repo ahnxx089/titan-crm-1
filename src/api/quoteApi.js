@@ -37,6 +37,29 @@ var quoteApi = function (knex) {
         // 
         // addQuoteItem
         else if (req.query.hasOwnProperty('item')) {
+            
+            /* TEMPORARY NOTE FOR PRE-UI TESTING -- PAYLOAD CONSTRAINTS:
+                The UI will ulimately be designed to more naturally take care of two preliminary requirements for adding an Item to a Quote:
+                    (1) a valid quote_id must be supplied to this functionality, so this does function 
+                        does not need to somehow first check and make sure this quote actually exists in the db before trying to add an item to it.
+                    (2) the quote_item_seq_id must not duplicate one in the table already, which
+                        will cause an error; the UI will handle what quote_item_seq_id even makes
+                        it here in the first place.
+                Here's a sample payload that works-- MANUALLY INCREMENT quoteItemSeqId if using more
+                than once!
+                {
+                    "quoteId": "2",
+                    "quoteItemSeqId": "1",
+                    "productId": "testProd2",
+                    "quantity": "5",
+                    "selectedAmount": "12",
+                    "quoteUnitPrice": "45.00",
+                    "estimatedDeliveryDate": "",
+                    "comments": "test addQuoteItem",
+                    "isPromo": "",
+                    "description": "test addQuoteItem"
+                }   
+            */
 
             var resultsForThisUser = quoteController.addQuoteItem(req.body, req.user);
 
@@ -167,6 +190,7 @@ var quoteApi = function (knex) {
                     "salesChannelEnumId":  "IND_GEN_SERVICES"
                 }
         */
+        
         var quoteId = req.params.id;
         var quote = req.body;
         var resultsForThisUser = quoteController.updateQuote(quoteId, quote, req.user);
