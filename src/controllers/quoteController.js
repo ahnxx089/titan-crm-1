@@ -18,7 +18,7 @@ var quoteController = function (knex) {
     // Get a reference to data layer module
     //
     var quoteData = require('../data/quoteData')(knex);
-
+    
     // CONTROLLER METHODS
     // ==========================================
     //
@@ -30,7 +30,54 @@ var quoteController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new contact
      */
     var addQuote = function (quote, user) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CASE_CREATE');
+        if (hasPermission !== -1) {
+        var now = (new Date()).toISOString();
 
+        var quoteEntity = new Quote(
+            null,
+            quote.quoteTypeId,
+            quote.partyId,
+            quote.issueDate,
+            quote.statusId,
+            quote.currencyUomId,
+            quote.salesChannelEnumId,
+            quote.validFromDate,
+            quote.validThruDate,
+            quote.quoteName,
+            quote.description,
+            quote.contactPartyId,
+            quote.createdByPartyId,
+            now,
+            now
+        )
+        
+        // Validate the quoteItem data before going ahead
+        var validationErrors = [];
+        var quoteValidationErrors = quoteEntity.validateForInsert();
+        for (var i = 0; i < quoteValidationErrors.length; i++) {
+                if (quoteValidationErrors[i]) {
+                    validationErrors.push(quoteValidationErrors[i]);
+                }
+            }
+            if (validationErrors.length === 0) {
+                // Pass on the entity to be added to the data layer
+                var promise = var promise = quoteData.addQuote(quote);
+                    .then(function (quoteId) {
+                        return quoteData.addQuoteRole(quoteId);
+                    });
+                
+                promise.catch(function (error) {
+                    winston.error(error);
+                });
+                
+                return promise;
+            }
+            else {  
+                return validationErrors;
+            }
+        }
+       return null;
     };
 
     /**

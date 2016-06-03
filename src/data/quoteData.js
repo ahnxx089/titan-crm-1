@@ -18,7 +18,38 @@ var quoteData = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new contact
      */
     var addQuote = function (quote, user) {
-
+        return knex('quote')
+            .returning('quote_id')
+            //passing through
+            .insert({
+                quote_id: quote.quoteId,
+                quote_type_id: quote.quoteTypeId,
+                party_id: quote.partyId,
+                issue_date: quote.issueDate,
+                status_id: quote.statusId,
+                currency_uom_id: quote.currencyUomId,
+                sales_channel_enum_id: quote.salesChannelEnumId,
+                valid_from_date: quote.validFromDate,
+                valid_thru_date: quote.validThruDate,
+                quote_name: quote.quoteName,
+                description: quote.description,
+                contact_party_id: quote.contactPartyId,
+                created_by_party_id: quote.createdByPartyId,
+                created_date: quote.createdDate,
+                updated_date: quote.updatedDate
+        })
+        .then(function (passQuoteId){
+            return knex('quote_role')
+                .returning('quote_id')
+                .insert({
+                    quote_id: quote.quoteId,
+                    party_id: user.partyId,
+                    role_type_id: quote.roleTypeId,
+                    created_date: quote.createdDate,
+                    updated_date: quote.updatedDate
+                
+            })
+        })
     };
 
     /**
