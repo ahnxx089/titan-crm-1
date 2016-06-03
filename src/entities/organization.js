@@ -7,9 +7,10 @@
 // @author: 
 /////////////////////////////////////////////////
 
+/* jshint maxparams: false */
+
 var validation = require('../common/validation')();
 var Party = require('../entities/party');
-
 
 // Constructor
 //

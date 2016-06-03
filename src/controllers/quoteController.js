@@ -82,23 +82,10 @@ var quoteController = function (knex) {
 
     /**
      * Add a new item to a quote 
-     * @param {Object} quoteItem - entity containing existing quote_id to add an Item to
+     * @param {Object} quoteItem - entity containing existing quote_id to add an Item on.
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    /* 
-        BASIC FUNCTIONALITY IS WORKING-- This will still need some work, though, since right
-        now it relies on the user to:
-        (1) provide a valid quoteId for an already existing Quote that was made with addQuote,
-            an issue which the UI might take care of since adding an Item to a Quote is only
-            possible from the screen for that Quote-- meaning, by the time this functionality 
-            is accessed, the proper quote_id will be incoming.
-        (2) provide a quoteItemSeqId that does not duplicate an existing Item for this Quote
-            already present as a row in table quote_item.  The easiest way for that to be
-            ensured is for quote_item.quote_item_seq_id to AUTOINCREMENT, but for some reason
-            it is not set up that way in the DB and it will not let met change it, discuss
-            this possibility with Anurag.       
-    */
     var addQuoteItem = function (quoteItem, user) {
         
         // Check user's security permission to own contacts
@@ -286,7 +273,7 @@ var quoteController = function (knex) {
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
-                var promise = quoteData.addQuoteItem(quoteEntity)
+                var promise = quoteData.updateQuote(quoteEntity)
                     .then(function (quoteUpdated) {
                         return quoteUpdated;
                     });
@@ -306,11 +293,11 @@ var quoteController = function (knex) {
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,
-        updateQuote: updateQuote,
         updateQuoteItem: updateQuoteItem,
         addQuoteNote: addQuoteNote,
         getQuoteById: getQuoteById,
-        getQuotesByOwner: getQuotesByOwner
+        getQuotesByOwner: getQuotesByOwner,
+        updateQuote: updateQuote
     };
 };
 
