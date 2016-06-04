@@ -13,7 +13,7 @@ var validation = require('../common/validation')();
 // Constructor 
 //
 function QuoteItem(quoteId, quoteItemSeqId, productId, quantity, selectedAmount, quoteUnitPrice, estimatedDeliveryDate, comments, isPromo, description, createdDate, updatedDate) {
-    
+
     // Properties
     this.quoteId = quoteId;
     this.quoteItemSeqId = quoteItemSeqId;
@@ -60,11 +60,6 @@ QuoteItem.prototype.validateForInsert = function () {
     return errors;
 };
 
-/*
-NOTE:  NOT SURE THIS PARTICULAR VALIDATION WILL ACTUALLY EVER GET USED, BUT IT IS
-HERE JUST IN CASE . . . remember that the updateQuoteItem functionality is really
-about adding options to an item and/or changing options on an existing item.
-So this code might not get used, but don't delete it for now, please.*/
 QuoteItem.prototype.validateForUpdate = function () {
     // Perform validations
     var validations = [
@@ -78,7 +73,6 @@ QuoteItem.prototype.validateForUpdate = function () {
         this.validateComments(false),
         this.validateIsPromo(false),
         this.validateDescription(false),
-        this.validateCreatedDate(true),
         this.validateUpdatedDate(true)
     ];
     // The "errors" array is "validations" array
@@ -94,55 +88,55 @@ QuoteItem.prototype.validateForUpdate = function () {
     return errors;
 };
 
-QuoteItem.prototype.validateQuoteId = function(isRequired) {
+QuoteItem.prototype.validateQuoteId = function (isRequired) {
     this.quoteId = validation.sanitizeInput(this.quoteId);
     var validationResult = validation.validateInt(this.quoteId, isRequired, 'quoteId');
-    if(this.quoteId && !validationResult) {
+    if (this.quoteId && !validationResult) {
         this.quoteId = validation.convertToInt(this.quoteId);
     }
     return validationResult;
 };
 
-QuoteItem.prototype.validateQuoteItemSeqId = function(isRequired) {
+QuoteItem.prototype.validateQuoteItemSeqId = function (isRequired) {
     this.quoteItemSeqId = validation.sanitizeInput(this.quoteItemSeqId);
     var validationResult = validation.validateString(this.quoteItemSeqId, isRequired, 20, 'quoteItemSeqId');
     return validationResult;
 };
 
-QuoteItem.prototype.validateProductId = function(isRequired) {
+QuoteItem.prototype.validateProductId = function (isRequired) {
     this.productId = validation.sanitizeInput(this.productId);
     var validationResult = validation.validateString(this.productId, isRequired, 20, 'productId');
     return validationResult;
 };
 
-QuoteItem.prototype.validateQuantity = function(isRequired) {
+QuoteItem.prototype.validateQuantity = function (isRequired) {
     this.quantity = validation.sanitizeInput(this.quantity);
     var validationResult = validation.validateFloat(this.quantity, isRequired, 'quantity');
-    if(this.quantity && !validationResult) {
+    if (this.quantity && !validationResult) {
         this.quantity = validation.convertToFloat(this.quantity);
     }
     return validationResult;
 };
 
-QuoteItem.prototype.validateSelectedAmount = function(isRequired) {
+QuoteItem.prototype.validateSelectedAmount = function (isRequired) {
     this.selectedAmount = validation.sanitizeInput(this.selectedAmount);
     var validationResult = validation.validateFloat(this.selectedAmount, isRequired, 'selectedAmount');
-    if(this.selectedAmount && !validationResult) {
+    if (this.selectedAmount && !validationResult) {
         this.selectedAmount = validation.convertToFloat(this.selectedAmount);
     }
     return validationResult;
 };
 
-QuoteItem.prototype.validateQuoteUnitPrice = function(isRequired) {
+QuoteItem.prototype.validateQuoteUnitPrice = function (isRequired) {
     this.quoteUnitPrice = validation.sanitizeInput(this.quoteUnitPrice);
     var validationResult = validation.validateFloat(this.quoteUnitPrice, isRequired, 'quoteUnitPrice');
-    if(this.quoteUnitPrice && !validationResult) {
+    if (this.quoteUnitPrice && !validationResult) {
         this.quoteUnitPrice = validation.convertToFloat(this.quoteUnitPrice);
     }
     return validationResult;
 };
 
-QuoteItem.prototype.validateEstimatedDeliveryDate = function(isRequired) {
+QuoteItem.prototype.validateEstimatedDeliveryDate = function (isRequired) {
     this.estimatedDeliveryDate = validation.sanitizeInput(this.estimatedDeliveryDate);
     var validationResult = validation.validateDate(this.estimatedDeliveryDate, isRequired, 'estimatedDeliveryDate');
     return validationResult;
@@ -154,10 +148,10 @@ QuoteItem.prototype.validateComments = function (isRequired) {
     return validationResult;
 };
 
-QuoteItem.prototype.validateIsPromo = function(isRequired) {
+QuoteItem.prototype.validateIsPromo = function (isRequired) {
     this.isPromo = validation.sanitizeInput(this.isPromo);
     var validationResult = validation.validateInt(this.isPromo, isRequired, 'isPromo');
-    if(this.isPromo && !validationResult) {
+    if (this.isPromo && !validationResult) {
         this.isPromo = validation.convertToInt(this.isPromo);
     }
     return validationResult;
@@ -169,13 +163,13 @@ QuoteItem.prototype.validateDescription = function (isRequired) {
     return validationResult;
 };
 
-QuoteItem.prototype.validateCreatedDate = function(isRequired) {
+QuoteItem.prototype.validateCreatedDate = function (isRequired) {
     this.createdDate = validation.sanitizeInput(this.createdDate);
     var validationResult = validation.validateDate(this.createdDate, isRequired, 'createdDate');
     return validationResult;
 };
 
-QuoteItem.prototype.validateUpdatedDate = function(isRequired) {
+QuoteItem.prototype.validateUpdatedDate = function (isRequired) {
     this.updatedDate = validation.sanitizeInput(this.updatedDate);
     var validationResult = validation.validateDate(this.updatedDate, isRequired, 'updatedDate');
     return validationResult;

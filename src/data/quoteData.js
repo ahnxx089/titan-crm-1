@@ -75,19 +75,54 @@ var quoteData = function (knex) {
                 created_date: quoteItem.createdDate,
                 updated_date: quoteItem.updatedDate
             }).then(function () {
+                return knex('quote_item_option')
+                    .insert({
+                        quote_id: quoteItem.quoteId,
+                        quote_item_seq_id: quoteItem.quoteItemSeqId,
+                        quote_item_option_seq_id: quoteItem.quoteItemOptionSeqId,
+                        quantity: quoteItem.quantity,
+                        quote_unit_price: quoteItem.quoteUnitPrice,
+                        created_date: quoteItem.createdDate,
+                        updated_date: quoteItem.updatedDate
+                    });
+            }).then(function () {
                 return quoteItem;
             });
     };
 
     /**
-     * Update a quote item in database by adding an option
-     * @param {Number} quoteId - Unique quote_id of the quote to add an item to
-     * @param {Number} quoteItemSeqId - item seq id of the quote_id of the quote to add an item to
-     * @param {Object} optionInfo - option to update the item with <-- TAKE AS OBJECT?  NEED ENTITY?
+     * Update a quote item in database (either changing an existing option or adding one)
+     * @param {Object} quoteItem - quoteItem for existing or new item
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateQuoteItem = function (quoteId, quoteItemSeqId, optionInfo) {
-
+    var updateQuoteItem = function (quoteItem) {
+        return knex('quote_item')
+            .update({
+                quote_item_seq_id: quoteItem.quoteItemSeqId,
+                product_id: quoteItem.productId,
+                quantity: quoteItem.quantity,
+                selected_amount: quoteItem.selectedAmount,
+                quote_unit_price: quoteItem.quoteUnitPrice,
+                estimated_delivery_date: quoteItem.estimatedDeliveryDate,
+                comments: quoteItem.comments,
+                is_promo: quoteItem.isPromo,
+                description: quoteItem.description,
+                created_date: quoteItem.createdDate,
+                updated_date: quoteItem.updatedDate
+            }).then(function () {
+                return knex('quote_item_option')
+                    .insert({
+                        quote_id: quoteItem.quoteId,
+                        quote_item_seq_id: quoteItem.quoteItemSeqId,
+                        quote_item_option_seq_id: quoteItem.quoteItemOptionSeqId,
+                        quantity: quoteItem.quantity,
+                        quote_unit_price: quoteItem.quoteUnitPrice,
+                        created_date: quoteItem.createdDate,
+                        updated_date: quoteItem.updatedDate
+                    });
+            }).then(function () {
+                return quoteItem;
+            });
     };
 
     /**
@@ -133,7 +168,7 @@ var quoteData = function (knex) {
 
     /**
      * Update a quote in database 
-     * @param {Object} quote - quote object to be updated
+     * @param {Object} quote - Quote entity coming in with the updates
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateQuote = function (quote) {
