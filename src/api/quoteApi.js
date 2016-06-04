@@ -139,10 +139,10 @@ var quoteApi = function (knex) {
     //
     var updateQuoteItem = function (req, res) {
         
-        // PUT /api/quotes
+        // PUT /api/quotes?item
         // 
-        // updateQuoteItem:  the default if no property for updating a quote Item Option          
-        if(Object.keys(req.query).length === 0) {
+        // updateQuoteItem          
+        if(req.query.hasOwnProperty('item')) {
             
             var resultsForThisUser = quoteController.updateQuoteItem(req.body, req.user);
 
@@ -163,9 +163,9 @@ var quoteApi = function (knex) {
             }
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
-                resultsForThisUser.then(function (quoteItemInserted) {
+                resultsForThisUser.then(function (quoteItemUpdated) {
                     res.json({
-                        quoteItemInserted: quoteItemInserted
+                        quoteItemUpdated: quoteItemUpdated
                     });
                 });
             }
@@ -175,11 +175,32 @@ var quoteApi = function (knex) {
         // 
         // updateQuoteItemOption
         else if (req.query.hasOwnProperty('itemOption')) {
-            // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
-            res.json({
-                'message': 'updateQuoteItemOption functionality is under construction...',
-                'reachedOn': 'This was reached on PUT route /api/quotes?itemOption'
-            });
+            
+            var resultsForThisUser = quoteController.updateQuoteItemOption(req.body, req.user);
+
+            /* Intepret the possible outcomes from the controller layer:
+                1.  User does not have permission to add a Quote
+                2.  User does have permission, but supplied data is not validated
+                3.  User does have permission, and a promise is returned
+            */
+            // null result means user does not have permission to add an Item to a Quote
+            if (resultsForThisUser === null) {
+                res.json({
+                    message: 'You do not have permission to PUT to this route!'
+                });
+            }
+            // An array in result means it's array of validation errors
+            else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
+                res.json(resultsForThisUser);
+            }
+            // An object in result means it's a promise (returned only if validation succeeds)
+            else {
+                resultsForThisUser.then(function (quoteItemOptionUpdated) {
+                    res.json({
+                        quoteItemOptionUpdated: quoteItemOptionUpdated
+                    });
+                });
+            }
         }
         
         // no other PUT routes, return error message so the app does not hang
@@ -245,22 +266,6 @@ var quoteApi = function (knex) {
 
     // PUT /api/quotes/:id
     var updateQuote = function (req, res) {
-
-        /* TEMPORARY NOTE FOR PRE-UI TESTING -- PAYLOAD REQUIRED:
-            The UI will ultimately use getQuoteById to populate a payload with all columns
-            of the quote you are about to update with this function.  For hand-testing with
-            ARC and the unit tests, for now the db holds at least one manually created
-            quote for this to be tested on.  To test you must pass in a payload that has all of
-            the existing values you don't want to wipe out, and the new values for what you
-            are updating.  Since this is an update, of course you cannot try and change
-            quote_id or created_date.  Here is a sample payload with values that will validate:
-                {
-                    "quoteTypeId": "PRODUCT_QUOTE",
-                    "issueDate": "2016-06-03 02:07:00",
-                    "statusId": "QUOTE_REJECTED",
-                    "salesChannelEnumId":  "IND_GEN_SERVICES"
-                }
-        */
         
         var quoteId = req.params.id; // read from the URL, not the payload
         var quote = req.body;

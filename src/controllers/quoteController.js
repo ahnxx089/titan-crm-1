@@ -12,6 +12,7 @@
 var winston = require('winston');
 var Quote = require('../entities/quote');
 var QuoteItem = require('../entities/quoteItem');
+var QuoteItemOption = require('../entities/quoteItemOption');
 var _ = require('lodash');
 
 var quoteController = function (knex) {
@@ -81,8 +82,8 @@ var quoteController = function (knex) {
     };
 
     /**
-     * Add a new item to a quote (which must exist already first)
-     * @param {Object} quoteItem - entity containing existing quote_id to add an Item onto.
+     * Add a new item to a quote
+     * @param {Object} quoteItem - entity containing item to add onto a quote
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
@@ -98,7 +99,6 @@ var quoteController = function (knex) {
             var quoteItemEntity = new QuoteItem(
                 quoteItem.quoteId,
                 quoteItem.quoteItemSeqId,
-                quoteItem.quoteItemOptionSeqId,
                 quoteItem.productId,
                 quoteItem.quantity,
                 quoteItem.selectedAmount,
@@ -140,13 +140,12 @@ var quoteController = function (knex) {
     };
 
     /**
-     * Update a quote item in database by adding an option
-     * @param {Object} quoteItem - quoteItem to update with 
+     * Add a new option to an item of a quote
+     * @param {Object} quoteItemOption - entity containing option to add to an item of a quote
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateQuoteItem = function (quoteItem, user) {
-        
+    var addQuoteItemOption = function(quoteItemOption, user) {
         // Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
@@ -154,25 +153,19 @@ var quoteController = function (knex) {
             var now = (new Date()).toISOString();
 
             // QuoteItem entity
-            var quoteItemEntity = new QuoteItem(
-                quoteItem.quoteId,
-                quoteItem.quoteItemSeqId,
-                quoteItem.quoteItemOptionSeqId,
-                quoteItem.productId,
-                quoteItem.quantity,
-                quoteItem.selectedAmount,
-                quoteItem.quoteUnitPrice,
-                quoteItem.estimatedDeliveryDate,
-                quoteItem.comments,
-                quoteItem.isPromo,
-                quoteItem.description,
+            var quoteItemOptionEntity = new QuoteItemOption(
+                quoteItemOption.quoteId,
+                quoteItemOption.quoteItemSeqId,
+                quoteItemOption.quoteItemOptionSeqId,
+                quoteItemOption.quantity,
+                quoteItemOption.quoteUnitPrice,
                 now,
                 now
             );
 
             // Validate the quoteItem data before going ahead
             var validationErrors = [];
-            var quoteItemValidationErrors = quoteItemEntity.validateForInsert();
+            var quoteItemValidationErrors = quoteItemOptionEntity.validateForInsert();
             //Errors are non-empty validation results
             for (var i = 0; i < quoteItemValidationErrors.length; i++) {
                 if (quoteItemValidationErrors[i]) {
@@ -181,7 +174,7 @@ var quoteController = function (knex) {
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
-                var promise = quoteData.updateQuoteItem(quoteItemEntity)
+                var promise = quoteData.addQuoteItemOption(quoteItemOptionEntity)
                     .then(function (quoteItemInserted) {
                         return quoteItemInserted;
                     });
@@ -197,7 +190,181 @@ var quoteController = function (knex) {
             return null;
         }
     };
+    
+    /**
+     * Update a quote in database (equiv to Opentaps' Edit Quote & Accept/Send/Finalize/Reject/Cancel)
+     * @param {Number} quoteId - Unique quote_id of the quote to update
+     * @param {Object} quote - The object that contains the item to update quote with
+     * @param {Object} user - The logged in user
+     * @return {Object} promise - Fulfillment value is number of rows updated
+     */
+    var updateQuote = function (quoteId, quote, user) {
 
+        // Check user's security permission to own contacts
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
+        if (hasPermission !== -1) {
+            // proceed towards data layer
+            var now = (new Date()).toISOString();
+
+            // build Quote Entity.  (Reminder to self on how created_by column will not
+            // be affected:  UI will be filling quote.createdDate with the value that this
+            // quote already has.  Only updated_date column is receiving new value called "now")
+            var quoteEntity = new Quote(
+                quoteId,
+                quote.quoteTypeId,
+                quote.partyId,
+                quote.issueDate,
+                quote.statusId,
+                quote.currencyUomId,
+                quote.salesChannelEnumId,
+                quote.validFromDate,
+                quote.validThruDate,
+                quote.quoteName,
+                quote.description,
+                quote.contactPartyId,
+                quote.createdByPartyId,
+                quote.createdDate,
+                now
+            );
+
+            // Validate the quoteItem data before going ahead
+            var validationErrors = [];
+            var quoteValidationErrors = quoteEntity.validateForUpdate();
+            //Errors are non-empty validation results
+            for (var i = 0; i < quoteValidationErrors.length; i++) {
+                if (quoteValidationErrors[i]) {
+                    validationErrors.push(quoteValidationErrors[i]);
+                }
+            }
+            if (validationErrors.length === 0) {
+                // Pass on the entity to be added to the data layer
+                var promise = quoteData.updateQuote(quoteEntity)
+                    .then(function (quoteUpdated) {
+                        return quoteUpdated;
+                    });
+                promise.catch(function (error) {
+                    winston.error(error);
+                });
+                return promise;
+            } else {
+                return validationErrors;
+            }
+        } else {
+            // user does not have permissions to add a quote, return null
+            return null;
+        }
+    };
+    
+    /**
+     * Update an item of a quote 
+     * @param {Object} quoteItem - entity containing info of item to be updated
+     * @param {Object} user - The logged in user
+     * @return {Object} promise - Fulfillment value is number of rows updated
+     */
+    var updateQuoteItem = function (quoteItem, user) {
+        
+        // Check user's security permission to own contacts
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
+        if (hasPermission !== -1) {
+            // proceed towards data layer
+            var now = (new Date()).toISOString();
+
+            // QuoteItem entity
+            var quoteItemEntity = new QuoteItem(
+                quoteItem.quoteId,
+                quoteItem.quoteItemSeqId,
+                quoteItem.productId,
+                quoteItem.quantity,
+                quoteItem.selectedAmount,
+                quoteItem.quoteUnitPrice,
+                quoteItem.estimatedDeliveryDate,
+                quoteItem.comments,
+                quoteItem.isPromo,
+                quoteItem.description,
+                quoteItem.createdDate,
+                now
+            );
+
+            // Validate the quoteItem data before going ahead
+            var validationErrors = [];
+            var quoteItemValidationErrors = quoteItemEntity.validateForUpdate();
+            //Errors are non-empty validation results
+            for (var i = 0; i < quoteItemValidationErrors.length; i++) {
+                if (quoteItemValidationErrors[i]) {
+                    validationErrors.push(quoteItemValidationErrors[i]);
+                }
+            }
+            if (validationErrors.length === 0) {
+                // Pass on the entity to be added to the data layer
+                var promise = quoteData.updateQuoteItem(quoteItemEntity)
+                    .then(function (quoteItemUpdated) {
+                        return quoteItemUpdated;
+                    });
+                promise.catch(function (error) {
+                    winston.error(error);
+                });
+                return promise;
+            } else {
+                return validationErrors;
+            }
+        } else {
+            // user does not have permissions to add a quote, return null
+            return null;
+        }
+    };
+
+    /**
+     * Update an option of an item of a quote 
+     * @param {Object} quoteItemOption - entity containing info of option of item to be updated
+     * @param {Object} user - The logged in user
+     * @return {Object} promise - Fulfillment value is number of rows updated
+     */
+    var updateQuoteItemOption = function (quoteItemOption, user) {
+        // Check user's security permission to own contacts
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
+        if (hasPermission !== -1) {
+            // proceed towards data layer
+            var now = (new Date()).toISOString();
+
+            // QuoteItem entity
+            var quoteItemOptionEntity = new QuoteItemOption(
+                quoteItemOption.quoteId,
+                quoteItemOption.quoteItemSeqId,
+                quoteItemOption.quoteItemOptionSeqId,
+                quoteItemOption.quantity,
+                quoteItemOption.quoteUnitPrice,
+                quoteItemOption.createdDate,
+                now
+            );
+
+            // Validate the quoteItem data before going ahead
+            var validationErrors = [];
+            var quoteItemValidationErrors = quoteItemOptionEntity.validateForUpdate();
+            //Errors are non-empty validation results
+            for (var i = 0; i < quoteItemValidationErrors.length; i++) {
+                if (quoteItemValidationErrors[i]) {
+                    validationErrors.push(quoteItemValidationErrors[i]);
+                }
+            }
+            if (validationErrors.length === 0) {
+                // Pass on the entity to be added to the data layer
+                var promise = quoteData.updateQuoteItemOption(quoteItemOptionEntity)
+                    .then(function (quoteItemOptionUpdated) {
+                        return quoteItemOptionUpdated;
+                    });
+                promise.catch(function (error) {
+                    winston.error(error);
+                });
+                return promise;
+            } else {
+                return validationErrors;
+            }
+        } else {
+            // user does not have permissions to add a quote, return null
+            return null;
+        }
+    };
+    
     /**
      * Add a new quote note
      * @param {Number} quoteId - Unique quote_id of the quote to add a note to
@@ -265,78 +432,16 @@ var quoteController = function (knex) {
         }
     };
 
-    /**
-     * Update a quote in database (equiv to Opentaps' Edit Quote & Accept/Send/Finalize/Reject/Cancel)
-     * @param {Number} quoteId - Unique quote_id of the quote to update
-     * @param {Object} quote - The object that contains the item to update quote with
-     * @param {Object} user - The logged in user
-     * @return {Object} promise - Fulfillment value is number of rows updated
-     */
-    var updateQuote = function (quoteId, quote, user) {
-
-        // Check user's security permission to own contacts
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
-        if (hasPermission !== -1) {
-            // proceed towards data layer
-            var now = (new Date()).toISOString();
-
-            // build Quote Entity.  (Reminder to self on how created_by column will not
-            // be affected:  UI will be filling quote.createdDate with the value that this
-            // quote already has.  Only updated_date column is receiving new value called "now")
-            var quoteEntity = new Quote(
-                quoteId,
-                quote.quoteTypeId,
-                quote.partyId,
-                quote.issueDate,
-                quote.statusId,
-                quote.currencyUomId,
-                quote.salesChannelEnumId,
-                quote.validFromDate,
-                quote.validThruDate,
-                quote.quoteName,
-                quote.description,
-                quote.contactPartyId,
-                quote.createdByPartyId,
-                quote.createdDate,
-                now
-            );
-
-            // Validate the quoteItem data before going ahead
-            var validationErrors = [];
-            var quoteValidationErrors = quoteEntity.validateForUpdate();
-            //Errors are non-empty validation results
-            for (var i = 0; i < quoteValidationErrors.length; i++) {
-                if (quoteValidationErrors[i]) {
-                    validationErrors.push(quoteValidationErrors[i]);
-                }
-            }
-            if (validationErrors.length === 0) {
-                // Pass on the entity to be added to the data layer
-                var promise = quoteData.updateQuote(quoteEntity)
-                    .then(function (quoteUpdated) {
-                        return quoteUpdated;
-                    });
-                promise.catch(function (error) {
-                    winston.error(error);
-                });
-                return promise;
-            } else {
-                return validationErrors;
-            }
-        } else {
-            // user does not have permissions to add a quote, return null
-            return null;
-        }
-    };
-
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,
+        addQuoteItemOption: addQuoteItemOption,
+        updateQuote: updateQuote,
         updateQuoteItem: updateQuoteItem,
+        updateQuoteItemOption: updateQuoteItemOption,
         addQuoteNote: addQuoteNote,
         getQuoteById: getQuoteById,
-        getQuotesByOwner: getQuotesByOwner,
-        updateQuote: updateQuote
+        getQuotesByOwner: getQuotesByOwner
     };
 };
 
