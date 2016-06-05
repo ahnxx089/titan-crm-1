@@ -6,6 +6,7 @@
 /////////////////////////////////////////////////
 
 /* jshint shadow:true */
+/* jshint maxcomplexity:false */
 
 var quoteApi = function (knex) {
     // Get a reference to data layer module
@@ -17,15 +18,15 @@ var quoteApi = function (knex) {
     //
     // POST /api/quotes
     // 
-    // Methods:  addQuote, addQuoteItem, addQuoteNote
+    // Methods:  addQuote, addQuoteItem, addQuoteItemOption, addQuoteNote
     //
     var addQuote = function (req, res) {
 
+        // POST /api/quotes
+        // 
+        // addQuote:  the default if no property for adding a note
         if (Object.keys(req.query).length === 0) {
 
-            // POST /api/quotes
-            // 
-            // addQuote:  the default if no property for adding a note
             var quote = req.body;
             var user = req.user;
             var resultsForThisUser = quoteController.addQuote(quote, user);
@@ -53,33 +54,10 @@ var quoteApi = function (knex) {
         // addQuoteItem
         else if (req.query.hasOwnProperty('item')) {
 
-            /* TEMPORARY NOTE FOR PRE-UI TESTING -- PAYLOAD CONSTRAINTS:
-                The UI will ulimately be designed to more naturally take care of two preliminary requirements for adding an Item to a Quote:
-                    (1) a valid quote_id must be supplied to this functionality, so this does function 
-                        does not need to somehow first check and make sure this quote actually exists in the db before trying to add an item to it.
-                    (2) the quote_item_seq_id must not duplicate one in the table already, which
-                        will cause an error; the UI will handle what quote_item_seq_id even makes
-                        it here in the first place.
-                Here's a sample payload that works-- MANUALLY INCREMENT quoteItemSeqId if using more
-                than once!
-                {
-                    "quoteId": "2",
-                    "quoteItemSeqId": "1",
-                    "productId": "testProd2",
-                    "quantity": "5",
-                    "selectedAmount": "12",
-                    "quoteUnitPrice": "45.00",
-                    "estimatedDeliveryDate": "",
-                    "comments": "test addQuoteItem",
-                    "isPromo": "",
-                    "description": "test addQuoteItem"
-                }   
-            */
-
             var resultsForThisUser = quoteController.addQuoteItem(req.body, req.user);
 
             /* Intepret the possible outcomes from the controller layer:
-                1.  User does not have permission to add a Quote
+                1.  User does not have permission to add a Quote (thus nor an Item)
                 2.  User does have permission, but supplied data is not validated
                 3.  User does have permission, and a promise is returned
             */
@@ -98,6 +76,38 @@ var quoteApi = function (knex) {
                 resultsForThisUser.then(function (quoteItemInserted) {
                     res.json({
                         quoteItemInserted: quoteItemInserted
+                    });
+                });
+            }
+        }
+
+        // POST /api/quotes?itemOption
+        // 
+        // addQuoteItemOption
+        else if (req.query.hasOwnProperty('itemOption')) {
+            
+            var resultsForThisUser = quoteController.addQuoteItemOption(req.body, req.user);
+
+            /* Intepret the possible outcomes from the controller layer:
+                1.  User does not have permission to add a Quote (thus nor an Item Option)
+                2.  User does have permission, but supplied data is not validated
+                3.  User does have permission, and a promise is returned
+            */
+            // null result means user does not have permission to add an Item to a Quote
+            if (resultsForThisUser === null) {
+                res.json({
+                    message: 'You do not have permission to POST to this route!'
+                });
+            }
+            // An array in result means it's array of validation errors
+            else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
+                res.json(resultsForThisUser);
+            }
+            // An object in result means it's a promise (returned only if validation succeeds)
+            else {
+                resultsForThisUser.then(function (quoteItemOptionInserted) {
+                    res.json({
+                        quoteItemOptionInserted: quoteItemOptionInserted
                     });
                 });
             }
@@ -125,15 +135,80 @@ var quoteApi = function (knex) {
 
     // PUT /api/quotes
     // 
-    // Method:  updateQuoteItem
+    // Methods:  updateQuoteItem, updateQuoteItemOption
     //
     var updateQuoteItem = function (req, res) {
+        
+        // PUT /api/quotes?item
+        // 
+        // updateQuoteItem          
+        if(req.query.hasOwnProperty('item')) {
+            
+            var resultsForThisUser = quoteController.updateQuoteItem(req.body, req.user);
 
-        // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
-        res.json({
-            'message': 'updateQuoteItem functionality is under construction...',
-            'reachedOn': 'This was reached on PUT route /api/quotes?item'
-        });
+            /* Intepret the possible outcomes from the controller layer:
+                1.  User does not have permission to add a Quote
+                2.  User does have permission, but supplied data is not validated
+                3.  User does have permission, and a promise is returned
+            */
+            // null result means user does not have permission to add an Item to a Quote
+            if (resultsForThisUser === null) {
+                res.json({
+                    message: 'You do not have permission to PUT to this route!'
+                });
+            }
+            // An array in result means it's array of validation errors
+            else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
+                res.json(resultsForThisUser);
+            }
+            // An object in result means it's a promise (returned only if validation succeeds)
+            else {
+                resultsForThisUser.then(function (quoteItemUpdated) {
+                    res.json({
+                        quoteItemUpdated: quoteItemUpdated
+                    });
+                });
+            }
+        }
+        
+        // PUT /api/quotes?itemOption
+        // 
+        // updateQuoteItemOption
+        else if (req.query.hasOwnProperty('itemOption')) {
+            
+            var resultsForThisUser = quoteController.updateQuoteItemOption(req.body, req.user);
+
+            /* Intepret the possible outcomes from the controller layer:
+                1.  User does not have permission to add a Quote
+                2.  User does have permission, but supplied data is not validated
+                3.  User does have permission, and a promise is returned
+            */
+            // null result means user does not have permission to add an Item to a Quote
+            if (resultsForThisUser === null) {
+                res.json({
+                    message: 'You do not have permission to PUT to this route!'
+                });
+            }
+            // An array in result means it's array of validation errors
+            else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
+                res.json(resultsForThisUser);
+            }
+            // An object in result means it's a promise (returned only if validation succeeds)
+            else {
+                resultsForThisUser.then(function (quoteItemOptionUpdated) {
+                    res.json({
+                        quoteItemOptionUpdated: quoteItemOptionUpdated
+                    });
+                });
+            }
+        }
+        
+        // no other PUT routes, return error message so the app does not hang
+        else {
+            res.json({
+                'message': 'ERROR:  No such route to PUT to...',
+            });
+        }
     };
 
     // GET /api/quotes
@@ -191,26 +266,10 @@ var quoteApi = function (knex) {
 
     // PUT /api/quotes/:id
     var updateQuote = function (req, res) {
-
-        /* TEMPORARY NOTE FOR PRE-UI TESTING -- MINIMUM PAYLOAD REQUIRED:
-            The UI will ultimately use getQuoteById to populate a payload with all columns
-            of the quote you are about to update with this function.  For hand-testing with
-            ARC and the unit tests, for now you need to provide at least these minimum
-            properties (and validate-able values) in the payload (fill with your own
-            acceptable values, these are just one example)
-                {
-                    "quoteTypeId": "PRODUCT_QUOTE",
-                    "issueDate": "2016-06-03 02:07:00",
-                    "statusId": "QUOTE_REJECTED",
-                    "salesChannelEnumId":  "IND_GEN_SERVICES"
-                }
-        */
-
-        var quoteId = req.params.id;
+        
+        var quoteId = req.params.id; // read from the URL, not the payload
         var quote = req.body;
         var resultsForThisUser = quoteController.updateQuote(quoteId, quote, req.user);
-
-        console.log('typeof resultsForThisUser is ', typeof resultsForThisUser);
 
         /* Intepret the possible outcomes from the controller layer:
             1.  User does not have permission to add a Quote
