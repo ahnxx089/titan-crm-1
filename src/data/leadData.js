@@ -179,8 +179,67 @@ var leadData = function (knex) {
 
 
 
-    // WARNING
-    // updateLead, deleteLead ARE NOT FULLY IMPLEMENTED! See beginning for more detail. 
+    // getLeadbyIdentity
+    //@params {string} firstName -  The first name of the lead you want
+    //@params {string} lastName - The last name of the lead you want
+    //@return {object} promise - The fulfilmment object is an array of searched values
+    var getLeadByIdentity = function (firstName, lastName){
+        var leadByIdentity = ['party.party_id', 'party.party_type_id',
+                              'party.preferred_currency_uom_id',
+                              'party.description', 'party.status_id', 
+                              'party.created_by', 'party.created_date', 
+                              'party.updated_date', 'person.salutation', 
+                              'person.first_name', 'person.middle_name', 
+                              'person.last_name', 'person.birth_date', 
+                              'person.comments'
+        ];
+    var firstNameLike = '%' + firstName + '%';
+    var lastNameLike = '%' + lastName + '%';
+    //search with only the first name
+    if (firstName.length > 0 && lastName.length === 0) {
+            firstNameLike = '%' + firstName + '%';
+            return knex.select(leadByIdentity)
+                .from('party_relationship')
+                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+                .innerJoin('party', 'party.party_id', 'person.party_id')
+                .andWhere('role_type_id_from', 'LEAD')
+                .andWhere('first_name', 'like', firstNameLike);
+        }
+    //search with only the last name
+    if (firstName.length === 0 && lastName.length > 0) {
+            lastNameLike = '%' + lastName + '%';
+            return knex.select(leadByIdentity)
+                .from('party_relationship')
+                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+                .innerJoin('party', 'party.party_id', 'person.party_id')
+                .andWhere('role_type_id_from', 'LEAD')
+                .andWhere('last_name', 'like', lastNameLike);
+        }
+    // search using both the first name and the last name
+    if (firstName.length > 0 && lastName.length > 0) {
+            firstNameLike = '%' + firstName + '%';
+            lastNameLike = '%' + lastName + '%';
+            return knex.select(leadByIdentity)
+                .from('party_relationship')
+                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+                .innerJoin('party', 'party.party_id', 'person.party_id')
+                .andWhere('role_type_id_from', 'LEAD')
+                .andWhere('first_name', 'like', firstNameLike)
+                .andWhere('last_name', 'like', lastNameLike);
+        }
+    
+    // if nothing is entered
+    else {
+            return knex.select(leadByIdentity)
+                .from('party_relationship')
+                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+                .innerJoin('party', 'party.party_id', 'person.party_id')
+                .andWhere('role_type_id_from', 'Lead')
+                .andWhere('first_name', 'like', '')
+                .andWhere('last_name', 'like', '');
+        }
+        
+    };
 
     /**
      * Update a lead in database
