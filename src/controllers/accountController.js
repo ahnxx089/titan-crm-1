@@ -128,49 +128,50 @@ var accountController = function (knex) {
         }
     };
     /**
+     * NO LONGER IN USE.
      * Gets all account.
      * @return {Object} promise - Fulfillment value is an array of account entities
      */
-    var getAccounts = function () {
-        var promise = accountData.getAccounts()
-            .then(function (accounts) {
-                // Map the retrieved result set to corresponding entities
-                var accountEntities = [];
-                for (var i = 0; i < accounts.length; i++) {
-                    var account = new Account();
-                    account.partyId = accounts[i].party_id;
-                    account.partyTypeId = accounts[i].party_type_id;
-                    account.preferredCurrencyUomId = accounts[i].preferred_currency_uom_id;
-                    account.description = accounts[i].description;
-                    account.statusId = accounts[i].status_id;
-                    account.createdBy = accounts[i].created_by;
-                    account.createdDate = accounts[i].created_date;
-                    account.updatedDate = accounts[i].updated_date;
-                    account.orgName = accounts[i].organization_name;
-                    account.officeSiteName = accounts[i].office_site_name;
-                    account.annualRevenue = accounts[i].annual_revenue;
-                    account.numEmployees = accounts[i].num_employees;
-                    account.tickerSymbol = accounts[i].ticker_symbol;
-                    account.comments = accounts[i].comments;
-                    account.logoImgURL = accounts[i].logo_image_url;
-                    account.partyParentId = accounts[i].party_parent_id;
-                    account.industryEnumId = accounts[i].industry_enum_id;
-                    account.ownershipEnumId = accounts[i].ownership_enum_id;
-                    account.importantNote = accounts[i].important_note;
-                    account.primaryPostalAddressId = accounts[i].primary_postal_address_id;
-                    account.primaryTelecomNumberId = accounts[i].primary_telecom_number_id;
-                    account.primaryEmailId = accounts[i].primary_email_id;
-                    
-                    accountEntities.push(account);
-                }
-                return accountEntities;
-            });
-        promise.catch(function (error) {
-            // Log the error
-            winston.error(error);
-        });
-        return promise;
-    };
+//    var getAccounts = function () {
+//        var promise = accountData.getAccounts()
+//            .then(function (accounts) {
+//                // Map the retrieved result set to corresponding entities
+//                var accountEntities = [];
+//                for (var i = 0; i < accounts.length; i++) {
+//                    var account = new Account();
+//                    account.partyId = accounts[i].party_id;
+//                    account.partyTypeId = accounts[i].party_type_id;
+//                    account.preferredCurrencyUomId = accounts[i].preferred_currency_uom_id;
+//                    account.description = accounts[i].description;
+//                    account.statusId = accounts[i].status_id;
+//                    account.createdBy = accounts[i].created_by;
+//                    account.createdDate = accounts[i].created_date;
+//                    account.updatedDate = accounts[i].updated_date;
+//                    account.orgName = accounts[i].organization_name;
+//                    account.officeSiteName = accounts[i].office_site_name;
+//                    account.annualRevenue = accounts[i].annual_revenue;
+//                    account.numEmployees = accounts[i].num_employees;
+//                    account.tickerSymbol = accounts[i].ticker_symbol;
+//                    account.comments = accounts[i].comments;
+//                    account.logoImgURL = accounts[i].logo_image_url;
+//                    account.partyParentId = accounts[i].party_parent_id;
+//                    account.industryEnumId = accounts[i].industry_enum_id;
+//                    account.ownershipEnumId = accounts[i].ownership_enum_id;
+//                    account.importantNote = accounts[i].important_note;
+//                    account.primaryPostalAddressId = accounts[i].primary_postal_address_id;
+//                    account.primaryTelecomNumberId = accounts[i].primary_telecom_number_id;
+//                    account.primaryEmailId = accounts[i].primary_email_id;
+//                    
+//                    accountEntities.push(account);
+//                }
+//                return accountEntities;
+//            });
+//        promise.catch(function (error) {
+//            // Log the error
+//            winston.error(error);
+//        });
+//        return promise;
+//    };
 
     /**
      * Gets one account by its id
@@ -267,46 +268,52 @@ var accountController = function (knex) {
      */
 
     var getAccountByPhoneNumber = function (query, user) {
-        var phoneNumber = query.phoneNumber;
-        var promise = accountData.getAccountByPhoneNumber(phoneNumber)
-            .then(function (accounts) {
-                // Map the retrieved result set to corresponding entity
-               var phoneAccounts = [];
-                for (var i = 0; i < accounts.length; i++) {
-                    var accountEntity = new Account(
-                        accounts[i].party_id,
-                        accounts[i].party_type_id,
-                        accounts[i].preferred_currency_uom_id,
-                        accounts[i].description,
-                        accounts[i].status_id,
-                        accounts[i].created_by,
-                        accounts[i].created_date,
-                        accounts[i].updated_date,
-                        accounts[i].organization_name,
-                        accounts[i].office_site_name,
-                        accounts[i].annual_revenue,
-                        accounts[i].num_employees,
-                        accounts[i].ticker_symbol,
-                        accounts[i].comments,
-                        accounts[i].logo_image_url,
-                        accounts[i].party_parent_id,
-                        accounts[i].industry_enum_id,
-                        accounts[i].ownership_enum_id,
-                        accounts[i].important_note,
-                        accounts[i].primary_postal_address_id,
-                        accounts[i].primary_telecom_number_id,
-                        accounts[i].primary_email_id
-                        
-                    );
-                    phoneAccounts.push(accountEntity);  
-                }
-                return phoneAccounts;    
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
+        if (hasPermission !== -1) {
+            var phoneNumber = query.phoneNumber;
+            var promise = accountData.getAccountByPhoneNumber(phoneNumber)
+                .then(function (accounts) {
+                    // Map the retrieved result set to corresponding entity
+                   var phoneAccounts = [];
+                    for (var i = 0; i < accounts.length; i++) {
+                        var accountEntity = new Account(
+                            accounts[i].party_id,
+                            accounts[i].party_type_id,
+                            accounts[i].preferred_currency_uom_id,
+                            accounts[i].description,
+                            accounts[i].status_id,
+                            accounts[i].created_by,
+                            accounts[i].created_date,
+                            accounts[i].updated_date,
+                            accounts[i].organization_name,
+                            accounts[i].office_site_name,
+                            accounts[i].annual_revenue,
+                            accounts[i].num_employees,
+                            accounts[i].ticker_symbol,
+                            accounts[i].comments,
+                            accounts[i].logo_image_url,
+                            accounts[i].party_parent_id,
+                            accounts[i].industry_enum_id,
+                            accounts[i].ownership_enum_id,
+                            accounts[i].important_note,
+                            accounts[i].primary_postal_address_id,
+                            accounts[i].primary_telecom_number_id,
+                            accounts[i].primary_email_id
+
+                        );
+                        phoneAccounts.push(accountEntity);  
+                    }
+                    return phoneAccounts;    
+                });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
             });
-        promise.catch(function (error) {
-            // Log the error
-            winston.error(error);
-        });
-        return promise;
+            return promise;
+        }
+        else {
+            return
+        }
     };
     /**
      * Gets one account by <SOME ACCOUNT ATTRIBUTE OR COMBINATION OF ATTRIBUTES> from database
@@ -315,47 +322,53 @@ var accountController = function (knex) {
      */
     
     var getAccountByIdentity = function (query, user) {
-        var accountId = query.accountId;
-        var accountName = query.accountName; 
-        var promise = accountData.getAccountByIdentity(accountId, accountName)
-        
-            .then(function (accounts) {
-                var identityAccounts = [];
-                for (var i = 0; i < accounts.length; i++) {
-                    var accountEntity = new Account(
-                        accounts[i].party_id,
-                        accounts[i].party_type_id,
-                        accounts[i].preferred_currency_uom_id,
-                        accounts[i].description,
-                        accounts[i].status_id,
-                        accounts[i].created_by,
-                        accounts[i].created_date,
-                        accounts[i].updated_date,
-                        accounts[i].organization_name,
-                        accounts[i].office_site_name,
-                        accounts[i].annual_revenue,
-                        accounts[i].num_employees,
-                        accounts[i].ticker_symbol,
-                        accounts[i].comments,
-                        accounts[i].logo_image_url,
-                        accounts[i].party_parent_id,
-                        accounts[i].industry_enum_id,
-                        accounts[i].ownership_enum_id,
-                        accounts[i].important_note,
-                        accounts[i].primary_postal_address_id,
-                        accounts[i].primary_telecom_number_id,
-                        accounts[i].primary_email_id
-                        
-                    );
-                    identityAccounts.push(accountEntity);  
-                }
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
+        if (hasPermission !== -1) {
+            var accountId = query.accountId;
+            var accountName = query.accountName; 
+            var promise = accountData.getAccountByIdentity(accountId, accountName)
+
+                .then(function (accounts) {
+                    var identityAccounts = [];
+                    for (var i = 0; i < accounts.length; i++) {
+                        var accountEntity = new Account(
+                            accounts[i].party_id,
+                            accounts[i].party_type_id,
+                            accounts[i].preferred_currency_uom_id,
+                            accounts[i].description,
+                            accounts[i].status_id,
+                            accounts[i].created_by,
+                            accounts[i].created_date,
+                            accounts[i].updated_date,
+                            accounts[i].organization_name,
+                            accounts[i].office_site_name,
+                            accounts[i].annual_revenue,
+                            accounts[i].num_employees,
+                            accounts[i].ticker_symbol,
+                            accounts[i].comments,
+                            accounts[i].logo_image_url,
+                            accounts[i].party_parent_id,
+                            accounts[i].industry_enum_id,
+                            accounts[i].ownership_enum_id,
+                            accounts[i].important_note,
+                            accounts[i].primary_postal_address_id,
+                            accounts[i].primary_telecom_number_id,
+                            accounts[i].primary_email_id
+
+                        );
+                        identityAccounts.push(accountEntity);  
+                    }
                 return identityAccounts;    
             });
-                promise.catch(function (error) {
-                    // Log the error
-                    winston.error(error);
-                });
-                return promise;
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
+            });
+            return promise;
+        }
+        else {
+            return
+        }
     };
 
     /**
@@ -467,7 +480,7 @@ var accountController = function (knex) {
 
     return {
         addAccount: addAccount,
-        getAccounts: getAccounts,
+        //getAccounts: getAccounts,
         getAccountById: getAccountById,
         getAccountsByOwner: getAccountsByOwner,
         updateAccount: updateAccount,

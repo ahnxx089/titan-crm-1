@@ -77,28 +77,29 @@ var accountApi = function (knex) {
             // IF ELSE block interprets controller returning an object or null
             if (resultsForThisUser === null) {
                 res.json({
-                    'message': 'You do not have permission to own contacts!'
+                    'message': 'You do not have permission to own accounts!'
                 });
             } else {
-                resultsForThisUser.then(function (contacts) {
+                resultsForThisUser.then(function (accounts) {
                     res.json(accounts);
                 });
             }
         }
         //If query strings are non-empty, use getAccountsByIdentity
-        else if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
-
-            var resultsForUser = contactController.getContactsByIdentity(req.query, req.user);
-            if (resultsForUser === null) {
-                res.json({
-                    'message': 'You do not have permission to get contacts by the supplied queries!'
-                });
-            } else {
-                resultsForUser.then(function (contacts) {
-                    res.json(contacts);
-                });
-            }
-        }
+//        else if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
+//
+//            var resultsForUser = accountController.getAccountByIdentity(req.query, req.user);
+//            if (resultsForUser === null) {
+//                res.json({
+//                    'message': 'You do not have permission to get accounts by the supplied queries!'
+//                });
+//            } else {
+//                resultsForUser.then(function (accounts) {
+//                    res.json(accounts);
+//                });
+//            }
+//        }
+        
         /*This function also same like the Identity. Identity need to first_name and last_name and Company_Name.
       PhoneNumber also exist from user part. So, firstly, check out the primary key(user.partyID), and call the phoneNumber data.
     */
@@ -129,10 +130,10 @@ var accountApi = function (knex) {
                     res.json(accounts);
                 });
             }
-        accountController.getAccounts()
-            .then(function (accounts) {
-                res.json(accounts);
-            });
+//        accountController.getAccounts()
+//            .then(function (accounts) {
+//                res.json(accounts);
+//            });
         }
     }
 
@@ -169,7 +170,7 @@ var accountApi = function (knex) {
         getAccountsByIdentity: getAccountsByIdentity,
         getAccountsByOwner: getAccountsByOwner,
         getAccounts: getAccounts,
-        getAccountByPhoneNumber: getAccountByPhoneNumber,
+        //getAccountByPhoneNumber: getAccountByPhoneNumber,
         getAccountById: getAccountById,
         updateAccount: updateAccount,
         deleteAccount: deleteAccount
