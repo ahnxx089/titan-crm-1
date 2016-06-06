@@ -297,10 +297,7 @@ var contactController = function (knex) {
 
     /** 
      * Gets contacts by identity (see opentaps' Find Contact feature)
-     // the following two arguments are obselete
-     * @param {String} firstName - portion of a first name to search for
-     * @param {String} lastName - portion of a last name to search for
-     * @param {String} query - query string: SOME ARGUMENTS
+     * @param {String} query - query string may contain firstName and/or lastName
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is an array of contact entities
      */

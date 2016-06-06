@@ -186,6 +186,7 @@ var caseController = function (knex) {
 
     /**
      * Gets case owned by the user/owner
+     * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is an array of case entities
      */
     var getCasesByOwner = function (user) {
