@@ -157,7 +157,20 @@ var leadApi = function (knex) {
     // Not implemented now. 
     // GET /api/leads/?leadId=&firstName=&lastName=&companyName=
     var getLeadsByIdentity = function (req, res) {
+        
+        if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
 
+            var resultsForUser = leadController.getLeadsByIdentity(req.query, req.user);
+            if (resultsForUser === null) {
+                res.json({
+                    'message': 'You do not have permission to view leads by the supplied queries!'
+                });
+            } else {
+                resultsForUser.then(function (leads) {
+                    res.json(leads);
+                });
+    }
+        }
     };
 
     // Possibly not implemented or used now. 
