@@ -6,6 +6,7 @@
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
+/* jshint shadow:true */
 
 var winston = require('winston');
 var Account = require('../entities/account');

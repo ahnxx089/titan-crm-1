@@ -6,6 +6,7 @@
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
+/* jshint maxlen:1000 */
 
 /* TODO: add a method or two for copying a lead's party_supplemental_data values into 
 the newly created entry in that table, then deleting the account-related fields in the new entry. 

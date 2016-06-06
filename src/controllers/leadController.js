@@ -472,9 +472,58 @@ var leadController = function (knex) {
         return promise;
     };
 
+    //@params {string} firstName -  The first name of the lead you want
+    //@params {string} lastName - The last name of the lead you want
+    //@return {object} promise - The fulfilmment object is an array of searched values
+    var getLeadsByIdenity = function (query, user) {
+        // check user's security permissions
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
+        if (hasPermission !== -1) {
+            // Declare variables for input
+            var firstName = query.firstName;
+            var lastName = query.lastName;
 
-    
-    /**
+            if (firstName === undefined) {
+                firstName = '';
+            }
+            if (lastName === undefined) {
+                lastName = '';
+            }
+            var promise = leadData.getLeadsByIdentity(firstName, lastName)
+                .then(function (leads) {
+            // Fill the leads Entity
+             var leadsEntities = [];
+                    for (var i = 0; i < leads.length; i++) {
+                        var lead = new Lead(
+                            leads[i].party_id,
+                            leads[i].party_type_id,
+                            leads[i].currency_uom_id,
+                            leads[i].description,
+                            leads[i].status_id,
+                            leads[i].created_by,
+                            leads[i].created_date,
+                            leads[i].updated_date,
+                            leads[i].salutation,
+                            leads[i].first_name,
+                            leads[i].middle_name,
+                            leads[i].last_name,
+                            leads[i].birth_date,
+                            leads[i].comments
+                        );
+                        leadsEntities.push(lead);
+                    }
+                    return leadsEntities;
+             });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            // user does not have permissions of a contact owner, return null
+            return null;
+        }
+        };    /**
      * Update a lead in database
      * @param {Number} leadId - Unique id of the lead to be updated
      * @param {Object} lead - The object that contains updated data
