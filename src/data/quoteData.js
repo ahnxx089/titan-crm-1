@@ -221,7 +221,40 @@ var quoteData = function (knex) {
             .andWhere('quote_role.role_type_id', 'PERSON_ROLE');
 
     };
+    
+    
+    // Lucas wrote this. Finished
+    /** 
+     * Gets all quotes from database by advanced search
+     * @return {Object} promise - Fulfillment value is an array of raw data objects
+     */
+    var getQuotesByAdvanced = function (quoteId, quoteName, status, account, salesChannel) {
 
+//        var conditionArray = [quoteId, quoteName, status, account, salesChannel];
+//        var conditionString = '';
+//        conditionString += quoteId.length > 0 ? 'a' : '';
+//        conditionString += quoteName.length > 0 ? 'b' : '';
+//        conditionString += status.length > 0 ? 'c' : '';
+//        conditionString += account.length > 0 ? 'd' : '';
+//        conditionString += salesChannel.length > 0 ? 'e' : '';
+//        console.log(conditionString);
+
+
+//        return knex.raw('select * from quote where ' + ' sales_channel_enum_id = "' + salesChannel + '"');
+        return knex.from('quote');
+        
+        /*
+        return knex.select()
+            .from('quote')
+            .whereNot('quote.quote_id',quoteId)
+            .andWhere('quote.quote_name', quoteName)
+            .andWhere('quote.status_id', status)
+            .andWhere('quote.party_id', account)
+            .andWhere('quote.sales_channel_enum_id', salesChannel);
+        */
+    };
+    
+    
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,
@@ -231,6 +264,7 @@ var quoteData = function (knex) {
         addQuoteNote: addQuoteNote,
         getQuoteById: getQuoteById,
         getQuotesByOwner: getQuotesByOwner,
+        getQuotesByAdvanced: getQuotesByAdvanced,
         updateQuote: updateQuote
     };
 };

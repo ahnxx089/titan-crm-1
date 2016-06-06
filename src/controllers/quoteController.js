@@ -31,6 +31,7 @@ var quoteController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new contact
      */
     var addQuote = function (quote, user) {
+        // NOTE TO DUKJIN: should the premission be CRMSFA_QUOTE_CREATE?
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CASE_CREATE');
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
@@ -431,7 +432,103 @@ var quoteController = function (knex) {
             return;
         }
     };
+    
+    
+    /** 
+     * Gets quotes by advanced search
+     * @param {String} query - query string: SOME ARGUMENT
+     * @param {Object} user - The logged in user
+     * @return {Object} promise - Fulfillment value is an array of quote entities
+     */
+    var getQuotesByAdvanced = function (query, user) {
+        //Check security permission of user
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
+        if (hasPermission !== -1) {
+            
+            // these variables are strings if were set, or object if null
+            var quoteId = query.quoteId || null;
+            var quoteName = query.quoteName || null;
+            var status = query.status || null;
+            var account = query.account || null;
+            var salesChannel = query.salesChannel || null; 
+            
+            var promise = quoteData.getQuotesByAdvanced(quoteId, quoteName, status, account, salesChannel)
+            .then(function (quotes) {
+                var quoteEntities = [];
+                for (var i = 0; i < quotes.length; i++) {
+                    
+                    // quotes[i].quote_id is Number
+                    var test1 = quoteId == null ? true : quotes[i].quote_id === +quoteId;
+                    
+                    
+                    // quotes[i].quote_name is varchar(100), and is NULLABLE
+                    var emptyString = quoteName == null;
+                    var emptyColumn = quotes[i].quote_name == null;
+                    // If we search for something, in null columns, then we will never find it
+                    var test2 = (!emptyString && emptyColumn) ? false : true;
+                    // If we search for something, in some columns, we need to compare
+                    test2 = (!emptyString && !emptyColumn) ? quotes[i].quote_name.toUpperCase() === quoteName.toUpperCase() : test2;
+//                    Line above is same as 
+//                    if(!emptyString && !emptyColumn) {
+//                        test2 = quotes[i].quote_name.toUpperCase() == quoteName.toUpperCase();
+//                    }
 
+                    
+                    // quotes[i].status_id is varchar(20), and is NULLABLE
+                    var emptyString = status == null;
+                    var emptyColumn = quotes[i].status_id == null;
+//                    console.log(emptyString);
+//                    console.log(emptyColumn);
+                    // If we search for something, in null columns, then we will never find it
+                    var test3 = (!emptyString && emptyColumn) ? false : true;
+                    // If we search for something, in some columns, we need to compare
+                    test3 = (!emptyString && !emptyColumn) ? quotes[i].status_id.toUpperCase() === status.toUpperCase() : test3;
+                    
+                    
+                    // quotes[i].party_id is Number, and is NULLABLE
+                    var test4 = account == null ? true : quotes[i].party_id === +account;
+                    
+                    // quotes[i].sales_channel_enum_id is varchar(20)
+                    // Good column! I love it. 
+                    var test5 = salesChannel == null ? true: quotes[i].sales_channel_enum_id.toUpperCase() === salesChannel.toUpperCase();
+
+
+                    if(test1 && test2 && test3 && test4 && test5) {
+                        // build quote from returned columns
+                        var quote = new Quote(
+                            quotes[i].quote_id,
+                            quotes[i].quote_type_id,
+                            quotes[i].party_id,
+                            quotes[i].issue_date,
+                            quotes[i].status_id,
+                            quotes[i].currency_uom_id,
+                            quotes[i].sales_channel_enum_id,
+                            quotes[i].valid_from_date,
+                            quotes[i].valid_thru_date,
+                            quotes[i].quote_name,
+                            quotes[i].description,
+                            quotes[i].contact_party_id,
+                            quotes[i].created_by_party_id,
+                            quotes[i].created_date,
+                            quotes[i].updated_date
+                        );
+                        quoteEntities.push(quote);
+                    }
+                    else {
+                        continue;
+                    }
+                }
+                return quoteEntities;
+            });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            return null;
+        }
+    };
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,
@@ -441,7 +538,8 @@ var quoteController = function (knex) {
         updateQuoteItemOption: updateQuoteItemOption,
         addQuoteNote: addQuoteNote,
         getQuoteById: getQuoteById,
-        getQuotesByOwner: getQuotesByOwner
+        getQuotesByOwner: getQuotesByOwner,
+        getQuotesByAdvanced: getQuotesByAdvanced
     };
 };
 

@@ -232,17 +232,18 @@ var caseController = function (knex) {
     /** 
      * Gets cases by advanced search
      * @param {String} SOME ARGUMENT - DESCRIPTION OF THAT ARGUMENT
+     * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is an array of case entities
      */
     var getCasesByAdvanced = function (query, user) {
         //Check security permission of user
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
         if (hasPermission !== -1) {
-           /* /api/case?subject=
-              /api/case?priority=
-              /api/case?status=
-              /api/case?type=
-              If block set thease things
+           /* /api/cases?subject=
+              /api/cases?priority=
+              /api/cases?status=
+              /api/cases?type=
+              If block set these things
            */
             var subject = query.subject;
             var priority = query.priority;
