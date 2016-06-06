@@ -210,7 +210,7 @@ var quoteData = function (knex) {
         //corresponds to the party id listed in the quote table's created_by_party_id field 
         //(and not the party_id or contact_party_id fields). 
 
-        return knex.select('quote_id', 'quote_type_id', 'party_id', 'issue_date', 'status_id',
+        return knex.select('quote.quote_id', 'quote_type_id', 'quote.party_id', 'issue_date', 'status_id',
                 'currency_uom_id', 'sales_channel_enum_id', 'valid_from_date',
                 'valid_thru_date', 'quote_name', 'description', 'contact_party_id',
                 'created_by_party_id', 'created_date', 'updated_date')
