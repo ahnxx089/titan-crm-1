@@ -45,7 +45,7 @@ Person.prototype.validateForInsert = function () {
     var errors = Party.prototype.validateForInsert.call(this);
     
     // the line above validates
-//    PartyTypeId(nullable),
+//    PartyTypeId(required),
 //    PreferredCurrencyUomId(nullable),
 //    Description(nullable),
 //    StatusId(required),

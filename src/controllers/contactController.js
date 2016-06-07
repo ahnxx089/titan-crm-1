@@ -31,7 +31,7 @@ var contactController = function (knex) {
      * and chain all promises together with .then()
      * @param {object} addContactMechPromises - An array of promises returned by addContactMech
      * @param {object} contactMechEntities - An array containing the contactMechs used to generate the first array
-     * @param {object} partyId - The partyId of the contact to be linked to these contactMechs
+     * @param {Number} partyId - The partyId of the contact to be linked to these contactMechs
      * @return {object} addContactMechPromises - Fulfillment value is the fulfillment value of the last promise in the array
      */
     var addContactMechCallback = function (addContactMechPromises, contactMechEntities, partyId) {
@@ -205,6 +205,7 @@ var contactController = function (knex) {
     /**
      * Gets one contact by its id
      * @param {Number} contactId - Unique id of the contact to be fetched
+     * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is a contact entity
      */
     var getContactById = function (contactId, user) {
@@ -250,6 +251,7 @@ var contactController = function (knex) {
 
     /**
      * Gets contacts owned by the user/owner
+     * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is an array of contact entities
      */
     var getContactsByOwner = function (user) {
@@ -295,8 +297,8 @@ var contactController = function (knex) {
 
     /** 
      * Gets contacts by identity (see opentaps' Find Contact feature)
-     * @param {String} firstName - portion of a first name to search for
-     * @param {String} firstName - portion of a last name to search for
+     * @param {String} query - query string may contain firstName and/or lastName
+     * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is an array of contact entities
      */
     var getContactsByIdentity = function (query, user) {
@@ -393,6 +395,7 @@ var contactController = function (knex) {
      * Update a contact in database
      * @param {Number} contactId - Unique id of the contact to be updated
      * @param {Object} contact - The object that contains updated data
+     * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContact = function (contactId, contact, user) {

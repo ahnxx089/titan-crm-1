@@ -265,7 +265,7 @@ var contactMechController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */
     var deleteContactMech = function (contactMechId) {
-        var promise = contactMechData.deleteContacrMech(contactMechId)
+        var promise = contactMechData.deleteContactMech(contactMechId)
             .then(function (result) {
                 return result;
             });

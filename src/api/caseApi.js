@@ -15,9 +15,31 @@ var caseApi = function (knex) {
     // API methods
     // ==========================================
     //
+    
+    // Lucas wrote this
     // POST /api/cases
     var addCase = function (req, res) {
-
+        var case_ = req.body;
+        var user = req.user;
+//        console.log('in case api A');
+        var resultsForThisUser = caseController.addCase(case_, user);
+//        console.log('in case api B');
+        if (resultsForThisUser === null) {
+            res.json({
+                message: 'You do not have permission to add cases!'
+            });
+        }
+        else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
+            res.json(resultsForThisUser);
+        }
+        // An object in result means it's a promise (which is returned only if validation succeeds)
+        else {
+            resultsForThisUser.then(function (caseId) {
+                res.json(
+                    {caseId:caseId}
+                );
+            });
+        }
     };
 
     // GET /api/cases
@@ -51,11 +73,20 @@ var caseApi = function (knex) {
         /* DUK JIN, THE ELSE IF BLOCK IS COMMENTED OUT FOR NOW, ACTIVATE WHEN YOU ARE READY.
             ELSE IF ensures there is only one response to API layer!
             See: http://www.ofssam.com/forums/showthread.php?tid=43 
+        */  
+        else if ( req.query.hasOwnProperty('subject') || req.query.hasOwnProperty('priority') || req.query.hasOwnProperty('status') || req.query.hasOwnProperty('type')) {
             
-        else if (  ) {
-            
+            var resultsForUser = caseController.getCasesByAdvanced(req.query, req.user);
+            if (resultsForUser === null) {
+                res.json({
+                    'message': 'You do not have permission about getCasesByAdvanced because of query!'
+                });
+            } else {
+                resultsForUser.then(function (cases) {
+                    res.json(cases);
+                });
+            }
         }
-        */
 
         // If the request did not properly pass any of the various if tests
         // above, it is not a valid query, make the reponse null.

@@ -6,17 +6,18 @@
 //          DukJin Ahn <ahnxx089@gmail.com>
 /////////////////////////////////////////////////
 
-/*
+
+/* jshint maxlen:1000 */
+
 
 var request = require('request');
-var apiBaseUrl = 'http://localhost:5000/api/account';
+var apiBaseUrl = 'http://localhost:5000/api/accounts';
 var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhZG1pbiIsInBhc3N3b3JkIjoiJDJhJDEwJEExUVFja2dRL2hoZnZ4V1RUM3Z4bHV1WlEvRWVweUY1NzBlQnh4SDd4ZDNxT0NwbWpHU2JDIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjIsImNyZWF0ZWREYXRlIjoiMjAxNi0wNS0xM1QwNjoxNjozNS4wMDBaIiwidXBkYXRlZERhdGUiOiIyMDE2LTA1LTEzVDA2OjE2OjM1LjAwMFoiLCJpYXQiOjE0NjM3Nzk3MDgsImV4cCI6MTQ5NTMxNTcwOH0.ZT9kcx1WiMxfsftVIxbvIn_1Mt5nYKAvl-duY7Vd7qM'; // token for "admin" user account, expires May 19, 2017
 var baseRequest = request.defaults({
     headers: {
         'x-access-token': token
     }
 });
-*/
 
 
 describe('Accounts API', function () {
@@ -38,11 +39,45 @@ describe('Accounts API', function () {
         });
     });
     xit('getAccount returns a valid Accounts entity', function (done) {
-        baseRequest.get(apiBaseUrl + '/2', function (err, res, body) {
+        baseRequest.get(apiBaseUrl + '/99', function (err, res, body) {
             expect(JSON.parse(body).hasOwnProperty('partyId')).toBeTruthy();
             // Call done to finish the async function
             done();
         });
     });
+    
+    /*
+    it('addAccount adds an account and successfully returns the new entry\s single partyId', function (done) {
+        newAccount = new Account(
+            partyTypeId: 'ORGANIZATION',
+            preferredCurrencyUomId: 'USD',
+            description: 'accountApi test',
+            statusId: 'PARTY_DISABLED',
+            createdBy: 'admin',
+            orgName: 'Test Organization',
+            officeSiteName: 'Test office',
+            annualRevenue: '777',
+            numEmployees: '777',
+            tickerSymbol: 'test symbol',
+            comments: 'test comment',
+            logoImgURL: 'testlogourl.com',,
+            industryEnumId: 'IND_AEROSPACE',
+            ownershipEnumId: 'OWN_SCORP',
+            importantNote: 'test important note',
+            emailAddress: 'test@testemail.com',
+            webAddress: 'testwebsite.com',
+            phoneNumber: '9990009999'
+        );
+        baseRequest.post(apiBaseUrl, {form: newAccount}, function (err, res, body) {
+            var result = JSON.parse(body);
+            // Check whether return value is a partyId
+            expect(result.hasOwnProperty('partyId')).toBeTruthy();
+            // Check whether a single party id is returned
+            expect(result.partyId.length).toBe(1);
+            // Call done to finish the async function
+            done();
+        });
+    });
+    */
     
 });

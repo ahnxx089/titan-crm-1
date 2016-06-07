@@ -10,7 +10,7 @@
 /* jshint maxparams: false */
 
 // NOT COMPLETED! 
-// Anurag: statusId is a foreign key that is not reflected in the design document. Consider update. 
+// Anurag: statusId is a foreign key that is not reflected in the design document. Consider update. Check marked @ June 2
 // Need work on validateForUpdate, and validateAnnualRevenue.
 // Need more fields.
 
@@ -62,7 +62,7 @@ function Lead(partyId, /*PK, SHARED #1 */
 //               pc_comments
                // Use SHARED #1,6,7
                
-               // I DONT UNDERSTAND party_id_to, and party_id_from. 
+               // I DONT UNDERSTAND party_id_to, and party_id_from. (party_relationship table)
                // They are linking to party_role, that is an empty table. 
                // How am I supposed to refer to null values?
                // for party_relationship. Several (less useful or interesting) and nullable fields were omitted. 
@@ -101,11 +101,11 @@ function Lead(partyId, /*PK, SHARED #1 */
 }
 
 
-// Inherit from Person (and automatically implictly from Party, maybe?)
+// Inherit from Person (and automatically implictly from Party, maybe? YES!)
 //
 Lead.prototype = Object.create(Person.prototype);
 
-// Set the "constructor" property to refer to Person
+// Set the "constructor" property to refer to Lead
 Lead.prototype.constructor = Lead;
 
 
@@ -184,7 +184,7 @@ Person.prototype.validateAnnualRevenue = function(isRequired) {
     return validationResult;
 };
 
-// numEmployees is decimal(20,0) = int(20)
+// numEmployees is decimal(20,0) == int(20)
 Person.prototype.validateNumEmployees = function(isRequired) {
     this.numEmployees = validation.sanitizeInput(this.numEmployees);
     var validationResult = validation.validateInt(this.numEmployees, isRequired, 'numEmployees');
@@ -193,9 +193,6 @@ Person.prototype.validateNumEmployees = function(isRequired) {
     }
     return validationResult;
 };
-
-
-//
 
 // industryEnumId is varchar(20)
 Person.prototype.validateIndustryEnumId = function(isRequired) {
@@ -263,9 +260,6 @@ Person.prototype.validateRoleTypeId = function(isRequired) {
     var validationResult = validation.validateString(this.roleTypeId, isRequired, 20, 'roleTypeId');
     return validationResult;
 };
-
-
-
 
 // Export the class as a module
 module.exports = Lead;

@@ -5,12 +5,10 @@
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
-// NOT COMPLETED! 
+// Warning! 
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
-// We have a separate getLeadsByOwner, different from Dinesh's approach. It is working now. Need to consult Anurag for more detail. 
-//
-// getLeads is not called from anywhere. I don't know why. Will look later. 
-//
+// We have a separate wroking getLeadsByOwner, different from Dinesh's approach. Need to consult Anurag for more detail. 
+// getLeads is not added in apiRoutes, or called from anywhere. Do not remove it yet. 
 // getLeadsByIdentity, getLeadsByPhoneNumber, updateLead, deleteLead are not tested. 
 
 var leadApi = function (knex) {
@@ -47,7 +45,6 @@ var leadApi = function (knex) {
 //        console.log('user in add is ' + user);
 
         //        var result = leadController.addLead(lead, user); // changed var name later
-        //        var result = leadController.addLead(lead); // obsolete
 
         var resultsForThisUser = leadController.addLead(lead, user);
 
@@ -103,6 +100,7 @@ var leadApi = function (knex) {
         //
         // This if block triggers if a query by owner has been made.
         if (req.query.owner) {
+            console.info('hello from getLeads in leadAPI');
             var ownerId = req.query.owner;
             leadController.getLeadsByOwner(ownerId)
                 .then(function (leads) {
@@ -160,7 +158,20 @@ var leadApi = function (knex) {
     // Not implemented now. 
     // GET /api/leads/?leadId=&firstName=&lastName=&companyName=
     var getLeadsByIdentity = function (req, res) {
+        
+        if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
 
+            var resultsForUser = leadController.getLeadsByIdentity(req.query, req.user);
+            if (resultsForUser === null) {
+                res.json({
+                    'message': 'You do not have permission to view leads by the supplied queries!'
+                });
+            } else {
+                resultsForUser.then(function (leads) {
+                    res.json(leads);
+                });
+    }
+        }
     };
 
     // Possibly not implemented or used now. 
@@ -173,6 +184,7 @@ var leadApi = function (knex) {
             });
     };
 
+    // Potential TODO: add security permission check here
     // Lucas's taking this
     // GET /api/leads/:id
     var getLeadById = function (req, res) {
