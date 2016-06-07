@@ -128,3 +128,7 @@ describe('Contact API', function () {
     });
 
 });
+
+describe('updateContact', function () {
+    it('')
+});

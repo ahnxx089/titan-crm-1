@@ -55,25 +55,25 @@ var contactMechController = function (knex) {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
                     .then(function (contactMechId) {
                         contactMechEntity.contactMechId = contactMechId;
-                        return contactMechData.addContactMechToTelecomTable(contactMechEntity)
-                            .then(function (input) {
-                                return contactMechId;
-                            });
+                        return contactMechData.addContactMechToTelecomTable(contactMechEntity);
+                            //.then(function (input) {
+                            //    return contactMechId;
+                            //});
                     });
             } else if (contactMech.contactMechTypeId === 'POSTAL_ADDRESS') {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
                     .then(function (contactMechId) {
                         contactMechEntity.contactMechId = contactMechId;
-                        return contactMechData.addContactMechToPostalTable(contactMechEntity)
-                            .then(function (input) {
-                                return contactMechId;
-                            });
+                        return contactMechData.addContactMechToPostalTable(contactMechEntity);
+                            //.then(function (input) {
+                            //    return contactMechId;
+                            //});
                     });
             } else {
-                promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
-                    .then(function (contactMechId) {
-                        return contactMechId;
-                    });
+                promise = contactMechData.addContactMechToGeneralTable(contactMechEntity);
+                    //.then(function (contactMechId) {
+                    //    return contactMechId;
+                    //});
             }
 
             promise.catch(function (error) {
@@ -98,6 +98,7 @@ var contactMechController = function (knex) {
                     var contactMech = new ContactMech(
                         contactMechs[i].contactMechId,
                         contactMechs[i].contactMechTypeId,
+                        contactMechs[i].contactMechPuproseTypeId,
                         contactMechs[i].infoString,
                         contactMechs[i].createdDate,
                         contactMechs[i].updatedDate,
@@ -141,6 +142,7 @@ var contactMechController = function (knex) {
                     var contactMech = new ContactMech(
                         contactMechs[i].contactMechId,
                         contactMechs[i].contactMechTypeId,
+                        contactMechs[i].contactMechPuproseTypeId,
                         contactMechs[i].infoString,
                         contactMechs[i].createdDate,
                         contactMechs[i].updatedDate,
@@ -180,6 +182,7 @@ var contactMechController = function (knex) {
                     contactMechEntity = new ContactMech(
                         contactMech[0].contactMechId,
                         contactMech[0].contactMechTypeId,
+                        contactMech[0].contactMechPuproseTypeId,
                         contactMech[0].infoString,
                         contactMech[0].createdDate,
                         contactMech[0].updatedDate,
@@ -213,13 +216,16 @@ var contactMechController = function (knex) {
      * @param {Object} contact - The object that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateContactMech = function (contactId, contactMech) {
+    var updateContactMech = function (contactMechId, contactMech) {
+        var now = (new Date()).toISOString();
+        
         var contactMechEntity = new ContactMech(
-            contactMech.contactMechId,
+            contactMechId,
             contactMech.contactMechTypeId,
+            contactMech.contactMechPurposeTypeId,
             contactMech.infoString,
             contactMech.createdDate,
-            (new Date()).toISOString(), //updated date
+            now, //updated date
             contactMech.countryCode,
             contactMech.areaCode,
             contactMech.contactNumber,
@@ -240,10 +246,10 @@ var contactMechController = function (knex) {
 
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
-            var promise = contactMechData.updateContactMech(contactMechEntity)
-                .then(function (contactMechId) {
-                    return contactMechId;
-                });
+            var promise = contactMechData.updateContactMech(contactMechEntity);
+                //.then(function (contactMechId) {
+                //    return contactMechId;
+                //});
             promise.catch(function (error) {
                 winston.error(error);
             });

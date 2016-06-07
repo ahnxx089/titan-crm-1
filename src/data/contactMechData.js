@@ -22,7 +22,10 @@ var contactMechData = function (knex) {
                 created_date: (new Date()).toISOString(),
                 updated_date: (new Date()).toISOString()
             })
-            .into('contact_mech');
+            .into('contact_mech')
+            .then(function (idArray) {
+                return idArray[0];
+            });
     };
 
     /**
@@ -45,7 +48,10 @@ var contactMechData = function (knex) {
                 created_date: (new Date()).toISOString(),
                 updated_date: (new Date()).toISOString()
             })
-            .into('postal_address');
+            .into('postal_address')
+            .then(function (idArray) {
+                return idArray[0];
+            });
     };
 
 
@@ -64,7 +70,10 @@ var contactMechData = function (knex) {
                 created_date: (new Date()).toISOString(),
                 updated_date: (new Date()).toISOString()
             })
-            .into('telecom_number');
+            .into('telecom_number')
+            .then(function (idArray) {
+                return idArray[0];
+            });
     };
 
     /**
@@ -101,7 +110,7 @@ var contactMechData = function (knex) {
             .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
             .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')
             .where({
-                party_id: partyId
+                'contact_mech.party_id': partyId
             });
     };
 
@@ -123,7 +132,7 @@ var contactMechData = function (knex) {
             .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
             .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')
             .where({
-                contact_mech_id: id
+                'contact_mech.contact_mech_id': id
             });
     };
 

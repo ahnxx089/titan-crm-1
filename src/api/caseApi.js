@@ -2,7 +2,8 @@
 // RESTful API module for cases.
 //
 // @file:    caseApi.js
-// @author: Dinesh Shenoy <astroshenoy@gmail.com>
+// @authors: Dinesh Shenoy <astroshenoy@gmail.com>
+//           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 var caseApi = function (knex) {
@@ -55,7 +56,7 @@ var caseApi = function (knex) {
             
         }
         */
-        
+
         // If the request did not properly pass any of the various if tests
         // above, it is not a valid query, make the reponse null.
         else {
@@ -69,12 +70,20 @@ var caseApi = function (knex) {
         caseController.getCaseById(caseId)
             .then(function (case_) {
                 return res.json(case_);
-        });
+            });
     };
 
     // PUT /api/cases/:id
     var updateCase = function (req, res) {
+        var caseId = req.params.id;
+        var case_ = req.body;
 
+        caseController.updateCase(caseId, case_)
+            .then(function (result) {
+                res.json({
+                    updated: result
+                });
+            });
     };
 
     // DELETE /api/cases/:id

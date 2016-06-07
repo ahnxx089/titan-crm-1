@@ -396,40 +396,47 @@ var contactController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContact = function (contactId, contact, user) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_UPDATE');
         var now = (new Date()).toISOString();
-        //Convert contact to entity
-        var contactEntity = new Contact(
-            contactId,
-            contact.partyTypeId,
-            contact.preferredCurrencyUomId,
-            contact.description,
-            contact.statusId,
-            contact.createdBy,
-            contact.createdDate, 
-            now, //contact.updatedDate,
-            contact.salutation,
-            contact.firstName,
-            contact.middleName,
-            contact.lastName,
-            contact.birthDate,
-            contact.comments
-        );
 
-        var validationErrors = contactEntity.validateForUpdate();
-        if (validationErrors.length === 0) {
-            // Pass on the entity to be added to the data layer
-            var promise = contactData.updateContact(contactEntity, user);
-            //.then(function (numRows) {
-            //    return numRows;
-            //});
+        if (hasPermission !== -1) {
+            //Convert contact to entity
+            var contactEntity = new Contact(
+                contactId,
+                contact.partyTypeId,
+                contact.preferredCurrencyUomId,
+                contact.description,
+                contact.statusId,
+                contact.createdBy,
+                contact.createdDate,
+                now, //contact.updatedDate,
+                contact.salutation,
+                contact.firstName,
+                contact.middleName,
+                contact.lastName,
+                contact.birthDate,
+                contact.comments
+            );
 
-            promise.catch(function (error) {
-                winston.error(error);
-            });
-            return promise;
+            var validationErrors = contactEntity.validateForUpdate();
+            if (validationErrors.length === 0) {
+                // Pass on the entity to be added to the data layer
+                var promise = contactData.updateContact(contactEntity, user);
+                //.then(function (numRows) {
+                //    return numRows;
+                //});
+
+                promise.catch(function (error) {
+                    winston.error(error);
+                });
+                return promise;
+            } else {
+                return validationErrors;
+            }
         } else {
             return null;
         }
+
     };
 
     /**

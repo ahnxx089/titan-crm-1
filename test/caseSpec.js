@@ -109,14 +109,73 @@ describe('Case module ', function () {
             done();
         }
     });
-    
-    it('caseController.getCaseById returns a valid case object', function(done) {
+
+    it('caseController.getCaseById returns a valid case object', function (done) {
         caseController.getCaseById(1).then(function (testCase) {
             expect(testCase instanceof Case).toBeTruthy();
             // Call done to finish the async function
             done();
         });
-        
+
     });
 
+});
+
+describe('updateCase', function () {
+    it('returns null for invalid input', function (done) {
+        var caseId = 1;
+        var case_ = {};
+
+        var result = caseController.updateCase(caseId, case_);
+        expect(result).toBeNull();
+        done();
+    });
+
+    it('returns a promise for valid input', function (done) {
+        var caseId = 1;
+        var case_ = {
+            caseId: 1,
+            caseTypeId: 'RF_SUPPORT',
+            caseCategoryId: 'CRCAT_NEW_PROB',
+            statusId: 'CASE_ACCEPTED',
+            fromPartyId: 62,
+            priority: 5,
+            caseDate: '2016-05-28 12:31:26',
+            responseRequiredDate: '2016-05-28 12:31:26',
+            caseName: 'Red light keeps flashing',
+            description: 'Customer expects a few niceties first, before getting down to business',
+            resolutionId: null,
+            createdBy: 'fullAdminDEF',
+            createdDate: '2016-05-28 12:31:26'
+        };
+
+        var result = caseController.updateCase(caseId, case_);
+        expect('then' in result).toBeTruthy();
+        done();
+    });
+
+    it('fulfillment value of promise is a number', function (done) {
+        var caseId = 1;
+        var case_ = {
+            caseId: 1,
+            caseTypeId: 'RF_SUPPORT',
+            caseCategoryId: 'CRCAT_NEW_PROB',
+            statusId: 'CASE_ACCEPTED',
+            fromPartyId: 62,
+            priority: 5,
+            caseDate: '2016-05-28 12:31:26',
+            responseRequiredDate: '2016-05-28 12:31:26',
+            caseName: 'Red light keeps flashing',
+            description: 'Customer expects a few niceties first, before getting down to business',
+            resolutionId: null,
+            createdBy: 'fullAdminDEF',
+            createdDate: '2016-05-28 12:31:26'
+        };
+
+        caseController.updateCase(caseId, case_)
+            .then(function (result) {
+                expect(typeof result).toBe('number');
+                done();
+            });
+    });
 });

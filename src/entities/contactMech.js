@@ -98,7 +98,7 @@ ContactMech.prototype.validateForUpdate = function () {
     
     // Perform general validations
     var validations = [
-            this.contactMechId(true),
+            this.validateContactMechId(true),
             this.validateContactMechTypeId(true),
             this.validateContactMechPurposeTypeId(true),
             this.validateInfoString(false),
@@ -167,10 +167,24 @@ ContactMech.prototype.validateContactMechPurposeTypeId = function (isRequired) {
     return validationResult;
 };
 
-// info_strng is varchar(255)
+// info_string is varchar(255)
 ContactMech.prototype.validateInfoString = function (isRequired) {
     this.infoString = validation.sanitizeInput(this.infoString);
     var validationResult = validation.validateString(this.infoString, isRequired, 255, 'infoString');
+    return validationResult;
+};
+
+// created_date is date
+ContactMech.prototype.validateCreatedDate = function (isRequired) {
+    this.createdDate = validation.sanitizeInput(this.createdDate);
+    var validationResult = validation.validateDate(this.createdDate, isRequired, 'createdDate');
+    return validationResult;
+};
+
+// updated_date is date
+ContactMech.prototype.validateUpdatedDate = function (isRequired) {
+    this.updatedDate = validation.sanitizeInput(this.updatedDate);
+    var validationResult = validation.validateDate(this.updatedDate, isRequired, 'updatedDate');
     return validationResult;
 };
 

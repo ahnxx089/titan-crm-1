@@ -2,7 +2,8 @@
 // Business logic module for cases.
 //
 // @file:    caseController.js
-// @author:  Dinesh Shenoy <astroshenoy@gmail.com>
+// @authors: Dinesh Shenoy <astroshenoy@gmail.com>
+//           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
@@ -128,8 +129,39 @@ var caseController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateCase = function (caseId, case_) {
+        var now = (new Date()).toISOString();
+        
+        //Convert case to entity
+        var caseEntity = new Case(
+            caseId,
+            case_.caseTypeId,
+            case_.caseCategoryId,
+            case_.statusId,
+            case_.fromPartyId,
+            case_.priority,
+            case_.caseDate,
+            case_.responseRequiredDate,
+            case_.caseName,
+            case_.description,
+            case_.resolutionId,
+            case_.createdBy,
+            case_.createdDate,
+            now
+        );
+        
+        var validationErrors = caseEntity.validateForUpdate();
+        
+        if (validationErrors.length === 0) {
+            // Pass on the entity to be added to the data layer
+            var promise = caseData.updateCase(caseEntity);
 
-
+            promise.catch(function (error) {
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            return null;
+        }
     };
 
     /**

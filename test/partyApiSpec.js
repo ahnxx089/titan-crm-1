@@ -29,7 +29,7 @@ describe('Party API', function () {
         });
     });
 
-    it('getParties returns all parties in system as an array', function (done) {
+    xit('getParties returns all parties in system as an array', function (done) {
         baseRequest.get(apiBaseUrl, function (err, res, body) {
             var typeofParties = Object.prototype.toString.call(JSON.parse(body));
             // Check whether the return value is an array
@@ -39,7 +39,7 @@ describe('Party API', function () {
         });
     });
 
-    it('getParty returns a valid party entity', function (done) {
+    xit('getParty returns a valid party entity', function (done) {
         baseRequest.get(apiBaseUrl + '/2', function (err, res, body) {
             expect(JSON.parse(body).hasOwnProperty('partyId')).toBeTruthy();
             // Call done to finish the async function

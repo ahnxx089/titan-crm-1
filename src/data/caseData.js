@@ -3,6 +3,7 @@
 //
 // @file:    caseData.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
+//           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
@@ -56,7 +57,24 @@ var caseData = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateCase = function (case_) {
-
+        return knex('case_')
+            .where({case_id: case_.caseId})
+            .update({
+                case_id: case_.caseId,
+                case_type_id: case_.caseTypeId,
+                case_category_id: case_.caseCategoryId,
+                status_id: case_.statusId,
+                from_party_id: case_.fromPartyId,
+                priority: case_.priority,
+                case_date: case_.caseDate,
+                response_required_date: case_.responseRequiredDate,
+                case_name: case_.caseName,
+                description: case_.description,
+                resolution_id: case_.resolutionId,
+                created_by: case_.createdBy,
+                created_date: case_.createdDate,
+                updated_date: case_.updatedDate
+        });
     };
 
     /**
