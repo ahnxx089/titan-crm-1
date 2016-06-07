@@ -5,7 +5,7 @@ var nodemon = require('gulp-nodemon');
 var jasmine = require('gulp-jasmine');
 
 // Location of all JS files that need to be linted
-var jsFiles = ['*.js', 'src/*/*.js'];
+var jsFiles = ['*.js', 'src/**/*.js'];
 
 // Location of all Jasmine spec files
 var specFiles = ['test/*.js'];
