@@ -154,7 +154,6 @@ var contactApi = function (knex) {
             res.json(results);
         }
         
-        
     };
 
     // DELETE /api/contacts/:id
