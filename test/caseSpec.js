@@ -161,7 +161,7 @@ describe('Case module ', function () {
     });
     
     
-    // Add case purposedly not passed [Lucas]
+    // Add case passed. This will not add case [Lucas]
     xit('addCase DOES NOT add a case', function (done) {
         
         // this is a user without proper permission
@@ -196,7 +196,7 @@ describe('Case module ', function () {
     });
     
     
-    // Another Add case purposedly not passed [Lucas]
+    // Another Add case passed. This will not add case [Lucas]
     xit('should throw an exception', function () {
         
         var user = {
@@ -234,6 +234,7 @@ describe('Case module ', function () {
     });
 
 });
+
 
 describe('updateCase', function () {
     xit('returns null for invalid input', function (done) {
