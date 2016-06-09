@@ -9,7 +9,7 @@ var knex = require('../src/config/knexConfig')().getConfig();
 var partyController = require('../src/controllers/partyController')(knex);
 var Party = require('../src/entities/party');
 
-describe('Party module', function () {
+xdescribe('Party module', function () {
     xit('getParties returns all parties in system as an array of Party objects', function (done) {
            partyController.getParties().then(function(parties) {
                // Get types of returned objects
