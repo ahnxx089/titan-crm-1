@@ -329,12 +329,22 @@ var caseController = function (knex) {
         }
     };
 
+
     /**
-     * Delete a case
-     * @param {Number} caseId - Unique id of the case to be deleted
+     * Delete a lead
+     * @param {Number} leadId - Unique id of the lead (actually lead id in DB) to be deleted
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */
     var deleteCase = function (caseId) {
+        var promise = caseData.deleteCase(caseId)
+            .then(function (result) {
+                return result;
+            });
+        promise.catch(function (error) {
+            // Log the error
+            winston.error(error);
+        });
+        return promise;
 
     };
 

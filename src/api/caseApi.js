@@ -121,10 +121,18 @@ var caseApi = function (knex) {
             });
     };
 
-    // DELETE /api/cases/:id
+ // DELETE /api/cases/:id
     var deleteCase = function (req, res) {
+        var caseId = req.params.id;
+        caseController.deleteCase(caseId)
+            .then(function (result) {
+                res.json({
+                    deleted: result
+                });
+            });
 
     };
+
 
     return {
         addCase: addCase,
