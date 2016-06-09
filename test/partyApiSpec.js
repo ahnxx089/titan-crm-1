@@ -18,7 +18,7 @@ var baseRequest = request.defaults({
 
 
 
-describe('Party API', function () {
+xdescribe('Party API', function () {
 
     xit('is inaccessible without a valid token', function (done) {
         request.get(apiBaseUrl, function (err, res, body) {

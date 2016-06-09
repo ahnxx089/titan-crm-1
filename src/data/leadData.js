@@ -149,7 +149,7 @@ var leadData = function (knex) {
             .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')*/
             .where('person.party_id', id)
             .andWhere('party_role.role_type_id', 'LEAD');
-        // potential TODO: limit results to LEAD type (party_role.role_type_id)
+        // potential TODO: limit results to LEAD type (party_role.role_type_id) [CHECK]
         
         
         

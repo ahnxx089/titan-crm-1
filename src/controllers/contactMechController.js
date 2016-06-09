@@ -53,21 +53,25 @@ var contactMechController = function (knex) {
 
             if (contactMech.contactMechTypeId === 'TELECOM_NUMBER') {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
-                    .then(function (contactMechId) {
-                        contactMechEntity.contactMechId = contactMechId;
-                        return contactMechData.addContactMechToTelecomTable(contactMechEntity);
-                            //.then(function (input) {
-                            //    return contactMechId;
-                            //});
+                    .then(function (contactMechId6) {
+                        contactMechEntity.contactMechId = contactMechId6;
+                        return contactMechData.addContactMechToTelecomTable(contactMechEntity)//;
+                            // NOTE TO BILL: 
+                            // this .then is necessary because contactMechId (line 56) is needed in addContactMechCallback in lead controller, contact controller and account controller.
+                            // Although contactMechId is used above (line 27), it had been null all the time
+                            // Lucas purposedly changed the variable name to contactMechId6, to distinguish it from others.
+                            .then(function () {
+                                return contactMechId6;
+                            });
                     });
             } else if (contactMech.contactMechTypeId === 'POSTAL_ADDRESS') {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
                     .then(function (contactMechId) {
                         contactMechEntity.contactMechId = contactMechId;
-                        return contactMechData.addContactMechToPostalTable(contactMechEntity);
-                            //.then(function (input) {
-                            //    return contactMechId;
-                            //});
+                        return contactMechData.addContactMechToPostalTable(contactMechEntity)//;
+                            .then(function () {
+                                return contactMechId;
+                            });
                     });
             } else {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity);
@@ -279,7 +283,7 @@ var contactMechController = function (knex) {
     var linkContactMechToParty = function (partyId, contactMechId, purposeTypeId) {
 
         var promise = contactMechData.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
-            .then(function (result) {
+            .then(function () {
                 return partyId;
             });
         promise.catch(function (error) {

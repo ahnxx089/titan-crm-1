@@ -14,7 +14,7 @@ var contactController = require('../src/controllers/contactController')(knex);
 var userController = require('../src/controllers/userController')(knex);
 var Contact = require('../src/entities/contact');
 
-describe('Contact module ', function () {
+xdescribe('Contact module ', function () {
 
     // Test contactController.addContact where a user has security permission to add a contact
     xit('contactController.addContact allows a user with permission to add a Contact', function (done) {
@@ -217,7 +217,7 @@ describe('Contact module ', function () {
 
 });
 
-describe('updateContact', function () {
+xdescribe('updateContact', function () {
     it('returns null if user lacks permission', function (done) {
         var contactId = 20;
         var user = {
@@ -308,7 +308,7 @@ describe('updateContact', function () {
 
 });
 
-describe('deleteContact', function () {
+xdescribe('deleteContact', function () {
     it('does not return null for valid input', function (done) {
         var now = (new Date()).toISOString();
         var contact = new Contact(

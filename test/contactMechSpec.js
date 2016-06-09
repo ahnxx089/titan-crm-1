@@ -14,7 +14,7 @@ var contactMechController = require('../src/controllers/contactMechController')(
 var ContactMech = require('../src/entities/contactMech');
 
 
-describe('addContactMech', function () {
+xdescribe('addContactMech', function () {
     it('returns array of errors for invalid input', function (done) {
         //var now = (new Date()).toISOString();
         var mech = {};
@@ -114,7 +114,7 @@ xdescribe('getContactMechsByParty', function () {
 
 });
 
-describe('getContactMechById', function () {
+xdescribe('getContactMechById', function () {
     it('returns promise', function (done) {
         var mechId = 1;
         var result = contactMechController.getContactMechById(mechId);
@@ -132,7 +132,7 @@ describe('getContactMechById', function () {
     });
 });
 
-describe('updateContactMech', function () {
+xdescribe('updateContactMech', function () {
     it('returns null for invalid input', function (done) {
         var id = 23;
         var mech = {};

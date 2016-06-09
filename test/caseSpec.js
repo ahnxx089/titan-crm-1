@@ -12,7 +12,7 @@ var knex = require('../src/config/knexConfig')().getConfig();
 var caseController = require('../src/controllers/caseController')(knex);
 var Case = require('../src/entities/case');
 
-describe('Case module ', function () {
+xdescribe('Case module ', function () {
 
     // Test caseController.getCasesByOwner where a user has security permission
     // (but does not actually own any cases) -- TEST HAS PASSED
@@ -110,7 +110,7 @@ describe('Case module ', function () {
         }
     });
 
-    it('caseController.getCaseById returns a valid case object', function (done) {
+    xit('caseController.getCaseById returns a valid case object', function (done) {
         caseController.getCaseById(1).then(function (testCase) {
             expect(testCase instanceof Case).toBeTruthy();
             // Call done to finish the async function
@@ -122,7 +122,7 @@ describe('Case module ', function () {
 });
 
 describe('updateCase', function () {
-    it('returns null for invalid input', function (done) {
+    xit('returns null for invalid input', function (done) {
         var caseId = 1;
         var case_ = {};
 
@@ -131,7 +131,7 @@ describe('updateCase', function () {
         done();
     });
 
-    it('returns a promise for valid input', function (done) {
+    xit('returns a promise for valid input', function (done) {
         var caseId = 1;
         var case_ = {
             caseId: 1,
@@ -154,7 +154,7 @@ describe('updateCase', function () {
         done();
     });
 
-    it('fulfillment value of promise is a number', function (done) {
+    xit('fulfillment value of promise is a number', function (done) {
         var caseId = 1;
         var case_ = {
             caseId: 1,

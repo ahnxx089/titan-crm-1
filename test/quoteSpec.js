@@ -14,7 +14,7 @@ var quoteController = require('../src/controllers/quoteController')(knex);
 var userController = require('../src/controllers/userController')(knex);
 var Quote = require('../src/entities/quote');
 
-describe('Quote module ', function () {
+xdescribe('Quote module ', function () {
 
     // Test quoteController.updateQuote where user LACKS security permission -- TEST PASSED
     xit('quoteController.updateQuote DENIES a user without permission to own Quotes(s) to update a Quote', function (done) {
