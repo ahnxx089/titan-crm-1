@@ -129,7 +129,7 @@ var leadData = function (knex) {
                            'party_supplemental_data.annual_revenue', 'party_supplemental_data.num_employees',
                            'party_supplemental_data.industry_enum_id', 'party_supplemental_data.ownership_enum_id',
                            'party_supplemental_data.ticker_symbol', 'party_supplemental_data.important_note',
-                           'party_role.role_type_id'/*,
+                           'party_role.role_type_id' /*,
                            'party_contact_mech.contact_mech_id', 'party_contact_mech.contact_mech_purpose_type_id', 
                            'party_contact_mech.from_date', 'party_contact_mech.thru_date', 'party_contact_mech.verified',
                            'party_contact_mech.comments',
