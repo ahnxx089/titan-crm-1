@@ -169,12 +169,12 @@ var noteController = function (knex) {
 
     // this is for the mapping table: case_note
     var linkNoteToCase = function (caseId, noteId) {
-        var promise = noteData.linkNoteToCase(caseId, noteId);
+        var promise = noteData.linkNoteToCase(caseId, noteId)
         // this .then is actually used. WHY and HOW? 
         // TODO: use console and debugger to show promise and its type, content, etc
-//            .then(function (result) {
-//                return caseId;
-//            });
+            .then(function (result) {
+                return caseId;
+            });
         promise.catch(function (error) {
             // Log the error
             winston.error(error);
