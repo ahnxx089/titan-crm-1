@@ -467,14 +467,12 @@ var quoteController = function (knex) {
                     // If we search for something, in null columns, then we will never find it
                     var test2 = (!emptyString && emptyColumn) ? false : true;
                     // If we search for something, in some columns, we need to compare
-                    test2 = (!emptyString && !emptyColumn) ? quotes[i].quote_name.toUpperCase() === quoteName.toUpperCase() : test2;
-//                    Line above is same as 
-//                    if(!emptyString && !emptyColumn) {
-//                        test2 = quotes[i].quote_name.toUpperCase() == quoteName.toUpperCase();
-//                    }
+                    // the first attempt is to do complete string match, the second attempt is to do substring match.
+                    test2 = (!emptyString && !emptyColumn) ? (quotes[i].quote_name.toUpperCase().indexOf(quoteName.toUpperCase()) > -1) : test2;
 
                     
                     // quotes[i].status_id is varchar(20), and is NULLABLE
+                    // status_id will be shown in a drop-down menu. There is no need to do substring match here. 
                     var emptyString = status == null;
                     var emptyColumn = quotes[i].status_id == null;
 //                    console.log(emptyString);
@@ -483,7 +481,10 @@ var quoteController = function (knex) {
                     var test3 = (!emptyString && emptyColumn) ? false : true;
                     // If we search for something, in some columns, we need to compare
                     test3 = (!emptyString && !emptyColumn) ? quotes[i].status_id.toUpperCase() === status.toUpperCase() : test3;
-                    
+//                    The line above is same as 
+//                    if(!emptyString && !emptyColumn) {
+//                        test3 = quotes[i].status_id.toUpperCase() == status.toUpperCase();
+//                    }
                     
                     // quotes[i].party_id is Number, and is NULLABLE
                     var test4 = account == null ? true : quotes[i].party_id === +account;
