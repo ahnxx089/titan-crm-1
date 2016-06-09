@@ -14,7 +14,7 @@ var accountController = require('../src/controllers/accountController')(knex);
 var Account = require('../src/entities/account');
 
 
-describe('Account module', function () {
+xdescribe('Account module', function () {
 
     xit('getAccounts returns a valid account entity', function (done) {
         accountController.getAccountById(70).then(function (account) {
