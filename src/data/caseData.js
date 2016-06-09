@@ -154,8 +154,25 @@ var caseData = function (knex) {
      * @param {Number} caseId - Unique id of the case to be deleted
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */
-    var deleteCase = function (caseId) {
-
+var deleteCase = function (case_) {
+        return knex('case_')
+            .where({case_id: case_.caseId})
+            .delete({
+                case_id: case_.caseId,
+                case_type_id: case_.caseTypeId,
+                case_category_id: case_.caseCategoryId,
+                status_id: case_.statusId,
+                from_party_id: case_.fromPartyId,
+                priority: case_.priority,
+                case_date: case_.caseDate,
+                response_required_date: case_.responseRequiredDate,
+                case_name: case_.caseName,
+                description: case_.description,
+                resolution_id: case_.resolutionId,
+                created_by: case_.createdBy,
+                created_date: case_.createdDate,
+                updated_date: case_.updatedDate
+        });
     };
 
     return {
