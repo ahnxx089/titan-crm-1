@@ -230,13 +230,17 @@ var leadController = function (knex) {
                     if ('then' in mechPromise) {
                         addContactMechPromises.push(mechPromise);
                     }
+                    // this catch necessary? Maybe move it inside the for loop?
+                    mechPromise.catch(function (error) {
+                        winston.error(error);
+                    });
                 }
                 // above
                 
-                // this catch necessary?
-                mechPromise.catch(function (error) {
-                    winston.error(error);
-                });
+                // this catch necessary? Maybe move it inside the for loop?
+//                mechPromise.catch(function (error) {
+//                    winston.error(error);
+//                });
                 promise.catch(function (error) {
                     winston.error(error);
                 });

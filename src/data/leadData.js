@@ -129,7 +129,7 @@ var leadData = function (knex) {
                            'party_supplemental_data.annual_revenue', 'party_supplemental_data.num_employees',
                            'party_supplemental_data.industry_enum_id', 'party_supplemental_data.ownership_enum_id',
                            'party_supplemental_data.ticker_symbol', 'party_supplemental_data.important_note',
-                           'party_role.role_type_id',
+                           'party_role.role_type_id'/*,
                            'party_contact_mech.contact_mech_id', 'party_contact_mech.contact_mech_purpose_type_id', 
                            'party_contact_mech.from_date', 'party_contact_mech.thru_date', 'party_contact_mech.verified',
                            'party_contact_mech.comments',
@@ -137,18 +137,21 @@ var leadData = function (knex) {
                            'telecom_number.country_code', 'telecom_number.area_code', 'telecom_number.contact_number', 'telecom_number.ask_for_name',
                            'postal_address.to_name', 'postal_address.attn_name', 'postal_address.address1',
                            'postal_address.address2', 'postal_address.directions', 'postal_address.city',
-                           'postal_address.postal_code', 'postal_address.country_geo_id', 'postal_address.state_province_geo_id'
+                           'postal_address.postal_code', 'postal_address.country_geo_id', 'postal_address.state_province_geo_id'*/
                           )
             .from('person')
             .innerJoin('party', 'person.party_id', 'party.party_id')
             .innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id')
             .innerJoin('party_role', 'person.party_id', 'party_role.party_id')
-            .innerJoin('party_contact_mech', 'person.party_id', 'party_contact_mech.party_id')
+            /*.innerJoin('party_contact_mech', 'person.party_id', 'party_contact_mech.party_id')
             .leftJoin('contact_mech', 'party_contact_mech.contact_mech_id', '=', 'contact_mech.contact_mech_id')
             .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
-            .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')
-            .where('person.party_id', id);
+            .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')*/
+            .where('person.party_id', id)
+            .andWhere('party_role.role_type_id', 'LEAD');
         // potential TODO: limit results to LEAD type (party_role.role_type_id)
+        
+        
         
 //        return knex.from('person')
 //            .innerJoin('party', 'person.party_id', 'party.party_id')
