@@ -237,10 +237,6 @@ var leadController = function (knex) {
                 }
                 // above
                 
-                // this catch necessary? Maybe move it inside the for loop?
-//                mechPromise.catch(function (error) {
-//                    winston.error(error);
-//                });
                 promise.catch(function (error) {
                     winston.error(error);
                 });

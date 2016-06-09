@@ -22,10 +22,10 @@ var contactMechData = function (knex) {
                 created_date: (new Date()).toISOString(),
                 updated_date: (new Date()).toISOString()
             })
-            .into('contact_mech')
-            .then(function (idArray) {
-                return idArray[0];
-            });
+            .into('contact_mech');
+//            .then(function (idArray) {
+//                return idArray[0];
+//            });
     };
 
     /**
@@ -48,10 +48,10 @@ var contactMechData = function (knex) {
                 created_date: (new Date()).toISOString(),
                 updated_date: (new Date()).toISOString()
             })
-            .into('postal_address')
-            .then(function (idArray) {
-                return idArray[0];
-            });
+            .into('postal_address');
+//            .then(function (idArray) {
+//                return idArray[0];
+//            });
     };
 
 
@@ -70,10 +70,10 @@ var contactMechData = function (knex) {
                 created_date: (new Date()).toISOString(),
                 updated_date: (new Date()).toISOString()
             })
-            .into('telecom_number')
-            .then(function (idArray) {
-                return idArray[0];
-            });
+            .into('telecom_number');
+//            .then(function (idArray) {
+//                return idArray[0];
+//            });
     };
 
     /**
