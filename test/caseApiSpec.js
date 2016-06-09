@@ -14,7 +14,7 @@ var apiBaseUrl = 'http://localhost:5000/api/cases';
 // so that the tests can be customized enough to show what they need to, without each of us
 // having to overwrite one token up here outside describe().
 
-xdescribe('Case API', function () {
+describe('Case API', function () {
 
     // Test Passes, confirmed.
     xit('getCasesByOwner returns all cases owned by a user as an array', function (done) {
@@ -56,8 +56,8 @@ xdescribe('Case API', function () {
 //        });
     });
     
-    
-    it('addCase adds a case and returns a valid case id', function(done) {
+    // Test passed [Lucas]
+    xit('addCase adds a case and returns a valid case id', function(done) {
         // generated using crmsfaContactTasksABC
         var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjcm1zZmFDb250YWN0VGFza3NBQkMiLCJwYXNzd29yZCI6IiQyYSQwOCRDQi5BQXpDdkFNN2doc0lnRDlIdXJlUE8zQnNMREFKMHRCR0lQSExodjlpanlheTFFMjRPMiIsInBhc3N3b3JkSGludCI6bnVsbCwiZW5hYmxlZCI6MSwiZGlzYWJsZWREYXRlIjpudWxsLCJwYXJ0eUlkIjoxNSwiY3JlYXRlZERhdGUiOiIyMDE2LTA1LTI1VDE2OjE0OjMzLjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDUtMjVUMTY6MTQ6MzMuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX0NBU0VfQ1JFQVRFIiwiQ1JNU0ZBX0FDVFNfVklFVyIsIkNSTVNGQV9BQ1RfQ0xPU0UiLCJDUk1TRkFfQUNUX0NSRUFURSIsIkNSTVNGQV9BQ1RfVVBEQVRFIiwiQ1JNU0ZBX0FDVF9WSUVXIiwiQ1JNU0ZBX0NPTlRBQ1RTX1ZJRVciLCJDUk1TRkFfQ09OVEFDVF9DUkVBVEUiLCJDUk1TRkFfQ09OVEFDVF9ERUFDVElWQVRFIiwiQ1JNU0ZBX0NPTlRBQ1RfUkVBU1NJR04iLCJDUk1TRkFfQ09OVEFDVF9VUERBVEUiLCJDUk1TRkFfQ09OVEFDVF9WSUVXIiwiQ1JNU0ZBX1ZJRVciLCJQQVJUWU1HUl9DTUVfQ1JFQVRFIiwiUEFSVFlNR1JfQ01FX0RFTEVURSIsIlBBUlRZTUdSX0NNRV9VUERBVEUiLCJQQVJUWU1HUl9HUlBfVVBEQVRFIiwiUEFSVFlNR1JfTk9URSIsIlBBUlRZTUdSX1BDTV9DUkVBVEUiLCJQQVJUWU1HUl9QQ01fREVMRVRFIiwiUEFSVFlNR1JfUENNX1VQREFURSIsIlBBUlRZTUdSX1JFTF9DUkVBVEUiLCJQQVJUWU1HUl9SRUxfVVBEQVRFIiwiUEFSVFlNR1JfUk9MRV9DUkVBVEUiLCJQQVJUWU1HUl9ST0xFX0RFTEVURSIsIlBBUlRZTUdSX1NSQ19DUkVBVEUiLCJQQVJUWU1HUl9TVFNfVVBEQVRFIiwiV09SS0VGRk9SVE1HUl9BRE1JTiJdLCJpYXQiOjE0NjU0OTE1NjMsImV4cCI6MTQ2NTU3Nzk2M30.tykjk5DDWSZPdVKByJO-ifPIqbvAOAluolKTl_KqH08';
         
@@ -68,27 +68,20 @@ xdescribe('Case API', function () {
         });
         
         var newCase = {
-            "caseId": 1,
-            "caseTypeId": "RF_SUPPORT",
-            "caseCategoryId": "CRCAT_NEW_PROB",
+            "caseTypeId": "RF_PROPOSAL",
+            "caseCategoryId": "CRCAT_COMPLEX",
             "statusId": "CASE_ACCEPTED",
-            "fromPartyId": 62,
+            "fromPartyId": 90,
             "priority": 5,
-            "caseDate": "2016-05-28T17:31:26.000Z",
-            "responseRequiredDate": "2016-05-28T17:31:26.000Z",
-            "caseName": "Red light keeps flashing",
-            "description": "Customer expects a few niceties first, before getting down to business",
+            "caseName": "what is case name doing",
+            "description": "Customer wants a new system",
             "resolutionId": null,
-            "createdBy": "fullAdminDEF",
-            "createdDate": "2016-05-28T17:31:26.000Z",
-            "updatedDate": "2016-05-28T17:31:26.000Z"
+            "createdBy": "crmsfaContactTasksABC",
+            "intenalNote": "this is an internal note"
         };
         
         
-        
-        baseRequest.post(apiBaseUrl, {
-            form: newCase
-        }, function (err, res, body) {
+        baseRequest.post(apiBaseUrl, {form: newCase}, function (err, res, body) {
             var result = JSON.parse(body);
             // Check whether return value is a partyId
             expect(result.hasOwnProperty('caseId')).toBeTruthy();
@@ -98,12 +91,43 @@ xdescribe('Case API', function () {
             done();
         });
         
-        
-        
-//        baseRequest.get(apiBaseUrl + '/2', function (err, res, body) {
-//            expect(JSON.parse(body).hasOwnProperty('caseId')).toBeTruthy();
-//            done();
-//        });
     });
+    
+    // Test (purposedly) not passed [Lucas]
+    xit('addCase will NOT adds a case due to invalid party id', function(done) {
+        // generated using crmsfaContactTasksABC
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjcm1zZmFDb250YWN0VGFza3NBQkMiLCJwYXNzd29yZCI6IiQyYSQwOCRDQi5BQXpDdkFNN2doc0lnRDlIdXJlUE8zQnNMREFKMHRCR0lQSExodjlpanlheTFFMjRPMiIsInBhc3N3b3JkSGludCI6bnVsbCwiZW5hYmxlZCI6MSwiZGlzYWJsZWREYXRlIjpudWxsLCJwYXJ0eUlkIjoxNSwiY3JlYXRlZERhdGUiOiIyMDE2LTA1LTI1VDE2OjE0OjMzLjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDUtMjVUMTY6MTQ6MzMuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX0NBU0VfQ1JFQVRFIiwiQ1JNU0ZBX0FDVFNfVklFVyIsIkNSTVNGQV9BQ1RfQ0xPU0UiLCJDUk1TRkFfQUNUX0NSRUFURSIsIkNSTVNGQV9BQ1RfVVBEQVRFIiwiQ1JNU0ZBX0FDVF9WSUVXIiwiQ1JNU0ZBX0NPTlRBQ1RTX1ZJRVciLCJDUk1TRkFfQ09OVEFDVF9DUkVBVEUiLCJDUk1TRkFfQ09OVEFDVF9ERUFDVElWQVRFIiwiQ1JNU0ZBX0NPTlRBQ1RfUkVBU1NJR04iLCJDUk1TRkFfQ09OVEFDVF9VUERBVEUiLCJDUk1TRkFfQ09OVEFDVF9WSUVXIiwiQ1JNU0ZBX1ZJRVciLCJQQVJUWU1HUl9DTUVfQ1JFQVRFIiwiUEFSVFlNR1JfQ01FX0RFTEVURSIsIlBBUlRZTUdSX0NNRV9VUERBVEUiLCJQQVJUWU1HUl9HUlBfVVBEQVRFIiwiUEFSVFlNR1JfTk9URSIsIlBBUlRZTUdSX1BDTV9DUkVBVEUiLCJQQVJUWU1HUl9QQ01fREVMRVRFIiwiUEFSVFlNR1JfUENNX1VQREFURSIsIlBBUlRZTUdSX1JFTF9DUkVBVEUiLCJQQVJUWU1HUl9SRUxfVVBEQVRFIiwiUEFSVFlNR1JfUk9MRV9DUkVBVEUiLCJQQVJUWU1HUl9ST0xFX0RFTEVURSIsIlBBUlRZTUdSX1NSQ19DUkVBVEUiLCJQQVJUWU1HUl9TVFNfVVBEQVRFIiwiV09SS0VGRk9SVE1HUl9BRE1JTiJdLCJpYXQiOjE0NjU0OTE1NjMsImV4cCI6MTQ2NTU3Nzk2M30.tykjk5DDWSZPdVKByJO-ifPIqbvAOAluolKTl_KqH08';
+        
+        var baseRequest = request.defaults({
+            headers: {
+                'x-access-token': token
+            }
+        });
+        
+        var newCase = {
+            "caseTypeId": "RF_PROPOSAL",
+            "caseCategoryId": "CRCAT_COMPLEX",
+            "statusId": "CASE_ACCEPTED",
+            "fromPartyId": 900,
+            "priority": 5,
+            "caseName": "what is case name doing",
+            "description": "Customer wants a new system",
+            "resolutionId": null,
+            "createdBy": "crmsfaContactTasksABC",
+            "intenalNote": "this is an internal note"
+        };
+        
+        
+        baseRequest.post(apiBaseUrl, {form: newCase}, function (err, res, body) {
+            var result = JSON.parse(body);
+            // Check whether return value is a partyId
+            expect(result.hasOwnProperty('caseId')).toBeTruthy();
+            // Check whether a single party id is returned
+            expect(result.caseId.length).toBe(1);
+            // Call done to finish the async function
+            done();
+        });
+        
+    })
     
 });
