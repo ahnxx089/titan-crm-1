@@ -14,10 +14,10 @@ var quoteController = require('../src/controllers/quoteController')(knex);
 var userController = require('../src/controllers/userController')(knex);
 var Quote = require('../src/entities/quote');
 
-xdescribe('Quote module ', function () {
+describe('Quote module ', function () {
 
     // Test quoteController.updateQuote where user LACKS security permission -- TEST PASSED
-    xit('quoteController.updateQuote DENIES a user without permission to own Quotes(s) to update a Quote', function (done) {
+    it('quoteController.updateQuote DENIES a user without permission to own Quotes(s) to update a Quote', function (done) {
 
         // contactOwnerABC does not have permission to create a Quote (and thus neither to update)
         var user = {
@@ -67,7 +67,7 @@ xdescribe('Quote module ', function () {
         }
     });
 
-    xit('quoteController.updateQuote allows a user with permission to update a Quote', function (done) {
+    it('quoteController.updateQuote allows a user with permission to update a Quote', function (done) {
 
         var user = {
             userId: 'mrQuoteUnquote',
@@ -210,7 +210,7 @@ xdescribe('Quote module ', function () {
         }
     });
 
-    xit('quoteController.updateQuoteItem allows a user with permission to update an Item of a Quote', function (done) {
+    it('quoteController.updateQuoteItem allows a user with permission to update an Item of a Quote', function (done) {
 
         var user = {
             userId: 'mrQuoteUnquote',
@@ -297,7 +297,7 @@ xdescribe('Quote module ', function () {
         }
     });
 
-    xit('quoteController.updateQuoteItemOption allows a user with permission to update an Item of a Quote', function (done) {
+    it('quoteController.updateQuoteItemOption allows a user with permission to update an Item of a Quote', function (done) {
 
         var user = {
             userId: 'mrQuoteUnquote',
