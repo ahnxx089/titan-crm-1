@@ -13,6 +13,9 @@
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
 // getLeads is not finished, not used. Lucas will look at it later. 
 // deleteLead and updateLead are (maybe not) wrong. 
+// getLeadsByPhoneNumber is not declared. Canceled by Anurag. 
+// getLeadsByIdentity is using wrong permission and is not returned. Lucas returned this.
+
 
 var winston = require('winston');
 var Lead = require('../entities/lead');
@@ -93,8 +96,9 @@ var leadController = function (knex) {
      */
     var addLead = function (lead, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
+        var now = (new Date()).toISOString();
+
         if (hasPermission !== -1) {
-            var now = (new Date()).toISOString();
             // Contact mechanisms
             var contactMechEntities = [];
 
@@ -165,11 +169,23 @@ var leadController = function (knex) {
                 contactMechEntities.push(addressContactMech);
             }
             
+            var dob;
+            if (lead.birthDate) {
+                try {
+                    dob = new Date(lead.birthDate).toISOString();
+                } catch (e) {
+                    dob = null;
+                }
+            } else {
+                dob = null;
+            }
+            
             var leadEntity = new Lead(
                 // ok to put dummy data here, eg, null and birthDate
                 // Single quotes are must.
                 null,
-                lead.partyTypeId,
+                // will be PERSON anyway
+                lead.partyTypeId, 
                 lead.currencyUomId,
                 lead.description,
                 lead.statusId,
@@ -182,7 +198,7 @@ var leadController = function (knex) {
                 lead.middleName,
                 lead.lastName,
                 // lead.birthDate,
-                (new Date()).toISOString(), 
+                dob,
                 lead.comments,
                 // for person
                 lead.parentPartyId,
@@ -201,7 +217,7 @@ var leadController = function (knex) {
 //                lead.primaryTelecomNumberId,
 //                lead.primaryEmailId,
                 
-                
+                // will be LEAD anyway
                 lead.roleTypeId
 
                 /*
@@ -471,7 +487,8 @@ var leadController = function (knex) {
         });
         return promise;
     };
-
+    
+    
     //@params {string} firstName -  The first name of the lead you want
     //@params {string} lastName - The last name of the lead you want
     //@return {object} promise - The fulfilmment object is an array of searched values
@@ -491,8 +508,8 @@ var leadController = function (knex) {
             }
             var promise = leadData.getLeadsByIdentity(firstName, lastName)
                 .then(function (leads) {
-            // Fill the leads Entity
-             var leadsEntities = [];
+                    // Fill the leads Entity
+                    var leadsEntities = [];
                     for (var i = 0; i < leads.length; i++) {
                         var lead = new Lead(
                             leads[i].party_id,
@@ -513,7 +530,7 @@ var leadController = function (knex) {
                         leadsEntities.push(lead);
                     }
                     return leadsEntities;
-             });
+                });
             promise.catch(function (error) {
                 // Log the error
                 winston.error(error);
@@ -523,7 +540,9 @@ var leadController = function (knex) {
             // user does not have permissions of a contact owner, return null
             return null;
         }
-        };    /**
+    };
+    
+    /**
      * Update a lead in database
      * @param {Number} leadId - Unique id of the lead to be updated
      * @param {Object} lead - The object that contains updated data
@@ -588,6 +607,7 @@ var leadController = function (knex) {
         getLeads: getLeads,
         getLeadById: getLeadById,
         getLeadsByOwner: getLeadsByOwner,
+        getLeadsByIdenity: getLeadsByIdenity,
         addLead: addLead,
         updateLead: updateLead,
         deleteLead: deleteLead
