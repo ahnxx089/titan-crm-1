@@ -133,19 +133,14 @@ var contactApi = function (knex) {
         var contactId = req.params.id;
         var user = req.user;
         var contact = req.body;
-        contactController.updateContact(contactId, contact, user);
-            //.then(function (result) {
-            //    res.json({
-            //        updated: result
-            //    });
-            //});
+        var results = contactController.updateContact(contactId, contact, user);
         
         if (results === null) {
             res.json({
                 message: 'You do not have permission to add contacts!'
             });
         } else if ('then' in results) {
-            resultsForThisUser.then(function (rows) {
+            results.then(function (rows) {
                 res.json({
                     rowsUpdated: rows
                 });
