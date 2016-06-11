@@ -14,10 +14,10 @@ var apiBaseUrl = 'http://localhost:5000/api/quotes';
 // so that the tests can be customized enough to show what they need to, without each of us
 // having to overwrite one token up here outside describe().
 
-xdescribe('Quote API', function () {
+describe('Quote API', function () {
 
     // This test passes because var token and var baseRequest are commented out-- no token, no access! 
-    xit('is inaccessible without a valid token', function (done) {
+    it('is inaccessible without a valid token', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
         /*var token = 'iAmNotAValidToken';
@@ -35,16 +35,16 @@ xdescribe('Quote API', function () {
         });
     });
 
-    xit('updateQuote updates a Quote and returns an object', function (done) {
+    it('updateQuote updates a Quote and returns an object', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjUwNDQ4NzcsImV4cCI6MTQ2NTEzMTI3N30.T7JC147bEouzPkrfJGcMLz98K7L4IF25vrhRQLNQDwM';
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NjA0NDIsImV4cCI6MTQ5NzE5NjQ0Mn0.QbGIm52_9Qlr4hxfJXRe3qEnUlpaYY98k5D534adRNw';
         var baseRequest = request.defaults({
             headers: {
                 'x-access-token': token
             }
         });
-        var quoteId = 4; // an existing row in table quote to be updated
+        var quoteId = 5; // an existing row in table quote to be updated
 
         var quote = {
             'quoteTypeId': 'PRODUCT_QUOTE',
@@ -73,17 +73,17 @@ xdescribe('Quote API', function () {
     xit('addQuoteItem adds an Item to a Quote and returns an object', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjUwNDQ4NzcsImV4cCI6MTQ2NTEzMTI3N30.T7JC147bEouzPkrfJGcMLz98K7L4IF25vrhRQLNQDwM';
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NjA0NDIsImV4cCI6MTQ5NzE5NjQ0Mn0.QbGIm52_9Qlr4hxfJXRe3qEnUlpaYY98k5D534adRNw';
         var baseRequest = request.defaults({
             headers: {
                 'x-access-token': token
             }
         });
-        var quoteId = 4; // an existing row in table quote to be updated
+        var quoteId = 5; // an existing row in table quote to be updated
 
         var quoteItem = {
-            'quoteId': '4',
-            'quoteItemSeqId': '4',
+            'quoteId': '5',
+            'quoteItemSeqId': '3',
             'productId': 'testProd2',
             'quantity': null,
             'selectedAmount': null,
@@ -103,20 +103,20 @@ xdescribe('Quote API', function () {
         });
     });
 
-    xit('updateQuoteItem updates an Item of a Quote and returns an object', function (done) {
+    it('updateQuoteItem updates an Item of a Quote and returns an object', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjUwNDQ4NzcsImV4cCI6MTQ2NTEzMTI3N30.T7JC147bEouzPkrfJGcMLz98K7L4IF25vrhRQLNQDwM';
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NjA0NDIsImV4cCI6MTQ5NzE5NjQ0Mn0.QbGIm52_9Qlr4hxfJXRe3qEnUlpaYY98k5D534adRNw';
         var baseRequest = request.defaults({
             headers: {
                 'x-access-token': token
             }
         });
-        var quoteId = 4; // an existing row in table quote to be updated
+        var quoteId = 5; // an existing row in table quote to be updated
 
         var quoteItem = {
-            'quoteId': '4',
-            'quoteItemSeqId': '3',
+            'quoteId': '5',
+            'quoteItemSeqId': '2',
             'productId': 'testProd2',
             'quantity': null,
             'selectedAmount': null,
@@ -139,17 +139,17 @@ xdescribe('Quote API', function () {
     xit('addQuoteItemOption adds an Option of an Item of a Quote and returns an object', function (done){
         
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjUwNDQ4NzcsImV4cCI6MTQ2NTEzMTI3N30.T7JC147bEouzPkrfJGcMLz98K7L4IF25vrhRQLNQDwM';
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NjA0NDIsImV4cCI6MTQ5NzE5NjQ0Mn0.QbGIm52_9Qlr4hxfJXRe3qEnUlpaYY98k5D534adRNw';
         var baseRequest = request.defaults({
             headers: {
                 'x-access-token': token
             }
         });
-        var quoteId = 4; // an existing row in table quote to be updated
+        var quoteId = 5; // an existing row in table quote to be updated
 
         var quoteItemOption = {
-            'quoteId': '4',
-            'quoteItemSeqId': '4',
+            'quoteId': '5',
+            'quoteItemSeqId': '2',
             'quoteItemOptionSeqId': '1',
             'quantity': '40',
             'quoteUnitPrice': '12.95'
