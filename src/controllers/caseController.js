@@ -33,11 +33,11 @@ var caseController = function (knex) {
      * create entry in case_note table
      * and chain all promises together with .then()
      * @param {object} addNotePromises - An array of promises each of which is returned by noteController.addNote
-     * @param {object} intenalNoteEntity - The single internal note entity to be linked
+     * @param {object} internalNoteEntity - The single internal note entity to be linked
      * @param {object} caseId - The Id of the case to be linked to these notes
      * @return {object} caseId - Fulfillment value is the id of the case that is linked
      */
-    var addNoteCallback = function (addNotePromises, intenalNoteEntity, caseId) {
+    var addNoteCallback = function (addNotePromises, internalNoteEntity, caseId) {
         var promise;
         
         /*param 1*/
@@ -71,9 +71,9 @@ var caseController = function (knex) {
             // Convert the received objects into entities (protect the data layer)
             //
             // Notes
-            var intenalNoteEntity;
+            var internalNoteEntity;
             if (case_.intenalNote) {
-                intenalNoteEntity = new Note(
+                internalNoteEntity = new Note(
                     null,
                     case_.intenalNote, 
                     case_.intenalNote, 
@@ -114,10 +114,10 @@ var caseController = function (knex) {
                 var promise = caseData.addCase(caseEntity);
                 
                 // if there is a field called internalNote
-                if(intenalNoteEntity){
+                if(internalNoteEntity){
                     var addNotePromises = [];
                     var notePromise;
-                    notePromise = noteController.addNote(intenalNoteEntity);
+                    notePromise = noteController.addNote(internalNoteEntity);
                     // Make sure we have promise,
                     // and not array of errors
                     if ('then' in notePromise) {
@@ -125,7 +125,7 @@ var caseController = function (knex) {
                     }
                     if (addNotePromises.length > 0) {
                         promise.then(function (caseId) {
-                            return addNoteCallback(addNotePromises, intenalNoteEntity, caseId);
+                            return addNoteCallback(addNotePromises, internalNoteEntity, caseId);
                         });
                         promise.catch(function (error) {
                             winston.error(error);
