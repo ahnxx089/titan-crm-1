@@ -20,8 +20,8 @@ var baseRequest = request.defaults({
 });
 
 
-describe('Accounts API', function () {
-    it('is inaccessible without a valid token', function (done) {
+xdescribe('Accounts API', function () {
+    xit('is inaccessible without a valid token', function (done) {
         request.get(apiBaseUrl, function (err, res, body) {
             // Check the HTTP status code of response
             expect(res.statusCode).toBe(403);
@@ -38,13 +38,14 @@ describe('Accounts API', function () {
             done();
         });
     });
-    it('getAccount returns a valid Accounts entity', function (done) {
+    xit('getAccount returns a valid Accounts entity', function (done) {
         baseRequest.get(apiBaseUrl + '/99', function (err, res, body) {
             expect(JSON.parse(body).hasOwnProperty('partyId')).toBeTruthy();
             // Call done to finish the async function
             done();
         });
     });
+
     it('addAccount adds an account and successfully returns the new entry\'s single partyId', function (done) {
         var newAccount = {
             partyTypeId: 'ORGANIZATION',
@@ -76,5 +77,6 @@ describe('Accounts API', function () {
             done();
         });
     });
+    
     
 });

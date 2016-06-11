@@ -1,8 +1,9 @@
 /////////////////////////////////////////////////
 // RESTful API module for cases.
 //
-// @file:   caseApi.js
-// @author: Dinesh Shenoy <astroshenoy@gmail.com>
+// @file:    caseApi.js
+// @authors: Dinesh Shenoy <astroshenoy@gmail.com>
+//           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 var caseApi = function (knex) {
@@ -54,6 +55,10 @@ var caseApi = function (knex) {
         //
         // getCasesByOwner:  The default if no query string for advanced search
         // 
+        // The owner of a case is the value in the case_.created_by column for the case.
+        // The values in that column come from user_login.user_login_id per the foreign key constraint
+        // on case_.created_by column.  Therefore caseData.getCasesByOwner does an innerJoin
+        // of tables case_ and user_login.
         if (Object.keys(req.query).length === 0) {
             var resultsForThisUser = caseController.getCasesByOwner(req.user);
             if (resultsForThisUser === null) {
@@ -86,9 +91,7 @@ var caseApi = function (knex) {
                 });
             }
         }
-        
-        
-        
+
         // If the request did not properly pass any of the various if tests
         // above, it is not a valid query, make the reponse null.
         else {
@@ -112,13 +115,29 @@ var caseApi = function (knex) {
 
     // PUT /api/cases/:id
     var updateCase = function (req, res) {
+        var caseId = req.params.id;
+        var case_ = req.body;
 
+        caseController.updateCase(caseId, case_)
+            .then(function (result) {
+                res.json({
+                    updated: result
+                });
+            });
     };
 
-    // DELETE /api/cases/:id
+ // DELETE /api/cases/:id
     var deleteCase = function (req, res) {
+        var caseId = req.params.id;
+        caseController.deleteCase(caseId)
+            .then(function (result) {
+                res.json({
+                    deleted: result
+                });
+            });
 
     };
+
 
     return {
         addCase: addCase,

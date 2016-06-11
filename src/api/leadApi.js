@@ -155,7 +155,8 @@ var leadApi = function (knex) {
         }
     };
 
-    // Not implemented now. 
+    // Implemented now. 
+    // NOTE TO DIVINE: you did not check the lead ID. This will return every lead that matches the given name
     // GET /api/leads/?leadId=&firstName=&lastName=&companyName=
     var getLeadsByIdentity = function (req, res) {
         

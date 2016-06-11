@@ -14,7 +14,7 @@ var contactController = require('../src/controllers/contactController')(knex);
 var userController = require('../src/controllers/userController')(knex);
 var Contact = require('../src/entities/contact');
 
-describe('Contact module ', function () {
+xdescribe('Contact module ', function () {
 
     // Test contactController.addContact where a user has security permission to add a contact
     xit('contactController.addContact allows a user with permission to add a Contact', function (done) {
@@ -217,19 +217,37 @@ describe('Contact module ', function () {
 
 });
 
-describe('updateContact', function () {
-    xit('returns null for invalid input', function (done) {
+xdescribe('updateContact', function () {
+    it('returns null if user lacks permission', function (done) {
         var contactId = 20;
-        var user = userController.getUserById('contactOwnerABC');
+        var user = {
+            securityPermissions: []
+        };
         var contact = {};
         var output = contactController.updateContact(contactId, contact, user);
         expect(output).toBeNull();
         done();
     });
 
-    xit('does not return null for valid input', function (done) {
+    it('returns error array for bad data', function (done) {
+        var contactId = 20;
+        var user = {
+            securityPermissions: ['CRMSFA_CONTACT_UPDATE']
+        };
+        var contact = {};
+        var output = contactController.updateContact(contactId, contact, user);
+        var outputType = Object.prototype.toString.call(output);
+        expect(outputType).toBe('[object Array]');
+        done();
+    });
+
+    it('does not return null for valid input', function (done) {
         var now = (new Date()).toISOString();
         var contactId = 20;
+        var user = {
+            securityPermissions: ['CRMSFA_CONTACT_UPDATE']
+        };
+
         //wanted to use getContact, but couldn't get it to work
         var contact = new Contact(
             contactId,
@@ -247,16 +265,20 @@ describe('updateContact', function () {
             now,
             'nondescript'
         );
-        var user = userController.getUserById('contactOwnerABC');
-        
+
         var output = contactController.updateContact(contactId, contact, user);
         expect(output).not.toBeNull();
         done();
+
     });
 
     xit('returns promise for valid input', function (done) {
         var now = (new Date()).toISOString();
         var contactId = 20;
+        var user = {
+            securityPermissions: ['CRMSFA_CONTACT_UPDATE']
+        };
+
         //wanted to use getContact, but couldn't get it to work
         var contact = new Contact(
             contactId,
@@ -274,14 +296,78 @@ describe('updateContact', function () {
             now,
             'nondescript'
         );
-        var user = userController.getUserById('contactOwnerABC');
-        
+
         var output = contactController.updateContact(contactId, contact, user);
         expect('then' in output).toBeTruthy();
         done();
+
     });
-    
+
     //need to test values changed in database
     //but can't get getContact to work
-    
+
+});
+
+xdescribe('deleteContact', function () {
+    it('does not return null for valid input', function (done) {
+        var now = (new Date()).toISOString();
+        var contact = new Contact(
+            null,
+            'PERSON',
+            'USD',
+            'blah',
+            'PARTY_ENABLED',
+            'fullAdminABC',
+            now,
+            now,
+            'Mr.',
+            'Agent',
+            'Francis',
+            'Smith',
+            now,
+            'nondescript'
+        );
+        userController.getUserById('contactOwnerABC')
+            .then(function (user) {
+                contactController.addContact(contact, user)
+                    .then(function (contactId) {
+                        var output = contactController.deleteContact(contactId, contact, user);
+                        expect(output).not.toBeNull();
+                        done();
+                    });
+            });
+    });
+
+    it('returns promise for valid input', function (done) {
+        var now = (new Date()).toISOString();
+        var contactId = 20;
+        //wanted to use getContact, but couldn't get it to work
+        var contact = new Contact(
+            null,
+            'PERSON',
+            'USD',
+            'blah',
+            'PARTY_ENABLED',
+            'fullAdminABC',
+            now,
+            now,
+            'Mr.',
+            'Agent',
+            'Francis',
+            'Smith',
+            now,
+            'nondescript'
+        );
+
+        userController.getUserById('contactOwnerABC')
+            .then(function (user) {
+                contactController.addContact(contact, user)
+                    .then(function (contactId) {
+                        var output = contactController.deleteContact(contactId, contact, user);
+                        expect('then' in output).toBeTruthy();
+                        done();
+                    });
+            });
+    });
+
 });

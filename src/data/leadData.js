@@ -43,7 +43,7 @@ var leadData = function (knex) {
             .returning('party_id')
             .insert({
                 // ok to put dummy data here
-                party_type_id: lead.partyTypeId,
+                party_type_id: lead.partyTypeId, // should have made sure this is PERSON
                 preferred_currency_uom_id: lead.currencyUomId,
                 description: lead.description,
                 status_id: lead.statusId,
@@ -147,8 +147,11 @@ var leadData = function (knex) {
             .leftJoin('contact_mech', 'party_contact_mech.contact_mech_id', '=', 'contact_mech.contact_mech_id')
             .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
             .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')
-            .where('person.party_id', id);
-        // potential TODO: limit results to LEAD type (party_role.role_type_id)
+            .where('person.party_id', id)
+            .andWhere('party_role.role_type_id', 'LEAD');
+        // potential TODO: limit results to LEAD type (party_role.role_type_id) [CHECK]
+        
+        
         
 //        return knex.from('person')
 //            .innerJoin('party', 'person.party_id', 'party.party_id')

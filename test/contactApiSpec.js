@@ -6,7 +6,6 @@
 /////////////////////////////////////////////////
 
 /* jshint maxlen:1000 */
-
 var request = require('request');
 var apiBaseUrl = 'http://localhost:5000/api/contacts';
 
@@ -14,7 +13,7 @@ var apiBaseUrl = 'http://localhost:5000/api/contacts';
 // so that the tests can be customized enough to show what they need to, without each of us
 // having to overwrite one token up here outside describe().
 
-describe('Contact API', function () {
+xdescribe('Contact API', function () {
 
     // TO SHOW THIS TEST PASSES, COMMENT OUT var token AND var baseRequest DECLARATIONS 
     xit('is inaccessible without a valid token', function (done) {
@@ -71,7 +70,7 @@ describe('Contact API', function () {
             stateProvinceGeoId: 'CA',
             zipOrPostalCode: '90210',
             countryGeoId: 'USA'
-        }
+        };
 
         baseRequest.post(apiBaseUrl, {
             form: newContact
@@ -127,4 +126,45 @@ describe('Contact API', function () {
         });
     });
 
+});
+
+xdescribe('updateContact', function () {
+    xit('works', function (done) {
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjb250YWN0T3duZXJBQkMiLCJwYXNzd29yZCI6IiQyYSQwOCRpVGFQcVEvNFc4TFNETkJEVDE4b3BlZ3ZTeG80a1dDOFNqV05vakhQL2xoTjdlT1NUWUhKdSIsInBhc3N3b3JkSGludCI6bnVsbCwiZW5hYmxlZCI6MSwiZGlzYWJsZWREYXRlIjpudWxsLCJwYXJ0eUlkIjoxMywiY3JlYXRlZERhdGUiOiIyMDE2LTA1LTI1VDE2OjA3OjExLjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDUtMjVUMTY6MDc6MTEuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX0FDVF9BRE1JTiIsIkNSTVNGQV9BQ1RfQ0xPU0UiLCJDUk1TRkFfQUNUX0NSRUFURSIsIkNSTVNGQV9BQ1RfVVBEQVRFIiwiQ1JNU0ZBX0FDVF9WSUVXIiwiQ1JNU0ZBX0NPTlRBQ1RfQ1JFQVRFIiwiQ1JNU0ZBX0NPTlRBQ1RfREVBQ1RJVkFURSIsIkNSTVNGQV9DT05UQUNUX1JFQVNTSUdOIiwiQ1JNU0ZBX0NPTlRBQ1RfVVBEQVRFIiwiQ1JNU0ZBX0NPTlRBQ1RfVklFVyIsIkNSTVNGQV9DQVNFX0NSRUFURSJdLCJpYXQiOjE0NjUzNDMyNTQsImV4cCI6MTQ5Njg3OTI1NH0.xFe4WLekfCQgv1AHWW_rvSNodenolKatIEazC4Xg85c';
+        //token should be good through May 2017
+
+        var id = 20;
+        var now = (new Date()).toISOString();
+        var contact = {
+            partyId: id,
+            partyTypeId: 'PERSON',
+            currencyUomId: 'USD',
+            description: 'blah',
+            statusId: 'PARTY_ENABLED',
+            createdBy: 'fullAdminABC',
+            createdDate: now,
+            updatedDate: now,
+            salutation: 'Mr.',
+            firstName: 'Agent',
+            middleName: 'Francis',
+            lastName: 'Smith',
+            birthDate: now,
+            comments: 'nondescript'
+        };
+
+        var baseRequest = request.defaults({
+            headers: {
+                'Content-Type': 'application/json',
+                'x-access-token': token
+            },
+            body: JSON.stringify(contact)
+        });
+
+        baseRequest.post(apiBaseUrl + '/' + id, function (err, res, body) {
+            expect(body).not.toBe('Cannot POST /api/contacts/20\n');
+            //var result = JSON.parse(body);
+            //expect('rowsUpdated' in result).toBeTruthy();
+            done();
+        });
+    });
 });

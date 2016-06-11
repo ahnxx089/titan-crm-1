@@ -98,7 +98,7 @@ ContactMech.prototype.validateForUpdate = function () {
     
     // Perform general validations
     var validations = [
-            this.contactMechId(true),
+            this.validateContactMechId(true),
             this.validateContactMechTypeId(true),
             this.validateContactMechPurposeTypeId(true),
             this.validateInfoString(false),
@@ -109,7 +109,7 @@ ContactMech.prototype.validateForUpdate = function () {
     // Perform validations specific to postal addresses
     if (this.infoString === 'POSTAL_ADDRESS') {
         //validations only applicable to postal addresses
-        validations.concat([
+        validations = validations.concat([
             this.validateToName(false),
             this.validateAttnName(false),
             this.validateAddress1(false),
@@ -125,7 +125,7 @@ ContactMech.prototype.validateForUpdate = function () {
     // Perform validations specific to telecom numbers
     if (this.infoString === 'TELECOM_NUMBER') {
         //validations only applicable to postal addresses
-        validations.concat([
+        validations = validations.concat([
             this.validateCountryCode(false),
             this.validateAreaCode(false),
             this.validateContactNumber(true),
@@ -167,10 +167,24 @@ ContactMech.prototype.validateContactMechPurposeTypeId = function (isRequired) {
     return validationResult;
 };
 
-// info_strng is varchar(255)
+// info_string is varchar(255)
 ContactMech.prototype.validateInfoString = function (isRequired) {
     this.infoString = validation.sanitizeInput(this.infoString);
     var validationResult = validation.validateString(this.infoString, isRequired, 255, 'infoString');
+    return validationResult;
+};
+
+// created_date is date
+ContactMech.prototype.validateCreatedDate = function (isRequired) {
+    this.createdDate = validation.sanitizeInput(this.createdDate);
+    var validationResult = validation.validateDate(this.createdDate, isRequired, 'createdDate');
+    return validationResult;
+};
+
+// updated_date is date
+ContactMech.prototype.validateUpdatedDate = function (isRequired) {
+    this.updatedDate = validation.sanitizeInput(this.updatedDate);
+    var validationResult = validation.validateDate(this.updatedDate, isRequired, 'updatedDate');
     return validationResult;
 };
 

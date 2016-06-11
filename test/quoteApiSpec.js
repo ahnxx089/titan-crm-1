@@ -14,7 +14,7 @@ var apiBaseUrl = 'http://localhost:5000/api/quotes';
 // so that the tests can be customized enough to show what they need to, without each of us
 // having to overwrite one token up here outside describe().
 
-describe('Quote API', function () {
+xdescribe('Quote API', function () {
 
     // This test passes because var token and var baseRequest are commented out-- no token, no access! 
     xit('is inaccessible without a valid token', function (done) {
