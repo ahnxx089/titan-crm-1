@@ -21,6 +21,8 @@ var winston = require('winston');
 var Lead = require('../entities/lead');
 var ContactMech = require('../entities/contactMech');
 var _ = require('lodash');
+var contactInfoHelper = require('../controllers/helpers/contactInfoHelper');
+
 
 var leadController = function (knex) {
     // Get a reference to data layer module, and contactMechController
@@ -100,74 +102,8 @@ var leadController = function (knex) {
 
         if (hasPermission !== -1) {
             // Contact mechanisms
-            var contactMechEntities = [];
-
-            if (lead.emailAddress) {
-                var emailContactMech = new ContactMech(
-                    null,
-                    'EMAIL_ADDRESS',
-                    'PRIMARY_EMAIL',
-                    lead.emailAddress,
-                    now,
-                    now
-                );
-                contactMechEntities.push(emailContactMech);
-            }
-            if (lead.webAddress) {
-                var webContactMech = new ContactMech(
-                    null,
-                    'WEB_ADDRESS',
-                    'PRIMARY_WEB_URL',
-                    lead.webAddress,
-                    now,
-                    now
-                );
-                contactMechEntities.push(webContactMech);
-            }
-            if (lead.contactNumber) {
-//                var info = lead.countryCode + ' ' + lead.areaCode + ' ' + lead.contactNumber + ' ' + lead.askForName;
-                var phoneContactMech = new ContactMech(
-                    null,
-                    'TELECOM_NUMBER',
-                    'PRIMARY_PHONE',
-                    null, // null info string
-//                    info,
-                    now,
-                    now,
-                    lead.countryCode,
-                    lead.areaCode,
-                    lead.contactNumber,
-                    lead.askForName
-                );
-                contactMechEntities.push(phoneContactMech);
-            }
-            if (lead.countryGeoId) {
-//                var info = lead.toName + ' ' + lead.attnName + ' ' + lead.address1 + ' ' + lead.address2 + ' ' + lead.directions
-//                    + ' ' + lead.city + ' ' + lead.stateProvinceGeoId + ' ' + lead.zipOrPostalCode + ' ' + lead.countryGeoId;
-                var addressContactMech = new ContactMech(
-                    null,
-                    'POSTAL_ADDRESS',
-                    'PRIMARY_LOCATION',
-                    null, // null info string
-//                    info,
-                    now,
-                    now,
-                    null,
-                    null,
-                    null,
-                    null,
-                    lead.toName,
-                    lead.attnName,
-                    lead.address1,
-                    lead.address2,
-                    lead.directions,
-                    lead.city,
-                    lead.stateProvinceGeoId,
-                    lead.zipOrPostalCode,
-                    lead.countryGeoId
-                );
-                contactMechEntities.push(addressContactMech);
-            }
+            var contactMechEntities = contactInfoHelper(lead); 
+            // This big chunk of code has been replaced with contactInfoHelper. Thanks to Eric
             
             var dob;
             if (lead.birthDate) {
@@ -179,6 +115,10 @@ var leadController = function (knex) {
             } else {
                 dob = null;
             }
+            
+            // TODO: Use the helper Eric wrote. Done
+            // TODO: Link contact_mech with party. Done (taken care by contactMechController.linkContactMechToParty)
+            // TODO: Link contact_mech with party_supplemental_data. NOT DONE.
             
             var leadEntity = new Lead(
                 // ok to put dummy data here, eg, null and birthDate

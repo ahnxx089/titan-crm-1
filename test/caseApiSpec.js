@@ -146,6 +146,6 @@ describe('Case API', function () {
             done();
         });
         
-    })
+    })// missing semicolon?
     
 });
