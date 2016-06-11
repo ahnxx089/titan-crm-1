@@ -45,8 +45,8 @@ describe('Accounts API', function () {
             done();
         });
     });
-    it('addAccount adds an account and successfully returns the new entry\s single partyId', function (done) {
-        newAccount = new Account(
+    it('addAccount adds an account and successfully returns the new entry\'s single partyId', function (done) {
+        var newAccount = {
             partyTypeId: 'ORGANIZATION',
             preferredCurrencyUomId: 'USD',
             description: 'accountApi test',
@@ -58,14 +58,14 @@ describe('Accounts API', function () {
             numEmployees: '777',
             tickerSymbol: 'test symbol',
             comments: 'test comment',
-            logoImgURL: 'testlogourl.com',,
+            logoImgURL: 'testlogourl.com',
             industryEnumId: 'IND_AEROSPACE',
             ownershipEnumId: 'OWN_SCORP',
             importantNote: 'test important note',
             emailAddress: 'test@testemail.com',
             webAddress: 'testwebsite.com',
             phoneNumber: '9990009999'
-        );
+        };
         baseRequest.post(apiBaseUrl, {form: newAccount}, function (err, res, body) {
             var result = JSON.parse(body);
             // Check whether return value is a partyId
