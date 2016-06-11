@@ -43,7 +43,7 @@ var leadData = function (knex) {
             .returning('party_id')
             .insert({
                 // ok to put dummy data here
-                party_type_id: lead.partyTypeId,
+                party_type_id: lead.partyTypeId, // should have made sure this is PERSON
                 preferred_currency_uom_id: lead.currencyUomId,
                 description: lead.description,
                 status_id: lead.statusId,
