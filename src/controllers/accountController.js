@@ -329,7 +329,7 @@ var accountController = function (knex) {
      */
     
     var getAccountByIdentity = function (query, user) {
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACCOUNT_CREATE');
         if (hasPermission !== -1) {
             var accountId = query.accountId;
             var accountName = query.accountName; 
