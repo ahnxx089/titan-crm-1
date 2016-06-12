@@ -45,7 +45,28 @@ var leadController = function (knex) {
     //
 
     
-    // Credit: Bill
+    // Lucas's taking this
+    /**
+     * Update three contact info fields in party_supplemental_data table, upon the creation of a lead 
+     * Link this column to party_contact_mech.contact_mech_id
+     * @param {Number} partyid - Unique id of the party (grandparent of lead)
+     * @param {Object} partyid - Unique id of the contact mechanism of the lead
+     * @param {String} partyid - Purpose type id of a contact mechanism
+     * @return {Object} promise - Fulfillment value is a message that PSD was successfully updated
+     */
+    var updatePSD = function(partyId, contactMechId, purposeTypeId) {
+        var promise = leadData.updatePSD(partyId, contactMechId, purposeTypeId)
+            .then(function (result) {
+                return result; // 1 here: 1 row was updated. This could be changed to partyId which makes more sense.
+            });
+        promise.catch(function (error) {
+            winston.error(error);
+        });
+        return promise;
+    };
+    
+    
+    
     /**
      * For each promise delivered by contactMechController.addContactMech(),
      * create entry in party_contact_mech table
@@ -67,6 +88,15 @@ var leadController = function (knex) {
             return promise.then(function (contactMechId) {
                 return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
                     .then(function () {
+//                         console.log('partyId is ' + partyId);
+//                         console.log('contactMechId is ' + contactMechId);
+//                         console.log('purposeTypeId is ' + purposeTypeId);
+                        if (purposeTypeId !== 'PRIMARY_WEB_URL') {
+                            updatePSD(partyId, contactMechId, purposeTypeId); // why also runs without return keyword?
+                            return partyId;
+                        }
+                    })
+                    .then(function () {
                         return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
                     });
             });
@@ -79,11 +109,20 @@ var leadController = function (knex) {
             return promise.then(function (contactMechId) {
                 return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
                     .then(function () {
+//                        console.log('partyId is ' + partyId);
+//                        console.log('contactMechId is ' + contactMechId);
+//                        console.log('purposeTypeId is ' + purposeTypeId);
+                        if (purposeTypeId !== 'PRIMARY_WEB_URL') {
+                            updatePSD(partyId, contactMechId, purposeTypeId); // why not return keyword?
+                        }
+                    })
+                    .then(function () {
                         return partyId;
                     });
             });
         }
     };
+    
     
     
     // Lucas's taking this
@@ -116,10 +155,12 @@ var leadController = function (knex) {
                 dob = null;
             }
             
+            // ALL DONE
             // TODO: Use the helper Eric wrote. Done
             // TODO: contact_mech does take care of validations correct but does not let the user know. Done.
             // TODO: Link contact_mech with party. Done (taken care by contactMechController.linkContactMechToParty)
-            // TODO: Link contact_mech with party_supplemental_data. NOT DONE.
+            // TODO: Link contact_mech with party_supplemental_data. DONE.
+            // TODO: Figure out possible duplicate entries. Done. 
             
             var leadEntity = new Lead(
                 // ok to put dummy data here, eg, null and birthDate
@@ -131,8 +172,8 @@ var leadController = function (knex) {
                 lead.description,
                 lead.statusId,
                 user.userId, // use 'admin' for testing 
-                (new Date()).toISOString(),
-                (new Date()).toISOString(),
+                now,
+                now,
                 // for party
                 lead.salutation,
                 lead.firstName,
@@ -153,7 +194,6 @@ var leadController = function (knex) {
                 lead.importantNote,
                 // for party_supplemental_data (partially). 
 
-                
 //                lead.primaryPostalAddressId,
 //                lead.primaryTelecomNumberId,
 //                lead.primaryEmailId,
@@ -190,7 +230,7 @@ var leadController = function (knex) {
                         //continue;
                     }
                     // Make sure we have promise, and not array of errors
-                    else if ('then' in mechPromise) {
+                    if ('then' in mechPromise) {
                         addContactMechPromises.push(mechPromise);
                         // this catch necessary? Maybe move it inside the for loop?
                         mechPromise.catch(function (error) {
@@ -202,6 +242,7 @@ var leadController = function (knex) {
                 promise.catch(function (error) {
                     winston.error(error);
                 });
+                
                 
                 if (addContactMechPromises.length > 0) {
                     // there should not be any potential errors in here

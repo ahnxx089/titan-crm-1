@@ -17,11 +17,9 @@ var caseData = function (knex) {
     /**
      * Add a new case in the database:  
      * @param {Object} case_ - The new case entity to be added 
-     * @return {Object} promise - Fulfillment value is id of row inserted
+     * @return {Object} promise - Fulfillment value is id of row inserted (in other words, case id)
      */
     var addCase = function (case_, user) {
-//        console.log('in case data add ');
-
         
         /*
         return knex('case_')
@@ -84,6 +82,7 @@ var caseData = function (knex) {
                 });
             });
         });
+        
     };
 
     /**
