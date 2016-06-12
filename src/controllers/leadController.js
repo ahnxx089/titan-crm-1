@@ -117,6 +117,7 @@ var leadController = function (knex) {
             }
             
             // TODO: Use the helper Eric wrote. Done
+            // TODO: contact_mech does take care of validations correct but does not let the user know. Done.
             // TODO: Link contact_mech with party. Done (taken care by contactMechController.linkContactMechToParty)
             // TODO: Link contact_mech with party_supplemental_data. NOT DONE.
             
@@ -176,22 +177,27 @@ var leadController = function (knex) {
                 // insert new lead, get the promise first
                 var promise = leadData.addLead(leadEntity);
                 
-                // below: to add contactMech
+                // code block below: to add contactMech
                 var addContactMechPromises = [];
                 var mechPromise;
                 for (var i = 0; i < contactMechEntities.length; i++) {
                     mechPromise = contactMechController.addContactMech(contactMechEntities[i]);
-                    // Make sure we have promise,
-                    // and not array of errors
-                    if ('then' in mechPromise) {
-                        addContactMechPromises.push(mechPromise);
+                    // return type of mechPromise can be a promise, or an array (validationErrors)
+                    
+                    if(mechPromise instanceof Array) {
+                        // the condition is same as (mechPromise.constructor === Array)
+                        return mechPromise;
+                        //continue;
                     }
-                    // this catch necessary? Maybe move it inside the for loop?
-                    mechPromise.catch(function (error) {
-                        winston.error(error);
-                    });
+                    // Make sure we have promise, and not array of errors
+                    else if ('then' in mechPromise) {
+                        addContactMechPromises.push(mechPromise);
+                        // this catch necessary? Maybe move it inside the for loop?
+                        mechPromise.catch(function (error) {
+                            winston.error(error);
+                        });
+                    }
                 }
-                // above
                 
                 promise.catch(function (error) {
                     winston.error(error);
