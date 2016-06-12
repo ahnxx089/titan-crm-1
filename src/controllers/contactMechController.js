@@ -27,8 +27,7 @@ var contactMechController = function (knex) {
             contactMech.contactMechId,
             contactMech.contactMechTypeId,
             contactMech.contactMechPurposeTypeId,
-            contactMech.infoString,
-            (new Date()).toISOString(), //created date
+            contactMech.infoString, (new Date()).toISOString(), //created date
             (new Date()).toISOString(), //updated date
             contactMech.countryCode,
             contactMech.areaCode,
@@ -55,25 +54,26 @@ var contactMechController = function (knex) {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
                     .then(function (contactMechId) {
                         contactMechEntity.contactMechId = contactMechId;
-                        return contactMechData.addContactMechToTelecomTable(contactMechEntity);
-                            //.then(function (input) {
-                            //    return contactMechId;
-                            //});
+                        return contactMechData.addContactMechToTelecomTable(contactMechEntity)
+                            //function above should be returning contactMechId already
+                            //why is it returning 0 instead?
+                            .then(function () {
+                                return contactMechId;
+                            });
                     });
             } else if (contactMech.contactMechTypeId === 'POSTAL_ADDRESS') {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
                     .then(function (contactMechId) {
                         contactMechEntity.contactMechId = contactMechId;
-                        return contactMechData.addContactMechToPostalTable(contactMechEntity);
-                            //.then(function (input) {
-                            //    return contactMechId;
-                            //});
+                        return contactMechData.addContactMechToPostalTable(contactMechEntity)
+                            //function above should be returning contactMechId already
+                            //why is it returning 0 instead?
+                            .then(function () {
+                                return contactMechId;
+                            });
                     });
             } else {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity);
-                    //.then(function (contactMechId) {
-                    //    return contactMechId;
-                    //});
             }
 
             promise.catch(function (error) {
@@ -218,7 +218,7 @@ var contactMechController = function (knex) {
      */
     var updateContactMech = function (contactMechId, contactMech) {
         var now = (new Date()).toISOString();
-        
+
         var contactMechEntity = new ContactMech(
             contactMechId,
             contactMech.contactMechTypeId,
@@ -247,9 +247,9 @@ var contactMechController = function (knex) {
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
             var promise = contactMechData.updateContactMech(contactMechEntity);
-                //.then(function (contactMechId) {
-                //    return contactMechId;
-                //});
+            //.then(function (contactMechId) {
+            //    return contactMechId;
+            //});
             promise.catch(function (error) {
                 winston.error(error);
             });
@@ -279,7 +279,7 @@ var contactMechController = function (knex) {
     var linkContactMechToParty = function (partyId, contactMechId, purposeTypeId) {
 
         var promise = contactMechData.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
-            .then(function (result) {
+            .then(function () {
                 return partyId;
             });
         promise.catch(function (error) {

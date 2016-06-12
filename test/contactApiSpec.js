@@ -13,7 +13,7 @@ var apiBaseUrl = 'http://localhost:5000/api/contacts';
 // so that the tests can be customized enough to show what they need to, without each of us
 // having to overwrite one token up here outside describe().
 
-describe('Contact API', function () {
+xdescribe('Contact API', function () {
 
     // TO SHOW THIS TEST PASSES, COMMENT OUT var token AND var baseRequest DECLARATIONS 
     xit('is inaccessible without a valid token', function (done) {

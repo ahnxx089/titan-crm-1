@@ -22,7 +22,7 @@ var quoteData = function (knex) {
             .returning('quote_id')
             //passing through
             .insert({
-                quote_id: quote.quoteId,
+                //quote_id: quote.quoteId,
                 quote_type_id: quote.quoteTypeId,
                 party_id: quote.partyId,
                 issue_date: quote.issueDate,
@@ -38,20 +38,21 @@ var quoteData = function (knex) {
                 created_date: quote.createdDate,
                 updated_date: quote.updatedDate
             })
-            .then(function () {
+            .then(function (quoteId) {
                 return knex('quote_role')
-                    .returning('quote_id')
+                    //.returning('quote_id')
                     .insert({
-                        quote_id: quote.quoteId,
+                        quote_id: quoteId, //quote.quoteId,
                         party_id: quote.partyId,
-                        role_type_id: quote.roleTypeId,
+                        role_type_id: 'CONTACT', //quote.roleTypeId,
                         created_date: quote.createdDate,
                         updated_date: quote.updatedDate
+                    })
+                    .then(function () {
+                        return quoteId;
                     });
-            })
-            .then(function () {
-                return quote;
             });
+
     };
 
     /**
@@ -74,9 +75,9 @@ var quoteData = function (knex) {
                 description: quoteItem.description,
                 created_date: quoteItem.createdDate,
                 updated_date: quoteItem.updatedDate
-            }).then(function () {
-                return quoteItem;
-            });
+            })//.then(function () {
+            //    return quoteItem;
+            //});
     };
 
     /**
@@ -123,9 +124,9 @@ var quoteData = function (knex) {
                 description: quote.description,
                 contact_party_id: quote.contactPartyId,
                 updated_date: quote.updatedDate
-            }).then(function () {
-                return quote;
-            });
+            });//.then(function () {
+            //    return quote;
+            //});
     };
 
     /**
@@ -221,8 +222,8 @@ var quoteData = function (knex) {
             .andWhere('quote_role.role_type_id', 'PERSON_ROLE');
 
     };
-    
-    
+
+
     // Lucas wrote this. Finished
     /** 
      * Gets all quotes from database by advanced search
@@ -230,19 +231,19 @@ var quoteData = function (knex) {
      */
     var getQuotesByAdvanced = function (quoteId, quoteName, status, account, salesChannel) {
 
-//        var conditionArray = [quoteId, quoteName, status, account, salesChannel];
-//        var conditionString = '';
-//        conditionString += quoteId.length > 0 ? 'a' : '';
-//        conditionString += quoteName.length > 0 ? 'b' : '';
-//        conditionString += status.length > 0 ? 'c' : '';
-//        conditionString += account.length > 0 ? 'd' : '';
-//        conditionString += salesChannel.length > 0 ? 'e' : '';
-//        console.log(conditionString);
+        //        var conditionArray = [quoteId, quoteName, status, account, salesChannel];
+        //        var conditionString = '';
+        //        conditionString += quoteId.length > 0 ? 'a' : '';
+        //        conditionString += quoteName.length > 0 ? 'b' : '';
+        //        conditionString += status.length > 0 ? 'c' : '';
+        //        conditionString += account.length > 0 ? 'd' : '';
+        //        conditionString += salesChannel.length > 0 ? 'e' : '';
+        //        console.log(conditionString);
 
 
-//        return knex.raw('select * from quote where ' + ' sales_channel_enum_id = "' + salesChannel + '"');
+        //        return knex.raw('select * from quote where ' + ' sales_channel_enum_id = "' + salesChannel + '"');
         return knex.from('quote');
-        
+
         /*
         return knex.select()
             .from('quote')
@@ -253,8 +254,8 @@ var quoteData = function (knex) {
             .andWhere('quote.sales_channel_enum_id', salesChannel);
         */
     };
-    
-    
+
+
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,

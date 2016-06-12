@@ -110,7 +110,7 @@ describe('addContactMech', function () {
     });
 });
 
-xdescribe('getContactMechsByParty', function () {
+describe('getContactMechsByParty', function () {
 
 });
 
@@ -174,10 +174,10 @@ describe('updateContactMech', function () {
     });
 });
 
-xdescribe('deleteContactMech', function () {
+describe('deleteContactMech', function () {
     //deleteContactMech won't actually be used
 });
 
-xdescribe('linkContactMechToParty', function () {
+describe('linkContactMechToParty', function () {
 
 });

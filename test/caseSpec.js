@@ -16,7 +16,7 @@ describe('Case module ', function () {
 
     // Test caseController.getCasesByOwner where a user has security permission
     // (but does not actually own any cases) -- TEST HAS PASSED
-    xit('caseController.getCasesByOwner allows a user with permission to own Case(s) to get the party_id of Cases owned by that user (if any)', function (done) {
+    it('caseController.getCasesByOwner allows a user with permission to own Case(s) to get the party_id of Cases owned by that user (if any)', function (done) {
 
         // user crmsfaContactTasksABC has permission to own Cases (but does not actually own any)
         var user = {
@@ -49,7 +49,7 @@ describe('Case module ', function () {
 
     // Test caseController.getCasesByOwner where a user owns a case, does it return the correct one?
     // TEST PASSED
-    xit('caseController.getCasesByOwner allows a user with permission to own Case(s) to get the party_id of Cases owned by that user', function (done) {
+    it('caseController.getCasesByOwner allows a user with permission to own Case(s) to get the party_id of Cases owned by that user', function (done) {
 
         // user contactOwnerABC )
         var user = {
@@ -77,7 +77,7 @@ describe('Case module ', function () {
     });
 
     // Test caseController.getCasesByOwner where user lacks security permission -- TEST PASSED
-    xit('caseController.getCasesByOwner DENIES a user without permission to own Case(s) to get the party_id of (any) Cases', function (done) {
+    it('caseController.getCasesByOwner DENIES a user without permission to own Case(s) to get the party_id of (any) Cases', function (done) {
         // leadOwnerDEF has permission to own Leads, but not Cases
         var user = {
             userId: 'leadOwnerDEF',
@@ -118,8 +118,123 @@ describe('Case module ', function () {
         });
 
     });
+    
+    
+    // Add case passed [Lucas]
+    it('addCase adds a case', function (done) {
+        var user = {
+            userId: 'contactOwnerABC',
+            password: '$2a$08$iTaPqQ/4W8LSDNBDT18opegvSxo4kWC8SjWNojHP/lhN7eOSTYHJu',
+            passwordHint: null,
+            enabled: 1,
+            disabledDate: null,
+            partyId: 13,
+            createdDate: '2016-05-25T16:07:11.000Z',
+            updatedDate: '2016-05-25T16:07:11.000Z',
+            securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_CONTACT_CREATE', 'CRMSFA_CONTACT_DEACTIVATE', 'CRMSFA_CONTACT_REASSIGN', 'CRMSFA_CONTACT_UPDATE', 'CRMSFA_CONTACT_VIEW', 'CRMSFA_CASE_CREATE', 'CRMSFA_ACTS_VIEW', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_CONTACTS_VIEW', 'CRMSFA_CONTACT_CREATE', 'CRMSFA_CONTACT_DEACTIVATE', 'CRMSFA_CONTACT_REASSIGN', 'CRMSFA_CONTACT_UPDATE', 'CRMSFA_CONTACT_VIEW', 'CRMSFA_VIEW', 'PARTYMGR_CME_CREATE', 'PARTYMGR_CME_DELETE', 'PARTYMGR_CME_UPDATE', 'PARTYMGR_GRP_UPDATE', 'PARTYMGR_NOTE', 'PARTYMGR_PCM_CREATE', 'PARTYMGR_PCM_DELETE', 'PARTYMGR_PCM_UPDATE', 'PARTYMGR_REL_CREATE', 'PARTYMGR_REL_UPDATE', 'PARTYMGR_ROLE_CREATE', 'PARTYMGR_ROLE_DELETE', 'PARTYMGR_SRC_CREATE', 'PARTYMGR_STS_UPDATE', 'WORKEFFORTMGR_ADMIN'],
+            iat: 1464573779,
+            exp: 1464660179
+        };
+        
+        var newCase = {
+            "caseTypeId": "RF_PROPOSAL",
+            "caseCategoryId": "CRCAT_COMPLEX",
+            "statusId": "CASE_ACCEPTED",
+            "fromPartyId": 20,
+            "priority": 5,
+            "caseName": "what is case name doing",
+            "description": "Customer wants a new system",
+            "resolutionId": null,
+            "createdBy": user.userId,
+            "intenalNote": "this is an internal note"
+        };
+
+        var resultsForThisUser = caseController.addCase(newCase, user);
+        resultsForThisUser.then(function (caseReturn) {
+            // Get types of returned objects
+            var typeofCase = Object.prototype.toString.call(caseReturn);
+            // Check whether the return value is an array
+            expect(typeofCase).toBe('[object Array]');
+            // Call done to finish the async function
+            done();
+        });
+    });
+    
+    
+    // Add case passed. This will not add case [Lucas]
+    it('addCase DOES NOT add a case', function (done) {
+        
+        // this is a user without proper permission
+        var user = {
+            userId: 'leadOwnerDEF',
+            password: '$2a$08$Y/fQPgblCV2ZK6UtopnyveZpn.VoY1ZP4oPK6R3JOuzTi9FU42Hiu',
+            passwordHint: null,
+            enabled: 1,
+            disabledDate: null,
+            partyId: 18,
+            createdDate: '2016-05-28T03:34:11.000Z',
+            updatedDate: '2016-05-28T03:34:11.000Z',
+            securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_LEAD_DEACTIVATE', 'CRMSFA_LEAD_DELETE', 'CRMSFA_LEAD_REASSIGN', 'CRMSFA_LEAD_UPDATE', 'CRMSFA_LEAD_VIEW', 'CRMSFA_OPP_CREATE', 'CRMSFA_OPP_UPDATE', 'CRMSFA_OPP_VIEW']
+        };
+        
+        var newCase = {
+            "caseTypeId": "RF_PROPOSAL",
+            "caseCategoryId": "CRCAT_COMPLEX",
+            "statusId": "CASE_ACCEPTED",
+            "fromPartyId": 20,
+            "priority": 5,
+            "caseName": "what is case name doing",
+            "description": "Customer wants a new system",
+            "resolutionId": null,
+            "createdBy": user.userId,
+            "intenalNote": "this is an internal note"
+        };
+
+        var resultsForThisUser = caseController.addCase(newCase, user);
+        expect(resultsForThisUser).toBeNull();
+        done();
+    });
+    
+    
+    // Another Add case passed. This will not add case [Lucas]
+    it('should throw an exception', function () {
+        
+        var user = {
+            userId: 'leadOwnerDEF',
+            password: '$2a$08$Y/fQPgblCV2ZK6UtopnyveZpn.VoY1ZP4oPK6R3JOuzTi9FU42Hiu',
+            passwordHint: null,
+            enabled: 1,
+            disabledDate: null,
+            partyId: 18,
+            createdDate: '2016-05-28T03:34:11.000Z',
+            updatedDate: '2016-05-28T03:34:11.000Z',
+            securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_LEAD_DEACTIVATE', 'CRMSFA_LEAD_DELETE', 'CRMSFA_LEAD_REASSIGN', 'CRMSFA_LEAD_UPDATE', 'CRMSFA_LEAD_VIEW', 'CRMSFA_OPP_CREATE', 'CRMSFA_OPP_UPDATE', 'CRMSFA_OPP_VIEW']
+        };
+        
+        var newCase = {
+            "caseTypeId": "RF_PROPOSAL",
+            "caseCategoryId": "CRCAT_COMPLEX",
+            "statusId": "CASE_ACCEPTED",
+            "fromPartyId": 20,
+            "priority": 5,
+            "caseName": "what is case name doing",
+            "description": "Customer wants a new system",
+            "resolutionId": null,
+            "createdBy": user.userId,
+            "intenalNote": "this is an internal note"
+        };
+
+        var resultsForThisUser = caseController.addCase(newCase, user);
+        
+        expect(function () {
+            resultsForThisUser.then(function (caseReturn) {
+                var typeofCase = Object.prototype.toString.call(caseReturn);
+            });
+        }).toThrow(new TypeError('Cannot read property \'then\' of null'));
+    });
 
 });
+
 
 describe('updateCase', function () {
     it('returns null for invalid input', function (done) {

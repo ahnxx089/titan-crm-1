@@ -55,6 +55,10 @@ var caseApi = function (knex) {
         //
         // getCasesByOwner:  The default if no query string for advanced search
         // 
+        // The owner of a case is the value in the case_.created_by column for the case.
+        // The values in that column come from user_login.user_login_id per the foreign key constraint
+        // on case_.created_by column.  Therefore caseData.getCasesByOwner does an innerJoin
+        // of tables case_ and user_login.
         if (Object.keys(req.query).length === 0) {
             var resultsForThisUser = caseController.getCasesByOwner(req.user);
             if (resultsForThisUser === null) {
@@ -117,10 +121,18 @@ var caseApi = function (knex) {
             });
     };
 
-    // DELETE /api/cases/:id
+ // DELETE /api/cases/:id
     var deleteCase = function (req, res) {
+        var caseId = req.params.id;
+        caseController.deleteCase(caseId)
+            .then(function (result) {
+                res.json({
+                    deleted: result
+                });
+            });
 
     };
+
 
     return {
         addCase: addCase,
