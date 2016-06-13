@@ -23,10 +23,6 @@ MyContactsStore.emitChange = function() {
     this.emit('change');  
 };
 
-MyContactsStore.addChangeListener = function(listener) {
-    this.on('change', listener);
-};
-
 
 // BUSINESS LOGIC
 //-----------------------------------------------
@@ -37,10 +33,12 @@ MyContactsStore.getContactsByOwner = function() {
         url: '/api/contacts/',
         headers: { 'x-access-token': Cookies.get('titanAuthToken') },
         success: function(contacts) {
+            
             contactsOwned = contacts;
-            // Diagnostic:  This confirms the API is returning Contact objects as it should...
-            console.log('In MyContactsStore.getContactsByOwner success function, typeof contactsOwned = ', typeof contactsOwned);
-            console.log('In MyContactsStore.getContactsByOwner success function, contactsOwned = ', contactsOwned);
+            
+            // DIAGNOSTICS:  These confirm the API is returning Contact objects as it should...
+            console.log('In MyContactsStore.getContactsByOwner ajax call success function, typeof contactsOwned = ', typeof contactsOwned);
+            console.log('In MyContactsStore.getContactsByOwner ajax call success function, contactsOwned = ', contactsOwned);
                         
             thisMyContactsStore.emitChange();
         }

@@ -6,56 +6,43 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
-
-// the Store from which data flows down to this View
 var MyContactsStore = require('../../stores/MyContactsStore');
 
 var MyContactsPage = React.createClass({
     
     getInitialState: function() {
         return {
-            contactsOwned: MyContactsStore.getContactsByOwner()
+            contactsOwned: []
         };
     },
 
-    /* ASYNCHRONICITY PROBLEM: Two alternatives I have attempted:
-        1.  With the next three functions componentDidMount, componentWillUnmount and _onChange
-            (modeled from HomePage.js) commented out so that this React class goes from 
-            getInitialState immediately to render, the render is happening before the initial state
-            of contactsOwned is even set-- pursue that in a moment....
-        2.  With the next three functions commented in, I see in the I'm getting stuck in an
-            infinite loop of execution of some kind, clearly that is not the way to go...
-            
-        So I think I've articulated my problem, and that now I need to explore React or Flux
-        documentation further.  Strictly speaking, I don't think this is a Flux issue (although
-        it happens to be that the reason I want the render to wait is because I want contactsOwned
-        to get its state set before the render happens, and that needed info is coming from the Store...)
-    
+    // Per 2016 Jun 13 stand-up meeting, this should CHANGE the state of contactsOwned and thus
+    // trigger a render, right?
     componentDidMount: function() {
-        MyContactsStore.addChangeListener(this._onChange);
-    },
-    
-    componentWillUnmount: function() {
-        MyContactsStore.removeListener('change', this._onChange);
-    },
-    
-    _onChange: function() {
         this.setState({
             contactsOwned: MyContactsStore.getContactsByOwner()
         });
     },
-    */
+
     render: function() {
         
         console.log('In MyContactsPage render, this.state.contactsOwned = ', this.state.contactsOwned);
         
-        // IFF I can figure out how to get the state of contactsOwned to be set before this render
-        // happens, use this shorthand variable or something similar
-        //var contactsToRender = this.state.contactsOwned;
+        // IFF I can figure out how to change the state of contactsOwned so that another render is
+        // triggered, use some shorthand variable name such as this in the table:
         
+        //var contacts = this.state.contactsOwned;
+        
+        // NOTE:  Still have yet to determine how to handle an incoming ARRAY of contacts, there will
+        // be zero, or one, or most importantly more than one.  At that point explore something like
+        // a jQuery DataTable maybe, if that means I can simply feed it an array of objects and one
+        // of column headings, rather than having to do some kind of FOR loop to generate rows of
+        // a bootstrap <table> . . . but first must solve the problem of getting the data in here in 
+        // the first place, worry about making it pretty later!
+    
         return (
             <div>
-                <p>(This paragraph precedes the table, remove this paragraph eventually...)</p>
+                <p>(This precedes the table, remove once confirmed table renders real data properly...)</p>
                 <div className="container" >
                     <div className="panel panel-default">
                         <div className="panel-heading panel-heading-custom">
@@ -71,19 +58,24 @@ var MyContactsPage = React.createClass({
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* TEMPORARY ROW OF FILLER MATERIAL JUST FOR VISUALIZING... */}
+                                {/* This is a temporary row of filler material just for visualizing, 
+                                    delete once real data is rendering properly...  */}
                                 <tr>                        
                                     <th>0</th>
                                     <th>Mr.</th>
                                     <th>Dinesh</th>
                                     <th>Shenoy</th>
                                 </tr>
-                                {/*  COMMENT IN ONLY WHEN ACTUALLY HAVE data coming in to render!
+                                {/*  When I have real data coming in to be rendered, individual rows
+                                        of the table could be filled in a manner like this . . . see
+                                        comments above re: if contacts is more than length === 1 then
+                                        might need a FOR loop, or preferably switch out this table for
+                                        a jQuery DataTable that will be much easier to render?
                                 <tr>                        
-                                    <th>{ contact.partyId }</th>
-                                    <th>{ contact.salutation }</th>
-                                    <th>{ contact.firstName }</th>
-                                    <th>{ contact.lastName }</th>
+                                    <th>{ contacts.partyId }</th>
+                                    <th>{ contacts.salutation }</th>
+                                    <th>{ contacts.firstName }</th>
+                                    <th>{ contacts.lastName }</th>
                                 </tr>
                                 */}
                             </tbody>
@@ -91,7 +83,7 @@ var MyContactsPage = React.createClass({
                     </div>
                 </div> 
             
-                <p>(This paragraph follows the table, remove it eventually...)</p>
+                <p>(This follows the table, remove it eventually when real data rendering properly...)</p>
 
             </div>
         );
