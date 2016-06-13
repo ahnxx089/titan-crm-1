@@ -30,6 +30,9 @@ var routes = (
     <Route path="cp" component={require('./components/ControlPanel')} onEnter={requireAuth}>
         <Route path="home" component={require('./components/home/HomePage')} />
         <Route path="about" component={require('./components/about/AboutPage')} />
+        <Route path="myContacts" component={require('./components/contacts/MyContactsPage')} />
+        <Route path="createContact" component={require('./components/contacts/CreateContactPage')} />
+        <Route path="findContacts" component={require('./components/contacts/FindContactsPage')} />
     </Route>
     <Route path="login" component={require('./components/login/LoginPage')} />
     {/*<NotFoundRoute handler={require('./components/notFoundPage')} />*/}
