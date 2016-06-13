@@ -37,6 +37,10 @@ var HomePage = React.createClass({
     },
     
     render: function () {
+        
+        // TEMPORARY DIAGNOSTIC
+        console.log('In HomePage render, this.state.contactDetails = ', this.state.contactDetails);
+
         return (
             <div>
                 <div className="jumbotron">

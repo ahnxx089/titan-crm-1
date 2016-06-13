@@ -57,6 +57,10 @@ HomeStore.getContactById = function(contactId) {
         headers: { 'x-access-token': Cookies.get('titanAuthToken') },
         success: function(contact) {
             contactDetails = contact;
+            // TEMPORARY, DINESH WILL REMOVE THIS SOON...
+            console.log('In HomeStore.getContactById success function, typeof contactDetails = ', typeof contactDetails);
+            console.log('In HomeStore.getContactById success function, contactDetails = ', contactDetails);
+
             thisHomeStore.emitChange();
         }
     });

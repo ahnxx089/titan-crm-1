@@ -11,8 +11,6 @@ var MyContactsConstants = require('../constants/MyContactsConstants');
 var $ = require('jquery');
 var Cookies = require('js-cookie');
 
-// EMPTY OBJECT (EVENTUALLY TO HOLD ZERO, ONE OR MORE CONTACT ENTITIES)
-var contactsOwned = {};
 
 // STORE as EVENT EMITTER
 //-----------------------------------------------
@@ -38,8 +36,12 @@ MyContactsStore.getContactsByOwner = function() {
         type: 'GET',
         url: '/api/contacts/',
         headers: { 'x-access-token': Cookies.get('titanAuthToken') },
-        success: function(contact) {
-            contactsOwned = contact;
+        success: function(contacts) {
+            contactsOwned = contacts;
+            // Diagnostic:  This confirms the API is returning Contact objects as it should...
+            console.log('In MyContactsStore.getContactsByOwner success function, typeof contactsOwned = ', typeof contactsOwned);
+            console.log('In MyContactsStore.getContactsByOwner success function, contactsOwned = ', contactsOwned);
+                        
             thisMyContactsStore.emitChange();
         }
     });

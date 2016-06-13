@@ -1,31 +1,35 @@
 /////////////////////////////////////////////////
 // My Contacts page component.
 //
-// @file:   MyContacts.js
+// @file:   MyContactsPage.js
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>
 /////////////////////////////////////////////////
 
 var React = require('react');
 
-// children will be required in here, e.g. as HomePage.js requires in GetContactForm and ContactDetails
-
-// the store will be required in here as (probably):
-//var MyContactsStore = require('../../stores/MyContactsStore');
-
-// unlike CreateContactPage and HomePage, this page should not need to need to send out
-// any info to a MyContactsAction after this page is rendered . . . MyContactsAction
-// will of course be sending down this user's Contacts to MyContactsStore which will
-// be sending it down here, but this page will not later be sending info back out. . . 
+// the Store from which data flows down to this View
+var MyContactsStore = require('../../stores/MyContactsStore');
 
 var MyContactsPage = React.createClass({
+    
     getInitialState: function() {
-        // JUST FOR NOW HAVE THE STORE SEND DOWN ONE CONTACT, BUT YEAH, VERY SOON OF COURSE THE STATE
-        // OF "contacts" IS GOING TO HAVE TO BE SOMETHING LIKE A JSON OBJECT IN WHICH EACH OBJECT IS A JSON
-        // FORMATTED CONTACT'S INFORMATION. .. . THAT IS FORMATTING, JUST GET ONE HERE FIRST!
         return {
-            contacts: MyContactsStore.getContactsByOwner()
+            contactsOwned: MyContactsStore.getContactsByOwner()
         };
     },
+
+    /* ASYNCHRONICITY PROBLEM: Two alternatives I have attempted:
+        1.  With the next three functions componentDidMount, componentWillUnmount and _onChange
+            (modeled from HomePage.js) commented out so that this React class goes from 
+            getInitialState immediately to render, the render is happening before the initial state
+            of contactsOwned is even set-- pursue that in a moment....
+        2.  With the next three functions commented in, I see in the I'm getting stuck in an
+            infinite loop of execution of some kind, clearly that is not the way to go...
+            
+        So I think I've articulated my problem, and that now I need to explore React or Flux
+        documentation further.  Strictly speaking, I don't think this is a Flux issue (although
+        it happens to be that the reason I want the render to wait is because I want contactsOwned
+        to get its state set before the render happens, and that needed info is coming from the Store...)
     
     componentDidMount: function() {
         MyContactsStore.addChangeListener(this._onChange);
@@ -35,22 +39,23 @@ var MyContactsPage = React.createClass({
         MyContactsStore.removeListener('change', this._onChange);
     },
     
+    _onChange: function() {
+        this.setState({
+            contactsOwned: MyContactsStore.getContactsByOwner()
+        });
+    },
+    */
     render: function() {
-        // TEMPORARY -- OBVIOUSLY I MUST WORK OUT A WAY TO RENDER AN UNKNOWN NUMBER OF CONTACTS
-        // OWNED BY THE USER, BUT RIGHT NOW I HAVE MY DB RIGGED UP TO RETURN EXACTLY ONE, SO THAT
-        // IF I GET THE UNIDIRECTIONAL DATA FLOW WORKING, THEN this.state.contacts WILL BE A SINGLE
-        // CONTACT ENTITY WITH party_id = 20, who is Agent Smith.
-        var contact = this.state.contacts;
+        
+        console.log('In MyContactsPage render, this.state.contactsOwned = ', this.state.contactsOwned);
+        
+        // IFF I can figure out how to get the state of contactsOwned to be set before this render
+        // happens, use this shorthand variable or something similar
+        //var contactsToRender = this.state.contactsOwned;
         
         return (
             <div>
-            
-                {/* This container is the kind of table I could use, or probably a jQuery
-                    DataTable would be better, but for now just keep it since it does 
-                    display after some effort!  
-                    NOTE:  ON THIS FIRST PASS, NOT ATTEMPTING TO PULL IN CONTACT MECHANISMS,
-                    LET ME JUST GET THIS WORKING FIRST TO DISPLAY NOTHING BUT A FEW IMPORTANT
-                    COLUMNS OF THE CONTACT ENTITY(IES) RETURNED BY getContactsByOwner ITSELF... */}
+                <p>(This paragraph precedes the table, remove this paragraph eventually...)</p>
                 <div className="container" >
                     <div className="panel panel-default">
                         <div className="panel-heading panel-heading-custom">
@@ -66,24 +71,28 @@ var MyContactsPage = React.createClass({
                                 </tr>
                             </thead>
                             <tbody>
+                                {/* TEMPORARY ROW OF FILLER MATERIAL JUST FOR VISUALIZING... */}
+                                <tr>                        
+                                    <th>0</th>
+                                    <th>Mr.</th>
+                                    <th>Dinesh</th>
+                                    <th>Shenoy</th>
+                                </tr>
+                                {/*  COMMENT IN ONLY WHEN ACTUALLY HAVE data coming in to render!
                                 <tr>                        
                                     <th>{ contact.partyId }</th>
                                     <th>{ contact.salutation }</th>
                                     <th>{ contact.firstName }</th>
                                     <th>{ contact.lastName }</th>
                                 </tr>
-                                {/* This row is just proof the table className works, get rid of eventually
-                                <tr>                        
-                                    <th>0000</th>
-                                    <th>Mr.</th>
-                                    <th>Dinesh</th>
-                                    <th>Shenoy</th>
-                                </tr>
                                 */}
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> 
+            
+                <p>(This paragraph follows the table, remove it eventually...)</p>
+
             </div>
         );
     }

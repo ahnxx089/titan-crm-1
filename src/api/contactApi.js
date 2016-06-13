@@ -68,6 +68,8 @@ var contactApi = function (knex) {
             } else {
                 resultsForThisUser.then(function (contacts) {
                     res.json(contacts);
+                    //console.log('typeof contacts = ', typeof contacts);
+                    //console.log('contacts = ', contacts);
                 });
             }
         }
