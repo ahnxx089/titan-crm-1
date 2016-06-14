@@ -32,12 +32,12 @@ var routes = (
         <Route path="home" component={require('./components/home/HomePage')}/>
         <Route path="home/home-sub" component={require('./components/home/HomeSubPage')} />
         {/* Contacts module pages */}
-        {/* <Route path="contact/my-contacts" component={require('./components/contacts/my-contacts/MyContactsPage')} />
-        <Route path="home/create-contact" component={require('./components/contacts/create-contact/CreateContactPage')} />*/ }
+        {/* <Route path="contacts/my-contacts" component={require('./components/contacts/my-contacts/MyContactsPage')} />
+        <Route path="contacts/create-contact" component={require('./components/contacts/create-contact/CreateContactPage')} />*/ }
         {/* About page */}
         <Route path="about" component={require('./components/about/AboutPage')} />
         <Route path="contacts">
-            <Route path="myContacts" component={require('./components/contacts/MyContactsPage')} />
+            <Route path="my-contacts" component={require('./components/contacts/my-contacts/MyContactsPage')} />
         </Route>
     </Route>
     <Route path="login" component={require('./components/login/LoginPage')} />

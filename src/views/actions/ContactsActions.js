@@ -1,22 +1,22 @@
 /////////////////////////////////////////////////
-// All actions for My Contacts page.
+// All actions for Contacts module pages.
 //
-// @file:   MyContactsActions.js
+// @file:   ContactsActions.js
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>
 /////////////////////////////////////////////////
 
 var TitanDispatcher = require('../dispatcher/TitanDispatcher');
-var MyContactsConstants = require('../constants/MyContactsConstants');
+var ContactsConstants = require('../constants/ContactsConstants');
 
-var MyContactsActions = {
+var ContactsActions = {
     
     getContactsByOwner: function() {
         //console.log('In MyContactsAction getContactsByOwner about to send actionType MyContactsConstants.MY_CONTACTS down to dispatcher');
         TitanDispatcher.dispatch({
-            actionType: MyContactsConstants.MY_CONTACTS
+            actionType: ContactsConstants.GET_MY_CONTACTS
         });
     }
     
 };
 
-module.exports = MyContactsActions;
+module.exports = ContactsActions;
