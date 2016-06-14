@@ -12,6 +12,7 @@ var winston = require('winston');
 var Account = require('../entities/account');
 var userController = require('../controllers/userController');
 var contactInfoHelper = require('../controllers/helpers/contactInfoHelper');
+var _ = require('lodash');
 
 var accountController = function (knex) {
     // Get a reference to data layer module
@@ -319,7 +320,7 @@ var accountController = function (knex) {
             return promise;
         }
         else {
-            return
+            return;
         }
     };
     /**
@@ -374,7 +375,7 @@ var accountController = function (knex) {
             return promise;
         }
         else {
-            return
+            return;
         }
     };
 

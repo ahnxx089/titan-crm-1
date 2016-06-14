@@ -5,6 +5,8 @@
 // @author: Eric Brichetto <brichett13@gmail.com>
 /////////////////////////////////////////////////
 
+/* jshint shadow:true */
+
 var accountApi = function (knex) {
     //Not yet functional
     var accountController = require('../controllers/accountController')(knex);
@@ -135,7 +137,7 @@ var accountApi = function (knex) {
 //                res.json(accounts);
 //            });
         }
-    }
+    };
 
     // GET /api/accounts/:id
     var getAccountById = function (req, res) {
