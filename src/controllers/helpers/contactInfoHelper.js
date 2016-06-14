@@ -43,7 +43,7 @@ var contactInfoHelper = function(target) {
             null,
             'TELECOM_NUMBER',
             'PRIMARY_PHONE',
-            null,
+            null, // null info string
             now,
             now,
             target.countryCode,
@@ -58,7 +58,7 @@ var contactInfoHelper = function(target) {
             null,
             'POSTAL_ADDRESS',
             'PRIMARY_LOCATION',
-            null,
+            null, // null info string
             now,
             now,
             null,

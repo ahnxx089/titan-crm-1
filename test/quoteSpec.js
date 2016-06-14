@@ -151,9 +151,6 @@ describe('Quote module ', function () {
     });
 
     it('quoteController.addQuoteItem allows a user with permission to add an Item to a Quote', function (done) {
-
-
-
         var user = {
             userId: 'contactOwnerABC',
             securityPermissions: ['CRMSFA_QUOTE_CREATE']
@@ -161,7 +158,7 @@ describe('Quote module ', function () {
 
         var quote = {
             'quoteTypeId': 'PRODUCT_QUOTE',
-            'partyId': '91', 
+            'partyId': '91',
             'issueDate': '2016-06-04 10:49:22',
             'statusId': 'QUOTE_SENT',
             'currencyUomId': 'USD',
@@ -205,12 +202,6 @@ describe('Quote module ', function () {
                     done();
                 }
             });
-
-
-
-
-
-
     });
 
     it('quoteController.updateQuoteItem allows a user with permission to update an Item of a Quote', function (done) {
@@ -259,7 +250,7 @@ describe('Quote module ', function () {
         }
     });
 
-    xit('quoteController.updateQuoteItemOption allows a user with permission to update an Item of a Quote', function (done) {
+    it('quoteController.updateQuoteItemOption allows a user with permission to update an Item of a Quote', function (done) {
 
         var user = {
             userId: 'mrQuoteUnquote',
@@ -300,6 +291,7 @@ describe('Quote module ', function () {
         }
     });
 
+
     it('quoteController.addQuote allows user with authorization to add a Quote', function (done) {
         var user = {
             userId: 'contactOwnerABC',
@@ -325,6 +317,19 @@ describe('Quote module ', function () {
         expect(result).not.toBeNull();
 
         done();
-    })
+    });
+
+    it('quoteController.getQuoteById returns a valid quote', function (done) {
+        var id = 1;
+        var user = {
+            securityPermissions: ['CRMSFA_QUOTE_CREATE']
+        };
+
+        quoteController.getQuoteById(id, user)
+            .then(function (quote) {
+                expect(quote instanceof Quote).toBeTruthy();
+                done();
+            });
+    });
 
 });

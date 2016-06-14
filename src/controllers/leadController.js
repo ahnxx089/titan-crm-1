@@ -13,11 +13,16 @@
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
 // getLeads is not finished, not used. Lucas will look at it later. 
 // deleteLead and updateLead are (maybe not) wrong. 
+// getLeadsByPhoneNumber is not declared. Canceled by Anurag. 
+// getLeadsByIdentity is using wrong permission and is not returned. Lucas returned this.
+
 
 var winston = require('winston');
 var Lead = require('../entities/lead');
 var ContactMech = require('../entities/contactMech');
 var _ = require('lodash');
+var contactInfoHelper = require('../controllers/helpers/contactInfoHelper');
+
 
 var leadController = function (knex) {
     // Get a reference to data layer module, and contactMechController
@@ -93,83 +98,34 @@ var leadController = function (knex) {
      */
     var addLead = function (lead, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
-        if (hasPermission !== -1) {
-            var now = (new Date()).toISOString();
-            // Contact mechanisms
-            var contactMechEntities = [];
+        var now = (new Date()).toISOString();
 
-            if (lead.emailAddress) {
-                var emailContactMech = new ContactMech(
-                    null,
-                    'EMAIL_ADDRESS',
-                    'PRIMARY_EMAIL',
-                    lead.emailAddress,
-                    now,
-                    now
-                );
-                contactMechEntities.push(emailContactMech);
+        if (hasPermission !== -1) {
+            // Contact mechanisms
+            var contactMechEntities = contactInfoHelper(lead); 
+            // This big chunk of code has been replaced with contactInfoHelper. Thanks to Eric
+            
+            var dob;
+            if (lead.birthDate) {
+                try {
+                    dob = new Date(lead.birthDate).toISOString();
+                } catch (e) {
+                    dob = null;
+                }
+            } else {
+                dob = null;
             }
-            if (lead.webAddress) {
-                var webContactMech = new ContactMech(
-                    null,
-                    'WEB_ADDRESS',
-                    'PRIMARY_WEB_URL',
-                    lead.webAddress,
-                    now,
-                    now
-                );
-                contactMechEntities.push(webContactMech);
-            }
-            if (lead.contactNumber) {
-//                var info = lead.countryCode + ' ' + lead.areaCode + ' ' + lead.contactNumber + ' ' + lead.askForName;
-                var phoneContactMech = new ContactMech(
-                    null,
-                    'TELECOM_NUMBER',
-                    'PRIMARY_PHONE',
-                    null, // null info string
-//                    info,
-                    now,
-                    now,
-                    lead.countryCode,
-                    lead.areaCode,
-                    lead.contactNumber,
-                    lead.askForName
-                );
-                contactMechEntities.push(phoneContactMech);
-            }
-            if (lead.countryGeoId) {
-//                var info = lead.toName + ' ' + lead.attnName + ' ' + lead.address1 + ' ' + lead.address2 + ' ' + lead.directions
-//                    + ' ' + lead.city + ' ' + lead.stateProvinceGeoId + ' ' + lead.zipOrPostalCode + ' ' + lead.countryGeoId;
-                var addressContactMech = new ContactMech(
-                    null,
-                    'POSTAL_ADDRESS',
-                    'PRIMARY_LOCATION',
-                    null, // null info string
-//                    info,
-                    now,
-                    now,
-                    null,
-                    null,
-                    null,
-                    null,
-                    lead.toName,
-                    lead.attnName,
-                    lead.address1,
-                    lead.address2,
-                    lead.directions,
-                    lead.city,
-                    lead.stateProvinceGeoId,
-                    lead.zipOrPostalCode,
-                    lead.countryGeoId
-                );
-                contactMechEntities.push(addressContactMech);
-            }
+            
+            // TODO: Use the helper Eric wrote. Done
+            // TODO: Link contact_mech with party. Done (taken care by contactMechController.linkContactMechToParty)
+            // TODO: Link contact_mech with party_supplemental_data. NOT DONE.
             
             var leadEntity = new Lead(
                 // ok to put dummy data here, eg, null and birthDate
                 // Single quotes are must.
                 null,
-                lead.partyTypeId,
+                // will be PERSON anyway
+                lead.partyTypeId, 
                 lead.currencyUomId,
                 lead.description,
                 lead.statusId,
@@ -182,7 +138,7 @@ var leadController = function (knex) {
                 lead.middleName,
                 lead.lastName,
                 // lead.birthDate,
-                (new Date()).toISOString(), 
+                dob,
                 lead.comments,
                 // for person
                 lead.parentPartyId,
@@ -201,7 +157,7 @@ var leadController = function (knex) {
 //                lead.primaryTelecomNumberId,
 //                lead.primaryEmailId,
                 
-                
+                // will be LEAD anyway
                 lead.roleTypeId
 
                 /*
@@ -471,7 +427,8 @@ var leadController = function (knex) {
         });
         return promise;
     };
-
+    
+    
     //@params {string} firstName -  The first name of the lead you want
     //@params {string} lastName - The last name of the lead you want
     //@return {object} promise - The fulfilmment object is an array of searched values
@@ -491,8 +448,8 @@ var leadController = function (knex) {
             }
             var promise = leadData.getLeadsByIdentity(firstName, lastName)
                 .then(function (leads) {
-            // Fill the leads Entity
-             var leadsEntities = [];
+                    // Fill the leads Entity
+                    var leadsEntities = [];
                     for (var i = 0; i < leads.length; i++) {
                         var lead = new Lead(
                             leads[i].party_id,
@@ -513,7 +470,7 @@ var leadController = function (knex) {
                         leadsEntities.push(lead);
                     }
                     return leadsEntities;
-             });
+                });
             promise.catch(function (error) {
                 // Log the error
                 winston.error(error);
@@ -523,7 +480,9 @@ var leadController = function (knex) {
             // user does not have permissions of a contact owner, return null
             return null;
         }
-        };    /**
+    };
+    
+    /**
      * Update a lead in database
      * @param {Number} leadId - Unique id of the lead to be updated
      * @param {Object} lead - The object that contains updated data
@@ -588,6 +547,7 @@ var leadController = function (knex) {
         getLeads: getLeads,
         getLeadById: getLeadById,
         getLeadsByOwner: getLeadsByOwner,
+        getLeadsByIdenity: getLeadsByIdenity,
         addLead: addLead,
         updateLead: updateLead,
         deleteLead: deleteLead

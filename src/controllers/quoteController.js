@@ -146,7 +146,7 @@ var quoteController = function (knex) {
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var addQuoteItemOption = function(quoteItemOption, user) {
+    var addQuoteItemOption = function (quoteItemOption, user) {
         // Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
@@ -191,7 +191,7 @@ var quoteController = function (knex) {
             return null;
         }
     };
-    
+
     /**
      * Update a quote in database (equiv to Opentaps' Edit Quote & Accept/Send/Finalize/Reject/Cancel)
      * @param {Number} quoteId - Unique quote_id of the quote to update
@@ -255,7 +255,7 @@ var quoteController = function (knex) {
             return null;
         }
     };
-    
+
     /**
      * Update an item of a quote 
      * @param {Object} quoteItem - entity containing info of item to be updated
@@ -263,7 +263,7 @@ var quoteController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateQuoteItem = function (quoteItem, user) {
-        
+
         // Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
@@ -365,7 +365,7 @@ var quoteController = function (knex) {
             return null;
         }
     };
-    
+
     /**
      * Add a new quote note
      * @param {Number} quoteId - Unique quote_id of the quote to add a note to
@@ -384,7 +384,42 @@ var quoteController = function (knex) {
      * @return {Object} promise - Fulfillment value is a quote entity
      */
     var getQuoteById = function (quoteId, user) {
-
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
+        if (hasPermission !== -1) {
+            var promise = quoteData.getQuoteById(quoteId)
+                .then(function (quote) {
+                    // Map the retrieved result set to corresponding entity
+                    var quoteEntity;
+                    if (quote.length > 0) {
+                        quoteEntity = new Quote(
+                            quote[0].quote_id,
+                            quote[0].quote_type_id,
+                            quote[0].party_id,
+                            quote[0].issue_date,
+                            quote[0].status_id,
+                            quote[0].currency_uom_id,
+                            quote[0].sales_channel_enum_id,
+                            quote[0].valid_from_date,
+                            quote[0].valid_thru_date,
+                            quote[0].quote_dame,
+                            quote[0].description,
+                            quote[0].contact_party_id,
+                            quote[0].created_by_party_id,
+                            quote[0].created_date,
+                            quote[0].updated_date
+                        );
+                    }
+                    return quoteEntity;
+                });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            // user does not have permissions to add a quote, return null
+            return null;
+        }
     };
 
     /**
@@ -432,8 +467,8 @@ var quoteController = function (knex) {
             return;
         }
     };
-    
-    
+
+
     /** 
      * Gets quotes by advanced search
      * @param {String} query - query string: SOME ARGUMENT
@@ -444,83 +479,82 @@ var quoteController = function (knex) {
         //Check security permission of user
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
-            
+
             // these variables are strings if were set, or object if null
             var quoteId = query.quoteId || null;
             var quoteName = query.quoteName || null;
             var status = query.status || null;
             var account = query.account || null;
-            var salesChannel = query.salesChannel || null; 
-            
+            var salesChannel = query.salesChannel || null;
+
             var promise = quoteData.getQuotesByAdvanced(quoteId, quoteName, status, account, salesChannel)
-            .then(function (quotes) {
-                var quoteEntities = [];
-                for (var i = 0; i < quotes.length; i++) {
-                    
-                    // quotes[i].quote_id is Number
-                    var test1 = quoteId == null ? true : quotes[i].quote_id === +quoteId;
-                    
-                    
-                    // quotes[i].quote_name is varchar(100), and is NULLABLE
-                    var emptyString = quoteName == null;
-                    var emptyColumn = quotes[i].quote_name == null;
-                    // If we search for something, in null columns, then we will never find it
-                    var test2 = (!emptyString && emptyColumn) ? false : true;
-                    // If we search for something, in some columns, we need to compare
-                    // the first attempt is to do complete string match, the second attempt is to do substring match.
-                    test2 = (!emptyString && !emptyColumn) ? (quotes[i].quote_name.toUpperCase().indexOf(quoteName.toUpperCase()) > -1) : test2;
+                .then(function (quotes) {
+                    var quoteEntities = [];
+                    for (var i = 0; i < quotes.length; i++) {
 
-                    
-                    // quotes[i].status_id is varchar(20), and is NULLABLE
-                    // status_id will be shown in a drop-down menu. There is no need to do substring match here. 
-                    var emptyString = status == null;
-                    var emptyColumn = quotes[i].status_id == null;
-//                    console.log(emptyString);
-//                    console.log(emptyColumn);
-                    // If we search for something, in null columns, then we will never find it
-                    var test3 = (!emptyString && emptyColumn) ? false : true;
-                    // If we search for something, in some columns, we need to compare
-                    test3 = (!emptyString && !emptyColumn) ? quotes[i].status_id.toUpperCase() === status.toUpperCase() : test3;
-//                    The line above is same as 
-//                    if(!emptyString && !emptyColumn) {
-//                        test3 = quotes[i].status_id.toUpperCase() == status.toUpperCase();
-//                    }
-                    
-                    // quotes[i].party_id is Number, and is NULLABLE
-                    var test4 = account == null ? true : quotes[i].party_id === +account;
-                    
-                    // quotes[i].sales_channel_enum_id is varchar(20)
-                    // Good column! I love it. 
-                    var test5 = salesChannel == null ? true: quotes[i].sales_channel_enum_id.toUpperCase() === salesChannel.toUpperCase();
+                        // quotes[i].quote_id is Number
+                        var test1 = quoteId == null ? true : quotes[i].quote_id === +quoteId;
 
 
-                    if(test1 && test2 && test3 && test4 && test5) {
-                        // build quote from returned columns
-                        var quote = new Quote(
-                            quotes[i].quote_id,
-                            quotes[i].quote_type_id,
-                            quotes[i].party_id,
-                            quotes[i].issue_date,
-                            quotes[i].status_id,
-                            quotes[i].currency_uom_id,
-                            quotes[i].sales_channel_enum_id,
-                            quotes[i].valid_from_date,
-                            quotes[i].valid_thru_date,
-                            quotes[i].quote_name,
-                            quotes[i].description,
-                            quotes[i].contact_party_id,
-                            quotes[i].created_by_party_id,
-                            quotes[i].created_date,
-                            quotes[i].updated_date
-                        );
-                        quoteEntities.push(quote);
+                        // quotes[i].quote_name is varchar(100), and is NULLABLE
+                        var emptyString = quoteName == null;
+                        var emptyColumn = quotes[i].quote_name == null;
+                        // If we search for something, in null columns, then we will never find it
+                        var test2 = (!emptyString && emptyColumn) ? false : true;
+                        // If we search for something, in some columns, we need to compare
+                        // the first attempt is to do complete string match, the second attempt is to do substring match.
+                        test2 = (!emptyString && !emptyColumn) ? (quotes[i].quote_name.toUpperCase().indexOf(quoteName.toUpperCase()) > -1) : test2;
+
+
+                        // quotes[i].status_id is varchar(20), and is NULLABLE
+                        // status_id will be shown in a drop-down menu. There is no need to do substring match here. 
+                        var emptyString = status == null;
+                        var emptyColumn = quotes[i].status_id == null;
+                        //                    console.log(emptyString);
+                        //                    console.log(emptyColumn);
+                        // If we search for something, in null columns, then we will never find it
+                        var test3 = (!emptyString && emptyColumn) ? false : true;
+                        // If we search for something, in some columns, we need to compare
+                        test3 = (!emptyString && !emptyColumn) ? quotes[i].status_id.toUpperCase() === status.toUpperCase() : test3;
+                        //                    The line above is same as 
+                        //                    if(!emptyString && !emptyColumn) {
+                        //                        test3 = quotes[i].status_id.toUpperCase() == status.toUpperCase();
+                        //                    }
+
+                        // quotes[i].party_id is Number, and is NULLABLE
+                        var test4 = account == null ? true : quotes[i].party_id === +account;
+
+                        // quotes[i].sales_channel_enum_id is varchar(20)
+                        // Good column! I love it. 
+                        var test5 = salesChannel == null ? true : quotes[i].sales_channel_enum_id.toUpperCase() === salesChannel.toUpperCase();
+
+
+                        if (test1 && test2 && test3 && test4 && test5) {
+                            // build quote from returned columns
+                            var quote = new Quote(
+                                quotes[i].quote_id,
+                                quotes[i].quote_type_id,
+                                quotes[i].party_id,
+                                quotes[i].issue_date,
+                                quotes[i].status_id,
+                                quotes[i].currency_uom_id,
+                                quotes[i].sales_channel_enum_id,
+                                quotes[i].valid_from_date,
+                                quotes[i].valid_thru_date,
+                                quotes[i].quote_name,
+                                quotes[i].description,
+                                quotes[i].contact_party_id,
+                                quotes[i].created_by_party_id,
+                                quotes[i].created_date,
+                                quotes[i].updated_date
+                            );
+                            quoteEntities.push(quote);
+                        } else {
+                            continue;
+                        }
                     }
-                    else {
-                        continue;
-                    }
-                }
-                return quoteEntities;
-            });
+                    return quoteEntities;
+                });
             promise.catch(function (error) {
                 // Log the error
                 winston.error(error);

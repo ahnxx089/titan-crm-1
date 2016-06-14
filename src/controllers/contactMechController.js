@@ -180,25 +180,25 @@ var contactMechController = function (knex) {
                 var contactMechEntity;
                 if (contactMech.length > 0) {
                     contactMechEntity = new ContactMech(
-                        contactMech[0].contactMechId,
-                        contactMech[0].contactMechTypeId,
-                        contactMech[0].contactMechPuproseTypeId,
-                        contactMech[0].infoString,
-                        contactMech[0].createdDate,
-                        contactMech[0].updatedDate,
-                        contactMech[0].countryCode,
-                        contactMech[0].areaCode,
-                        contactMech[0].contactNumber,
-                        contactMech[0].askForName,
-                        contactMech[0].toName,
-                        contactMech[0].attnName,
+                        contactMech[0].contact_mech_id,
+                        contactMech[0].contact_mech_type_id,
+                        contactMech[0].contact_mech_puprose_type_id,
+                        contactMech[0].info_string,
+                        contactMech[0].created_date,
+                        contactMech[0].updated_date,
+                        contactMech[0].country_code,
+                        contactMech[0].area_code,
+                        contactMech[0].contact_number,
+                        contactMech[0].ask_for_name,
+                        contactMech[0].to_name,
+                        contactMech[0].attn_name,
                         contactMech[0].address1,
                         contactMech[0].address2,
                         contactMech[0].directions,
                         contactMech[0].city,
-                        contactMech[0].stateProvinceGeoId,
-                        contactMech[0].zipOrPostalCode,
-                        contactMech[0].countryGeoId
+                        contactMech[0].state_province_geo_id,
+                        contactMech[0].zip_or_postal_code,
+                        contactMech[0].country_geoId
                     );
                 }
                 return contactMechEntity;

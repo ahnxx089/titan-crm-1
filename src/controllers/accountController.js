@@ -179,44 +179,50 @@ var accountController = function (knex) {
      * @param {Number} partyId - Unique id of the party to be fetched
      * @return {Object} promise - Fulfillment value is a account entity
      */
-    var getAccountById = function (partyId) {
-        var promise = accountData.getAccountById(partyId)
-            .then(function (accounts) {
-                // Map the retrieved result set to corresponding entity
-                var accountEntity;
-                if (accounts.length > 0) {
-                    accountEntity = new Account(
-                        accounts[0].party_id,
-                        accounts[0].party_type_id,
-                        accounts[0].preferred_currency_uom_id,
-                        accounts[0].description,
-                        accounts[0].status_id,
-                        accounts[0].created_by,
-                        accounts[0].created_date,
-                        accounts[0].updated_date,
-                        accounts[0].organization_name,
-                        accounts[0].office_site_name,
-                        accounts[0].annual_revenue,
-                        accounts[0].num_employees,
-                        accounts[0].ticker_symbol,
-                        accounts[0].comments,
-                        accounts[0].logo_image_url,
-                        accounts[0].parent_party_id,
-                        accounts[0].industry_enum_id,
-                        accounts[0].ownership_enum_id,
-                        accounts[0].important_note,
-                        accounts[0].primary_postal_address_id,
-                        accounts[0].primary_telecom_number_id,
-                        accounts[0].primary_email_id
-                    );
-                }
-                return accountEntity;
+    var getAccountById = function (partyId, user) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACCOUNT_CREATE');
+        if (hasPermission !== -1) {
+            var promise = accountData.getAccountById(partyId)
+                .then(function (accounts) {
+                    // Map the retrieved result set to corresponding entity
+                    var accountEntity;
+                    if (accounts.length > 0) {
+                        accountEntity = new Account(
+                            accounts[0].party_id,
+                            accounts[0].party_type_id,
+                            accounts[0].preferred_currency_uom_id,
+                            accounts[0].description,
+                            accounts[0].status_id,
+                            accounts[0].created_by,
+                            accounts[0].created_date,
+                            accounts[0].updated_date,
+                            accounts[0].organization_name,
+                            accounts[0].office_site_name,
+                            accounts[0].annual_revenue,
+                            accounts[0].num_employees,
+                            accounts[0].ticker_symbol,
+                            accounts[0].comments,
+                            accounts[0].logo_image_url,
+                            accounts[0].parent_party_id,
+                            accounts[0].industry_enum_id,
+                            accounts[0].ownership_enum_id,
+                            accounts[0].important_note,
+                            accounts[0].primary_postal_address_id,
+                            accounts[0].primary_telecom_number_id,
+                            accounts[0].primary_email_id
+                        );
+                    }
+                    return accountEntity;
+                });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
             });
-        promise.catch(function (error) {
-            // Log the error
-            winston.error(error);
-        });
-        return promise;
+            return promise;
+        }
+        else {
+            return;
+        }
     };
     /**
      * Gets all accounts associated with a given owner from the database

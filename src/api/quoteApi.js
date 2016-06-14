@@ -85,7 +85,7 @@ var quoteApi = function (knex) {
         // 
         // addQuoteItemOption
         else if (req.query.hasOwnProperty('itemOption')) {
-            
+
             var resultsForThisUser = quoteController.addQuoteItemOption(req.body, req.user);
 
             /* Intepret the possible outcomes from the controller layer:
@@ -138,12 +138,12 @@ var quoteApi = function (knex) {
     // Methods:  updateQuoteItem, updateQuoteItemOption
     //
     var updateQuoteItem = function (req, res) {
-        
+
         // PUT /api/quotes?item
         // 
         // updateQuoteItem          
-        if(req.query.hasOwnProperty('item')) {
-            
+        if (req.query.hasOwnProperty('item')) {
+
             var resultsForThisUser = quoteController.updateQuoteItem(req.body, req.user);
 
             /* Intepret the possible outcomes from the controller layer:
@@ -170,12 +170,12 @@ var quoteApi = function (knex) {
                 });
             }
         }
-        
+
         // PUT /api/quotes?itemOption
         // 
         // updateQuoteItemOption
         else if (req.query.hasOwnProperty('itemOption')) {
-            
+
             var resultsForThisUser = quoteController.updateQuoteItemOption(req.body, req.user);
 
             /* Intepret the possible outcomes from the controller layer:
@@ -202,7 +202,7 @@ var quoteApi = function (knex) {
                 });
             }
         }
-        
+
         // no other PUT routes, return error message so the app does not hang
         else {
             res.json({
@@ -226,7 +226,7 @@ var quoteApi = function (knex) {
             var resultsForThisUser = quoteController.getQuotesByOwner(req.user);
             // IF ELSE block interprets controller returning an object or null
             if (resultsForThisUser === null) {
-//                console.log('first get quotes');
+                //                console.log('first get quotes');
                 res.json({
                     'message': 'You do not have permission to own quotes!'
                 });
@@ -242,11 +242,11 @@ var quoteApi = function (knex) {
         // findQuotes, aka Advanced Search
         // quoteId here will ONLY be used the route /api/quotes?SOME_PROPERTY is chosen.
         // This is not going to interfere with Bill's work
-        else if (req.query.hasOwnProperty('quoteId') || req.query.hasOwnProperty('quoteName') ||  req.query.hasOwnProperty('status') || req.query.hasOwnProperty('account') || req.query.hasOwnProperty('salesChannel')) {
-//            console.log('second get quotes');
+        else if (req.query.hasOwnProperty('quoteId') || req.query.hasOwnProperty('quoteName') || req.query.hasOwnProperty('status') || req.query.hasOwnProperty('account') || req.query.hasOwnProperty('salesChannel')) {
+            //            console.log('second get quotes');
 
             var resultsForUser = quoteController.getQuotesByAdvanced(req.query, req.user);
-            
+
             if (resultsForUser === null) {
                 res.json({
                     'message': 'You do not have permission to Get Quotes By Advanced Search using the supplied query!'
@@ -270,15 +270,23 @@ var quoteApi = function (knex) {
     // GET /api/quotes/:id
     var getQuoteById = function (req, res) {
 
-        // NEXT THREE LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
-        res.json({
-            'message': 'getQuotesById functionality is under construction...'
-        });
+        var quoteId = req.params.id;
+        var result = quoteController.getQuoteById(quoteId, req.user)
+        
+        if (result) {
+            result.then(function (contact) {
+                res.json(contact);
+            });
+        } else {
+            res.json({'message': 'You do not have permission.'});
+        }
+        
+            
     };
 
     // PUT /api/quotes/:id
     var updateQuote = function (req, res) {
-        
+
         var quoteId = req.params.id; // read from the URL, not the payload
         var quote = req.body;
         var resultsForThisUser = quoteController.updateQuote(quoteId, quote, req.user);

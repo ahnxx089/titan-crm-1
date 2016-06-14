@@ -136,7 +136,7 @@ var caseData = function (knex) {
                 case_type_id: case_.caseTypeId,
                 case_category_id: case_.caseCategoryId,
                 status_id: case_.statusId,
-                from_party_id: case_.fromPartyId,
+                //from_party_id: case_.fromPartyId, //is this createdBy?
                 priority: case_.priority,
                 case_date: case_.caseDate,
                 response_required_date: case_.responseRequiredDate,
@@ -144,7 +144,7 @@ var caseData = function (knex) {
                 description: case_.description,
                 resolution_id: case_.resolutionId,
                 created_by: case_.createdBy,
-                created_date: case_.createdDate,
+                //created_date: case_.createdDate,
                 updated_date: case_.updatedDate
         });
     };

@@ -102,18 +102,24 @@ var caseApi = function (knex) {
     // GET /api/cases/:id
     var getCaseById = function (req, res) {
         var caseId = req.params.id;
-        caseController.getCaseById(caseId)
+        caseController.getCaseById(caseId, req.user)
             .then(function (case_) {
-                return res.json(case_);
-            });
+                if (case_ == 'null') {
+                    return res.json('You do not have permission to own a case! No case for you!');
+                }
+                else {
+                    return res.json(case_);
+                }
+        });
     };
 
     // PUT /api/cases/:id
     var updateCase = function (req, res) {
         var caseId = req.params.id;
         var case_ = req.body;
+        var user = req.user;
 
-        caseController.updateCase(caseId, case_)
+        caseController.updateCase(caseId, case_, user)
             .then(function (result) {
                 res.json({
                     updated: result
