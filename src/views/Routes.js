@@ -28,7 +28,13 @@ var routes = (
   <Route path="/">
     <IndexRedirect to="/cp/home" />
     <Route path="cp" component={require('./components/ControlPanel')} onEnter={requireAuth}>
-        <Route path="home" component={require('./components/home/HomePage')} />
+        {/* Home and sub pages */}
+        <Route path="home" component={require('./components/home/HomePage')}/>
+        <Route path="home/home-sub" component={require('./components/home/HomeSubPage')} />
+        {/* Contacts module pages */}
+        {/* <Route path="contact/my-contacts" component={require('./components/contacts/my-contacts/MyContactsPage')} />
+        <Route path="home/create-contact" component={require('./components/contacts/create-contact/CreateContactPage')} />*/ }
+        {/* About page */}
         <Route path="about" component={require('./components/about/AboutPage')} />
     </Route>
     <Route path="login" component={require('./components/login/LoginPage')} />
