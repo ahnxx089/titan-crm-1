@@ -7,23 +7,29 @@
 
 var React = require('react');
 var MyContactsStore = require('../../stores/MyContactsStore');
+var MyContactsActions = require('../../actions/MyContactsActions');
 
 var MyContactsPage = React.createClass({
     
     getInitialState: function() {
+        //console.log('In MyContactsPage getInitialState about to declare contactsOwned as an empty array');
         return {
             contactsOwned: []
         };
     },
 
-    // Per 2016 Jun 13 stand-up meeting, this should CHANGE the state of contactsOwned and thus
-    // trigger a render, right?
+    componentWillMount: function() {
+        //console.log('In MyContactsPage componentWillMount, about to call MyContactsActions.getContactsByOwner');
+        MyContactsActions.getContactsByOwner();
+    },
+    
     componentDidMount: function() {
         this.setState({
-            contactsOwned: MyContactsStore.getContactsByOwner()
+            contactsOwned: MyContactsStore.getContactsOwned()
         });
+        //console.log('In MyContactsPage componentDidMount, this.state.contactsOwned = ', this.state.contactsOwned);
     },
-
+    
     render: function() {
         
         console.log('In MyContactsPage render, this.state.contactsOwned = ', this.state.contactsOwned);

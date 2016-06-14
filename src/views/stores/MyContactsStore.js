@@ -12,6 +12,10 @@ var $ = require('jquery');
 var Cookies = require('js-cookie');
 
 
+// DATA
+//-----------------------------------------------
+var contactsOwned = [];
+
 // STORE as EVENT EMITTER
 //-----------------------------------------------
 var MyContactsStore = new EventEmitter();
@@ -20,6 +24,7 @@ var MyContactsStore = new EventEmitter();
 // CUSTOM METHODS
 //-----------------------------------------------
 MyContactsStore.emitChange = function() {
+    //console.log('In MyContactsStore emitChange...');
     this.emit('change');  
 };
 
@@ -37,12 +42,17 @@ MyContactsStore.getContactsByOwner = function() {
             contactsOwned = contacts;
             
             // DIAGNOSTICS:  These confirm the API is returning Contact objects as it should...
-            console.log('In MyContactsStore.getContactsByOwner ajax call success function, typeof contactsOwned = ', typeof contactsOwned);
-            console.log('In MyContactsStore.getContactsByOwner ajax call success function, contactsOwned = ', contactsOwned);
+            //console.log('In MyContactsStore.getContactsByOwner ajax call success function, typeof contactsOwned = ', typeof contactsOwned);
+            //console.log('In MyContactsStore.getContactsByOwner ajax call success function, contactsOwned = ', contactsOwned);
                         
             thisMyContactsStore.emitChange();
         }
     });
+};
+
+MyContactsStore.getContactsOwned = function() {
+    //console.log('In MyContactsStore.getContactsOwned, contactsOwned = ', contactsOwned);
+    return contactsOwned;
 };
 
 
@@ -52,6 +62,7 @@ TitanDispatcher.register(function(action) {
 
     switch(action.actionType) {
         case MyContactsConstants.MY_CONTACTS: {
+            //console.log('In MyContactsStore, in TitanDispatcher.register, about to call MyContactsStore.getContactsByOwner');
             MyContactsStore.getContactsByOwner();
             break;
         }
