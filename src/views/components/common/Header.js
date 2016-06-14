@@ -10,6 +10,7 @@ var Link = require('react-router').Link;
 
 var Header = React.createClass({
     render: function () {
+        /* jshint ignore:start */
         return (
             <nav className="navbar navbar-inverse navbar-fixed-top">
                 <div className="container">
@@ -80,6 +81,7 @@ var Header = React.createClass({
                 </div>
             </nav>
         );
+        /* jshint ignore:end */
     }
 });
 

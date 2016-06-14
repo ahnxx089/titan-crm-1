@@ -60,6 +60,7 @@ var MyContactsPage = React.createClass({
 
     render: function () {
 
+        /* jshint ignore:start */
         //console.log('In MyContactsPage render, this.state.contactsOwned = ', this.state.contactsOwned);
 
         // IFF I can figure out how to change the state of contactsOwned so that another render is
@@ -134,6 +135,7 @@ var MyContactsPage = React.createClass({
 
             </div>
         );
+        /* jshint ignore:end */
     }
 });
 

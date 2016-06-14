@@ -35,9 +35,15 @@ gulp.task('style', function () {
         .pipe(jshint.reporter('jshint-stylish', {
             verbose: true    
         }))
-//        .pipe(eslint())
-//        .pipe(eslint.format())
-//        .pipe(eslint.failOnError())
+    //    .pipe(eslint({
+	// 		'extends': 'eslint:recommended',
+	// 		'ecmaFeatures': {
+    //             'jsx': true,
+	// 			'modules': true
+    //         }
+    //    }))
+    //    .pipe(eslint.format())
+    //    //.pipe(eslint.failOnError())
         .pipe(jscs());
 });
 
