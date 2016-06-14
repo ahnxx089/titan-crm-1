@@ -86,7 +86,7 @@ var quoteController = function (knex) {
      * Add a new item to a quote
      * @param {Object} quoteItem - entity containing item to add onto a quote
      * @param {Object} user - The logged in user
-     * @return {Object} promise - Fulfillment value is number of rows updated
+     * @return {Object} promise - Fulfillment value is number of rows added
      */
     var addQuoteItem = function (quoteItem, user) {
 
@@ -122,10 +122,12 @@ var quoteController = function (knex) {
                 }
             }
             if (validationErrors.length === 0) {
-                // Pass on the entity to be added to the data layer
+                // Pass on the entity to be added to the data layer, which returns an object holding
+                // a RowDataPacket, which holds inside it the count of the number of rows added.
                 var promise = quoteData.addQuoteItem(quoteItemEntity)
-                    .then(function (quoteItemInserted) {
-                        return quoteItemInserted;
+                    .then(function (objectHoldingRDP) {
+                        var numRowsInserted = objectHoldingRDP[0][0]['count(*)'];
+                        return numRowsInserted;
                     });
                 promise.catch(function (error) {
                     winston.error(error);

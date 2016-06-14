@@ -71,11 +71,14 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // An object in result means it's a promise (returned only if validation succeeds)
+            // An object in result means it's a promise (returned only if validation succeeds).
+            // The object holds a RowDataPacket.  A RowDataPacket is an object holding one
+            // key-value pair.  The key is called 'count(*)'.  The value is the count of the 
+            // number of rows inserted to the quote_item table.
             else {
-                resultsForThisUser.then(function (quoteItemInserted) {
+                resultsForThisUser.then(function (numRowsInserted) {
                     res.json({
-                        quoteItemInserted: quoteItemInserted
+                        numRowsInserted: numRowsInserted
                     });
                 });
             }

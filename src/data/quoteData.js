@@ -57,9 +57,35 @@ var quoteData = function (knex) {
     /**
      * Add a new item to a quote 
      * @param {Object} quoteItem - quoteItem object to add to a quote
-     * @return {Object} promise - Fulfillment value is number of rows updated
+     * @return {Object} promise - Fulfillment value is number of rows added
      */
     var addQuoteItem = function (quoteItem) {
+        /*  Note:  Per 2016 June 13 follow-up from the demo of the Quotes module, for this functionality
+            (as well as updateQuoteItem, addQuoteItemOption, and updateQuoteItemOption following),
+            the API should return the NUMBER of rows inserted (versus just repeating a copy of the 
+            quoteItem which was inserted-- that did not provide any real measure of what the quote_item table 
+            now contains as a result of attempting the insert.)
+            
+            Therefore after the insert is done by the first knex statement below, in the function inside
+            .then() quoteItem.quoteId and quoteItem.quoteItemSeqId are used to query for the number of 
+            rows in table quote_item that have this combo of quote_id and quote_item_seq_id.  
+            Since those columns are both primary keys, there cannot be MORE than one such row inserted.
+            The important thing here is to confirm that the count indeed DOES equal 1.  A count of 1 means
+            the insert really happened.  If the count is 0, we know we have a problem.  That is why we want 
+            the API to return the number of rows inserted.
+            
+            In order for the API to get that info to report to the UI, here the .then() returns a promise; 
+            that promise's fulfillment value is an object whose zeroth element is a RowDataPacket.  
+            (See e.g., http://stackoverflow.com/questions/31221980/javascript-how-to-acess-rowdatapacket )
+            That RowDataPacket is itself an object; its sole key is called 'count(*)' (that's what the 
+            knex.raw query winds up naming it).  The value of RowDataPacket['count(*)'] is the count of all 
+            the rows in the quote_item table with this combo of quoteItem.quoteId and 
+            quoteItem.quoteItemSeqId.  That count should be 1.  (The knex.raw query itself does not 
+            know/care what the count is, it will just return the object to the controller, which will return 
+            it up to the API and the API will display the count no matter what its value is.  Then at
+            the UI level we can determine whether or not we have a problem, depending on whether the count
+            is 0 or 1.)  
+        */
         return knex('quote_item')
             .insert({
                 quote_id: quoteItem.quoteId,
@@ -75,10 +101,11 @@ var quoteData = function (knex) {
                 created_date: quoteItem.createdDate,
                 updated_date: quoteItem.updatedDate
             }).then(function () {
-                return quoteItem;
+                return knex.raw('select count(*) from quote_item where quote_id = ' + quoteItem.quoteId 
+                                + ' and quote_item_seq_id = ' + quoteItem.quoteItemSeqId);
             });
     };
-
+    
     /**
      * Add a new option to an item of a quote 
      * @param {Object} quoteItemOption - quoteItemOption object to add to an item of a quote
@@ -221,8 +248,8 @@ var quoteData = function (knex) {
             .andWhere('quote_role.role_type_id', 'PERSON_ROLE');
 
     };
-    
-    
+
+
     // Lucas wrote this. Finished
     /** 
      * Gets all quotes from database by advanced search
@@ -230,19 +257,19 @@ var quoteData = function (knex) {
      */
     var getQuotesByAdvanced = function (quoteId, quoteName, status, account, salesChannel) {
 
-//        var conditionArray = [quoteId, quoteName, status, account, salesChannel];
-//        var conditionString = '';
-//        conditionString += quoteId.length > 0 ? 'a' : '';
-//        conditionString += quoteName.length > 0 ? 'b' : '';
-//        conditionString += status.length > 0 ? 'c' : '';
-//        conditionString += account.length > 0 ? 'd' : '';
-//        conditionString += salesChannel.length > 0 ? 'e' : '';
-//        console.log(conditionString);
+        //        var conditionArray = [quoteId, quoteName, status, account, salesChannel];
+        //        var conditionString = '';
+        //        conditionString += quoteId.length > 0 ? 'a' : '';
+        //        conditionString += quoteName.length > 0 ? 'b' : '';
+        //        conditionString += status.length > 0 ? 'c' : '';
+        //        conditionString += account.length > 0 ? 'd' : '';
+        //        conditionString += salesChannel.length > 0 ? 'e' : '';
+        //        console.log(conditionString);
 
 
-//        return knex.raw('select * from quote where ' + ' sales_channel_enum_id = "' + salesChannel + '"');
+        //        return knex.raw('select * from quote where ' + ' sales_channel_enum_id = "' + salesChannel + '"');
         return knex.from('quote');
-        
+
         /*
         return knex.select()
             .from('quote')
@@ -253,8 +280,8 @@ var quoteData = function (knex) {
             .andWhere('quote.sales_channel_enum_id', salesChannel);
         */
     };
-    
-    
+
+
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,
