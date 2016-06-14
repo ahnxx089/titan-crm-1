@@ -10,6 +10,7 @@ var React = require('react');
 var ContactRow = React.createClass({
 
     render: function () {
+        /* jshint ignore:start */
         return (
             <tr>
                 <td>{ this.props.contact.partyId }</td>
@@ -18,6 +19,7 @@ var ContactRow = React.createClass({
                 <td>{ this.props.contact.lastName }</td>
             </tr>
         );
+        /* jshint ignore:end */
     }
 
 });

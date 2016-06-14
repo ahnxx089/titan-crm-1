@@ -11,6 +11,7 @@ var ErrorBoxMsg = require('./ErrorBoxMsg');
 
 var ErrorBox = React.createClass({
     render: function () {
+        /* jshint ignore:start */
         // Check the type of "messages"
         var messages = this.props.messages;
         var typeOfMessages = Object.prototype.toString.call(messages);
@@ -37,6 +38,7 @@ var ErrorBox = React.createClass({
         return (
             <div></div>
         );
+        /* jshint ignore:end */
     }
 });
 

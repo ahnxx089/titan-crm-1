@@ -11,6 +11,7 @@ var React = require('react');
 
 var ContactDetails = React.createClass({    
     render: function() {
+        /* jshint ignore:start */
         var contact = this.props.contact;
         
         return (
@@ -58,6 +59,7 @@ var ContactDetails = React.createClass({
                 </div>
             </div>
         );
+        /* jshint ignore:end */
     }
 });
 

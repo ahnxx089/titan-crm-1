@@ -25,7 +25,8 @@ var ContactsStore = new EventEmitter();
 //-----------------------------------------------
 ContactsStore.addGetDataListener = function (listener) {
     this.on('getData', listener);
-}
+};
+
 ContactsStore.emitGetData = function() {
     this.emit('getData');  
 };

@@ -24,6 +24,7 @@ var ControlPanel = React.createClass({
         });
     },
     render: function () {
+        /* jshint ignore:start */
         return (
             <div>
                 <Header username={ Cookies.get('titanAuthUser') }/>
@@ -36,6 +37,7 @@ var ControlPanel = React.createClass({
                 {/*<Footer/>*/}
             </div>
         );
+        /* jshint ignore:end */
     }
 });
 

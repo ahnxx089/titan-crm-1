@@ -24,6 +24,7 @@ var GetContactForm = React.createClass({
         this.props.onButtonClick(this.state.contactId);
     },
     render: function() {
+        /* jshint ignore:start */
         return (
             <p>
                 <input type="number" className="form-control" name="contactId" placeholder="Contact Id" value={ this.state.contactId } onChange={ this._onContactIdChange } style={{width:'150px', display: 'inline-block'}} />
@@ -33,6 +34,7 @@ var GetContactForm = React.createClass({
                 </a>
             </p>
         );
+        /* jshint ignore:end */
     }
 });
 

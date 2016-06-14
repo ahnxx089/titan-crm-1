@@ -9,6 +9,7 @@ var React = require('react');
 
 var AboutPage = React.createClass({
     render: function() {
+        /* jshint ignore:start */
         return (
             <div className="team">
                 <div className="page-header">
@@ -121,6 +122,7 @@ var AboutPage = React.createClass({
                 </div>
             </div>
         );
+        /* jshint ignore:end */
     }
 });
 
