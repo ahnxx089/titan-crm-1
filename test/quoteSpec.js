@@ -17,7 +17,7 @@ var Quote = require('../src/entities/quote');
 describe('Quote module ', function () {
 
     // Test quoteController.updateQuote where user LACKS security permission -- TEST PASSED
-    it('quoteController.updateQuote DENIES a user without permission to own Quotes(s) to update a Quote', function (done) {
+    xit('quoteController.updateQuote DENIES a user without permission to own Quotes(s) to update a Quote', function (done) {
 
         // contactOwnerABC does not have permission to create a Quote (and thus neither to update)
         var user = {
@@ -58,7 +58,7 @@ describe('Quote module ', function () {
 
     });
 
-    it('quoteController.updateQuote allows a user with permission to update a Quote', function (done) {
+    xit('quoteController.updateQuote allows a user with permission to update a Quote', function (done) {
 
         var user = {
             userId: 'mrQuoteUnquote',
@@ -113,7 +113,7 @@ describe('Quote module ', function () {
     });
 
     // Test quoteController.addQuoteItem where user LACKS security permission -- TEST PASSED
-    it('quoteController.addQuoteItem DENIES a user without permission to own Quotes(s) to add an Item to a Quote', function (done) {
+    xit('quoteController.addQuoteItem DENIES a user without permission to own Quotes(s) to add an Item to a Quote', function (done) {
 
         // contactOwnerABC does not have permission to create a Quote (and thus neither to update)
         var user = {
@@ -150,7 +150,7 @@ describe('Quote module ', function () {
         done();
     });
 
-    it('quoteController.addQuoteItem allows a user with permission to add an Item to a Quote', function (done) {
+    xit('quoteController.addQuoteItem allows a user with permission to add an Item to a Quote', function (done) {
         var user = {
             userId: 'contactOwnerABC',
             securityPermissions: ['CRMSFA_QUOTE_CREATE']
@@ -204,7 +204,7 @@ describe('Quote module ', function () {
             });
     });
 
-    it('quoteController.updateQuoteItem allows a user with permission to update an Item of a Quote', function (done) {
+    xit('quoteController.updateQuoteItem allows a user with permission to update an Item of a Quote', function (done) {
 
         var user = {
             userId: 'mrQuoteUnquote',
@@ -250,7 +250,7 @@ describe('Quote module ', function () {
         }
     });
 
-    it('quoteController.updateQuoteItemOption allows a user with permission to update an Item of a Quote', function (done) {
+    xit('quoteController.updateQuoteItemOption allows a user with permission to update an Item of a Quote', function (done) {
 
         var user = {
             userId: 'mrQuoteUnquote',
@@ -291,8 +291,7 @@ describe('Quote module ', function () {
         }
     });
 
-
-    it('quoteController.addQuote allows user with authorization to add a Quote', function (done) {
+    xit('quoteController.addQuote allows user with authorization to add a Quote', function (done) {
         var user = {
             userId: 'contactOwnerABC',
             securityPermissions: ['CRMSFA_QUOTE_CREATE']

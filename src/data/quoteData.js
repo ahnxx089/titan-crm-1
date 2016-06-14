@@ -152,16 +152,10 @@ var quoteData = function (knex) {
                 description: quote.description,
                 contact_party_id: quote.contactPartyId,
                 updated_date: quote.updatedDate
-<<<<<<< HEAD
             })
             .then(function () {
                 return knex.raw('select count(*) from quote where quote_id = ' + quote.quoteId);
             });
-=======
-            }); //.then(function () {
-        //    return quote;
-        //});
->>>>>>> e4c0276f3ba0ceefb36d2b72a16a1af43a656a8b
     };
 
     /**
