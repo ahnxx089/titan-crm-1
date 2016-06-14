@@ -38,63 +38,77 @@ describe('Quote API', function () {
     it('updateQuote updates a Quote and returns an object', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NjA0NDIsImV4cCI6MTQ5NzE5NjQ0Mn0.QbGIm52_9Qlr4hxfJXRe3qEnUlpaYY98k5D534adRNw';
-        var baseRequest = request.defaults({
-            headers: {
-                'x-access-token': token
-            }
-        });
-        var quoteId = 5; // an existing row in table quote to be updated
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
 
+        
+        
         var quote = {
-            'quoteTypeId': 'PRODUCT_QUOTE',
-            'partyId': '91',
-            'issueDate': '2016-06-04 10:49:22',
-            'statusId': 'QUOTE_SENT',
-            'currencyUomId': 'USD',
-            'salesChannelEnumId': 'IND_GEN_SERVICES',
-            'validFromDate': '2016-06-04 10:49:22',
-            'validThruDate': '2016-12-04 10:49:22',
-            'quoteName': 'Saturday morning quote',
-            'description': 'created on Saturday morning',
-            'contactPartyId': '91',
-            'createdByPartyId': '100'
+            quoteTypeId: 'PRODUCT_QUOTE',
+            partyId: 91,
+            issueDate: '2016-06-04 10:49:22',
+            statusId: 'QUOTE_FINALIZED',
+            currencyUomId: 'USD',
+            salesChannelEnumId: 'IND_GEN_SERVICES',
+            validFromDate: '2016-06-04 10:49:22',
+            validThruDate: '2016-12-04 10:49:22',
+            quoteName: 'Saturday morning quote',
+            description: 'today\'s test',
+            contactPartyId: 91,
+            createdByPartyId: 100
         };
 
-        baseRequest.get(apiBaseUrl + '/' + quoteId, function (err, res, body) {
+        var baseRequest = request.defaults({
+            headers: {
+                'x-access-token': token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(quote)
+        });
+        
+        
+        var quoteId = 5; // an existing row in table quote to be updated
+
+
+
+        baseRequest.put(apiBaseUrl + '/' + quoteId, function (err, res, body) {
+            /*
             var typeofQuotes = Object.prototype.toString.call(JSON.parse(body));
             // Check whether the return value is an array
             expect(typeofQuotes).toBe('[object Object]');
             // Call done to finish the async function
+            */
+            var result = JSON.parse(res.body);
+            expect('quoteUpdated' in result).toBeTruthy();
             done();
         });
     });
 
-    xit('addQuoteItem adds an Item to a Quote and returns an object', function (done) {
+    it('addQuoteItem adds an Item to a Quote and returns an object', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NjA0NDIsImV4cCI6MTQ5NzE5NjQ0Mn0.QbGIm52_9Qlr4hxfJXRe3qEnUlpaYY98k5D534adRNw';
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
+
         var baseRequest = request.defaults({
             headers: {
                 'x-access-token': token
             }
         });
-        var quoteId = 5; // an existing row in table quote to be updated
+        var quoteId = 46; // an existing row in table quote to be updated
 
         var quoteItem = {
-            'quoteId': '5',
+            'quoteId': '46',
             'quoteItemSeqId': '3',
             'productId': 'testProd2',
             'quantity': null,
             'selectedAmount': null,
             'quoteUnitPrice': null,
             'estimatedDeliveryDate': null,
-            'comments': 'testProd2 is high quality',
+            'comments': 'testing',
             'isPromo': null,
             'description': 'customers love this product'
         };
 
-        baseRequest.get(apiBaseUrl + '?item' + quoteId, function (err, res, body) {
+        baseRequest.get(apiBaseUrl +  '?item' , function (err, res, body) {
             var typeofQuotes = Object.prototype.toString.call(JSON.parse(body));
             // Check whether the return value is an array
             expect(typeofQuotes).toBe('[object Object]');
@@ -106,7 +120,8 @@ describe('Quote API', function () {
     it('updateQuoteItem updates an Item of a Quote and returns an object', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NjA0NDIsImV4cCI6MTQ5NzE5NjQ0Mn0.QbGIm52_9Qlr4hxfJXRe3qEnUlpaYY98k5D534adRNw';
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
+
         var baseRequest = request.defaults({
             headers: {
                 'x-access-token': token
@@ -126,7 +141,7 @@ describe('Quote API', function () {
             'isPromo': null,
             'description': 'some customers do not mind the speed'
         };
-        
+
         baseRequest.get(apiBaseUrl + '?item' + quoteId, function (err, res, body) {
             var typeofQuotes = Object.prototype.toString.call(JSON.parse(body));
             // Check whether the return value is an array
@@ -136,10 +151,11 @@ describe('Quote API', function () {
         });
     });
 
-    xit('addQuoteItemOption adds an Option of an Item of a Quote and returns an object', function (done){
-        
+    it('addQuoteItemOption adds an Option of an Item of a Quote and returns an object', function (done) {
+
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NjA0NDIsImV4cCI6MTQ5NzE5NjQ0Mn0.QbGIm52_9Qlr4hxfJXRe3qEnUlpaYY98k5D534adRNw';
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
+
         var baseRequest = request.defaults({
             headers: {
                 'x-access-token': token
@@ -164,10 +180,10 @@ describe('Quote API', function () {
         });
     });
 
-    xit('updateQuoteItemOption updates an Option of an Item of a Quote and returns an object', function (done){
-        
+    it('updateQuoteItemOption updates an Option of an Item of a Quote and returns an object', function (done) {
+
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjUwNDQ4NzcsImV4cCI6MTQ2NTEzMTI3N30.T7JC147bEouzPkrfJGcMLz98K7L4IF25vrhRQLNQDwM';
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
         var baseRequest = request.defaults({
             headers: {
                 'x-access-token': token
@@ -188,6 +204,24 @@ describe('Quote API', function () {
             // Check whether the return value is an array
             expect(typeofQuotes).toBe('[object Object]');
             // Call done to finish the async function
+            done();
+        });
+    });
+
+    it('quoteApi.getQuoteById returns a quote', function (done) {
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
+        var baseRequest = request.defaults({
+            headers: {
+                'x-access-token': token
+            }
+        });
+        var quoteId = 2;
+        
+        baseRequest.get(apiBaseUrl + '/' + quoteId, function (err, res, body) {
+            var result = JSON.parse(res.body);
+            
+            expect('quoteId' in result).toBeTruthy();
+            
             done();
         });
     });

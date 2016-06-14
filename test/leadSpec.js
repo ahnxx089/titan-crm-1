@@ -12,7 +12,7 @@ var leadController = require('../src/controllers/leadController')(knex);
 var Lead = require('../src/entities/lead');
 
 
-xdescribe('Lead module', function () {
+describe('Lead module', function () {
     
     // this is same as the second 
     xit('getLeads returns all leads in system as an array of Lead objects', function (done) {
@@ -38,7 +38,7 @@ xdescribe('Lead module', function () {
     });
     
     // Test leadController.addLead where a user has security permission to add a lead
-    xit('leadController.addLead allows a user with permission to add a Lead', function (done) {
+    it('leadController.addLead allows a user with permission to add a Lead', function (done) {
 
         // user leadOwnerABC has permission to create leads
         var user = {
@@ -100,7 +100,7 @@ xdescribe('Lead module', function () {
     
     // Test leadController.getLeadsByOwner where a user has security permission
     // (but does not actually own any leads) -- TEST HAS not PASSED
-    xit('leadController.getLeadsByOwner allows a user with permission to own Lead(s) to get the party_id of Lead owned by that user (if any)', function (done) {
+    it('leadController.getLeadsByOwner allows a user with permission to own Lead(s) to get the party_id of Lead owned by that user (if any)', function (done) {
 
         // user leadOwnerABC has permission to own Leads, ignore:(but does not actually own any)
         var user = {

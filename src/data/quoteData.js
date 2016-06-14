@@ -22,7 +22,7 @@ var quoteData = function (knex) {
             .returning('quote_id')
             //passing through
             .insert({
-                quote_id: quote.quoteId,
+                //quote_id: quote.quoteId,
                 quote_type_id: quote.quoteTypeId,
                 party_id: quote.partyId,
                 issue_date: quote.issueDate,
@@ -38,20 +38,21 @@ var quoteData = function (knex) {
                 created_date: quote.createdDate,
                 updated_date: quote.updatedDate
             })
-            .then(function () {
+            .then(function (quoteId) {
                 return knex('quote_role')
-                    .returning('quote_id')
+                    //.returning('quote_id')
                     .insert({
-                        quote_id: quote.quoteId,
+                        quote_id: quoteId, //quote.quoteId,
                         party_id: quote.partyId,
-                        role_type_id: quote.roleTypeId,
+                        role_type_id: 'CONTACT', //quote.roleTypeId,
                         created_date: quote.createdDate,
                         updated_date: quote.updatedDate
+                    })
+                    .then(function () {
+                        return quoteId;
                     });
-            })
-            .then(function () {
-                return quote;
             });
+
     };
 
     /**
@@ -151,10 +152,16 @@ var quoteData = function (knex) {
                 description: quote.description,
                 contact_party_id: quote.contactPartyId,
                 updated_date: quote.updatedDate
+<<<<<<< HEAD
             })
             .then(function () {
                 return knex.raw('select count(*) from quote where quote_id = ' + quote.quoteId);
             });
+=======
+            }); //.then(function () {
+        //    return quote;
+        //});
+>>>>>>> e4c0276f3ba0ceefb36d2b72a16a1af43a656a8b
     };
 
     /**
@@ -228,8 +235,31 @@ var quoteData = function (knex) {
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is a quote entity
      */
-    var getQuoteById = function (quoteId, user) {
-
+    var getQuoteById = function (quoteId) {
+        return knex.select(
+                'quote.quote_id',
+                'quote.quote_type_id',
+                'quote.party_id as "party_id"',
+                'quote.issue_date',
+                'quote.status_id',
+                'quote.currency_uom_id',
+                'quote.sales_channel_enum_id',
+                'quote.valid_from_date',
+                'quote.valid_thru_date',
+                'quote.quote_name',
+                'quote.description',
+                'quote.contact_party_id',
+                'quote.created_by_party_id',
+                'quote.created_date',
+                'quote.updated_date',
+                'quote_role.quote_id',
+                'quote_role.party_id',
+                'quote_role.role_type_id')
+            .from('quote')
+            .leftJoin('quote_role', 'quote.quote_id', '=', 'quote_role.quote_id')
+            .where({
+                'quote.quote_id': quoteId
+            });
     };
 
     /**
@@ -244,7 +274,7 @@ var quoteData = function (knex) {
         return knex.select('quote.quote_id', 'quote_type_id', 'quote.party_id', 'issue_date', 'status_id',
                 'currency_uom_id', 'sales_channel_enum_id', 'valid_from_date',
                 'valid_thru_date', 'quote_name', 'description', 'contact_party_id',
-                'created_by_party_id', 'created_date', 'updated_date')
+                'created_by_party_id', 'quote.created_date', 'quote.updated_date')
             .from('quote')
             .innerJoin('quote_role', 'quote.quote_id', 'quote_role.quote_id')
             .where('quote.created_by_party_id', userPartyId)

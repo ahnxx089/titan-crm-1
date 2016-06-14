@@ -22,7 +22,7 @@ var baseRequest = request.defaults({
 });
 
 
-xdescribe('Lead API', function () {
+describe('Lead API', function () {
     xit('is inaccessible without a valid token', function (done) {
         request.get(apiBaseUrl, function (err, res, body) {
             // Check the HTTP status code of response

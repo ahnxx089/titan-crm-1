@@ -50,7 +50,7 @@ describe('Case API', function () {
         });
         
         baseRequest.get(apiBaseUrl + '/2', function (err, res, body) {
-            expect(JSON.parse(body).hasOwnProperty('caseId')).toBeTruthy();
+            expect(JSON.parse(res.body).hasOwnProperty('caseId')).toBeTruthy();
             done();
         });
 //        baseRequest.get(apiBaseUrl + '/2', function (err, res, body) {
@@ -146,6 +146,6 @@ describe('Case API', function () {
             done();
         });
         
-    })// missing semicolon?
+    });
     
 });
