@@ -43,11 +43,13 @@ LoginStore.authenticateUser = function(username, password) {
         type: 'POST',
         url: '/api/authenticate',
         data: { userId: username, password: password },
-        //contentType: 'application/json',
         dataType: 'json',
         success: function(authResult) {
             authData = authResult;
             thisLoginStore.emitAuth();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
         }
     });
 };

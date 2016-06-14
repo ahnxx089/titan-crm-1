@@ -9,6 +9,7 @@ var React = require('react');
 
 var AboutPage = React.createClass({
     render: function() {
+        /* jshint ignore:start */
         return (
             <div className="team">
                 <div className="page-header">
@@ -16,7 +17,7 @@ var AboutPage = React.createClass({
                 </div>
                 <div className="row well">
                     <div className="col-xs-2 col-lg-2 text-center">
-                        <img src='img/avatar.jpg' alt='' />
+                        <img src='img/Dinesh_avatar_600x600.jpg' alt='' />
                     </div>
                     <div className="col-xs-10 col-lg-10">
                         <h3>Dinesh Shenoy</h3>
@@ -121,6 +122,7 @@ var AboutPage = React.createClass({
                 </div>
             </div>
         );
+        /* jshint ignore:end */
     }
 });
 

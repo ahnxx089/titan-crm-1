@@ -10,6 +10,7 @@ var Link = require('react-router').Link;
 
 var Header = React.createClass({
     render: function () {
+        /* jshint ignore:start */
         return (
             <nav className="navbar navbar-inverse navbar-fixed-top">
                 <div className="container">
@@ -36,9 +37,9 @@ var Header = React.createClass({
                             <li className="dropdown">
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contacts <span className="caret"></span></a>
                                 <ul className="dropdown-menu">
-                                    <li><a href="#">My Contacts</a></li>
-                                    <li><a href="#">Create Contact</a></li>
-                                    <li><a href="#">Find Contacts</a></li>
+                                    <li><Link to="/cp/contacts/my-contacts" activeClassName="active">My Contacts</Link></li>
+                                    <li><Link to="/cp/contacts/create-contact" activeClassName="active">Create Contact</Link></li>
+                                    <li><Link to="/cp/contacts/find-contacts" activeClassName="active">Find Contacts</Link></li>
                                 </ul>
                             </li>
                             <li className="dropdown">
@@ -80,6 +81,7 @@ var Header = React.createClass({
                 </div>
             </nav>
         );
+        /* jshint ignore:end */
     }
 });
 

@@ -21,7 +21,6 @@ var contactMechController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new party
      */
     var addContactMech = function (contactMech) {
-
         // Convert the received object into an entity
         var contactMechEntity = new ContactMech(
             contactMech.contactMechId,
@@ -50,6 +49,8 @@ var contactMechController = function (knex) {
             // Pass on the entity to be added to the data layer
             var promise;
 
+            // logically it makes more sense if here we use the validated attribute, 
+            // contactMechEntity.contactMechTypeId, instead of contactMech.contactMechTypeId
             if (contactMech.contactMechTypeId === 'TELECOM_NUMBER') {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
                     .then(function (contactMechId) {
@@ -73,7 +74,11 @@ var contactMechController = function (knex) {
                             });
                     });
             } else {
-                promise = contactMechData.addContactMechToGeneralTable(contactMechEntity);
+                promise = contactMechData.addContactMechToGeneralTable(contactMechEntity) //;
+                    // this is needed to avoid duplicate entries [WHY?]
+                    .then(function (contactMechId) {
+                        return contactMechId;
+                    });
             }
 
             promise.catch(function (error) {

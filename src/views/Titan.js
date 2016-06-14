@@ -14,4 +14,6 @@ var Router = require('react-router').Router;
 var hashHistory = require('react-router').hashHistory;
 var routes = require('./Routes');
 
+/* jshint ignore:start */
 ReactDOM.render(<Router routes={routes} history={hashHistory}/>, document.getElementById('app'));
+/* jshint ignore:end */
