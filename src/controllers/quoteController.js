@@ -122,8 +122,10 @@ var quoteController = function (knex) {
                 }
             }
             if (validationErrors.length === 0) {
-                // Pass on the entity to be added to the data layer, which returns an object holding
-                // a RowDataPacket, which holds inside it the count of the number of rows added.
+                // Pass on the entity to the data layer, which returns an object holding
+                // a RowDataPacket. A RowDataPacket is an object holding one key-value pair.  The key 
+                // is called 'count(*)'.  The value is the count of the number of rows inserted into 
+                // the quote_item table.
                 var promise = quoteData.addQuoteItem(quoteItemEntity)
                     .then(function (objectHoldingRDP) {
                         var numRowsInserted = objectHoldingRDP[0][0]['count(*)'];
@@ -146,7 +148,7 @@ var quoteController = function (knex) {
      * Add a new option to an item of a quote
      * @param {Object} quoteItemOption - entity containing option to add to an item of a quote
      * @param {Object} user - The logged in user
-     * @return {Object} promise - Fulfillment value is number of rows updated
+     * @return {Object} promise - Fulfillment value is number of rows added
      */
     var addQuoteItemOption = function(quoteItemOption, user) {
         // Check user's security permission to own contacts
@@ -176,10 +178,14 @@ var quoteController = function (knex) {
                 }
             }
             if (validationErrors.length === 0) {
-                // Pass on the entity to be added to the data layer
+                // Pass on the entity to the data layer, which returns an object holding
+                // a RowDataPacket. A RowDataPacket is an object holding one key-value pair.  The key 
+                // is called 'count(*)'.  The value is the count of the number of rows inserted into 
+                // the quote_item table.
                 var promise = quoteData.addQuoteItemOption(quoteItemOptionEntity)
-                    .then(function (quoteItemInserted) {
-                        return quoteItemInserted;
+                    .then(function (objectHoldingRDP) {
+                        var numRowsInserted = objectHoldingRDP[0][0]['count(*)'];
+                        return numRowsInserted;
                     });
                 promise.catch(function (error) {
                     winston.error(error);
@@ -230,7 +236,7 @@ var quoteController = function (knex) {
                 now
             );
 
-            // Validate the quoteItem data before going ahead
+            // Validate the quote data before going ahead
             var validationErrors = [];
             var quoteValidationErrors = quoteEntity.validateForUpdate();
             //Errors are non-empty validation results
@@ -240,10 +246,14 @@ var quoteController = function (knex) {
                 }
             }
             if (validationErrors.length === 0) {
-                // Pass on the entity to be added to the data layer
+                // Pass on the entity by the data layer, which returns an object holding
+                // a RowDataPacket. A RowDataPacket is an object holding one key-value pair.  The key 
+                // is called 'count(*)'.  The value is the count of the number of rows updated in  
+                // the quote table.
                 var promise = quoteData.updateQuote(quoteEntity)
-                    .then(function (quoteUpdated) {
-                        return quoteUpdated;
+                    .then(function (objectHoldingRDP) {
+                        var numRowsUpdated = objectHoldingRDP[0][0]['count(*)'];
+                        return numRowsUpdated;
                     });
                 promise.catch(function (error) {
                     winston.error(error);
@@ -298,10 +308,14 @@ var quoteController = function (knex) {
                 }
             }
             if (validationErrors.length === 0) {
-                // Pass on the entity to be added to the data layer
+                // Pass on the entity to the data layer, which returns an object holding
+                // a RowDataPacket. A RowDataPacket is an object holding one key-value pair.  The key 
+                // is called 'count(*)'.  The value is the count of the number of rows updated in 
+                // the quote_item table.
                 var promise = quoteData.updateQuoteItem(quoteItemEntity)
-                    .then(function (quoteItemUpdated) {
-                        return quoteItemUpdated;
+                    .then(function (objectHoldingRDP) {
+                        var numRowsUpdated = objectHoldingRDP[0][0]['count(*)'];
+                        return numRowsUpdated;
                     });
                 promise.catch(function (error) {
                     winston.error(error);
@@ -352,8 +366,9 @@ var quoteController = function (knex) {
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
                 var promise = quoteData.updateQuoteItemOption(quoteItemOptionEntity)
-                    .then(function (quoteItemOptionUpdated) {
-                        return quoteItemOptionUpdated;
+                    .then(function (objectHoldingRDP) {
+                        var numRowsUpdated = objectHoldingRDP[0][0]['count(*)'];
+                        return numRowsUpdated;
                     });
                 promise.catch(function (error) {
                     winston.error(error);
@@ -434,7 +449,6 @@ var quoteController = function (knex) {
             return;
         }
     };
-    
     
     /** 
      * Gets quotes by advanced search
@@ -532,6 +546,7 @@ var quoteController = function (knex) {
             return null;
         }
     };
+    
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,

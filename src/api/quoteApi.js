@@ -71,10 +71,8 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
+            // THIS COMMENT NEEDS REVISING, WHICH RE-WRITING THE UNIT TEST WILL HELP WITH ARTICULATING...
             // An object in result means it's a promise (returned only if validation succeeds).
-            // The object holds a RowDataPacket.  A RowDataPacket is an object holding one
-            // key-value pair.  The key is called 'count(*)'.  The value is the count of the 
-            // number of rows inserted to the quote_item table.
             else {
                 resultsForThisUser.then(function (numRowsInserted) {
                     res.json({
@@ -106,11 +104,12 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
+            // THIS COMMENT NEEDS REVISING, WHICH RE-WRITING THE UNIT TEST WILL HELP WITH ARTICULATING...
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
-                resultsForThisUser.then(function (quoteItemOptionInserted) {
+                resultsForThisUser.then(function (numRowsInserted) {
                     res.json({
-                        quoteItemOptionInserted: quoteItemOptionInserted
+                        numRowsInserted: numRowsInserted
                     });
                 });
             }
@@ -164,11 +163,12 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
+            // THIS COMMENT NEEDS REVISING, WHICH RE-WRITING THE UNIT TEST WILL HELP WITH ARTICULATING...
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
-                resultsForThisUser.then(function (quoteItemUpdated) {
+                resultsForThisUser.then(function (numRowsUpdated) {
                     res.json({
-                        quoteItemUpdated: quoteItemUpdated
+                        numRowsUpdated: numRowsUpdated
                     });
                 });
             }
@@ -196,11 +196,12 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
+            // THIS COMMENT NEEDS REVISING, WHICH RE-WRITING THE UNIT TEST WILL HELP WITH ARTICULATING...
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
-                resultsForThisUser.then(function (quoteItemOptionUpdated) {
+                resultsForThisUser.then(function (numRowsUpdated) {
                     res.json({
-                        quoteItemOptionUpdated: quoteItemOptionUpdated
+                        numRowsUpdated: numRowsUpdated
                     });
                 });
             }
@@ -301,11 +302,12 @@ var quoteApi = function (knex) {
         else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
             res.json(resultsForThisUser);
         }
+        // THIS COMMENT NEEDS REVISING, WHICH RE-WRITING THE UNIT TEST WILL HELP WITH ARTICULATING...
         // An object in result means it's a promise (returned only if validation succeeds)
         else {
-            resultsForThisUser.then(function (quoteUpdated) {
+            resultsForThisUser.then(function (numRowsUpdated) {
                 res.json({
-                    quoteUpdated: quoteUpdated
+                    numRowsUpdated: numRowsUpdated
                 });
             });
         }
