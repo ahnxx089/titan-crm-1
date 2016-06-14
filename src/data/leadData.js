@@ -29,7 +29,7 @@ var leadData = function (knex) {
     /**
      * Add a new lead in database
      * @param {Object} lead - The new lead entity to be added
-     * @return {Object} promise - Fulfillment value is id of row inserted
+     * @return {Object} promise - Fulfillment value is id of row inserted (in other words, lead id)
      */
     var addLead = function (lead) {
         // this achieves goals mentioned on slide # 17
@@ -102,6 +102,45 @@ var leadData = function (knex) {
             });
             });
     };
+    
+    /**
+     * Update three contact info fields in party_supplemental_data table, upon the creation of a lead 
+     * Link this column to party_contact_mech.contact_mech_id
+     * @param {Number} partyid - Unique id of the party (grandparent of lead)
+     * @param {Object} partyid - Unique id of the contact mechanism of the lead
+     * @param {String} partyid - Purpose type id of a contact mechanism
+     * @return {Object} promise - Fulfillment value is number of rows updated
+     */
+    var updatePSD = function (partyId, contactMechId, purposeTypeId) {
+        if(purposeTypeId == 'PRIMARY_EMAIL') {
+            return knex('party_supplemental_data')
+                .where({
+                    party_id: partyId
+                })
+                .update({
+                    primary_email_id: contactMechId
+                });
+        }
+        else if(purposeTypeId == 'PRIMARY_LOCATION') {
+            return knex('party_supplemental_data')
+                .where({
+                    party_id: partyId
+                })
+                .update({
+                    primary_postal_address_id: contactMechId
+                });
+        }
+        else if(purposeTypeId == 'PRIMARY_PHONE') {
+            return knex('party_supplemental_data')
+                .where({
+                    party_id: partyId
+                })
+                .update({
+                    primary_telecom_number_id: contactMechId
+                });
+        }
+    };
+    
 
     // Lucas's taking this
     /**
@@ -359,6 +398,7 @@ var leadData = function (knex) {
         getLeadsByOwner: getLeadsByOwner,
         getLeads: getLeads,
         getLeadById: getLeadById,
+        updatePSD: updatePSD,
         updateLead: updateLead,
         deleteLead: deleteLead
     };

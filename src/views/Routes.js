@@ -36,6 +36,9 @@ var routes = (
         <Route path="home/create-contact" component={require('./components/contacts/create-contact/CreateContactPage')} />*/ }
         {/* About page */}
         <Route path="about" component={require('./components/about/AboutPage')} />
+        <Route path="contacts">
+            <Route path="myContacts" component={require('./components/contacts/MyContactsPage')} />
+        </Route>
     </Route>
     <Route path="login" component={require('./components/login/LoginPage')} />
     {/*<NotFoundRoute handler={require('./components/notFoundPage')} />*/}

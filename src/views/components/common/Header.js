@@ -36,9 +36,9 @@ var Header = React.createClass({
                             <li className="dropdown">
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contacts <span className="caret"></span></a>
                                 <ul className="dropdown-menu">
-                                    <li><a href="#">My Contacts</a></li>
-                                    <li><a href="#">Create Contact</a></li>
-                                    <li><a href="#">Find Contacts</a></li>
+                                    <li><Link to="/cp/contacts/myContacts" activeClassName="active">My Contacts</Link></li>
+                                    <li><Link to="/cp/contacts/createContact" activeClassName="active">Create Contact</Link></li>
+                                    <li><Link to="/cp/contacts/findContacts" activeClassName="active">Find Contacts</Link></li>
                                 </ul>
                             </li>
                             <li className="dropdown">

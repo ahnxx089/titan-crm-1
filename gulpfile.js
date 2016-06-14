@@ -25,7 +25,7 @@ var jsFiles = ['*.js', 'src/**/*.js'];
 var specFiles = ['test/*.js'];
 
 // Location of all JSX files
-var jsxFiles = ['src/views/*.js', 'src/views/**/*.js']
+var jsxFiles = ['src/views/*.js', 'src/views/**/*.js'];
 
 // Gulp task to lint our JS files against JSCS and JSHint
 // (aka Code Analysis)

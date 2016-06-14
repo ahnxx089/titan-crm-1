@@ -11,7 +11,7 @@
 
 var winston = require('winston');
 var Case = require('../entities/case');
-var User = require('../entities/user');// is this ever used?
+//var User = require('../entities/user');// is this ever used?
 var Note = require('../entities/note');
 var _ = require('lodash');
 
@@ -113,31 +113,34 @@ var caseController = function (knex) {
                 // Pass on the entity to be added to the data layer. Insert new case_, get the promise first
                 var promise = caseData.addCase(caseEntity);
                 
+                promise.catch(function (error) {
+                    winston.error(error);
+                });
+                
                 // if there is a field called internalNote
                 if(internalNoteEntity){
                     var addNotePromises = [];
                     var notePromise;
                     notePromise = noteController.addNote(internalNoteEntity);
+                    
+                    // if validation fails (notePromise is not a promise but an array)
+                    if(notePromise instanceof Array) {
+                        return notePromise;
+                    }
                     // Make sure we have promise,
                     // and not array of errors
                     if ('then' in notePromise) {
                         addNotePromises.push(notePromise);
                     }
                     if (addNotePromises.length > 0) {
-                        promise.then(function (caseId) {
+                        return promise.then(function (caseId) {
                             return addNoteCallback(addNotePromises, internalNoteEntity, caseId);
-                        });
-                        promise.catch(function (error) {
-                            winston.error(error);
                         });
                     }
                     // if there isn't such internalNote
                     else {
-                        promise.then(function (caseId) {
+                        return promise.then(function (caseId) {
                             return caseId;
-                        });
-                        promise.catch(function (error) {
-                            winston.error(error);
                         });
                     }
                 }
