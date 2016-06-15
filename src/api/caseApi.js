@@ -117,8 +117,9 @@ var caseApi = function (knex) {
     var updateCase = function (req, res) {
         var caseId = req.params.id;
         var case_ = req.body;
+        var user = req.user;
 
-        caseController.updateCase(caseId, case_)
+        caseController.updateCase(caseId, case_, user)
             .then(function (result) {
                 res.json({
                     updated: result

@@ -17,7 +17,7 @@ var Quote = require('../src/entities/quote');
 describe('Quote module ', function () {
 
     // Test quoteController.updateQuote where user LACKS security permission -- TEST PASSED
-    it('quoteController.updateQuote DENIES a user without permission to own Quotes(s) to update a Quote', function (done) {
+    xit('quoteController.updateQuote DENIES a user without permission to own Quotes(s) to update a Quote', function (done) {
 
         // contactOwnerABC does not have permission to create a Quote (and thus neither to update)
         var user = {
@@ -52,22 +52,13 @@ describe('Quote module ', function () {
 
         var resultsForThisUser = quoteController.updateQuote(quoteId, quote, user);
 
-        // handle as in the Api layer, with an IF ELSE block to interpret whether the output
-        // is a promise or is null (cannot use .then on a null)
-        if (resultsForThisUser === null) {
-            expect(resultsForThisUser === null).toBeTruthy();
-            // Call done to finish the async function
-            done();
-        } else { // COMMENTED OUT, SHOULDN'T REACH HERE FOR THIS TEST ANYWAY
-            //var typeOfQuotes = Object.prototype.toString.call(resultsForThisUser);
-            // Check whether the return value is an array
-            //expect(typeOfQuotes).toBe('[object Array]');
-            // Call done to finish the async function
-            done();
-        }
+
+        expect(resultsForThisUser).toBeNull();
+        done();
+
     });
 
-    it('quoteController.updateQuote allows a user with permission to update a Quote', function (done) {
+    xit('quoteController.updateQuote allows a user with permission to update a Quote', function (done) {
 
         var user = {
             userId: 'mrQuoteUnquote',
@@ -101,19 +92,24 @@ describe('Quote module ', function () {
 
         var resultsForThisUser = quoteController.updateQuote(quoteId, quote, user);
 
-        // handle as in the Api layer, with an IF ELSE block to interpret whether the output
-        // is a promise or is null (cannot use .then on a null)
-        if (resultsForThisUser === null) {
-            expect(resultsForThisUser === null).toBeTruthy();
-            // Call done to finish the async function
-            done();
+
+        expect(resultsForThisUser).not.toBeNull();
+        if (resultsForThisUser) {
+            expect('then' in resultsForThisUser).toBeTruthy();
+            if ('then' in resultsForThisUser) {
+                resultsForThisUser.then(function (fulfillment) {
+                    expect(typeof fulfillment).toBe('number');
+                    done();
+                });
+            } else {
+                done();
+            }
         } else {
-            var typeOfQuotes = Object.prototype.toString.call(resultsForThisUser);
-            // Check whether the return value is an array
-            expect(typeOfQuotes).toBe('[object Object]');
-            // Call done to finish the async function
             done();
         }
+
+
+
     });
 
     // Test quoteController.addQuoteItem where user LACKS security permission -- TEST PASSED
@@ -149,68 +145,66 @@ describe('Quote module ', function () {
 
         var resultsForThisUser = quoteController.addQuoteItem(quoteItem, user);
 
-        // handle as in the Api layer, with an IF ELSE block to interpret whether the output
-        // is a promise or is null (cannot use .then on a null)
-        if (resultsForThisUser === null) {
-            expect(resultsForThisUser === null).toBeTruthy();
-            // Call done to finish the async function
-            done();
-        } else { // COMMENTED OUT, SHOULDN'T REACH HERE FOR THIS TEST ANYWAY
-            //var typeOfQuotes = Object.prototype.toString.call(resultsForThisUser);
-            // Check whether the return value is an array
-            //expect(typeOfQuotes).toBe('[object Array]');
-            // Call done to finish the async function
-            done();
-        }
+
+        expect(resultsForThisUser).toBeNull();
+        done();
     });
 
     xit('quoteController.addQuoteItem allows a user with permission to add an Item to a Quote', function (done) {
-
         var user = {
-            userId: 'mrQuoteUnquote',
-            password: '$2a$08$1/nJhCSD6bkTK0YbJD9T2OTYJ9ocJ9.HlUGIuqtEeie4yi3pfuLbS',
-            passwordHint: null,
-            enabled: 1,
-            disabledDate: null,
-            partyId: 100,
-            createdDate: '2016-06-02T01:50:16.000Z',
-            updatedDate: '2016-06-02T01:50:16.000Z',
-            securityPermissions: ['CRMSFA_QUOTE_CREATE'],
-            iat: 1464964504,
-            exp: 1465050904
+            userId: 'contactOwnerABC',
+            securityPermissions: ['CRMSFA_QUOTE_CREATE']
         };
 
-        var quoteItem = {
-            'quoteId': '4',
-            'quoteItemSeqId': '3',
-            'productId': 'testProd2',
-            'quantity': null,
-            'selectedAmount': null,
-            'quoteUnitPrice': null,
-            'estimatedDeliveryDate': null,
-            'comments': 'testProd2 is high quality',
-            'isPromo': null,
-            'description': 'customers love this product'
+        var quote = {
+            'quoteTypeId': 'PRODUCT_QUOTE',
+            'partyId': '91',
+            'issueDate': '2016-06-04 10:49:22',
+            'statusId': 'QUOTE_SENT',
+            'currencyUomId': 'USD',
+            'salesChannelEnumId': 'IND_GEN_SERVICES',
+            'validFromDate': '2016-06-04 10:49:22',
+            'validThruDate': '2016-12-04 10:49:22',
+            'quoteName': 'Saturday morning quote',
+            'description': 'created on Saturday morning',
+            'contactPartyId': '91',
+            'createdByPartyId': '100'
         };
 
-        var resultsForThisUser = quoteController.addQuoteItem(quoteItem, user);
+        quoteController.addQuote(quote, user)
+            .then(function (id) {
+                var quoteItem = {
+                    'quoteId': id,
+                    'quoteItemSeqId': '3',
+                    'productId': 'testProd2',
+                    'quantity': null,
+                    'selectedAmount': null,
+                    'quoteUnitPrice': null,
+                    'estimatedDeliveryDate': null,
+                    'comments': 'testProd2 is high quality',
+                    'isPromo': null,
+                    'description': 'customers love this product'
+                };
 
-        // handle as in the Api layer, with an IF ELSE block to interpret whether the output
-        // is a promise or is null (cannot use .then on a null)
-        if (resultsForThisUser === null) {
-            expect(resultsForThisUser === null).toBeTruthy();
-            // Call done to finish the async function
-            done();
-        } else {
-            var typeOfQuotes = Object.prototype.toString.call(resultsForThisUser);
-            // Check whether the return value is an array
-            expect(typeOfQuotes).toBe('[object Object]');
-            // Call done to finish the async function
-            done();
-        }
+                var resultsForThisUser = quoteController.addQuoteItem(quoteItem, user);
+
+                // handle as in the Api layer, with an IF ELSE block to interpret whether the output
+                // is a promise or is null (cannot use .then on a null)
+                if (resultsForThisUser === null) {
+                    expect(resultsForThisUser === null).toBeTruthy();
+                    // Call done to finish the async function
+                    done();
+                } else {
+                    var typeOfQuotes = Object.prototype.toString.call(resultsForThisUser);
+                    // Check whether the return value is an array
+                    expect(typeOfQuotes).toBe('[object Object]');
+                    // Call done to finish the async function
+                    done();
+                }
+            });
     });
 
-    it('quoteController.updateQuoteItem allows a user with permission to update an Item of a Quote', function (done) {
+    xit('quoteController.updateQuoteItem allows a user with permission to update an Item of a Quote', function (done) {
 
         var user = {
             userId: 'mrQuoteUnquote',
@@ -256,48 +250,7 @@ describe('Quote module ', function () {
         }
     });
 
-    xit('quoteController.addQuoteItemOption allows a user with permission to add an Option to an Item of a Quote', function (done) {
-
-        var user = {
-            userId: 'mrQuoteUnquote',
-            password: '$2a$08$1/nJhCSD6bkTK0YbJD9T2OTYJ9ocJ9.HlUGIuqtEeie4yi3pfuLbS',
-            passwordHint: null,
-            enabled: 1,
-            disabledDate: null,
-            partyId: 100,
-            createdDate: '2016-06-02T01:50:16.000Z',
-            updatedDate: '2016-06-02T01:50:16.000Z',
-            securityPermissions: ['CRMSFA_QUOTE_CREATE'],
-            iat: 1464964504,
-            exp: 1465050904
-        };
-
-        var quoteItemOption = {
-            'quoteId': '4',
-            'quoteItemSeqId': '3',
-            'quoteItemOptionSeqId': '1',
-            'quantity': '10',
-            'quoteUnitPrice': '20.20'
-        };
-
-        var resultsForThisUser = quoteController.addQuoteItemOption(quoteItemOption, user);
-
-        // handle as in the Api layer, with an IF ELSE block to interpret whether the output
-        // is a promise or is null (cannot use .then on a null)
-        if (resultsForThisUser === null) {
-            expect(resultsForThisUser === null).toBeTruthy();
-            // Call done to finish the async function
-            done();
-        } else {
-            var typeOfResults = Object.prototype.toString.call(resultsForThisUser);
-            // Check whether the return value is an array
-            expect(typeOfResults).toBe('[object Object]');
-            // Call done to finish the async function
-            done();
-        }
-    });
-
-    it('quoteController.updateQuoteItemOption allows a user with permission to update an Item of a Quote', function (done) {
+    xit('quoteController.updateQuoteItemOption allows a user with permission to update an Item of a Quote', function (done) {
 
         var user = {
             userId: 'mrQuoteUnquote',
@@ -336,6 +289,46 @@ describe('Quote module ', function () {
             // Call done to finish the async function
             done();
         }
+    });
+
+    xit('quoteController.addQuote allows user with authorization to add a Quote', function (done) {
+        var user = {
+            userId: 'contactOwnerABC',
+            securityPermissions: ['CRMSFA_QUOTE_CREATE']
+        };
+
+        var quote = {
+            'quoteTypeId': 'PRODUCT_QUOTE',
+            'partyId': '91',
+            'issueDate': '2016-06-04 10:49:22',
+            'statusId': 'QUOTE_SENT',
+            'currencyUomId': 'USD',
+            'salesChannelEnumId': 'IND_GEN_SERVICES',
+            'validFromDate': '2016-06-04 10:49:22',
+            'validThruDate': '2016-12-04 10:49:22',
+            'quoteName': 'Saturday morning quote',
+            'description': 'created on Saturday morning',
+            'contactPartyId': '91',
+            'createdByPartyId': '100'
+        };
+
+        var result = quoteController.addQuote(quote, user);
+        expect(result).not.toBeNull();
+
+        done();
+    });
+
+    it('quoteController.getQuoteById returns a valid quote', function (done) {
+        var id = 1;
+        var user = {
+            securityPermissions: ['CRMSFA_QUOTE_CREATE']
+        };
+
+        quoteController.getQuoteById(id, user)
+            .then(function (quote) {
+                expect(quote instanceof Quote).toBeTruthy();
+                done();
+            });
     });
 
 });

@@ -18,9 +18,9 @@ var baseRequest = request.defaults({
 
 
 
-xdescribe('Party API', function () {
+describe('Party API', function () {
 
-    xit('is inaccessible without a valid token', function (done) {
+    it('is inaccessible without a valid token', function (done) {
         request.get(apiBaseUrl, function (err, res, body) {
             // Check the HTTP status code of response
             expect(res.statusCode).toBe(403);

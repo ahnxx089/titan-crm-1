@@ -14,7 +14,7 @@ var accountController = require('../src/controllers/accountController')(knex);
 var Account = require('../src/entities/account');
 
 
-xdescribe('Account module', function () {
+describe('Account module', function () {
 
     xit('getAccounts returns a valid account entity', function (done) {
         accountController.getAccountById(70).then(function (account) {
@@ -101,19 +101,19 @@ xdescribe('Account module', function () {
             // finsh
             done();
         });
+    });
 
-        xit('accountController.update account put the query', function (done) {
-            var accountId = 'Company';
-            var accounts = {};
-            var resultsForThisTest = accountController.updateAccount(accountId, accounts);
-            expect(resultsForThisTest).toBeTruthy();
-            done();
-        });
-        xit('accountController.delete account delete the query', function (done) {
-            var accountId = 'Company2';
-            var resultsForThisTest = accountController.deleteAccount(accountId);
-            expect(resultsForThisTest).toBeNull();
-            done();
-        });
+    xit('accountController.update account put the query', function (done) {
+        var accountId = 'Company';
+        var accounts = {};
+        var resultsForThisTest = accountController.updateAccount(accountId, accounts);
+        expect(resultsForThisTest).toBeTruthy();
+        done();
+    });
+    xit('accountController.delete account delete the query', function (done) {
+        var accountId = 'Company2';
+        var resultsForThisTest = accountController.deleteAccount(accountId);
+        expect(resultsForThisTest).toBeNull();
+        done();
     });
 });
