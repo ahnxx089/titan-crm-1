@@ -30,6 +30,8 @@ var caseData = function (knex) {
             case_date: case_.caseDate, response_required_date: case_.responseRequiredDate,
             case_name: case_.caseName, description:case_.description, resolution_id: case_.resolutionId,
             created_by: case_.createdBy, created_date: case_.createdDate, updated_date: case_.updatedDate
+        }).then(function (cid1) {
+            return cid1;
         });
         */
         
