@@ -72,11 +72,50 @@ describe('addContactMech', function () {
             infoString: 'bob@gmail.com'
         };
 
+        
+        
+        
+        try {
+            var result = contactMechController.addContactMech(mech);
+
+            if (typeof result !== 'object') {
+                fail('returned ' + (typeof result) + ' instead of promise');
+                done();
+            } else if (result === null) {
+                fail('returned null instead of promise');
+                done();
+            } else if (Array.isArray(result)) {
+                fail('returned array instead of promise');
+                done();
+            } else if (!('then' in result)) {
+                fail('returned non-promise object');
+                done();
+            } else {
+                result
+                    .then(function (fulfillment) {
+                        expect(typeof fulfillment).toBe('number');
+                        expect(fulfillment).toBeGreaterThan(0);
+                        done();
+                    });
+            }
+        } catch (err) {
+            fail(err);
+            done();
+        }
+        
+        
+        
+        
+        
+        
+        
+        /*
         contactMechController.addContactMech(mech)
             .then(function (fulfillment) {
                 expect(typeof fulfillment).toBe('number');
                 done();
             });
+        */
     });
 
     it('has number as fulfillment for phone number', function (done) {
@@ -174,10 +213,6 @@ describe('updateContactMech', function () {
     });
 });
 
-describe('deleteContactMech', function () {
-    //deleteContactMech won't actually be used
-});
-
 describe('linkContactMechToParty', function () {
-
+    //TODO
 });
