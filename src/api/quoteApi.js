@@ -71,11 +71,13 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // An object in result means it's a promise (returned only if validation succeeds)
+            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
+            // An object in result means it's a promise (returned only if validation succeeds).
             else {
-                resultsForThisUser.then(function (quoteItemInserted) {
+                resultsForThisUser.then(function (numRowsInserted) {
                     res.json({
-                        quoteItemInserted: quoteItemInserted
+                        numRowsInserted: numRowsInserted
                     });
                 });
             }
@@ -103,11 +105,13 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
+            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
-                resultsForThisUser.then(function (quoteItemOptionInserted) {
+                resultsForThisUser.then(function (numRowsInserted) {
                     res.json({
-                        quoteItemOptionInserted: quoteItemOptionInserted
+                        numRowsInserted: numRowsInserted
                     });
                 });
             }
@@ -161,11 +165,13 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
+            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
-                resultsForThisUser.then(function (quoteItemUpdated) {
+                resultsForThisUser.then(function (numRowsUpdated) {
                     res.json({
-                        quoteItemUpdated: quoteItemUpdated
+                        numRowsUpdated: numRowsUpdated
                     });
                 });
             }
@@ -193,11 +199,13 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
+            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
-                resultsForThisUser.then(function (quoteItemOptionUpdated) {
+                resultsForThisUser.then(function (numRowsUpdated) {
                     res.json({
-                        quoteItemOptionUpdated: quoteItemOptionUpdated
+                        numRowsUpdated: numRowsUpdated
                     });
                 });
             }
@@ -306,11 +314,13 @@ var quoteApi = function (knex) {
         else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
             res.json(resultsForThisUser);
         }
+        // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+        // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
         // An object in result means it's a promise (returned only if validation succeeds)
         else {
-            resultsForThisUser.then(function (quoteUpdated) {
+            resultsForThisUser.then(function (numRowsUpdated) {
                 res.json({
-                    quoteUpdated: quoteUpdated
+                    numRowsUpdated: numRowsUpdated
                 });
             });
         }

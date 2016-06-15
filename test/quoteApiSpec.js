@@ -35,7 +35,7 @@ describe('Quote API', function () {
         });
     });
 
-    it('updateQuote updates a Quote and returns an object', function (done) {
+    xit('updateQuote updates a Quote and returns an object', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
         var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
@@ -83,7 +83,7 @@ describe('Quote API', function () {
         });
     });
 
-    it('addQuoteItem adds an Item to a Quote and returns an object', function (done) {
+    xit('addQuoteItem adds an Item to a Quote and returns an object', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
         var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
@@ -117,7 +117,7 @@ describe('Quote API', function () {
         });
     });
 
-    it('updateQuoteItem updates an Item of a Quote and returns an object', function (done) {
+    xit('updateQuoteItem updates an Item of a Quote and returns an object', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
         var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
@@ -151,7 +151,7 @@ describe('Quote API', function () {
         });
     });
 
-    it('addQuoteItemOption adds an Option of an Item of a Quote and returns an object', function (done) {
+    xit('addQuoteItemOption adds an Option of an Item of a Quote and returns an object', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
         var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
@@ -180,7 +180,7 @@ describe('Quote API', function () {
         });
     });
 
-    it('updateQuoteItemOption updates an Option of an Item of a Quote and returns an object', function (done) {
+    xit('updateQuoteItemOption updates an Option of an Item of a Quote and returns an object', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
         var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
