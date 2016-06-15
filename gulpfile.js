@@ -65,6 +65,12 @@ gulp.task('jsx2js', function () {
         .pipe(gulp.dest('./public/js/'));
 });
 
+// Gulp task to unit test the app
+gulp.task('test', function () {
+    return gulp.src(specFiles)
+        .pipe(jasmine());
+});
+
 // Gulp task to build the app
 // (combo of code analysis and unit testing)
 gulp.task('build', ['style', 'jsx2js'], function () {
