@@ -90,21 +90,33 @@ describe('Quote module ', function () {
             'createdByPartyId': '100'
         };
 
-        var resultsForThisUser = quoteController.updateQuote(quoteId, quote, user);
 
 
-        expect(resultsForThisUser).not.toBeNull();
-        if (resultsForThisUser) {
-            expect('then' in resultsForThisUser).toBeTruthy();
-            if ('then' in resultsForThisUser) {
-                resultsForThisUser.then(function (fulfillment) {
-                    expect(typeof fulfillment).toBe('number');
-                    done();
-                });
-            } else {
+        try {
+            var result = quoteController.updateQuote(quoteId, quote, user);
+
+            if (typeof result !== 'object') {
+                fail('returned ' + (typeof result) + ' instead of promise');
                 done();
+            } else if (result === null) {
+                fail('returned null instead of promise');
+                done();
+            } else if (Array.isArray(result)) {
+                fail('returned array instead of promise');
+                done();
+            } else if (!('then' in result)) {
+                fail('returned non-promise object');
+                done();
+            } else {
+                result
+                    .then(function (fulfillment) {
+                        expect(typeof fulfillment).toBe('number');
+                        expect(fulfillment).toBeGreaterThan(0);
+                        done();
+                    });
             }
-        } else {
+        } catch (err) {
+            fail(err);
             done();
         }
 
