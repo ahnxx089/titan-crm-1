@@ -78,7 +78,7 @@ var caseApi = function (knex) {
             ELSE IF ensures there is only one response to API layer!
             See: http://www.ofssam.com/forums/showthread.php?tid=43 
         */  
-        else if ( req.query.hasOwnProperty('subject') || req.query.hasOwnProperty('priority') || req.query.hasOwnProperty('status') || req.query.hasOwnProperty('type')) {
+        else if ( req.query.hasOwnProperty('subject') || req.query.hasOwnProperty('Priority') || req.query.hasOwnProperty('status') || req.query.hasOwnProperty('type')) {
             
             var resultsForUser = caseController.getCasesByAdvanced(req.query, req.user);
             if (resultsForUser === null) {
@@ -86,8 +86,8 @@ var caseApi = function (knex) {
                     'message': 'You do not have permission about getCasesByAdvanced because of query!'
                 });
             } else {
-                resultsForUser.then(function (cases) {
-                    res.json(cases);
+                resultsForUser.then(function (case_) {
+                    res.json(case_);
                 });
             }
         }

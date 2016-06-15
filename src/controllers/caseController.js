@@ -247,21 +247,21 @@ var caseController = function (knex) {
      */
     var getCasesByAdvanced = function (query, user) {
         //Check security permission of user
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CASE_CREATE');
         if (hasPermission !== -1) {
-            /* /api/cases?subject=
-               /api/cases?priority=
-               /api/cases?status=
-               /api/cases?type=
-               If block set these things
-            */
+           /* /api/cases?subject=
+              /api/cases?priority=
+              /api/cases?status=
+              /api/cases?type=
+              If block set these things
+           */
             var subject = query.subject;
-            var priority = query.priority;
+            var Priority = query.Priority;
             var status = query.status;
             var type = query.type;
-            var promise = caseData.getCasesByAdvanced(subject, priority, status, type)
-                .then(function (cases) {
-
+            var promise = caseData.getCasesByAdvanced(subject, Priority, status, type)
+                .then(function (result) {
+                    var cases = result[0];
                     var caseEntities = [];
                     for (var i = 0; i < cases.length; i++) {
                         var case_ = new Case(
@@ -284,7 +284,7 @@ var caseController = function (knex) {
                     }
                     return caseEntities;
                 });
-            promise.catch(function (error) {
+                promise.catch(function (error) {
                 // Log the error
                 winston.error(error);
             });
