@@ -393,6 +393,7 @@ var quoteController = function (knex) {
      */
     var getQuotesByOwner = function (user) {
         // Check user's security permission to own quotes
+        console.log(user.securityPermissions);
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
             // user has permission, proceed to the data layer
@@ -402,21 +403,21 @@ var quoteController = function (knex) {
                     var quoteEntities = [];
                     for (var i = 0; i < quotes.length; i++) {
                         var quote = new Quote(
-                            quotes[i].quoteId,
-                            quotes[i].quoteTypeId,
-                            quotes[i].partyId,
-                            quotes[i].issueDate,
-                            quotes[i].statusId,
-                            quotes[i].currencyUomId,
-                            quotes[i].salesChannelEnumId,
-                            quotes[i].validFromDate,
-                            quotes[i].validThruDate,
-                            quotes[i].quoteName,
+                            quotes[i].quote_id,
+                            quotes[i].quote_type_id,
+                            quotes[i].party_id,
+                            quotes[i].issue_date,
+                            quotes[i].status_id,
+                            quotes[i].currency_uom_id,
+                            quotes[i].sales_channel_enum_id,
+                            quotes[i].valid_from_date,
+                            quotes[i].valid_thru_date,
+                            quotes[i].quote_name,
                             quotes[i].description,
-                            quotes[i].contactPartyId,
-                            quotes[i].createdByPartyId,
-                            quotes[i].createdDate,
-                            quotes[i].updatedDate
+                            quotes[i].contact_party_id,
+                            quotes[i].created_by_party_id,
+                            quotes[i].created_date,
+                            quotes[i].updated_date
                         );
                         quoteEntities.push(quote);
                     }
@@ -428,8 +429,8 @@ var quoteController = function (knex) {
             });
             return promise;
         } else {
-            // user does not have permissions of a contact owner, return null
-            return;
+            // user does not have permissions of a quote owner, return null
+            return null;
         }
     };
     

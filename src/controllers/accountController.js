@@ -12,6 +12,7 @@ var winston = require('winston');
 var Account = require('../entities/account');
 var userController = require('../controllers/userController');
 var contactInfoHelper = require('../controllers/helpers/contactInfoHelper');
+var _ = require('lodash');
 
 var accountController = function (knex) {
     // Get a reference to data layer module
@@ -180,7 +181,7 @@ var accountController = function (knex) {
      * @return {Object} promise - Fulfillment value is a account entity
      */
     var getAccountById = function (partyId, user) {
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACCOUNT_CREATE');
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_CREATE');
         if (hasPermission !== -1) {
             var promise = accountData.getAccountById(partyId)
                 .then(function (accounts) {
@@ -229,44 +230,50 @@ var accountController = function (knex) {
      * @param {Number} ownerId - Unique party_id of the owner
      * @return {Object} promise - Fulfillment value is a raw data object
      */
-    var getAccountsByOwner = function (ownerId) {
-        var promise = accountData.getAccountsByOwner(ownerId)
-        .then(function(accounts) {
-            var ownedAccounts = [];
-            for (var i = 0; i < accounts.length; i++) {
-                var accountEntity = new Account(
-                    accounts[i].party_id,
-                    accounts[i].party_type_id,
-                    accounts[i].preferred_currency_uom_id,
-                    accounts[i].description,
-                    accounts[i].status_id,
-                    accounts[i].created_by,
-                    accounts[i].created_date,
-                    accounts[i].updated_date,
-                    accounts[i].organization_name,
-                    accounts[i].office_site_name,
-                    accounts[i].annual_revenue,
-                    accounts[i].num_employees,
-                    accounts[i].ticker_symbol,
-                    accounts[i].comments,
-                    accounts[i].logo_image_url,
-                    accounts[i].party_parent_id,
-                    accounts[i].industry_enum_id,
-                    accounts[i].ownership_enum_id,
-                    accounts[i].important_note,
-                    accounts[i].primary_postal_address_id,
-                    accounts[i].primary_telecom_number_id,
-                    accounts[i].primary_email_id
-                );
-                ownedAccounts.push(accountEntity);
-            }
-            return ownedAccounts;
-        });
-        promise.catch(function(error) {
-            // Log the error
-            winston.error(error);
-        });
-        return promise;
+    var getAccountsByOwner = function (user) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_CREATE');
+        if (hasPermission !== -1) {
+            var promise = accountData.getAccountsByOwner(user.partyId)
+            .then(function(accounts) {
+                var ownedAccounts = [];
+                for (var i = 0; i < accounts.length; i++) {
+                    var accountEntity = new Account(
+                        accounts[i].party_id,
+                        accounts[i].party_type_id,
+                        accounts[i].preferred_currency_uom_id,
+                        accounts[i].description,
+                        accounts[i].status_id,
+                        accounts[i].created_by,
+                        accounts[i].created_date,
+                        accounts[i].updated_date,
+                        accounts[i].organization_name,
+                        accounts[i].office_site_name,
+                        accounts[i].annual_revenue,
+                        accounts[i].num_employees,
+                        accounts[i].ticker_symbol,
+                        accounts[i].comments,
+                        accounts[i].logo_image_url,
+                        accounts[i].party_parent_id,
+                        accounts[i].industry_enum_id,
+                        accounts[i].ownership_enum_id,
+                        accounts[i].important_note,
+                        accounts[i].primary_postal_address_id,
+                        accounts[i].primary_telecom_number_id,
+                        accounts[i].primary_email_id
+                    );
+                    ownedAccounts.push(accountEntity);
+                }
+                return ownedAccounts;
+            });
+            promise.catch(function(error) {
+                // Log the error
+                winston.error(error);
+            });
+            return promise;
+        }
+        else {
+            return;
+        }
     };
     /**
      * Gets one account by its associated phone number from database
@@ -275,7 +282,7 @@ var accountController = function (knex) {
      */
 
     var getAccountByPhoneNumber = function (query, user) {
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_CREATE');
         if (hasPermission !== -1) {
             var phoneNumber = query.phoneNumber;
             var promise = accountData.getAccountByPhoneNumber(phoneNumber)
@@ -319,7 +326,7 @@ var accountController = function (knex) {
             return promise;
         }
         else {
-            return
+            return;
         }
     };
     /**
@@ -328,12 +335,12 @@ var accountController = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     
-    var getAccountByIdentity = function (query, user) {
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACCOUNT_CREATE');
+    var getAccountsByIdentity = function (query, user) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_CREATE');
         if (hasPermission !== -1) {
             var accountId = query.accountId;
             var accountName = query.accountName; 
-            var promise = accountData.getAccountByIdentity(accountId, accountName)
+            var promise = accountData.getAccountsByIdentity(accountId, accountName)
 
                 .then(function (accounts) {
                     var identityAccounts = [];
@@ -374,7 +381,7 @@ var accountController = function (knex) {
             return promise;
         }
         else {
-            return
+            return;
         }
     };
 
@@ -490,6 +497,8 @@ var accountController = function (knex) {
         //getAccounts: getAccounts,
         getAccountById: getAccountById,
         getAccountsByOwner: getAccountsByOwner,
+        getAccountsByIdentity: getAccountsByIdentity,
+        getAccountByPhoneNumber: getAccountByPhoneNumber,
         updateAccount: updateAccount,
         deleteAccount: deleteAccount
     };

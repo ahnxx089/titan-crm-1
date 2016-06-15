@@ -20,7 +20,7 @@ var baseRequest = request.defaults({
 });
 
 
-xdescribe('Accounts API', function () {
+describe('Accounts API', function () {
     xit('is inaccessible without a valid token', function (done) {
         request.get(apiBaseUrl, function (err, res, body) {
             // Check the HTTP status code of response
@@ -29,7 +29,7 @@ xdescribe('Accounts API', function () {
             done();
         });
     });
-    xit('getAccount returns all Accounts in system as an array', function (done) {
+    it('getAccount returns all Accounts in system as an array', function (done) {
         baseRequest.get(apiBaseUrl, function (err, res, body) {
             var typeofAccounts = Object.prototype.toString.call(JSON.parse(body));
             // Check whether the return value is an array
@@ -38,7 +38,7 @@ xdescribe('Accounts API', function () {
             done();
         });
     });
-    xit('getAccount returns a valid Accounts entity', function (done) {
+    it('getAccount returns a valid Accounts entity', function (done) {
         baseRequest.get(apiBaseUrl + '/99', function (err, res, body) {
             expect(JSON.parse(body).hasOwnProperty('partyId')).toBeTruthy();
             // Call done to finish the async function
