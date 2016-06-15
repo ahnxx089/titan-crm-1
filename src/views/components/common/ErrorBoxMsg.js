@@ -10,9 +10,11 @@ var React = require('react');
 
 var ErrorBoxMsg = React.createClass({
     render: function () {
+        /* jshint ignore:start */
         return (
             <li>{ this.props.message }</li>
         );
+        /* jshint ignore:end */
     }
 });
 

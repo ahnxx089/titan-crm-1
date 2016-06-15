@@ -26,8 +26,7 @@ var contactMechController = function (knex) {
             contactMech.contactMechId,
             contactMech.contactMechTypeId,
             contactMech.contactMechPurposeTypeId,
-            contactMech.infoString,
-            (new Date()).toISOString(), //created date
+            contactMech.infoString, (new Date()).toISOString(), //created date
             (new Date()).toISOString(), //updated date
             contactMech.countryCode,
             contactMech.areaCode,
@@ -54,28 +53,28 @@ var contactMechController = function (knex) {
             // contactMechEntity.contactMechTypeId, instead of contactMech.contactMechTypeId
             if (contactMech.contactMechTypeId === 'TELECOM_NUMBER') {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
-                    .then(function (contactMechId6) {
-                        contactMechEntity.contactMechId = contactMechId6;
-                        return contactMechData.addContactMechToTelecomTable(contactMechEntity)//;
-                            // NOTE TO BILL: 
-                            // this .then is necessary because contactMechId (line 56) is needed in addContactMechCallback in lead controller, contact controller and account controller.
-                            // Although contactMechId is used above (line 27), it had been null all the time
-                            // Lucas purposedly changed the variable name to contactMechId6, to distinguish it from others.
+                    .then(function (contactMechId) {
+                        contactMechEntity.contactMechId = contactMechId;
+                        return contactMechData.addContactMechToTelecomTable(contactMechEntity)
+                            //function above should be returning contactMechId already
+                            //why is it returning 0 instead?
                             .then(function () {
-                                return contactMechId6;
+                                return contactMechId;
                             });
                     });
             } else if (contactMech.contactMechTypeId === 'POSTAL_ADDRESS') {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
                     .then(function (contactMechId) {
                         contactMechEntity.contactMechId = contactMechId;
-                        return contactMechData.addContactMechToPostalTable(contactMechEntity)//;
+                        return contactMechData.addContactMechToPostalTable(contactMechEntity)
+                            //function above should be returning contactMechId already
+                            //why is it returning 0 instead?
                             .then(function () {
                                 return contactMechId;
                             });
                     });
             } else {
-                promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)//;
+                promise = contactMechData.addContactMechToGeneralTable(contactMechEntity) //;
                     // this is needed to avoid duplicate entries [WHY?]
                     .then(function (contactMechId) {
                         return contactMechId;
@@ -186,25 +185,25 @@ var contactMechController = function (knex) {
                 var contactMechEntity;
                 if (contactMech.length > 0) {
                     contactMechEntity = new ContactMech(
-                        contactMech[0].contactMechId,
-                        contactMech[0].contactMechTypeId,
-                        contactMech[0].contactMechPuproseTypeId,
-                        contactMech[0].infoString,
-                        contactMech[0].createdDate,
-                        contactMech[0].updatedDate,
-                        contactMech[0].countryCode,
-                        contactMech[0].areaCode,
-                        contactMech[0].contactNumber,
-                        contactMech[0].askForName,
-                        contactMech[0].toName,
-                        contactMech[0].attnName,
+                        contactMech[0].contact_mech_id,
+                        contactMech[0].contact_mech_type_id,
+                        contactMech[0].contact_mech_puprose_type_id,
+                        contactMech[0].info_string,
+                        contactMech[0].created_date,
+                        contactMech[0].updated_date,
+                        contactMech[0].country_code,
+                        contactMech[0].area_code,
+                        contactMech[0].contact_number,
+                        contactMech[0].ask_for_name,
+                        contactMech[0].to_name,
+                        contactMech[0].attn_name,
                         contactMech[0].address1,
                         contactMech[0].address2,
                         contactMech[0].directions,
                         contactMech[0].city,
-                        contactMech[0].stateProvinceGeoId,
-                        contactMech[0].zipOrPostalCode,
-                        contactMech[0].countryGeoId
+                        contactMech[0].state_province_geo_id,
+                        contactMech[0].zip_or_postal_code,
+                        contactMech[0].country_geoId
                     );
                 }
                 return contactMechEntity;
@@ -224,7 +223,7 @@ var contactMechController = function (knex) {
      */
     var updateContactMech = function (contactMechId, contactMech) {
         var now = (new Date()).toISOString();
-        
+
         var contactMechEntity = new ContactMech(
             contactMechId,
             contactMech.contactMechTypeId,
@@ -253,9 +252,9 @@ var contactMechController = function (knex) {
         if (validationErrors.length === 0) {
             // Pass on the entity to be added to the data layer
             var promise = contactMechData.updateContactMech(contactMechEntity);
-                //.then(function (contactMechId) {
-                //    return contactMechId;
-                //});
+            //.then(function (contactMechId) {
+            //    return contactMechId;
+            //});
             promise.catch(function (error) {
                 winston.error(error);
             });

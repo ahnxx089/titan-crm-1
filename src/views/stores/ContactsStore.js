@@ -11,7 +11,6 @@ var ContactsConstants = require('../constants/ContactsConstants');
 var $ = require('jquery');
 var Cookies = require('js-cookie');
 
-
 // DATA
 //-----------------------------------------------
 var contactsOwned = [];
@@ -20,16 +19,20 @@ var contactsOwned = [];
 //-----------------------------------------------
 var ContactsStore = new EventEmitter();
 
-
 // CUSTOM METHODS
 //-----------------------------------------------
 ContactsStore.addGetDataListener = function (listener) {
+    // see https://nodejs.org/api/events.html#events_emitter_on_eventname_listener
     this.on('getData', listener);
-}
-ContactsStore.emitGetData = function() {
-    this.emit('getData');  
 };
 
+ContactsStore.emitGetData = function() {
+    // see https://nodejs.org/api/events.html#events_emitter_emit_eventname_arg1_arg2
+    // Synchronously calls each of the listeners registered for the event named 'getData'
+    // In previous function addGetDataListener is where listeners such as 
+    // MyContactsPage._onGetData registered to get emits from this Store
+    this.emit('getData');  
+};
 
 // BUSINESS LOGIC
 //-----------------------------------------------
@@ -40,23 +43,15 @@ ContactsStore.getContactsByOwner = function() {
         url: '/api/contacts/',
         headers: { 'x-access-token': Cookies.get('titanAuthToken') },
         success: function(contacts) {
-            
             contactsOwned = contacts;
-            
-            // DIAGNOSTICS:  These confirm the API is returning Contact objects as it should...
-            //console.log('In ContactsStore.getContactsByOwner ajax call success function, typeof contactsOwned = ', typeof contactsOwned);
-            //console.log('In ContactsStore.getContactsByOwner ajax call success function, contactsOwned = ', contactsOwned);
-                        
             thisContactsStore.emitGetData();
         }
     });
 };
 
 ContactsStore.getContactsOwned = function() {
-    //console.log('In ContactsStore.getContactsOwned, contactsOwned = ', contactsOwned);
     return contactsOwned;
 };
-
 
 // LINK BETWEEN DISPATCHER AND STORE
 //-----------------------------------------------
@@ -64,7 +59,6 @@ TitanDispatcher.register(function(action) {
 
     switch(action.actionType) {
         case ContactsConstants.GET_MY_CONTACTS: {
-            //console.log('In ContactsStore, in TitanDispatcher.register, about to call ContactsStore.getContactsByOwner');
             ContactsStore.getContactsByOwner();
             break;
         }

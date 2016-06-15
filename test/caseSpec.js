@@ -16,7 +16,7 @@ describe('Case module ', function () {
 
     // Test caseController.getCasesByOwner where a user has security permission
     // (but does not actually own any cases) -- TEST HAS PASSED
-    xit('caseController.getCasesByOwner allows a user with permission to own Case(s) to get the party_id of Cases owned by that user (if any)', function (done) {
+    it('caseController.getCasesByOwner allows a user with permission to own Case(s) to get the party_id of Cases owned by that user (if any)', function (done) {
 
         // user crmsfaContactTasksABC has permission to own Cases (but does not actually own any)
         var user = {
@@ -49,7 +49,7 @@ describe('Case module ', function () {
 
     // Test caseController.getCasesByOwner where a user owns a case, does it return the correct one?
     // TEST PASSED
-    xit('caseController.getCasesByOwner allows a user with permission to own Case(s) to get the party_id of Cases owned by that user', function (done) {
+    it('caseController.getCasesByOwner allows a user with permission to own Case(s) to get the party_id of Cases owned by that user', function (done) {
 
         // user contactOwnerABC )
         var user = {
@@ -77,7 +77,7 @@ describe('Case module ', function () {
     });
 
     // Test caseController.getCasesByOwner where user lacks security permission -- TEST PASSED
-    xit('caseController.getCasesByOwner DENIES a user without permission to own Case(s) to get the party_id of (any) Cases', function (done) {
+    it('caseController.getCasesByOwner DENIES a user without permission to own Case(s) to get the party_id of (any) Cases', function (done) {
         // leadOwnerDEF has permission to own Leads, but not Cases
         var user = {
             userId: 'leadOwnerDEF',
@@ -162,7 +162,7 @@ describe('Case module ', function () {
     
     
     // Add case passed. This will not add case [Lucas]
-    xit('addCase DOES NOT add a case', function (done) {
+    it('addCase DOES NOT add a case', function (done) {
         
         // this is a user without proper permission
         var user = {
@@ -197,7 +197,7 @@ describe('Case module ', function () {
     
     
     // Another Add case passed. This will not add case [Lucas]
-    xit('should throw an exception', function () {
+    it('should throw an exception', function () {
         
         var user = {
             userId: 'leadOwnerDEF',
@@ -237,11 +237,14 @@ describe('Case module ', function () {
 
 
 describe('updateCase', function () {
-    xit('returns null for invalid input', function (done) {
+    it('returns null for invalid input', function (done) {
         var caseId = 1;
         var case_ = {};
+        var user = {
+            securityPermissions: ['CRMSFA_CASE_UPDATE']
+        };
 
-        var result = caseController.updateCase(caseId, case_);
+        var result = caseController.updateCase(caseId, case_, user);
         expect(result).toBeNull();
         done();
     });

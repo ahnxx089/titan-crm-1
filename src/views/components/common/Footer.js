@@ -9,6 +9,7 @@ var React = require('react');
 
 var Footer = React.createClass({
     render: function () {
+        /* jshint ignore:start */
         return (
             <footer className="footer">
                 <div className="container">
@@ -18,6 +19,7 @@ var Footer = React.createClass({
                 </div>
             </footer>
         );
+        /* jshint ignore:end */
     }
 });
 

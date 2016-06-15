@@ -35,9 +35,15 @@ gulp.task('style', function () {
         .pipe(jshint.reporter('jshint-stylish', {
             verbose: true    
         }))
-//        .pipe(eslint())
-//        .pipe(eslint.format())
-//        .pipe(eslint.failOnError())
+    //    .pipe(eslint({
+	// 		'extends': 'eslint:recommended',
+	// 		'ecmaFeatures': {
+    //             'jsx': true,
+	// 			'modules': true
+    //         }
+    //    }))
+    //    .pipe(eslint.format())
+    //    //.pipe(eslint.failOnError())
         .pipe(jscs());
 });
 
@@ -57,6 +63,12 @@ gulp.task('jsx2js', function () {
         .pipe(buffer())
         .pipe(uglify())
         .pipe(gulp.dest('./public/js/'));
+});
+
+// Gulp task to unit test the app
+gulp.task('test', function () {
+    return gulp.src(specFiles)
+        .pipe(jasmine());
 });
 
 // Gulp task to build the app

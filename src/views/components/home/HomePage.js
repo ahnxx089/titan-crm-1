@@ -40,7 +40,7 @@ var HomePage = React.createClass({
         // Otherwise we have received our expected result;
         // call setState to force a re-render of <ContactDetails>
         else {
-            this.props.updateErrorBox([]);
+            this.props.updateErrorBox([]); // clear the ErrorBox
             this.setState({
                 contactDetails: result
             });
@@ -48,6 +48,7 @@ var HomePage = React.createClass({
     },
     
     render: function () {
+        /* jshint ignore:start */
         return (
             <div>
                 <div className="jumbotron">
@@ -59,6 +60,7 @@ var HomePage = React.createClass({
                 <ContactDetails contact={ this.state.contactDetails }/>
             </div>
         );
+        /* jshint ignore:end */
     }
 });
 
