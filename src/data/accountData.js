@@ -37,8 +37,8 @@ var accountData = function (knex) {
         //WOULDN'T GO INTO orgData.addOrganization
         return knex.insert({
             party_id: account.partyId,
-            //parent_party_id: account.parentPartyId,
-            //Put in company name here maybe?
+            parent_party_id: account.parentPartyId,
+            company_name: account.companyName, //Put in company name here maybe?
             annual_revenue: account.annualRevenue,
             currency_uom_id: account.preferredCurrencyUomId,
             num_employees: account.numEmployees,
@@ -130,14 +130,11 @@ var accountData = function (knex) {
                 account.partyId = parseInt(accountResults[0]);
                 return addAccountOrg(account)
                     .then(function (OrgResults) {
-                        console.log(OrgResults);
                         return addAccountPartySupplementalData(account)
                             .then(function (PartySupplementalDataResults) {
                                 //previously had the addAccountContactMech function call here. Removed for now, with the controller handling that logic.
-                                console.log('PSDResults is ' + PartySupplementalDataResults);
                                 return addAccountPartyRole(account)
                                     .then(function (PartyRoleResults) {
-                                        console.log('PartyRoleResults is ' + PartyRoleResults);
                                         return addAccountPartyRelationship(account, user, contact)
                                             .then(function (results) {
                                                 return account.partyId;
@@ -280,17 +277,17 @@ var accountData = function (knex) {
             .from('party_supplemental_data')
             .innerJoin('contact_mech', 'party_supplemental_data.party_id', 'contact_mech.contact_mech_id' )
             .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id' )
-            .where({telecom_number: phoneNumber});
+            .where('telecom_number.contact_number', phoneNumber);
     };
     
-     var getAccountByIdentity = function (accountId, accountName) {
+     var getAccountsByIdentity = function (accountId, accountName) {
         var accountNameLike = '%' + accountName + '%';
         var acccountIdLike = '%' + accountId + '%';
         return knex.select('organization.party_id', 'organization.organization_name')
             .from('party_supplemental_data')
             .innerJoin('organization', 'party_supplemental_data.party_id','organization.party_id')
             .innerJoin('party_role', 'party_supplemental_data.party_id', 'party_role.party_id')
-            .where({party_id: accountId})
+            .where('party_supplemental_data.party_id', accountId)
             .orWhere('organization_name', 'like', accountNameLike) ;      
     };
 
@@ -392,7 +389,7 @@ var accountData = function (knex) {
         getAccountsByOwner: getAccountsByOwner,
         getAccountById: getAccountById,
         getAccountByPhoneNumber: getAccountByPhoneNumber,
-        getAccountByIdentity: getAccountByIdentity,
+        getAccountsByIdentity: getAccountsByIdentity,
         updateAccount: updateAccount,
         deleteAccount: deleteAccount      
     };

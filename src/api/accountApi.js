@@ -46,29 +46,29 @@ var accountApi = function (knex) {
        IdentityId didn't read from the API. So, I take user function and response the security loop.
        This forum are really helpful to me. http://www.ofssam.com/forums/showthread.php?tid=37*/
     // GET /api/accounts/?identity=
-    var getAccountsByIdentity = function (req, res) {
-        var resultForThisAccount =
-        accountController.getAccountsByIdentity(req.query, req.user);
-        if( resultForThisAccount == null){
-            res.json({
-                'message': 'You do not have permission to own identiy by accounts!'
-            });
-        } else {
-            resultForThisAccount.then(function (accounts){
-            res.json(accounts);
-            });
-        } 
-    };
+//    var getAccountsByIdentity = function (req, res) {
+//        var resultForThisAccount =
+//        accountController.getAccountsByIdentity(req.query, req.user);
+//        if( resultForThisAccount == null){
+//            res.json({
+//                'message': 'You do not have permission to own identiy by accounts!'
+//            });
+//        } else {
+//            resultForThisAccount.then(function (accounts){
+//            res.json(accounts);
+//            });
+//        } 
+//    };
     
     // GET /api/accounts/?owner=
-    var getAccountsByOwner = function (req, res) {
-        var ownerId = req.query.owner;
-        console.log(ownerId);
-        accountController.getAccountsByOwner(ownerId)
-            .then(function (accounts) {
-                res.json(accounts);
-            });
-    };
+//    var getAccountsByOwner = function (req, res) {
+//        var ownerId = req.query.owner;
+//        console.log(ownerId);
+//        accountController.getAccountsByOwner(ownerId)
+//            .then(function (accounts) {
+//                res.json(accounts);
+//            });
+//    };
     
     // GET /api/accounts
     var getAccounts = function (req, res) {
@@ -120,14 +120,15 @@ var accountApi = function (knex) {
             }
         }
         // Get Account By Identity - there is a continuing issue here where the method does effectively the same thing as GetAccountsByOwner
-        else {
+        else if (req.query.hasOwnProperty('accountId') || req.query.hasOwnProperty('accountName')) {
             var resultForThisAccount =
         accountController.getAccountsByIdentity(req.query, req.user);
             if( resultForThisAccount == null){
                 res.json({
                     'message': 'You do not have permission to own identiy by accounts!'
                 });
-            } else {
+            } 
+            else {
                 resultForThisAccount.then(function (accounts){
                     res.json(accounts);
                 });
@@ -137,12 +138,17 @@ var accountApi = function (knex) {
 //                res.json(accounts);
 //            });
         }
+        else {
+            res.json({
+                'message': 'ERR: Nothing found from that GET route request.'
+            })
+        }
     };
 
     // GET /api/accounts/:id
     var getAccountById = function (req, res) {
          var accountId = req.params.id;
-        accountController.getAccountById(accountId)
+        accountController.getAccountById(accountId, req.user)
             .then(function(party) {
                 res.json(party);
             });
@@ -169,8 +175,8 @@ var accountApi = function (knex) {
 
     return {
         addAccount: addAccount,
-        getAccountsByIdentity: getAccountsByIdentity,
-        getAccountsByOwner: getAccountsByOwner,
+        //getAccountsByIdentity: getAccountsByIdentity,
+        //getAccountsByOwner: getAccountsByOwner,
         getAccounts: getAccounts,
         //getAccountByPhoneNumber: getAccountByPhoneNumber,
         getAccountById: getAccountById,
