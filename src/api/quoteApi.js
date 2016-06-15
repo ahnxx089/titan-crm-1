@@ -31,7 +31,7 @@ var quoteApi = function (knex) {
             var user = req.user;
             var resultsForThisUser = quoteController.addQuote(quote, user);
 
-            if (resultsForThisUser == null) {
+            if (resultsForThisUser === null) {
                 res.json({
                     message: 'You do not have permission to add quote!'
                 });
@@ -120,21 +120,21 @@ var quoteApi = function (knex) {
         // POST /api/quotes?note
         // 
         // addQuoteNote 
-        else if (req.query.hasOwnProperty('note')) {
+            else if (req.query.hasOwnProperty('note')) {
 
-            // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
-            res.json({
-                'message': 'addQuoteNote functionality is under construction...',
-                'reachedOn': 'This was reached on POST route /api/quotes?note'
-            });
-        }
+                // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
+                res.json({
+                    'message': 'addQuoteNote functionality is under construction...',
+                    'reachedOn': 'This was reached on POST route /api/quotes?note'
+                });
+            }
 
         // no other POST routes, return error message so the app does not hang
-        else {
-            res.json({
-                'message': 'ERROR:  No such route to POST to...',
-            });
-        }
+            else {
+                res.json({
+                    'message': 'ERROR:  No such route to POST to...'
+                });
+            }
     };
 
     // PUT /api/quotes
@@ -238,7 +238,8 @@ var quoteApi = function (knex) {
                 res.json({
                     'message': 'You do not have permission to own quotes!'
                 });
-            } else {
+            }
+            else {
                 resultsForThisUser.then(function (quotes) {
                     res.json(quotes);
                 });
