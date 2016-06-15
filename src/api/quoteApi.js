@@ -71,7 +71,8 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // THIS COMMENT NEEDS REVISING, WHICH RE-WRITING THE UNIT TEST WILL HELP WITH ARTICULATING...
+            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
             // An object in result means it's a promise (returned only if validation succeeds).
             else {
                 resultsForThisUser.then(function (numRowsInserted) {
@@ -104,7 +105,8 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // THIS COMMENT NEEDS REVISING, WHICH RE-WRITING THE UNIT TEST WILL HELP WITH ARTICULATING...
+            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
                 resultsForThisUser.then(function (numRowsInserted) {
@@ -163,7 +165,8 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // THIS COMMENT NEEDS REVISING, WHICH RE-WRITING THE UNIT TEST WILL HELP WITH ARTICULATING...
+            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
                 resultsForThisUser.then(function (numRowsUpdated) {
@@ -196,7 +199,8 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // THIS COMMENT NEEDS REVISING, WHICH RE-WRITING THE UNIT TEST WILL HELP WITH ARTICULATING...
+            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
                 resultsForThisUser.then(function (numRowsUpdated) {
@@ -310,7 +314,8 @@ var quoteApi = function (knex) {
         else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
             res.json(resultsForThisUser);
         }
-        // THIS COMMENT NEEDS REVISING, WHICH RE-WRITING THE UNIT TEST WILL HELP WITH ARTICULATING...
+        // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+        // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
         // An object in result means it's a promise (returned only if validation succeeds)
         else {
             resultsForThisUser.then(function (numRowsUpdated) {
