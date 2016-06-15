@@ -11,7 +11,7 @@
 
 var winston = require('winston');
 var Case = require('../entities/case');
-var User = require('../entities/user');// is this ever used?
+//var User = require('../entities/user');// is this ever used?
 var Note = require('../entities/note');
 var _ = require('lodash');
 
@@ -21,12 +21,12 @@ var caseController = function (knex) {
     var caseData = require('../data/caseData')(knex);
     var noteData = require('../data/noteData')(knex);
     var noteController = require('../controllers/noteController')(knex);
-    
+
     // CONTROLLER METHODS
     // ==========================================
     //
-    
-    
+
+
     // Lucas wrote this
     /**
      * For each (and the only) promise delivered by addNote,
@@ -39,23 +39,23 @@ var caseController = function (knex) {
      */
     var addNoteCallback = function (addNotePromises, internalNoteEntity, caseId) {
         var promise;
-        
+
         /*param 1*/
         promise = addNotePromises.pop();
-        
+
         /*param 2*/
-        
+
         return promise.then(function (noteId) {
             return noteController.linkNoteToCase(caseId, noteId)
                 .then(function () {
-                return caseId;
-            });
+                    return caseId;
+                });
         });
         //}
     };
-    
-    
-    
+
+
+
     // Lucas wrote this
     /**
      * Add a new case  
@@ -64,7 +64,7 @@ var caseController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new case
      */
     var addCase = function (case_, user) {
-//        console.log('in case controller A');
+        //        console.log('in case controller A');
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CASE_CREATE');
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
@@ -75,26 +75,26 @@ var caseController = function (knex) {
             if (case_.intenalNote) {
                 internalNoteEntity = new Note(
                     null,
-                    case_.intenalNote, 
-                    case_.intenalNote, 
-                    now, 
-                    case_.fromPartyId, 
-                    now, 
+                    case_.intenalNote,
+                    case_.intenalNote,
+                    now,
+                    case_.fromPartyId,
+                    now,
                     now
                 );
             }
-            
+
             var caseEntity = new Case(
-//                case_.caseId,
+                //                case_.caseId,
                 null,
                 case_.caseTypeId,
                 case_.caseCategoryId,
                 case_.statusId,
                 case_.fromPartyId,
                 case_.priority,
-//                case_.caseDate,
+                //                case_.caseDate,
                 now,
-//                case_.responseRequiredDate,
+                //                case_.responseRequiredDate,
                 now,
                 case_.caseName,
                 case_.description,
@@ -102,42 +102,45 @@ var caseController = function (knex) {
                 case_.createdBy,
                 now,
                 now
-//                case_.createdDate,
-//                case_.updatedDate
+                //                case_.createdDate,
+                //                case_.updatedDate
             );
-//            console.log('in case controller B');
+            //            console.log('in case controller B');
 
             // Validate the data before going ahead
             var validationErrors = caseEntity.validateForInsert();
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer. Insert new case_, get the promise first
                 var promise = caseData.addCase(caseEntity);
-                
+
+                promise.catch(function (error) {
+                    winston.error(error);
+                });
+
                 // if there is a field called internalNote
-                if(internalNoteEntity){
+                if (internalNoteEntity) {
                     var addNotePromises = [];
                     var notePromise;
                     notePromise = noteController.addNote(internalNoteEntity);
+
+                    // if validation fails (notePromise is not a promise but an array)
+                    if (notePromise instanceof Array) {
+                        return notePromise;
+                    }
                     // Make sure we have promise,
                     // and not array of errors
                     if ('then' in notePromise) {
                         addNotePromises.push(notePromise);
                     }
                     if (addNotePromises.length > 0) {
-                        promise.then(function (caseId) {
+                        return promise.then(function (caseId) {
                             return addNoteCallback(addNotePromises, internalNoteEntity, caseId);
-                        });
-                        promise.catch(function (error) {
-                            winston.error(error);
                         });
                     }
                     // if there isn't such internalNote
                     else {
-                        promise.then(function (caseId) {
+                        return promise.then(function (caseId) {
                             return caseId;
-                        });
-                        promise.catch(function (error) {
-                            winston.error(error);
                         });
                     }
                 }
@@ -185,8 +188,7 @@ var caseController = function (knex) {
                 winston.error(errors);
             });
             return promise; //this return value is the caseEntity corresponding to specified caseId input
-        }
-        else {
+        } else {
             return;
         }
     };
@@ -247,19 +249,19 @@ var caseController = function (knex) {
         //Check security permission of user
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
         if (hasPermission !== -1) {
-           /* /api/cases?subject=
-              /api/cases?priority=
-              /api/cases?status=
-              /api/cases?type=
-              If block set these things
-           */
+            /* /api/cases?subject=
+               /api/cases?priority=
+               /api/cases?status=
+               /api/cases?type=
+               If block set these things
+            */
             var subject = query.subject;
             var priority = query.priority;
             var status = query.status;
             var type = query.type;
             var promise = caseData.getCasesByAdvanced(subject, priority, status, type)
                 .then(function (cases) {
-                    
+
                     var caseEntities = [];
                     for (var i = 0; i < cases.length; i++) {
                         var case_ = new Case(
@@ -282,7 +284,7 @@ var caseController = function (knex) {
                     }
                     return caseEntities;
                 });
-                promise.catch(function (error) {
+            promise.catch(function (error) {
                 // Log the error
                 winston.error(error);
             });
@@ -299,38 +301,44 @@ var caseController = function (knex) {
      * @param {Object} case_ - The object that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateCase = function (caseId, case_) {
-        var now = (new Date()).toISOString();
-        
-        //Convert case to entity
-        var caseEntity = new Case(
-            caseId,
-            case_.caseTypeId,
-            case_.caseCategoryId,
-            case_.statusId,
-            case_.fromPartyId,
-            case_.priority,
-            case_.caseDate,
-            case_.responseRequiredDate,
-            case_.caseName,
-            case_.description,
-            case_.resolutionId,
-            case_.createdBy,
-            case_.createdDate,
-            now
-        );
-        
-        var validationErrors = caseEntity.validateForUpdate();
-        
-        if (validationErrors.length === 0) {
-            // Pass on the entity to be added to the data layer
-            var promise = caseData.updateCase(caseEntity);
+    var updateCase = function (caseId, case_, user) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_UPDATE');
+        if (hasPermission !== -1) {
+            var now = (new Date()).toISOString();
 
-            promise.catch(function (error) {
-                winston.error(error);
-            });
-            return promise;
+            //Convert case to entity
+            var caseEntity = new Case(
+                caseId,
+                case_.caseTypeId,
+                case_.caseCategoryId,
+                case_.statusId,
+                case_.fromPartyId,
+                case_.priority,
+                case_.caseDate,
+                case_.responseRequiredDate,
+                case_.caseName,
+                case_.description,
+                case_.resolutionId,
+                case_.createdBy,
+                case_.createdDate,
+                now
+            );
+
+            var validationErrors = caseEntity.validateForUpdate();
+
+            if (validationErrors.length === 0) {
+                // Pass on the entity to be added to the data layer
+                var promise = caseData.updateCase(caseEntity);
+
+                promise.catch(function (error) {
+                    winston.error(error);
+                });
+                return promise;
+            } else {
+                return validationErrors;
+            }
         } else {
+            // user does not have permissions of a case owner, return null
             return null;
         }
     };

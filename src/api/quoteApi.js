@@ -71,11 +71,13 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // An object in result means it's a promise (returned only if validation succeeds)
+            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
+            // An object in result means it's a promise (returned only if validation succeeds).
             else {
-                resultsForThisUser.then(function (quoteItemInserted) {
+                resultsForThisUser.then(function (numRowsInserted) {
                     res.json({
-                        quoteItemInserted: quoteItemInserted
+                        numRowsInserted: numRowsInserted
                     });
                 });
             }
@@ -85,7 +87,7 @@ var quoteApi = function (knex) {
         // 
         // addQuoteItemOption
         else if (req.query.hasOwnProperty('itemOption')) {
-            
+
             var resultsForThisUser = quoteController.addQuoteItemOption(req.body, req.user);
 
             /* Intepret the possible outcomes from the controller layer:
@@ -103,11 +105,13 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
+            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
-                resultsForThisUser.then(function (quoteItemOptionInserted) {
+                resultsForThisUser.then(function (numRowsInserted) {
                     res.json({
-                        quoteItemOptionInserted: quoteItemOptionInserted
+                        numRowsInserted: numRowsInserted
                     });
                 });
             }
@@ -138,12 +142,12 @@ var quoteApi = function (knex) {
     // Methods:  updateQuoteItem, updateQuoteItemOption
     //
     var updateQuoteItem = function (req, res) {
-        
+
         // PUT /api/quotes?item
         // 
         // updateQuoteItem          
-        if(req.query.hasOwnProperty('item')) {
-            
+        if (req.query.hasOwnProperty('item')) {
+
             var resultsForThisUser = quoteController.updateQuoteItem(req.body, req.user);
 
             /* Intepret the possible outcomes from the controller layer:
@@ -161,21 +165,23 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
+            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
-                resultsForThisUser.then(function (quoteItemUpdated) {
+                resultsForThisUser.then(function (numRowsUpdated) {
                     res.json({
-                        quoteItemUpdated: quoteItemUpdated
+                        numRowsUpdated: numRowsUpdated
                     });
                 });
             }
         }
-        
+
         // PUT /api/quotes?itemOption
         // 
         // updateQuoteItemOption
         else if (req.query.hasOwnProperty('itemOption')) {
-            
+
             var resultsForThisUser = quoteController.updateQuoteItemOption(req.body, req.user);
 
             /* Intepret the possible outcomes from the controller layer:
@@ -193,16 +199,18 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
+            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
             // An object in result means it's a promise (returned only if validation succeeds)
             else {
-                resultsForThisUser.then(function (quoteItemOptionUpdated) {
+                resultsForThisUser.then(function (numRowsUpdated) {
                     res.json({
-                        quoteItemOptionUpdated: quoteItemOptionUpdated
+                        numRowsUpdated: numRowsUpdated
                     });
                 });
             }
         }
-        
+
         // no other PUT routes, return error message so the app does not hang
         else {
             res.json({
@@ -226,7 +234,7 @@ var quoteApi = function (knex) {
             var resultsForThisUser = quoteController.getQuotesByOwner(req.user);
             // IF ELSE block interprets controller returning an object or null
             if (resultsForThisUser === null) {
-//                console.log('first get quotes');
+                //                console.log('first get quotes');
                 res.json({
                     'message': 'You do not have permission to own quotes!'
                 });
@@ -243,11 +251,11 @@ var quoteApi = function (knex) {
         // findQuotes, aka Advanced Search
         // quoteId here will ONLY be used the route /api/quotes?SOME_PROPERTY is chosen.
         // This is not going to interfere with Bill's work
-        else if (req.query.hasOwnProperty('quoteId') || req.query.hasOwnProperty('quoteName') ||  req.query.hasOwnProperty('status') || req.query.hasOwnProperty('account') || req.query.hasOwnProperty('salesChannel')) {
-//            console.log('second get quotes');
+        else if (req.query.hasOwnProperty('quoteId') || req.query.hasOwnProperty('quoteName') || req.query.hasOwnProperty('status') || req.query.hasOwnProperty('account') || req.query.hasOwnProperty('salesChannel')) {
+            //            console.log('second get quotes');
 
             var resultsForUser = quoteController.getQuotesByAdvanced(req.query, req.user);
-            
+
             if (resultsForUser === null) {
                 res.json({
                     'message': 'You do not have permission to Get Quotes By Advanced Search using the supplied query!'
@@ -271,15 +279,23 @@ var quoteApi = function (knex) {
     // GET /api/quotes/:id
     var getQuoteById = function (req, res) {
 
-        // NEXT THREE LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
-        res.json({
-            'message': 'getQuotesById functionality is under construction...'
-        });
+        var quoteId = req.params.id;
+        var result = quoteController.getQuoteById(quoteId, req.user)
+        
+        if (result) {
+            result.then(function (contact) {
+                res.json(contact);
+            });
+        } else {
+            res.json({'message': 'You do not have permission.'});
+        }
+        
+            
     };
 
     // PUT /api/quotes/:id
     var updateQuote = function (req, res) {
-        
+
         var quoteId = req.params.id; // read from the URL, not the payload
         var quote = req.body;
         var resultsForThisUser = quoteController.updateQuote(quoteId, quote, req.user);
@@ -299,11 +315,13 @@ var quoteApi = function (knex) {
         else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
             res.json(resultsForThisUser);
         }
+        // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
+        // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
         // An object in result means it's a promise (returned only if validation succeeds)
         else {
-            resultsForThisUser.then(function (quoteUpdated) {
+            resultsForThisUser.then(function (numRowsUpdated) {
                 res.json({
-                    quoteUpdated: quoteUpdated
+                    numRowsUpdated: numRowsUpdated
                 });
             });
         }

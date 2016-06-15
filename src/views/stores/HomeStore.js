@@ -58,6 +58,9 @@ HomeStore.getContactById = function(contactId) {
         success: function(contact) {
             contactDetails = contact;
             thisHomeStore.emitChange();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
         }
     });
 };

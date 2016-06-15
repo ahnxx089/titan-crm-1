@@ -21,7 +21,8 @@ var baseRequest = request.defaults({
 
 
 describe('Accounts API', function () {
-    xit('is inaccessible without a valid token', function (done) {
+
+    it('is inaccessible without a valid token', function (done) {
         request.get(apiBaseUrl, function (err, res, body) {
             // Check the HTTP status code of response
             expect(res.statusCode).toBe(403);
@@ -46,7 +47,7 @@ describe('Accounts API', function () {
         });
     });
 
-    it('addAccount adds an account and successfully returns the new entry\'s single partyId', function (done) {
+    xit('addAccount adds an account and successfully returns the new entry\'s single partyId', function (done) {
         var newAccount = {
             partyTypeId: 'ORGANIZATION',
             preferredCurrencyUomId: 'USD',

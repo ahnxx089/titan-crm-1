@@ -72,6 +72,7 @@ var LoginPage = React.createClass({
         LoginActions.authenticateUser(this.state.titanUsername, this.state.titanPassword);
     },
     render: function() {
+        /* jshint ignore:start */
         return (
             <div className="container">
                 <form className="form-signin" onSubmit={ this._onLoginFormSubmit }>
@@ -92,6 +93,7 @@ var LoginPage = React.createClass({
                 </form>
             </div>
         );
+        /* jshint ignore:end */
     }
 });
 

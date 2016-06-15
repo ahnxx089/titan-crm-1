@@ -14,7 +14,7 @@ var contactController = require('../src/controllers/contactController')(knex);
 var userController = require('../src/controllers/userController')(knex);
 var Contact = require('../src/entities/contact');
 
-xdescribe('Contact module ', function () {
+describe('Contact module ', function () {
 
     // Test contactController.addContact where a user has security permission to add a contact
     xit('contactController.addContact allows a user with permission to add a Contact', function (done) {
@@ -62,25 +62,23 @@ xdescribe('Contact module ', function () {
             countryGeoId: 'USA'
         };
 
-        var resultsForThisUser = contactController.addContact(contact, user);
+        contactController.addContact(contact, user)
+            .then(function (resultsForThisUser) {
+                // Check whether the return value is an array
+                expect(typeof resultsForThisUser).toBe('[object Array]');
+                // Call done to finish the async function
+                done();
+            });
 
-        // The controller returns a promise, therefore the expect() and done() must be put in a 
-        // .then() clause so that the promise can be fulfilled. Otherwise the adding of the Contact
-        // does not actually happen before the expect() is reached and the done() executes.
-        resultsForThisUser.then(function (contact) {
-            // Get types of returned objects
-            var typeofContact = Object.prototype.toString.call(contact);
-            // Check whether the return value is an array
-            expect(typeofContact).toBe('[object Array]');
-            // Call done to finish the async function
-            done();
-        });
+        
+
+
 
     });
 
     // Test contactController.getContactsByOwner where a user has security permission
     // (but does not actually own any contacts) -- TEST HAS PASSED
-    xit('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
+    it('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
 
         // user contactOwnerDEF has permission to own Contacts (but does not actually own any)
         var user = {
@@ -113,7 +111,7 @@ xdescribe('Contact module ', function () {
 
     // Test contactController.getContactsByOwner where user owns a contact, does it return the correct
     // contact?  Check the first one on the returned collection -- TEST PASSED
-    xit('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user', function (done) {
+    it('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user', function (done) {
 
         // user contactOwnerDEF has permission to own Contacts (and owns at least one)
         var user = {
@@ -133,15 +131,21 @@ xdescribe('Contact module ', function () {
         // when a user has Contact owner rights, the controller returns an object.
         var resultsForThisUser = contactController.getContactsByOwner(user);
 
-        resultsForThisUser.then(function (contacts) {
-            expect(contacts[0].partyId === 25).toBeTruthy();
+        // The controller returns a promise, therefore the expect() and done() must be put in a 
+        // .then() clause so that the promise can be fulfilled. Otherwise the adding of the Contact
+        // does not actually happen before the expect() is reached and the done() executes.
+        resultsForThisUser.then(function (contact) {
+            // Get types of returned objects
+            var typeofContact = Object.prototype.toString.call(contact);
+            // Check whether the return value is an array
+            expect(typeofContact).toBe('[object Array]');
             // Call done to finish the async function
             done();
         });
     });
 
     // Test contactController.getContactsByOwner where user lacks security permission -- TEST PASSED
-    xit('contactController.getContactsByOwner DENIES a user without permission to own Contact(s) to get the party_id of (any) Contacts', function (done) {
+    it('contactController.getContactsByOwner DENIES a user without permission to own Contact(s) to get the party_id of (any) Contacts', function (done) {
         // leadOwnerDEF has permission to own Leads, but not Contacts
         var user = {
             userId: 'leadOwnerDEF',
@@ -175,7 +179,7 @@ xdescribe('Contact module ', function () {
     });
 
     // Test of contactController.getContactsByIdentity where user has security permission -- TEST PASSED
-    xit('contactController.getContactsByIdentity allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
+    it('contactController.getContactsByIdentity allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
 
         // this search looks for any first name containing "w" AND last name containing "e"
         var query = {
@@ -217,7 +221,7 @@ xdescribe('Contact module ', function () {
 
 });
 
-xdescribe('updateContact', function () {
+describe('updateContact', function () {
     it('returns null if user lacks permission', function (done) {
         var contactId = 20;
         var user = {
@@ -272,7 +276,7 @@ xdescribe('updateContact', function () {
 
     });
 
-    xit('returns promise for valid input', function (done) {
+    it('returns promise for valid input', function (done) {
         var now = (new Date()).toISOString();
         var contactId = 20;
         var user = {
@@ -305,69 +309,5 @@ xdescribe('updateContact', function () {
 
     //need to test values changed in database
     //but can't get getContact to work
-
-});
-
-xdescribe('deleteContact', function () {
-    it('does not return null for valid input', function (done) {
-        var now = (new Date()).toISOString();
-        var contact = new Contact(
-            null,
-            'PERSON',
-            'USD',
-            'blah',
-            'PARTY_ENABLED',
-            'fullAdminABC',
-            now,
-            now,
-            'Mr.',
-            'Agent',
-            'Francis',
-            'Smith',
-            now,
-            'nondescript'
-        );
-        userController.getUserById('contactOwnerABC')
-            .then(function (user) {
-                contactController.addContact(contact, user)
-                    .then(function (contactId) {
-                        var output = contactController.deleteContact(contactId, contact, user);
-                        expect(output).not.toBeNull();
-                        done();
-                    });
-            });
-    });
-
-    it('returns promise for valid input', function (done) {
-        var now = (new Date()).toISOString();
-        var contactId = 20;
-        //wanted to use getContact, but couldn't get it to work
-        var contact = new Contact(
-            null,
-            'PERSON',
-            'USD',
-            'blah',
-            'PARTY_ENABLED',
-            'fullAdminABC',
-            now,
-            now,
-            'Mr.',
-            'Agent',
-            'Francis',
-            'Smith',
-            now,
-            'nondescript'
-        );
-
-        userController.getUserById('contactOwnerABC')
-            .then(function (user) {
-                contactController.addContact(contact, user)
-                    .then(function (contactId) {
-                        var output = contactController.deleteContact(contactId, contact, user);
-                        expect('then' in output).toBeTruthy();
-                        done();
-                    });
-            });
-    });
 
 });

@@ -9,8 +9,8 @@ var knex = require('../src/config/knexConfig')().getConfig();
 var partyController = require('../src/controllers/partyController')(knex);
 var Party = require('../src/entities/party');
 
-xdescribe('Party module', function () {
-    xit('getParties returns all parties in system as an array of Party objects', function (done) {
+describe('Party module', function () {
+    it('getParties returns all parties in system as an array of Party objects', function (done) {
            partyController.getParties().then(function(parties) {
                // Get types of returned objects
                var typeofParties = Object.prototype.toString.call(parties);
@@ -23,7 +23,7 @@ xdescribe('Party module', function () {
            });
     });
     
-    xit('getParty returns a valid party entity', function (done) {
+    it('getParty returns a valid party entity', function (done) {
            partyController.getPartyById(2).then(function(party) {
                expect(party instanceof Party).toBeTruthy();
                // Call done to finish the async function

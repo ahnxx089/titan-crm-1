@@ -68,6 +68,8 @@ var contactApi = function (knex) {
             } else {
                 resultsForThisUser.then(function (contacts) {
                     res.json(contacts);
+                    //console.log('typeof contacts = ', typeof contacts);
+                    //console.log('contacts = ', contacts);
                 });
             }
         }
@@ -122,10 +124,16 @@ var contactApi = function (knex) {
     // GET /api/contacts/:id
     var getContactById = function (req, res) {
         var contactId = req.params.id;
-        contactController.getContactById(contactId, req.user)
-            .then(function (contact) {
+        var resultsForThisUser = contactController.getContactById(contactId, req.user);
+        if (resultsForThisUser === null) {
+            res.json({
+                'message': 'You do not have permission to view contacts!'
+            });
+        } else {
+            resultsForThisUser.then(function (contact) {
                 res.json(contact);
             });
+        }
     };
 
     // PUT /api/contacts/:id
@@ -133,19 +141,15 @@ var contactApi = function (knex) {
         var contactId = req.params.id;
         var user = req.user;
         var contact = req.body;
-        contactController.updateContact(contactId, contact, user);
-            //.then(function (result) {
-            //    res.json({
-            //        updated: result
-            //    });
-            //});
-        
+
+        var results = contactController.updateContact(contactId, contact, user);
+
         if (results === null) {
             res.json({
                 message: 'You do not have permission to add contacts!'
             });
         } else if ('then' in results) {
-            resultsForThisUser.then(function (rows) {
+            results.then(function (rows) {
                 res.json({
                     rowsUpdated: rows
                 });
@@ -153,7 +157,7 @@ var contactApi = function (knex) {
         } else {
             res.json(results);
         }
-        
+
     };
 
     // DELETE /api/contacts/:id
