@@ -35,26 +35,27 @@ describe('Quote API', function () {
         });
     });
 
-    xit('updateQuote updates a Quote and returns an object', function (done) {
+    // Author:  Dinesh.  Ran, passed & commented out on June 15, please do not edit without consulting Dinesh first
+    xit('updateQuote updates a Quote and returns the number of rows updated', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NjA0NDIsImV4cCI6MTQ5NzE5NjQ0Mn0.QbGIm52_9Qlr4hxfJXRe3qEnUlpaYY98k5D534adRNw';
 
-        
-        
+        var quoteId = 5; // an existing row in table quote to be updated
+
         var quote = {
-            quoteTypeId: 'PRODUCT_QUOTE',
-            partyId: 91,
-            issueDate: '2016-06-04 10:49:22',
-            statusId: 'QUOTE_FINALIZED',
-            currencyUomId: 'USD',
-            salesChannelEnumId: 'IND_GEN_SERVICES',
-            validFromDate: '2016-06-04 10:49:22',
-            validThruDate: '2016-12-04 10:49:22',
-            quoteName: 'Saturday morning quote',
-            description: 'today\'s test',
-            contactPartyId: 91,
-            createdByPartyId: 100
+            "quoteTypeId": "PRODUCT_QUOTE",
+            "partyId": "70",
+            "issueDate": "2016-06-11 20:45:23",
+            "statusId": "QUOTE_FINALIZED",
+            "currencyUomId": "USD",
+            "salesChannelEnumId": "IND_AEROSPACE",
+            "validFromDate": "2016-06-11 20:45:23",
+            "validThruDate": "2016-09-11 20:45:23",
+            "quoteName": "test quote to add items to soon...",
+            "description": "UPDATED:  changed sales channel enum id",
+            "contactPartyId": "70",
+            "createdByPartyId": "100"
         };
 
         var baseRequest = request.defaults({
@@ -64,40 +65,24 @@ describe('Quote API', function () {
             },
             body: JSON.stringify(quote)
         });
-        
-        
-        var quoteId = 5; // an existing row in table quote to be updated
-
-
 
         baseRequest.put(apiBaseUrl + '/' + quoteId, function (err, res, body) {
-            /*
-            var typeofQuotes = Object.prototype.toString.call(JSON.parse(body));
-            // Check whether the return value is an object
-            expect(typeofQuotes).toBe('[object Object]');
-            // Call done to finish the async function
-            */
             var result = JSON.parse(res.body);
-            expect('quoteUpdated' in result).toBeTruthy();
+            expect(result.numRowsUpdated ===  1).toBeTruthy();
             done();
         });
     });
 
-    xit('addQuoteItem adds an Item to a Quote and returns an object', function (done) {
+    // Author:  Dinesh.  Ran, passed & commented out on June 15, please do not edit without consulting Dinesh first
+    // REMINDER TO SELF:  This is a POST method, so make sure not attempting to duplicate an existing row!
+    xit('addQuoteItem adds an Item to a Quote and returns the number of rows inserted', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
-
-        var baseRequest = request.defaults({
-            headers: {
-                'x-access-token': token
-            }
-        });
-        var quoteId = 46; // an existing row in table quote to be updated
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NjA0NDIsImV4cCI6MTQ5NzE5NjQ0Mn0.QbGIm52_9Qlr4hxfJXRe3qEnUlpaYY98k5D534adRNw';
 
         var quoteItem = {
-            'quoteId': '46',
-            'quoteItemSeqId': '3',
+            'quoteId': '5',
+            'quoteItemSeqId': '5',
             'productId': 'testProd2',
             'quantity': null,
             'selectedAmount': null,
@@ -108,107 +93,114 @@ describe('Quote API', function () {
             'description': 'customers love this product'
         };
 
-        baseRequest.get(apiBaseUrl +  '?item' , function (err, res, body) {
-            var typeofQuotes = Object.prototype.toString.call(JSON.parse(body));
-            // Check whether the return value is an object
-            expect(typeofQuotes).toBe('[object Object]');
-            // Call done to finish the async function
+        var baseRequest = request.defaults({
+            headers: {
+                'x-access-token': token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(quoteItem)
+        });
+
+        baseRequest.post(apiBaseUrl + '?item', function (err, res, body) {
+            var result = JSON.parse(res.body);
+            expect(result.numRowsInserted ===  1).toBeTruthy();
             done();
         });
     });
 
-    xit('updateQuoteItem updates an Item of a Quote and returns an object', function (done) {
+    // Author:  Dinesh.  Ran, passed & commented out on June 15, please do not edit without consulting Dinesh first
+    xit('updateQuoteItem updates an Item of a Quote and returns the number of rows updated', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
-
-        var baseRequest = request.defaults({
-            headers: {
-                'x-access-token': token
-            }
-        });
-        var quoteId = 5; // an existing row in table quote to be updated
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NjA0NDIsImV4cCI6MTQ5NzE5NjQ0Mn0.QbGIm52_9Qlr4hxfJXRe3qEnUlpaYY98k5D534adRNw';
 
         var quoteItem = {
-            'quoteId': '5',
-            'quoteItemSeqId': '2',
-            'productId': 'testProd2',
-            'quantity': null,
-            'selectedAmount': null,
-            'quoteUnitPrice': null,
-            'estimatedDeliveryDate': null,
-            'comments': 'testProd2 gets slower with age',
-            'isPromo': null,
-            'description': 'some customers do not mind the speed'
+            "quoteId": "5",
+            "quoteItemSeqId": "1",
+            "productId": "testProd1",
+            "quantity": null,
+            "selectedAmount": null,
+            "quoteUnitPrice": null,
+            "estimatedDeliveryDate": null,
+            "comments": "testProd1 instead",
+            "isPromo": null,
+            "description": "testProd1 is nice"
         };
 
-        baseRequest.get(apiBaseUrl + '?item' + quoteId, function (err, res, body) {
-            var typeofQuotes = Object.prototype.toString.call(JSON.parse(body));
-            // Check whether the return value is an object
-            expect(typeofQuotes).toBe('[object Object]');
-            // Call done to finish the async function
+        var baseRequest = request.defaults({
+            headers: {
+                'x-access-token': token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(quoteItem)
+        });
+
+        baseRequest.put(apiBaseUrl + '/?item', function (err, res, body) {
+            var result = JSON.parse(res.body);
+            expect(result.numRowsUpdated ===  1).toBeTruthy();
             done();
         });
     });
 
-    xit('addQuoteItemOption adds an Option of an Item of a Quote and returns an object', function (done) {
+    // Author:  Dinesh.  Ran, passed & commented out on June 15, please do not edit without consulting Dinesh first
+    // REMINDER TO SELF:  This is a POST method, so make sure not attempting to duplicate an existing row!
+    xit('addQuoteItemOption adds an Option to an Item of a Quote and returns the number of rows inserted', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
-
-        var baseRequest = request.defaults({
-            headers: {
-                'x-access-token': token
-            }
-        });
-        var quoteId = 5; // an existing row in table quote to be updated
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NjA0NDIsImV4cCI6MTQ5NzE5NjQ0Mn0.QbGIm52_9Qlr4hxfJXRe3qEnUlpaYY98k5D534adRNw';
 
         var quoteItemOption = {
             'quoteId': '5',
-            'quoteItemSeqId': '2',
-            'quoteItemOptionSeqId': '1',
+            'quoteItemSeqId': '1',
+            'quoteItemOptionSeqId': '3',
             'quantity': '40',
             'quoteUnitPrice': '12.95'
         };
 
-        baseRequest.get(apiBaseUrl + '?itemOption' + quoteId, function (err, res, body) {
-            var typeofQuotes = Object.prototype.toString.call(JSON.parse(body));
-            // Check whether the return value is an array
-            expect(typeofQuotes).toBe('[object Object]');
-            // Call done to finish the async function
+        var baseRequest = request.defaults({
+            headers: {
+                'x-access-token': token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(quoteItemOption)
+        });
+        
+        baseRequest.post(apiBaseUrl + '?itemOption', function (err, res, body) {
+            var result = JSON.parse(res.body);
+            expect(result.numRowsInserted ===  1).toBeTruthy();
             done();
         });
     });
 
-    xit('updateQuoteItemOption updates an Option of an Item of a Quote and returns an object', function (done) {
+    // Author:  Dinesh.  Ran, passed & commented out on June 15, please do not edit without consulting Dinesh first
+    xit('updateQuoteItemOption updates an Option of an Item of a Quote and returns the number of rows updated', function (done) {
 
         // token and baseRequest request declarations moved in here so can pick a specific user
-        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
-        var baseRequest = request.defaults({
-            headers: {
-                'x-access-token': token
-            }
-        });
-        var quoteId = 4; // an existing row in table quote to be updated
-
+        var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NjA0NDIsImV4cCI6MTQ5NzE5NjQ0Mn0.QbGIm52_9Qlr4hxfJXRe3qEnUlpaYY98k5D534adRNw';
+        
         var quoteItemOption = {
-            'quoteId': '4',
-            'quoteItemSeqId': '4',
-            'quoteItemOptionSeqId': '1',
+            'quoteId': '5',
+            'quoteItemSeqId': '1',
+            'quoteItemOptionSeqId': '3',
             'quantity': '23',
             'quoteUnitPrice': '11.47'
         };
 
-        baseRequest.get(apiBaseUrl + '?itemOption' + quoteId, function (err, res, body) {
-            var typeofQuotes = Object.prototype.toString.call(JSON.parse(body));
-            // Check whether the return value is an array
-            expect(typeofQuotes).toBe('[object Object]');
-            // Call done to finish the async function
+        var baseRequest = request.defaults({
+            headers: {
+                'x-access-token': token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(quoteItemOption)
+        });
+
+        baseRequest.put(apiBaseUrl + '?itemOption', function (err, res, body) {
+            var result = JSON.parse(res.body);
+            expect(result.numRowsUpdated ===  1).toBeTruthy();
             done();
         });
     });
-    
-    
+
     it('quoteApi.getQuoteById returns a quote', function (done) {
         var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
         var baseRequest = request.defaults({
@@ -217,12 +209,12 @@ describe('Quote API', function () {
             }
         });
         var quoteId = 2;
-        
+
         baseRequest.get(apiBaseUrl + '/' + quoteId, function (err, res, body) {
             var result = JSON.parse(res.body);
-            
+
             expect('quoteId' in result).toBeTruthy();
-            
+
             done();
         });
     });
@@ -238,7 +230,7 @@ describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quote
             'x-access-token': token
         }
     });
-    
+
     // PLEASE COMMENT THIS TEST OUT when doing other normal tests except this one
     xit('should throw errors when nothing is specified, due to route to getQuotesByOwner which has bugs', function (done) {
         baseRequest.get(apiBaseUrl + '?', function (err, res, body) {
@@ -246,7 +238,7 @@ describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quote
             done();
         });
     }, 8000);
-    
+
     xit('should return only one quote by specifying the quoteId', function (done) {
             var quoteId = 2;
             baseRequest.get(apiBaseUrl + '?quoteId=' + quoteId, function (err, res, body) {
@@ -262,10 +254,10 @@ describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quote
                 done();
             });
         }
-       // this number is to change jasmine.DEFAULT_TIMEOUT_INTERVAL, see http://stackoverflow.com/questions/9867601/how-do-i-change-the-timeout-on-a-jasmine-node-async-spec
-       ,8000
+        // this number is to change jasmine.DEFAULT_TIMEOUT_INTERVAL, see http://stackoverflow.com/questions/9867601/how-do-i-change-the-timeout-on-a-jasmine-node-async-spec
+        , 8000
     );
-    
+
     xit('should return some quotes by specifying the quoteName', function (done) {
         var quoteName = 'ano';
         baseRequest.get(apiBaseUrl + '?quoteName=' + quoteName, function (err, res, body) {
@@ -278,8 +270,8 @@ describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quote
             done();
         });
     }, 10000);
-    
-    
+
+
     xit('should return some by specifying the status', function (done) {
         var status = 'quote_created';
         baseRequest.get(apiBaseUrl + '?status=' + status, function (err, res, body) {
@@ -291,7 +283,7 @@ describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quote
             done();
         });
     });
-    
+
     xit('should return some by specifying the account', function (done) {
         var account = 7;
         baseRequest.get(apiBaseUrl + '?account=' + account, function (err, res, body) {
@@ -303,7 +295,7 @@ describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quote
             done();
         });
     });
-    
+
     xit('should return some by specifying the salesChannel', function (done) {
         var salesChannel = 'IND_retail';
         baseRequest.get(apiBaseUrl + '?salesChannel=' + salesChannel, function (err, res, body) {
@@ -315,9 +307,9 @@ describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quote
             done();
         });
     });
-    
-    
-    
+
+
+
     xit('should return some by EXCLUDING nullable columns', function (done) {
         var account = 7;
         var salesChannel = 'IND_retail';
@@ -331,7 +323,7 @@ describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quote
             done();
         });
     }, 7000);
-    
+
     xit('should return some by specifying only nullable string columns', function (done) {
         var status = 'quote_created';
         var quoteName = 'a%20quot';
@@ -345,14 +337,14 @@ describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quote
             done();
         });
     });
-    
+
     xit('should return ALL quotes by specifying only and any nullable columns TO NULL', function (done) {
         // should not use var status = null OR var status = undefined, etc here. 
         var status = '';
         var quoteName = '';
         var account = '';
-        var extUrl = apiBaseUrl + '?status=' + status + '&quoteName=' + quoteName + '&account=' + account ;
-//        console.log(extUrl);
+        var extUrl = apiBaseUrl + '?status=' + status + '&quoteName=' + quoteName + '&account=' + account;
+        //        console.log(extUrl);
         baseRequest.get(extUrl, function (err, res, body) {
             var result = JSON.parse(body);
             var typeofQuotes = Object.prototype.toString.call(result);
@@ -362,8 +354,8 @@ describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quote
             done();
         });
     });
-    
-    
+
+
     xit('should return some by specifying nullable columns and other columns (combinations)', function (done) {
         var status = 'quote_created';
         var quoteName = 'qu';
@@ -378,6 +370,5 @@ describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quote
             done();
         });
     });
-    
-});
 
+});
