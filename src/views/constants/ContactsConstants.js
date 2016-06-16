@@ -6,7 +6,8 @@
 /////////////////////////////////////////////////
 
 var ContactsConstants = {
-    GET_MY_CONTACTS: 'GET_MY_CONTACTS'
+    GET_MY_CONTACTS: 'GET_MY_CONTACTS',
+    ADD_CONTACT: 'ADD_CONTACT'
 };
 
 module.exports = ContactsConstants;
