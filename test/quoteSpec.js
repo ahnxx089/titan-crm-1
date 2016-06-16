@@ -14,7 +14,7 @@ var quoteController = require('../src/controllers/quoteController')(knex);
 var userController = require('../src/controllers/userController')(knex);
 var Quote = require('../src/entities/quote');
 
-describe('Quote module ', function () {
+describe('Quote module, ', function () {
 
     // Author:  Bill (Note: Dinesh has done no editing of this test, and is leaving uncommented since it runs)
     it('quoteController.updateQuote allows a user with permission to update a Quote', function (done) {
@@ -438,5 +438,19 @@ describe('Quote module ', function () {
                 done();
             });
     });
+    
+    
+    it('quoteController.getQuotesByAdvanced returns valid quotes', function (done) {
+        var propertyString = { quoteName: 'ano', salesChannel: 'ind_retail' };
+        var user = {
+            securityPermissions: ['CRMSFA_QUOTE_CREATE']
+        };
+        quoteController.getQuotesByAdvanced(propertyString, user)
+            .then(function (quotes) {
+                expect(quotes[0] instanceof Quote).toBeTruthy();
+                done();
+            });
+    });
+    
 
 });

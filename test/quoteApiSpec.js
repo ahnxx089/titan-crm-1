@@ -221,6 +221,8 @@ describe('Quote API', function () {
 
 });
 
+
+// Lucas wrote this
 describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quotes in an array, ', function () {
     // token and baseRequest request declarations moved in here so can pick a specific user
     // THIS IS AN EVERLASTING TOKEN FOR mrQuoteUnquote

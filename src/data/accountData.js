@@ -273,22 +273,29 @@ var accountData = function (knex) {
         //TELECOM_NUMBER is the value of the contactmechtypeId where we want to join table entries
         //Is there really a telecom_number table in our titan_crm database? contactData mentions that there 
         //is, but I haven't seen one anywhere...
-        return knex.select('contact_mech.contact_mech_id','telecom_number.contact_mech_id')
+        
+        return knex.select('party_supplemental_data.party_id', 'parent_party_id', 'company_name', 'party_supplemental_data.annual_revenue',
+            'currency_uom_id', 'party_supplemental_data.num_employees', 'industry_enum_id', 'ownership_enum_id', 'party_supplemental_data.ticker_symbol',
+            'important_note', 'primary_postal_address_id', 'primary_telecom_number_id', 'primary_email_id',
+            'party_supplemental_data.created_date', 'party_supplemental_data.updated_date', 'organization.logo_image_url')
             .from('party_supplemental_data')
-            .innerJoin('contact_mech', 'party_supplemental_data.party_id', 'contact_mech.contact_mech_id' )
-            .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id' )
-            .where('telecom_number.contact_number', phoneNumber);
+            .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
+            .innerJoin('party_relationship', 'party_supplemental_data.party_id', 'party_relationship.party_id_from')
+            .where('primary_telecom_number_id', phoneNumber);
     };
     
      var getAccountsByIdentity = function (accountId, accountName) {
         var accountNameLike = '%' + accountName + '%';
-        var acccountIdLike = '%' + accountId + '%';
-        return knex.select('organization.party_id', 'organization.organization_name')
-            .from('party_supplemental_data')
-            .innerJoin('organization', 'party_supplemental_data.party_id','organization.party_id')
-            .innerJoin('party_role', 'party_supplemental_data.party_id', 'party_role.party_id')
-            .where('party_supplemental_data.party_id', accountId)
-            .orWhere('organization_name', 'like', accountNameLike) ;      
+        return knex.select('party.party_id', 'parent_party_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'organization.organization_name','party_supplemental_data.company_name', 'party_supplemental_data.annual_revenue',
+        'party_supplemental_data.currency_uom_id', 'party_supplemental_data.num_employees', 'party_supplemental_data.industry_enum_id', 'party_supplemental_data.ownership_enum_id', 'party_supplemental_data.ticker_symbol',
+        'party_supplemental_data.important_note', 'party_supplemental_data.primary_postal_address_id', 'party_supplemental_data.primary_telecom_number_id', 'party_supplemental_data.primary_email_id',
+        'party.created_date', 'party.updated_date', 'organization.logo_image_url')
+            .from('party')
+            .innerJoin('party_supplemental_data', 'party.party_id', 'party_supplemental_data.party_id')
+            .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
+            .innerJoin('party_role', 'party_supplemental_data.party_id',  'party_role.party_id')
+            .where('party.party_id', accountId)
+            .andWhere('organization_name', 'like', accountNameLike) ;      
     };
 
 
