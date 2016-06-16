@@ -7,7 +7,7 @@
 
 var EventEmitter = require('events').EventEmitter;
 var TitanDispatcher = require('../dispatcher/TitanDispatcher');
-//var LeadsConstants = require('../constants/LeadsConstants'); // not
+var LeadsConstants = require('../constants/LeadsConstants');
 var $ = require('jquery');
 var Cookies = require('js-cookie');
 
@@ -58,8 +58,8 @@ LeadsStore.getLeadsOwned = function() {
 TitanDispatcher.register(function(action) {
 
     switch(action.actionType) {
-//        case LeadsConstants.GET_MY_LEADS: {
-        case 'GET_MY_LEADS': {
+        case LeadsConstants.GET_MY_LEADS: {
+//        case 'GET_MY_LEADS': {
             LeadsStore.getLeadsByOwner();
             break;
         }

@@ -6,17 +6,18 @@
 /////////////////////////////////////////////////
 
 var TitanDispatcher = require('../dispatcher/TitanDispatcher');
-//var LeadsConstants = require('../constants/LeadsConstants'); // not
+var LeadsConstants = require('../constants/LeadsConstants');
 
 var LeadsActions = {
     
     getLeadsByOwner: function() {
         TitanDispatcher.dispatch({
-//            actionType: LeadsConstants.GET_MY_LEADS
-            actionType: 'GET_MY_LEADS'
+            actionType: LeadsConstants.GET_MY_LEADS
+//            actionType: 'GET_MY_LEADS'
 
         });
     }
+    //, addLead: function () {...}
     
 };
 

@@ -43,7 +43,8 @@ var Header = React.createClass({
                                 <ul className="dropdown-menu">
                                     <li><a href="http://www.google.com">My Leads old</a></li>
                                     <li><Link to="/cp/leads/my-leads" activeClassName="active">My Leads</Link></li>
-                                    <li><a href="#">Create Lead</a></li>
+                                    <li><Link to="/cp/leads/create-lead" activeClassName="active">Create Lead</Link></li>
+                                    <li><a href="www.bing.com">Create Lead old</a></li>
                                     <li><a href="#">Find Leads</a></li>
                                 </ul>
                             </li>

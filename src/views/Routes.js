@@ -42,13 +42,14 @@ var routes = (
             </Route>
             {/* Leads module pages */}
             <Route path="leads">
-                <Route path="my-leads" component={require('./components/leads/my-leads/MyLeadsPage') } />
+                <Route path="my-leads" component={ require('./components/leads/my-leads/MyLeadsPage') } />
+                <Route path="create-lead" component={ require('./components/leads/create-lead/CreateLeadPage') } />
             </Route>
             
         </Route>
         <Route path="login" component={require('./components/login/LoginPage') } />
         {/*<NotFoundRoute handler={require('./components/notFoundPage')} />*/}
-        {/*<Redirect from="awthurs" to="authors" />
+        {/*<Redirect from="authurs" to="authors" />
     <Redirect from="about/*" to="about" />*/}
     </Route>
     /* jshint ignore:end */
