@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////
 // Get contact form component.
-// Currently used only on home page.
+// Currently used ONLY on home page.
 // But is 100% reusable.
 //
 // @file:   GetContactForm.js

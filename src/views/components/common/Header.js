@@ -37,10 +37,12 @@ var Header = React.createClass({
                     <div id="navbar" className="navbar-collapse collapse">
                         <ul className="nav navbar-nav">
                             <li><Link to="/cp/home" activeClassName="active">Home</Link></li>
+            
                             <li className="dropdown">
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Leads <span className="caret"></span></a>
                                 <ul className="dropdown-menu">
-                                    <li><a href="#">My Leads</a></li>
+                                    <li><a href="http://www.google.com">My Leads old</a></li>
+                                    <li><Link to="/cp/leads/my-leads" activeClassName="active">My Leads</Link></li>
                                     <li><a href="#">Create Lead</a></li>
                                     <li><a href="#">Find Leads</a></li>
                                 </ul>

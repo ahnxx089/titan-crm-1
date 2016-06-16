@@ -107,12 +107,13 @@ var leadData = function (knex) {
      * Update three contact info fields in party_supplemental_data table, upon the creation of a lead 
      * Link this column to party_contact_mech.contact_mech_id
      * @param {Number} partyid - Unique id of the party (grandparent of lead)
-     * @param {Object} partyid - Unique id of the contact mechanism of the lead
-     * @param {String} partyid - Purpose type id of a contact mechanism
+     * @param {Object} contactMechId - Unique id of the contact mechanism of the lead
+     * @param {String} purposeTypeId - Purpose type id of a contact mechanism
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updatePSD = function (partyId, contactMechId, purposeTypeId) {
-        if(purposeTypeId == 'PRIMARY_EMAIL') {
+        // double equal == were changed to triple equals ===, at night, June 15 2016
+        if(purposeTypeId === 'PRIMARY_EMAIL') {
             return knex('party_supplemental_data')
                 .where({
                     party_id: partyId
@@ -121,7 +122,7 @@ var leadData = function (knex) {
                     primary_email_id: contactMechId
                 });
         }
-        else if(purposeTypeId == 'PRIMARY_LOCATION') {
+        else if(purposeTypeId === 'PRIMARY_LOCATION') {
             return knex('party_supplemental_data')
                 .where({
                     party_id: partyId
@@ -130,7 +131,7 @@ var leadData = function (knex) {
                     primary_postal_address_id: contactMechId
                 });
         }
-        else if(purposeTypeId == 'PRIMARY_PHONE') {
+        else if(purposeTypeId === 'PRIMARY_PHONE') {
             return knex('party_supplemental_data')
                 .where({
                     party_id: partyId

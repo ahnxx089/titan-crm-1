@@ -222,9 +222,8 @@ describe('Quote API', function () {
 });
 
 
-// Lucas wrote this
+// Author: Xiaosiqi
 describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quotes in an array, ', function () {
-    // token and baseRequest request declarations moved in here so can pick a specific user
     // THIS IS AN EVERLASTING TOKEN FOR mrQuoteUnquote
     var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjYwMTQxNTAsImV4cCI6MTQ5NzU1MDE1MH0.PSuvymm14z07yO79Ksik776Vv3jYiVUZmDfIC5mh-4g';
     var baseRequest = request.defaults({

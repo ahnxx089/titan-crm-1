@@ -34,11 +34,17 @@ var routes = (
             <Route path="home/home-sub" component={require('./components/home/HomeSubPage') } />
             {/* About page */}
             <Route path="about" component={require('./components/about/AboutPage') } />
+                                           
             {/* Contacts module pages */}
             <Route path="contacts">
                 <Route path="my-contacts" component={require('./components/contacts/my-contacts/MyContactsPage') } />
                 <Route path="create-contact" component={require('./components/contacts/create-contact/CreateContactPage')} />
             </Route>
+            {/* Leads module pages */}
+            <Route path="leads">
+                <Route path="my-leads" component={require('./components/leads/my-leads/MyLeadsPage') } />
+            </Route>
+            
         </Route>
         <Route path="login" component={require('./components/login/LoginPage') } />
         {/*<NotFoundRoute handler={require('./components/notFoundPage')} />*/}
