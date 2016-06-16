@@ -140,6 +140,15 @@ var router = function (knex) {
     apiRouter.route('/quotes/:id')
         .get(quoteApi.getQuoteById)
         .put(quoteApi.updateQuote);
+
+
+    // COMMON DATA
+    // ==========================================
+    //    
+    var commonDataApi = require('../api/commonDataApi')(knex); 
+    
+    apiRouter.route('/common-data')
+        .get(commonDataApi.getCommonData);
     
     return apiRouter;
 };

@@ -6,9 +6,20 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
+var withRouter = require('react-router').withRouter;
+var BrowserHistory = require('react-router').browserHistory;
 var Link = require('react-router').Link;
+var Cookies = require('js-cookie');
 
 var Header = React.createClass({
+    _Logout: function(event) {
+        event.preventDefault();
+        // Delete the auth cookies
+        Cookies.remove('titanAuthToken');
+        Cookies.remove('titanAuthUser');
+        // Redirect to Login page
+        this.props.router.replace('/login');
+    },
     render: function () {
         /* jshint ignore:start */
         return (
@@ -72,11 +83,15 @@ var Header = React.createClass({
                         </ul>
                         
                         <ul className="nav navbar-nav navbar-right">
-                            <li>
-                                <a href="#">
+                            <li className="dropdown">
+                                <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     <i className="fa fa-user" aria-hidden="true"></i>&nbsp;
-                                    { this.props.username }
+                                    { this.props.username }&nbsp;
+                                    <span className="caret"></span>
                                 </a>
+                                <ul className="dropdown-menu">
+                                    <li><a onClick={ this._Logout } href="#">Logout</a></li>
+                                </ul>
                             </li>
                         </ul>
                     </div>
@@ -87,4 +102,4 @@ var Header = React.createClass({
     }
 });
 
-module.exports = Header;
+module.exports = withRouter(Header);

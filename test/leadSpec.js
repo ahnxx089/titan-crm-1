@@ -39,7 +39,7 @@ describe('Lead module', function () {
     
     // Author: Xiaosiqi
     // Test leadController.addLead where a user has security permission to add a lead
-    it('leadController.addLead allows a user with permission to add a Lead', function (done) {
+    xit('leadController.addLead allows a user with permission to add a Lead', function (done) {
 
         // user leadOwnerABC has permission to create leads
         var user = {
