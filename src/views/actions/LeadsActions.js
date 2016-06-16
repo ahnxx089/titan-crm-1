@@ -6,7 +6,7 @@
 /////////////////////////////////////////////////
 
 var TitanDispatcher = require('../dispatcher/TitanDispatcher');
-//var LeadsConstants = require('../constants/LeadsConstants'); // not
+var LeadsConstants = require('../constants/LeadsConstants');
 
 var LeadsActions = {
     
@@ -17,6 +17,7 @@ var LeadsActions = {
 
         });
     }
+    //, addLead: function () {...}
     
 };
 

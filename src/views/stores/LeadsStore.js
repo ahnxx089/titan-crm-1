@@ -7,7 +7,7 @@
 
 var EventEmitter = require('events').EventEmitter;
 var TitanDispatcher = require('../dispatcher/TitanDispatcher');
-//var LeadsConstants = require('../constants/LeadsConstants'); // not
+var LeadsConstants = require('../constants/LeadsConstants');
 var $ = require('jquery');
 var Cookies = require('js-cookie');
 

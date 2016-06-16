@@ -43,6 +43,7 @@ var routes = (
             {/* Leads module pages */}
             <Route path="leads">
                 <Route path="my-leads" component={ require('./components/leads/my-leads/MyLeadsPage') } />
+                <Route path="create-lead" component={ require('./components/leads/create-lead/CreateLeadPage') } />
             </Route>
             
         </Route>
