@@ -20,6 +20,7 @@ describe('addContactMech', function () {
         var mech = {};
 
         var result = contactMechController.addContactMech(mech);
+
         var typeOfResult = Object.prototype.toString.call(result);
         expect(typeOfResult).toBe('[object Array]');
         done();
@@ -34,6 +35,7 @@ describe('addContactMech', function () {
         };
 
         var result = contactMechController.addContactMech(mech);
+
         expect('then' in result).toBeTruthy();
         done();
     });
@@ -47,6 +49,7 @@ describe('addContactMech', function () {
         };
 
         var result = contactMechController.addContactMech(mech);
+
         expect('then' in result).toBeTruthy();
         done();
     });
@@ -60,6 +63,7 @@ describe('addContactMech', function () {
         };
 
         var result = contactMechController.addContactMech(mech);
+
         expect('then' in result).toBeTruthy();
         done();
     });
@@ -72,50 +76,16 @@ describe('addContactMech', function () {
             infoString: 'bob@gmail.com'
         };
 
-        
-        
-        
-        try {
-            var result = contactMechController.addContactMech(mech);
-
-            if (typeof result !== 'object') {
-                fail('returned ' + (typeof result) + ' instead of promise');
-                done();
-            } else if (result === null) {
-                fail('returned null instead of promise');
-                done();
-            } else if (Array.isArray(result)) {
-                fail('returned array instead of promise');
-                done();
-            } else if (!('then' in result)) {
-                fail('returned non-promise object');
-                done();
-            } else {
-                result
-                    .then(function (fulfillment) {
-                        expect(typeof fulfillment).toBe('number');
-                        expect(fulfillment).toBeGreaterThan(0);
-                        done();
-                    });
-            }
-        } catch (err) {
-            fail(err);
-            done();
-        }
-        
-        
-        
-        
-        
-        
-        
-        /*
         contactMechController.addContactMech(mech)
             .then(function (fulfillment) {
                 expect(typeof fulfillment).toBe('number');
                 done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
             });
-        */
+
     });
 
     it('has number as fulfillment for phone number', function (done) {
@@ -129,6 +99,10 @@ describe('addContactMech', function () {
         contactMechController.addContactMech(mech)
             .then(function (fulfillment) {
                 expect(typeof fulfillment).toBe('number');
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
                 done();
             });
     });
@@ -145,6 +119,10 @@ describe('addContactMech', function () {
             .then(function (fulfillment) {
                 expect(typeof fulfillment).toBe('number');
                 done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
             });
     });
 });
@@ -157,6 +135,7 @@ describe('getContactMechById', function () {
     it('returns promise', function (done) {
         var mechId = 1;
         var result = contactMechController.getContactMechById(mechId);
+
         expect('then' in result).toBeTruthy();
         done();
     });
@@ -166,6 +145,10 @@ describe('getContactMechById', function () {
         var result = contactMechController.getContactMechById(mechId)
             .then(function (fulfillment) {
                 expect(fulfillment instanceof ContactMech).toBeTruthy();
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
                 done();
             });
     });
@@ -177,6 +160,7 @@ describe('updateContactMech', function () {
         var mech = {};
 
         var result = contactMechController.updateContactMech(id, mech);
+
         expect(result).toBeNull();
         done();
     });
@@ -191,6 +175,7 @@ describe('updateContactMech', function () {
         };
 
         var result = contactMechController.updateContactMech(id, mech);
+
         expect('then' in result).toBeTruthy();
         done();
     });
@@ -208,6 +193,10 @@ describe('updateContactMech', function () {
         contactMechController.updateContactMech(id, mech)
             .then(function (fulfillment) {
                 expect(typeof fulfillment).toBe('number');
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
                 done();
             });
     });

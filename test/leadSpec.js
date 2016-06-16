@@ -13,30 +13,40 @@ var Lead = require('../src/entities/lead');
 
 
 describe('Lead module', function () {
-    
+
     // this is same as the second 
-    xit('getLeads returns all leads in system as an array of Lead objects', function (done) {
-           leadController.getLeadById(120).then(function(leads) {
-               // Get types of returned objects
-               var typeofLeads = Object.prototype.toString.call(leads);
-               // Check whether the return value is an array
-               expect(typeofLeads).toBe('[object Object]');
-               // Check whether the first element in returned array is of type Object
-               expect(leads instanceof Lead).toBeTruthy();
-               // Call done to finish the async function
-               done();
-           });
+    it('getLeads returns all leads in system as an array of Lead objects', function (done) {
+        leadController.getLeadById(120)
+            .then(function (leads) {
+                // Get types of returned objects
+                var typeofLeads = Object.prototype.toString.call(leads);
+                // Check whether the return value is an array
+                expect(typeofLeads).toBe('[object Object]');
+                // Check whether the first element in returned array is of type Object
+                expect(leads instanceof Lead).toBeTruthy();
+                // Call done to finish the async function
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
-    
-    
-    xit('getLead returns a valid lead entity', function (done) {
-           leadController.getLeadById(2).then(function(lead) {
-               expect(lead instanceof Lead).toBeTruthy();
-               // Call done to finish the async function
-               done();
-           });
+
+
+    it('getLead returns a valid lead entity', function (done) {
+        leadController.getLeadById(2)
+            .then(function (lead) {
+                expect(lead instanceof Lead).toBeTruthy();
+                // Call done to finish the async function
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
-    
+
     // Test leadController.addLead where a user has security permission to add a lead
     it('leadController.addLead allows a user with permission to add a Lead', function (done) {
 
@@ -71,15 +81,15 @@ describe('Lead module', function () {
             "annualRevenue": 1000000,
             "numEmployees": 1000,
 
-            "industryEnumId": "IND_MEDIA", 
+            "industryEnumId": "IND_MEDIA",
             "ownershipEnumId": "OWN_CCORP",
-            "tickerSymbol": "this is a ticker", 
+            "tickerSymbol": "this is a ticker",
             "importantNote": "this is an important notes",
 
-            "roleTypeId": "this's lead anyway", 
+            "roleTypeId": "this's lead anyway",
 
-            "emailAddress" : "marilyn.monroe<3president@yahoo.com",
-            "webAddress" : "marilyn.kennedy.com"
+            "emailAddress": "marilyn.monroe<3president@yahoo.com",
+            "webAddress": "marilyn.kennedy.com"
         };
 
         var resultsForThisUser = leadController.addLead(lead, user);
@@ -87,17 +97,22 @@ describe('Lead module', function () {
         // The controller returns a promise, therefore the expect() and done() must be put in a 
         // .then() clause so that the promise can be fulfilled. Otherwise the adding of the Lead
         // does not actually happen before the expect() is reached and the done() executes.
-        resultsForThisUser.then(function (lead) {
-            // Get types of returned objects
-            var typeofLead = Object.prototype.toString.call(lead);
-            // Check whether the return value is an array
-            expect(typeofLead).toBe('[object Number]');
-            // Call done to finish the async function
-            done();
-        });
+        resultsForThisUser
+            .then(function (lead) {
+                // Get types of returned objects
+                var typeofLead = Object.prototype.toString.call(lead);
+                // Check whether the return value is an array
+                expect(typeofLead).toBe('[object Number]');
+                // Call done to finish the async function
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
-    
-    
+
+
     // Test leadController.getLeadsByOwner where a user has security permission
     // (but does not actually own any leads) -- TEST HAS not PASSED
     it('leadController.getLeadsByOwner allows a user with permission to own Lead(s) to get the party_id of Lead owned by that user (if any)', function (done) {
@@ -120,13 +135,18 @@ describe('Lead module', function () {
         // permission to create (and therefore own) leads is what is being tested here.
         var resultsForThisUser = leadController.getLeadsByOwner(user);
 
-        resultsForThisUser.then(function (leads) {
-            var typeOfLeads = Object.prototype.toString.call(leads);
-            // Check whether the return value is an array
-            expect(typeOfLeads).toBe('[object Array]');
-            // Call done to finish the async function
-            done();
-        });
+        resultsForThisUser
+            .then(function (leads) {
+                var typeOfLeads = Object.prototype.toString.call(leads);
+                // Check whether the return value is an array
+                expect(typeOfLeads).toBe('[object Array]');
+                // Call done to finish the async function
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
-    
+
 });

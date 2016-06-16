@@ -17,7 +17,7 @@ var Contact = require('../src/entities/contact');
 describe('Contact module ', function () {
 
     // Test contactController.addContact where a user has security permission to add a contact
-    xit('contactController.addContact allows a user with permission to add a Contact', function (done) {
+    it('contactController.addContact allows a user with permission to add a Contact', function (done) {
 
         // user contactOwnerDEF has permission to create Contacts
         var user = {
@@ -68,12 +68,11 @@ describe('Contact module ', function () {
                 expect(typeof resultsForThisUser).toBe('[object Array]');
                 // Call done to finish the async function
                 done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
             });
-
-        
-
-
-
     });
 
     // Test contactController.getContactsByOwner where a user has security permission
@@ -100,13 +99,18 @@ describe('Contact module ', function () {
         // permission to create (and therefore own) contacts is what is being tested here.
         var resultsForThisUser = contactController.getContactsByOwner(user);
 
-        resultsForThisUser.then(function (contacts) {
-            var typeOfContacts = Object.prototype.toString.call(contacts);
-            // Check whether the return value is an array
-            expect(typeOfContacts).toBe('[object Array]');
-            // Call done to finish the async function
-            done();
-        });
+        resultsForThisUser
+            .then(function (contacts) {
+                var typeOfContacts = Object.prototype.toString.call(contacts);
+                // Check whether the return value is an array
+                expect(typeOfContacts).toBe('[object Array]');
+                // Call done to finish the async function
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
 
     // Test contactController.getContactsByOwner where user owns a contact, does it return the correct
@@ -134,14 +138,19 @@ describe('Contact module ', function () {
         // The controller returns a promise, therefore the expect() and done() must be put in a 
         // .then() clause so that the promise can be fulfilled. Otherwise the adding of the Contact
         // does not actually happen before the expect() is reached and the done() executes.
-        resultsForThisUser.then(function (contact) {
-            // Get types of returned objects
-            var typeofContact = Object.prototype.toString.call(contact);
-            // Check whether the return value is an array
-            expect(typeofContact).toBe('[object Array]');
-            // Call done to finish the async function
-            done();
-        });
+        resultsForThisUser
+            .then(function (contact) {
+                // Get types of returned objects
+                var typeofContact = Object.prototype.toString.call(contact);
+                // Check whether the return value is an array
+                expect(typeofContact).toBe('[object Array]');
+                // Call done to finish the async function
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
 
     // Test contactController.getContactsByOwner where user lacks security permission -- TEST PASSED
@@ -201,22 +210,32 @@ describe('Contact module ', function () {
         };
 
         var resultsForUser = contactController.getContactsByIdentity(query, user);
-        resultsForUser.then(function (contacts) {
-            var typeOfContacts = Object.prototype.toString.call(contacts);
-            // Check whether the return value is an array
-            expect(typeOfContacts).toBe('[object Array]');
-            // Call done to finish the async function
-            done();
-        });
+        resultsForUser
+            .then(function (contacts) {
+                var typeOfContacts = Object.prototype.toString.call(contacts);
+                // Check whether the return value is an array
+                expect(typeOfContacts).toBe('[object Array]');
+                // Call done to finish the async function
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
 
-    xit('getContactById returns a valid contact entity', function (done) {
-        contactController.getContactById(56).then(function (contact) {
-            expect(contact).toBeTruthy();
-            expect(contact instanceof Contact).toBeTruthy();
-            // Call done to finish the async function
-            done();
-        });
+    it('getContactById returns a valid contact entity', function (done) {
+        contactController.getContactById(56)
+            .then(function (contact) {
+                expect(contact).toBeTruthy();
+                expect(contact instanceof Contact).toBeTruthy();
+                // Call done to finish the async function
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
 
 });

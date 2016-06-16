@@ -17,7 +17,7 @@ var Quote = require('../src/entities/quote');
 describe('Quote module ', function () {
 
     // Test quoteController.updateQuote where user LACKS security permission -- TEST PASSED
-    xit('quoteController.updateQuote DENIES a user without permission to own Quotes(s) to update a Quote', function (done) {
+    it('quoteController.updateQuote DENIES a user without permission to own Quotes(s) to update a Quote', function (done) {
 
         // contactOwnerABC does not have permission to create a Quote (and thus neither to update)
         var user = {
@@ -51,14 +51,11 @@ describe('Quote module ', function () {
         };
 
         var resultsForThisUser = quoteController.updateQuote(quoteId, quote, user);
-
-
         expect(resultsForThisUser).toBeNull();
         done();
-
     });
 
-    xit('quoteController.updateQuote allows a user with permission to update a Quote', function (done) {
+    it('quoteController.updateQuote allows a user with permission to update a Quote', function (done) {
 
         var user = {
             userId: 'mrQuoteUnquote',
@@ -90,42 +87,20 @@ describe('Quote module ', function () {
             'createdByPartyId': '100'
         };
 
-
-
-        try {
-            var result = quoteController.updateQuote(quoteId, quote, user);
-
-            if (typeof result !== 'object') {
-                fail('returned ' + (typeof result) + ' instead of promise');
+        quoteController.updateQuote(quoteId, quote, user)
+            .then(function (fulfillment) {
+                expect(typeof fulfillment).toBe('number');
+                expect(fulfillment).toBeGreaterThan(0);
                 done();
-            } else if (result === null) {
-                fail('returned null instead of promise');
+            })
+            .then(null, function (err) {
+                fail(err);
                 done();
-            } else if (Array.isArray(result)) {
-                fail('returned array instead of promise');
-                done();
-            } else if (!('then' in result)) {
-                fail('returned non-promise object');
-                done();
-            } else {
-                result
-                    .then(function (fulfillment) {
-                        expect(typeof fulfillment).toBe('number');
-                        expect(fulfillment).toBeGreaterThan(0);
-                        done();
-                    });
-            }
-        } catch (err) {
-            fail(err);
-            done();
-        }
-
-
-
+            });
     });
 
     // Test quoteController.addQuoteItem where user LACKS security permission -- TEST PASSED
-    xit('quoteController.addQuoteItem DENIES a user without permission to own Quotes(s) to add an Item to a Quote', function (done) {
+    it('quoteController.addQuoteItem DENIES a user without permission to own Quotes(s) to add an Item to a Quote', function (done) {
 
         // contactOwnerABC does not have permission to create a Quote (and thus neither to update)
         var user = {
@@ -162,7 +137,7 @@ describe('Quote module ', function () {
         done();
     });
 
-    xit('quoteController.addQuoteItem allows a user with permission to add an Item to a Quote', function (done) {
+    it('quoteController.addQuoteItem allows a user with permission to add an Item to a Quote', function (done) {
         var user = {
             userId: 'contactOwnerABC',
             securityPermissions: ['CRMSFA_QUOTE_CREATE']
@@ -213,10 +188,15 @@ describe('Quote module ', function () {
                     // Call done to finish the async function
                     done();
                 }
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
             });
+
     });
 
-    xit('quoteController.updateQuoteItem allows a user with permission to update an Item of a Quote', function (done) {
+    it('quoteController.updateQuoteItem allows a user with permission to update an Item of a Quote', function (done) {
 
         var user = {
             userId: 'mrQuoteUnquote',
@@ -262,7 +242,7 @@ describe('Quote module ', function () {
         }
     });
 
-    xit('quoteController.updateQuoteItemOption allows a user with permission to update an Item of a Quote', function (done) {
+    it('quoteController.updateQuoteItemOption allows a user with permission to update an Item of a Quote', function (done) {
 
         var user = {
             userId: 'mrQuoteUnquote',
@@ -303,7 +283,7 @@ describe('Quote module ', function () {
         }
     });
 
-    xit('quoteController.addQuote allows user with authorization to add a Quote', function (done) {
+    it('quoteController.addQuote allows user with authorization to add a Quote', function (done) {
         var user = {
             userId: 'contactOwnerABC',
             securityPermissions: ['CRMSFA_QUOTE_CREATE']
@@ -323,10 +303,8 @@ describe('Quote module ', function () {
             'contactPartyId': '91',
             'createdByPartyId': '100'
         };
-
         var result = quoteController.addQuote(quote, user);
         expect(result).not.toBeNull();
-
         done();
     });
 
@@ -339,6 +317,10 @@ describe('Quote module ', function () {
         quoteController.getQuoteById(id, user)
             .then(function (quote) {
                 expect(quote instanceof Quote).toBeTruthy();
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
                 done();
             });
     });
