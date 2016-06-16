@@ -344,6 +344,7 @@ describe('Quote module, ', function () {
     });
     
     
+    // test passed [Lucas]
     it('quoteController.getQuotesByAdvanced returns valid quotes', function (done) {
         var propertyString = { quoteName: 'ano', salesChannel: 'ind_retail' };
         var user = {
