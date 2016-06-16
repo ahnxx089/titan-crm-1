@@ -97,7 +97,7 @@ var router = function (knex) {
     // ==========================================
     var accountApi = require('../api/accountApi')(knex);
     apiRouter.route('/accounts')
-        .get(accountApi.getAccountsByOwner)
+        .get(accountApi.getAccounts)
         .post(accountApi.addAccount);
     apiRouter.route('/accounts/:id')
         .get(accountApi.getAccountById)

@@ -21,6 +21,7 @@ var baseRequest = request.defaults({
 
 
 describe('Accounts API', function () {
+
     it('is inaccessible without a valid token', function (done) {
         request.get(apiBaseUrl, function (err, res, body) {
             // Check the HTTP status code of response
@@ -29,7 +30,7 @@ describe('Accounts API', function () {
             done();
         });
     });
-    it('getAccount returns all Accounts in system as an array', function (done) {
+    xit('getAccount returns all Accounts in system as an array', function (done) {
         baseRequest.get(apiBaseUrl, function (err, res, body) {
             var typeofAccounts = Object.prototype.toString.call(JSON.parse(body));
             // Check whether the return value is an array

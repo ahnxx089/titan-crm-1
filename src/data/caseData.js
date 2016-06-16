@@ -30,6 +30,8 @@ var caseData = function (knex) {
             case_date: case_.caseDate, response_required_date: case_.responseRequiredDate,
             case_name: case_.caseName, description:case_.description, resolution_id: case_.resolutionId,
             created_by: case_.createdBy, created_date: case_.createdDate, updated_date: case_.updatedDate
+        }).then(function (cid1) {
+            return cid1;
         });
         */
         
@@ -112,14 +114,28 @@ var caseData = function (knex) {
      * Gets all cases from database by advanced search
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
-    var getCasesByAdvanced = function (subject, priority, status, type) {
-        return knex.select('case_.case_id', 'case_.case_type_id', 'case_.case_category_id', 'case_.status_id', 'case_.from_party_id', 'case_.priority', 'case_.case_date', 'case_.response_required_date', 'case_.case_name', 'case_.description', 'case_.resolution_id', 'case_.created_by', 'case_.created_date', 'case_.updated_date')
+    var getCasesByAdvanced = function (subject, Priority, status, type) {
+        var query = "SELECT * FROM case_ WHERE 1 = 1";
+        if(subject){
+            query = query + " and case_name LIKE '%" + subject + "%'";
+        }
+        if(Priority){
+            query = query + " and priority = " + Priority;
+        }
+        
+        if(status){
+            query = query + " and status_id LIKE '%" + status + "%'"; 
+        }
+        
+        if(type){
+            query = query + " and case_type_id LIKE '%" +type+ "%'"; 
+        }
+        return knex.raw(query);
+        /*return knex.select('case_.case_id', 'case_.case_type_id', 'case_.case_category_id', 'case_.status_id', 'case_.from_party_id', 'case_.priority', 'case_.case_date', 'case_.response_required_date', 'case_.case_name', 'case_.description', 'case_.resolution_id', 'case_.created_by', 'case_.created_date', 'case_.updated_date')
             .from('case_')
             .innerJoin('status_item', 'case_.status_id', 'status_item.status_code')
-            .where('case_.case_name',subject)
-            .where('case_.priority', priority)
-            .where('status_item.status_code', status)
-            .where('case_.case_type_id', type);
+            .andWhere('case_.priority', Priority);
+        */
     };
 
     /**

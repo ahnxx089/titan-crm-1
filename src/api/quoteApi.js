@@ -31,7 +31,7 @@ var quoteApi = function (knex) {
             var user = req.user;
             var resultsForThisUser = quoteController.addQuote(quote, user);
 
-            if (resultsForThisUser == null) {
+            if (resultsForThisUser === null) {
                 res.json({
                     message: 'You do not have permission to add quote!'
                 });
@@ -71,9 +71,7 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
-            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
-            // An object in result means it's a promise (returned only if validation succeeds).
+            // An integer (number of rows added) is returned only if validation succeeds
             else {
                 resultsForThisUser.then(function (numRowsInserted) {
                     res.json({
@@ -105,9 +103,7 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
-            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
-            // An object in result means it's a promise (returned only if validation succeeds)
+            // An integer (number of rows added) is returned only if validation succeeds
             else {
                 resultsForThisUser.then(function (numRowsInserted) {
                     res.json({
@@ -132,7 +128,7 @@ var quoteApi = function (knex) {
         // no other POST routes, return error message so the app does not hang
         else {
             res.json({
-                'message': 'ERROR:  No such route to POST to...',
+                'message': 'ERROR:  No such route to POST to...'
             });
         }
     };
@@ -165,9 +161,7 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
-            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
-            // An object in result means it's a promise (returned only if validation succeeds)
+            // An integer (number of rows updated) is returned only if validation succeeds
             else {
                 resultsForThisUser.then(function (numRowsUpdated) {
                     res.json({
@@ -199,9 +193,7 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
-            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
-            // An object in result means it's a promise (returned only if validation succeeds)
+            // An integer (number of rows updated) is returned only if validation succeeds
             else {
                 resultsForThisUser.then(function (numRowsUpdated) {
                     res.json({
@@ -238,7 +230,8 @@ var quoteApi = function (knex) {
                 res.json({
                     'message': 'You do not have permission to own quotes!'
                 });
-            } else {
+            }
+            else {
                 resultsForThisUser.then(function (quotes) {
                     res.json(quotes);
                 });
@@ -314,9 +307,7 @@ var quoteApi = function (knex) {
         else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
             res.json(resultsForThisUser);
         }
-        // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
-        // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
-        // An object in result means it's a promise (returned only if validation succeeds)
+        // An integer (number of rows updated) is returned only if validation succeeds
         else {
             resultsForThisUser.then(function (numRowsUpdated) {
                 res.json({

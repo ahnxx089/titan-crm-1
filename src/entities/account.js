@@ -16,12 +16,12 @@ var Organization = require('../entities/organization');
 //
 function Account(partyId, partyTypeId, currencyUomId, description, statusId, createdBy, createdDate, updatedDate, 
         orgName, officeSiteName, annualRevenue, numEmployees, tickerSymbol, comments,  logoImgURL,
-    partyParentId, industryEnumId, ownershipEnumId, importantNote, primaryPostalAddress, primaryTelecomNumber, primaryEmail) {
+    parentPartyId, industryEnumId, ownershipEnumId, importantNote, primaryPostalAddress, primaryTelecomNumber, primaryEmail) {
     // Call the parent constructor first
     Organization.call(this, partyId, partyTypeId, currencyUomId, description, statusId, createdBy, createdDate, updatedDate, orgName, officeSiteName, annualRevenue, numEmployees, tickerSymbol, comments, logoImgURL);
     
     // Properties specific to Account 
-    this.partyParentId = partyParentId;
+    this.parentPartyId = parentPartyId;
     this.industryEnumId = industryEnumId;
     this.ownershipEnumId = ownershipEnumId;
     this.importantNote = importantNote;
@@ -40,7 +40,7 @@ Account.prototype.validateForInsert = function () {
     var errors = Organization.prototype.validateForInsert.call(this);
     // Account-specific validation code
     var specificvalidations = [
-        this.validatePartyParentId(true),
+        this.validateParentPartyId(false),
         this.validateIndustryEnumId(false),
         this.validateOwnershipEnumId(false),
         this.validateImportantNote(false),
@@ -63,7 +63,7 @@ Account.prototype.validateForUpdate = function () {
     // Account-specific validation code
     
     var specificvalidations = [
-        this.validatePartyParentId(true),
+        this.validateParentPartyId(false),
         this.validateIndustryEnumId(false),
         this.validateOwnershipEnumId(false),
         this.validateImportantNote(false),
@@ -83,9 +83,9 @@ Account.prototype.validateForUpdate = function () {
 
 
 
-Account.prototype.validatePartyParentId = function(isRequired) {
-    this.partyParentId = validation.sanitizeInput(this.partyParentId);
-    var validationResult = validation.validateString(this.partyParentId, isRequired, 40, 'partyParentId');
+Account.prototype.validateParentPartyId = function(isRequired) {
+    this.parentPartyId = validation.sanitizeInput(this.parentPartyId);
+    var validationResult = validation.validateString(this.parentPartyId, isRequired, 40, 'parentPartyId');
     return validationResult;
 };
 
