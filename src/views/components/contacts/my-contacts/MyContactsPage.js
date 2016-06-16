@@ -57,7 +57,7 @@ var MyContactsPage = React.createClass({
                 <div className="container" >
                     <div className="panel panel-default">
                         <div className="panel-heading panel-heading-custom">
-                            <h2>My Contacts</h2>
+                            <h1>My Contacts</h1>
                         </div>
                         <table className='table'>
                             <thead>
