@@ -73,7 +73,7 @@ describe('Quote API', function () {
         baseRequest.put(apiBaseUrl + '/' + quoteId, function (err, res, body) {
             /*
             var typeofQuotes = Object.prototype.toString.call(JSON.parse(body));
-            // Check whether the return value is an array
+            // Check whether the return value is an object
             expect(typeofQuotes).toBe('[object Object]');
             // Call done to finish the async function
             */
@@ -110,7 +110,7 @@ describe('Quote API', function () {
 
         baseRequest.get(apiBaseUrl +  '?item' , function (err, res, body) {
             var typeofQuotes = Object.prototype.toString.call(JSON.parse(body));
-            // Check whether the return value is an array
+            // Check whether the return value is an object
             expect(typeofQuotes).toBe('[object Object]');
             // Call done to finish the async function
             done();
@@ -144,7 +144,7 @@ describe('Quote API', function () {
 
         baseRequest.get(apiBaseUrl + '?item' + quoteId, function (err, res, body) {
             var typeofQuotes = Object.prototype.toString.call(JSON.parse(body));
-            // Check whether the return value is an array
+            // Check whether the return value is an object
             expect(typeofQuotes).toBe('[object Object]');
             // Call done to finish the async function
             done();
@@ -207,7 +207,8 @@ describe('Quote API', function () {
             done();
         });
     });
-
+    
+    
     it('quoteApi.getQuoteById returns a quote', function (done) {
         var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjU2NzI5NDgsImV4cCI6MTQ5NzIwODk0OH0.x2r-faW7TG9bpECXT5UvOhQhpkPYJw6ZtU8HsN93iDM';
         var baseRequest = request.defaults({
@@ -227,3 +228,156 @@ describe('Quote API', function () {
     });
 
 });
+
+describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quotes in an array, ', function () {
+    // token and baseRequest request declarations moved in here so can pick a specific user
+    // THIS IS AN EVERLASTING TOKEN FOR mrQuoteUnquote
+    var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJtclF1b3RlVW5xdW90ZSIsInBhc3N3b3JkIjoiJDJhJDA4JDEvbkpoQ1NENmJrVEswWWJKRDlUMk9UWUo5b2NKOS5IbFVHSXVxdEVlaWU0eWkzcGZ1TGJTIiwicGFzc3dvcmRIaW50IjpudWxsLCJlbmFibGVkIjoxLCJkaXNhYmxlZERhdGUiOm51bGwsInBhcnR5SWQiOjEwMCwiY3JlYXRlZERhdGUiOiIyMDE2LTA2LTAyVDAxOjUwOjE2LjAwMFoiLCJ1cGRhdGVkRGF0ZSI6IjIwMTYtMDYtMDJUMDE6NTA6MTYuMDAwWiIsInNlY3VyaXR5UGVybWlzc2lvbnMiOlsiQ1JNU0ZBX1FVT1RFX0NSRUFURSJdLCJpYXQiOjE0NjYwMTQxNTAsImV4cCI6MTQ5NzU1MDE1MH0.PSuvymm14z07yO79Ksik776Vv3jYiVUZmDfIC5mh-4g';
+    var baseRequest = request.defaults({
+        headers: {
+            'x-access-token': token
+        }
+    });
+    
+    // PLEASE COMMENT THIS TEST OUT when doing other normal tests except this one
+    xit('should throw errors when nothing is specified, due to route to getQuotesByOwner which has bugs', function (done) {
+        baseRequest.get(apiBaseUrl + '?', function (err, res, body) {
+            expect(body).toBe(undefined);
+            done();
+        });
+    }, 8000);
+    
+    xit('should return only one quote by specifying the quoteId', function (done) {
+            var quoteId = 2;
+            baseRequest.get(apiBaseUrl + '?quoteId=' + quoteId, function (err, res, body) {
+                //console.log(body);
+                var result = JSON.parse(body);
+                var typeofQuotes = Object.prototype.toString.call(result);
+                // Check whether the return value is an array
+                expect(typeofQuotes).toBe('[object Array]');
+                // Check whether the first in return value has a quote id 2
+                expect(result[0].hasOwnProperty('quoteId')).toBeTruthy();
+                expect(result[0].quoteId).toBe(2);
+                // Call done to finish the async function
+                done();
+            });
+        }
+       // this number is to change jasmine.DEFAULT_TIMEOUT_INTERVAL, see http://stackoverflow.com/questions/9867601/how-do-i-change-the-timeout-on-a-jasmine-node-async-spec
+       ,8000
+    );
+    
+    xit('should return some quotes by specifying the quoteName', function (done) {
+        var quoteName = 'ano';
+        baseRequest.get(apiBaseUrl + '?quoteName=' + quoteName, function (err, res, body) {
+            var result = JSON.parse(body);
+            var typeofQuotes = Object.prototype.toString.call(result);
+            // Check whether the return value is an array
+            expect(typeofQuotes).toBe('[object Array]');
+            expect(result.length).toBe(1);
+            // Call done to finish the async function
+            done();
+        });
+    }, 10000);
+    
+    
+    xit('should return some by specifying the status', function (done) {
+        var status = 'quote_created';
+        baseRequest.get(apiBaseUrl + '?status=' + status, function (err, res, body) {
+            var result = JSON.parse(body);
+            var typeofQuotes = Object.prototype.toString.call(result);
+            // Check whether the return value is an array
+            expect(typeofQuotes).toBe('[object Array]');
+            // Call done to finish the async function
+            done();
+        });
+    });
+    
+    xit('should return some by specifying the account', function (done) {
+        var account = 7;
+        baseRequest.get(apiBaseUrl + '?account=' + account, function (err, res, body) {
+            var result = JSON.parse(body);
+            var typeofQuotes = Object.prototype.toString.call(result);
+            // Check whether the return value is an array
+            expect(typeofQuotes).toBe('[object Array]');
+            // Call done to finish the async function
+            done();
+        });
+    });
+    
+    xit('should return some by specifying the salesChannel', function (done) {
+        var salesChannel = 'IND_retail';
+        baseRequest.get(apiBaseUrl + '?salesChannel=' + salesChannel, function (err, res, body) {
+            var result = JSON.parse(body);
+            var typeofQuotes = Object.prototype.toString.call(result);
+            // Check whether the return value is an array
+            expect(typeofQuotes).toBe('[object Array]');
+            // Call done to finish the async function
+            done();
+        });
+    });
+    
+    
+    
+    xit('should return some by EXCLUDING nullable columns', function (done) {
+        var account = 7;
+        var salesChannel = 'IND_retail';
+        var extUrl = apiBaseUrl + '?account=' + account + '&salesChannel=' + salesChannel;
+        baseRequest.get(extUrl, function (err, res, body) {
+            var result = JSON.parse(body);
+            var typeofQuotes = Object.prototype.toString.call(result);
+            // Check whether the return value is an array
+            expect(typeofQuotes).toBe('[object Array]');
+            // Call done to finish the async function
+            done();
+        });
+    }, 7000);
+    
+    xit('should return some by specifying only nullable string columns', function (done) {
+        var status = 'quote_created';
+        var quoteName = 'a%20quot';
+        var extUrl = apiBaseUrl + '?status=' + status + '&quoteName=' + quoteName;
+        baseRequest.get(extUrl, function (err, res, body) {
+            var result = JSON.parse(body);
+            var typeofQuotes = Object.prototype.toString.call(result);
+            // Check whether the return value is an array
+            expect(typeofQuotes).toBe('[object Array]');
+            // Call done to finish the async function
+            done();
+        });
+    });
+    
+    xit('should return ALL quotes by specifying only and any nullable columns TO NULL', function (done) {
+        // should not use var status = null OR var status = undefined, etc here. 
+        var status = '';
+        var quoteName = '';
+        var account = '';
+        var extUrl = apiBaseUrl + '?status=' + status + '&quoteName=' + quoteName + '&account=' + account ;
+//        console.log(extUrl);
+        baseRequest.get(extUrl, function (err, res, body) {
+            var result = JSON.parse(body);
+            var typeofQuotes = Object.prototype.toString.call(result);
+            // Check whether the return value is an array
+            expect(typeofQuotes).toBe('[object Array]');
+            // Call done to finish the async function
+            done();
+        });
+    });
+    
+    
+    xit('should return some by specifying nullable columns and other columns (combinations)', function (done) {
+        var status = 'quote_created';
+        var quoteName = 'qu';
+        var salesChannel = 'IND_retail';
+        var extUrl = apiBaseUrl + '?status=' + status + '&quoteName=' + quoteName + '&salesChannel=' + salesChannel;
+        baseRequest.get(extUrl, function (err, res, body) {
+            var result = JSON.parse(body);
+            var typeofQuotes = Object.prototype.toString.call(result);
+            // Check whether the return value is an array
+            expect(typeofQuotes).toBe('[object Array]');
+            // Call done to finish the async function
+            done();
+        });
+    });
+    
+});
+
