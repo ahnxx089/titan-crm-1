@@ -326,7 +326,7 @@ var accountController = function (knex) {
             return promise;
         }
         else {
-            return;
+            return null;
         }
     };
     /**
@@ -381,7 +381,7 @@ var accountController = function (knex) {
             return promise;
         }
         else {
-            return;
+            return null;
         }
     };
 
