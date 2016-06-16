@@ -58,8 +58,8 @@ LeadsStore.getLeadsOwned = function() {
 TitanDispatcher.register(function(action) {
 
     switch(action.actionType) {
-//        case LeadsConstants.GET_MY_LEADS: {
-        case 'GET_MY_LEADS': {
+        case LeadsConstants.GET_MY_LEADS: {
+//        case 'GET_MY_LEADS': {
             LeadsStore.getLeadsByOwner();
             break;
         }

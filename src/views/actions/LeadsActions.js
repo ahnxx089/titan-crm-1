@@ -12,8 +12,8 @@ var LeadsActions = {
     
     getLeadsByOwner: function() {
         TitanDispatcher.dispatch({
-//            actionType: LeadsConstants.GET_MY_LEADS
-            actionType: 'GET_MY_LEADS'
+            actionType: LeadsConstants.GET_MY_LEADS
+//            actionType: 'GET_MY_LEADS'
 
         });
     }
