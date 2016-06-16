@@ -14,7 +14,7 @@ var quoteController = require('../src/controllers/quoteController')(knex);
 var userController = require('../src/controllers/userController')(knex);
 var Quote = require('../src/entities/quote');
 
-describe('Quote module ', function () {
+describe('Quote module, ', function () {
 
     // Test quoteController.updateQuote where user LACKS security permission -- TEST PASSED
     xit('quoteController.updateQuote DENIES a user without permission to own Quotes(s) to update a Quote', function (done) {
@@ -342,5 +342,19 @@ describe('Quote module ', function () {
                 done();
             });
     });
+    
+    
+    it('quoteController.getQuotesByAdvanced returns valid quotes', function (done) {
+        var propertyString = { quoteName: 'ano', salesChannel: 'ind_retail' };
+        var user = {
+            securityPermissions: ['CRMSFA_QUOTE_CREATE']
+        };
+        quoteController.getQuotesByAdvanced(propertyString, user)
+            .then(function (quotes) {
+                expect(quotes[0] instanceof Quote).toBeTruthy();
+                done();
+            });
+    });
+    
 
 });
