@@ -72,8 +72,6 @@ ContactsStore.getContactsOwned = function() {
 // Next two functions are called by CreateContactPage
 ContactsStore.addContact = function(contact) {
     var thisContactsStore = this;
-    // WILL "contact" COME IN HERE SUCH THAT THIS CHOICE FOR AJAX SETTING FOR contentType IS ENOUGH?
-    // OR MIGHT I NEED TO JSON.stringfy THE WAY WE DO IN THE UNIT TESTS OF THE APIs?
     $.ajax({
         type: 'POST',
         url: '/api/contacts/',
