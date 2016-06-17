@@ -17,6 +17,9 @@ var LeadRow = React.createClass({
                 <td>{ this.props.lead.salutation }</td>
                 <td>{ this.props.lead.firstName }</td>
                 <td>{ this.props.lead.lastName }</td>
+                <td>{ this.props.lead.description }</td>
+                <td>{ this.props.lead.parentPartyId }</td>
+                <td>{ this.props.lead.createdDate }</td>
             </tr>
         );
         /* jshint ignore:end */

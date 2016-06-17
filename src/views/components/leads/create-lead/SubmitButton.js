@@ -1,5 +1,6 @@
 /////////////////////////////////////////////////
 // A submit button on Add Lead page.
+// Dont use this. Use the one in ../../common/ instead
 //
 // @file:   SubmitButton.js
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
