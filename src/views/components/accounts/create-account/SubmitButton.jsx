@@ -13,14 +13,14 @@ var SubmitButton = React.createClass({
     
     render: function () {
         return (
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="createAccount">Create Account</label>
-                <div class="col-md-4">
-                    <button id="createAccount" name="createAccount" class="btn btn-primary">Submit</button>
+            <div className='form-group'>
+                <label className='col-md-4 control-label' for='createAccount'>Create Account</label>
+                <div className='col-md-4'>
+                    <button id='createAccount' name='createAccount' className='btn btn-primary'>Submit</button>
                 </div>
             </div>
         );
-    };
+    }
     
 });
 
