@@ -8,7 +8,11 @@
 var React = require('react');
 
 var UpdateContactForm = React.createClass({
-
+    getInitialState: function() {
+        return {
+            contact: {}
+        };
+    },
 
     _onFirstNameChange: function(event) {
         this.setState({
