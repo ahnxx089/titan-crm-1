@@ -38,13 +38,18 @@ describe('Case module ', function () {
         // permission to create (and therefore own) cases is what is being tested here.
         var resultsForThisUser = caseController.getCasesByOwner(user);
 
-        resultsForThisUser.then(function (cases) {
-            var typeOfCases = Object.prototype.toString.call(cases);
-            // Check whether the return value is an array
-            expect(typeOfCases).toBe('[object Array]');
-            // Call done to finish the async function
-            done();
-        });
+        resultsForThisUser
+            .then(function (cases) {
+                var typeOfCases = Object.prototype.toString.call(cases);
+                // Check whether the return value is an array
+                expect(typeOfCases).toBe('[object Array]');
+                // Call done to finish the async function
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
 
     // Test caseController.getCasesByOwner where a user owns a case, does it return the correct one?
@@ -69,11 +74,16 @@ describe('Case module ', function () {
         // when a user has Case owner rights, the controller returns an object.
         var resultsForThisUser = caseController.getCasesByOwner(user);
 
-        resultsForThisUser.then(function (cases) {
-            expect(cases[0].caseId === 2).toBeTruthy();
-            // Call done to finish the async function
-            done();
-        });
+        resultsForThisUser
+            .then(function (cases) {
+                expect(cases[0].caseId === 2).toBeTruthy();
+                // Call done to finish the async function
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
 
     // Test caseController.getCasesByOwner where user lacks security permission -- TEST PASSED
@@ -110,18 +120,22 @@ describe('Case module ', function () {
         }
     });
 
-    xit('caseController.getCaseById returns a valid case object', function (done) {
-        caseController.getCaseById(1).then(function (testCase) {
-            expect(testCase instanceof Case).toBeTruthy();
-            // Call done to finish the async function
-            done();
-        });
-
+    it('caseController.getCaseById returns a valid case object', function (done) {
+        caseController.getCaseById(1)
+            .then(function (testCase) {
+                expect(testCase instanceof Case).toBeTruthy();
+                // Call done to finish the async function
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
-    
-    
+
+
     // Add case passed [Lucas]
-    xit('addCase adds a case', function (done) {
+    it('addCase adds a case', function (done) {
         var user = {
             userId: 'contactOwnerABC',
             password: '$2a$08$iTaPqQ/4W8LSDNBDT18opegvSxo4kWC8SjWNojHP/lhN7eOSTYHJu',
@@ -135,7 +149,7 @@ describe('Case module ', function () {
             iat: 1464573779,
             exp: 1464660179
         };
-        
+
         var newCase = {
             "caseTypeId": "RF_PROPOSAL",
             "caseCategoryId": "CRCAT_COMPLEX",
@@ -150,20 +164,25 @@ describe('Case module ', function () {
         };
 
         var resultsForThisUser = caseController.addCase(newCase, user);
-        resultsForThisUser.then(function (caseReturn) {
-            // Get types of returned objects
-            var typeofCase = Object.prototype.toString.call(caseReturn);
-            // Check whether the return value is an array
-            expect(typeofCase).toBe('[object Array]');
-            // Call done to finish the async function
-            done();
-        });
+        resultsForThisUser
+            .then(function (caseReturn) {
+                // Get types of returned objects
+                var typeofCase = Object.prototype.toString.call(caseReturn);
+                // Check whether the return value is an array
+                expect(typeofCase).toBe('[object Array]');
+                // Call done to finish the async function
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
-    
-    
+
+
     // Add case passed. This will not add case [Lucas]
     it('addCase DOES NOT add a case', function (done) {
-        
+
         // this is a user without proper permission
         var user = {
             userId: 'leadOwnerDEF',
@@ -176,7 +195,7 @@ describe('Case module ', function () {
             updatedDate: '2016-05-28T03:34:11.000Z',
             securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_LEAD_DEACTIVATE', 'CRMSFA_LEAD_DELETE', 'CRMSFA_LEAD_REASSIGN', 'CRMSFA_LEAD_UPDATE', 'CRMSFA_LEAD_VIEW', 'CRMSFA_OPP_CREATE', 'CRMSFA_OPP_UPDATE', 'CRMSFA_OPP_VIEW']
         };
-        
+
         var newCase = {
             "caseTypeId": "RF_PROPOSAL",
             "caseCategoryId": "CRCAT_COMPLEX",
@@ -194,11 +213,11 @@ describe('Case module ', function () {
         expect(resultsForThisUser).toBeNull();
         done();
     });
-    
-    
+
+
     // Another Add case passed. This will not add case [Lucas]
     it('should throw an exception', function () {
-        
+
         var user = {
             userId: 'leadOwnerDEF',
             password: '$2a$08$Y/fQPgblCV2ZK6UtopnyveZpn.VoY1ZP4oPK6R3JOuzTi9FU42Hiu',
@@ -210,7 +229,7 @@ describe('Case module ', function () {
             updatedDate: '2016-05-28T03:34:11.000Z',
             securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_LEAD_DEACTIVATE', 'CRMSFA_LEAD_DELETE', 'CRMSFA_LEAD_REASSIGN', 'CRMSFA_LEAD_UPDATE', 'CRMSFA_LEAD_VIEW', 'CRMSFA_OPP_CREATE', 'CRMSFA_OPP_UPDATE', 'CRMSFA_OPP_VIEW']
         };
-        
+
         var newCase = {
             "caseTypeId": "RF_PROPOSAL",
             "caseCategoryId": "CRCAT_COMPLEX",
@@ -225,7 +244,7 @@ describe('Case module ', function () {
         };
 
         var resultsForThisUser = caseController.addCase(newCase, user);
-        
+
         expect(function () {
             resultsForThisUser.then(function (caseReturn) {
                 var typeofCase = Object.prototype.toString.call(caseReturn);
@@ -249,7 +268,7 @@ describe('updateCase', function () {
         done();
     });
 
-    xit('returns a promise for valid input', function (done) {
+    it('returns a promise for valid input', function (done) {
         var caseId = 1;
         var case_ = {
             caseId: 1,
@@ -272,7 +291,7 @@ describe('updateCase', function () {
         done();
     });
 
-    xit('fulfillment value of promise is a number', function (done) {
+    it('fulfillment value of promise is a number', function (done) {
         var caseId = 1;
         var case_ = {
             caseId: 1,
@@ -293,6 +312,10 @@ describe('updateCase', function () {
         caseController.updateCase(caseId, case_)
             .then(function (result) {
                 expect(typeof result).toBe('number');
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
                 done();
             });
     });

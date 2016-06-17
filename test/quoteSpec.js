@@ -16,6 +16,45 @@ var Quote = require('../src/entities/quote');
 
 describe('Quote module, ', function () {
 
+    // Test quoteController.updateQuote where user LACKS security permission -- TEST PASSED
+    it('quoteController.updateQuote DENIES a user without permission to own Quotes(s) to update a Quote', function (done) {
+
+        // contactOwnerABC does not have permission to create a Quote (and thus neither to update)
+        var user = {
+            userId: 'contactOwnerABC',
+            password: '$2a$08$iTaPqQ/4W8LSDNBDT18opegvSxo4kWC8SjWNojHP/lhN7eOSTYHJu',
+            passwordHint: null,
+            enabled: 1,
+            disabledDate: null,
+            partyId: 13,
+            createdDate: '2016-05-25T16:07:11.000Z',
+            updatedDate: '2016-05-25T16:07:11.000Z',
+            securityPermissions: ['CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_CONTACT_CREATE', 'CRMSFA_CONTACT_DEACTIVATE', 'CRMSFA_CONTACT_REASSIGN', 'CRMSFA_CONTACT_UPDATE', 'CRMSFA_CONTACT_VIEW', 'CRMSFA_CASE_CREATE', 'CRMSFA_ACTS_VIEW', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_CONTACTS_VIEW', 'CRMSFA_CONTACT_CREATE', 'CRMSFA_CONTACT_DEACTIVATE', 'CRMSFA_CONTACT_REASSIGN', 'CRMSFA_CONTACT_UPDATE', 'CRMSFA_CONTACT_VIEW', 'CRMSFA_VIEW', 'PARTYMGR_CME_CREATE', 'PARTYMGR_CME_DELETE', 'PARTYMGR_CME_UPDATE', 'PARTYMGR_GRP_UPDATE', 'PARTYMGR_NOTE', 'PARTYMGR_PCM_CREATE', 'PARTYMGR_PCM_DELETE', 'PARTYMGR_PCM_UPDATE', 'PARTYMGR_REL_CREATE', 'PARTYMGR_REL_UPDATE', 'PARTYMGR_ROLE_CREATE', 'PARTYMGR_ROLE_DELETE', 'PARTYMGR_SRC_CREATE', 'PARTYMGR_STS_UPDATE', 'WORKEFFORTMGR_ADMIN'],
+            iat: 1464968881,
+            exp: 1465055281
+        };
+        var quoteId = 4; // an existing row in table quote to be updated
+
+        var quote = {
+            'quoteTypeId': 'PRODUCT_QUOTE',
+            'partyId': '91',
+            'issueDate': '2016-06-04 10:49:22',
+            'statusId': 'QUOTE_SENT',
+            'currencyUomId': 'USD',
+            'salesChannelEnumId': 'IND_GEN_SERVICES',
+            'validFromDate': '2016-06-04 10:49:22',
+            'validThruDate': '2016-12-04 10:49:22',
+            'quoteName': 'Saturday morning quote',
+            'description': 'created on Saturday morning',
+            'contactPartyId': '91',
+            'createdByPartyId': '100'
+        };
+
+        var resultsForThisUser = quoteController.updateQuote(quoteId, quote, user);
+        expect(resultsForThisUser).toBeNull();
+        done();
+    });
+
     // Author:  Bill (Note: Dinesh has done no editing of this test, and is leaving uncommented since it runs)
     it('quoteController.updateQuote allows a user with permission to update a Quote', function (done) {
 
@@ -49,49 +88,36 @@ describe('Quote module, ', function () {
             'createdByPartyId': '100'
         };
 
-
-
-        try {
-            var result = quoteController.updateQuote(quoteId, quote, user);
-
-            if (typeof result !== 'object') {
-                fail('returned ' + (typeof result) + ' instead of promise');
+        quoteController.updateQuote(quoteId, quote, user)
+            .then(function (fulfillment) {
+                expect(typeof fulfillment).toBe('number');
+                expect(fulfillment).toBeGreaterThan(0);
                 done();
-            } else if (result === null) {
-                fail('returned null instead of promise');
+            })
+            .then(null, function (err) {
+                fail(err);
                 done();
-            } else if (Array.isArray(result)) {
-                fail('returned array instead of promise');
-                done();
-            } else if (!('then' in result)) {
-                fail('returned non-promise object');
-                done();
-            } else {
-                result
-                    .then(function (fulfillment) {
-                        expect(typeof fulfillment).toBe('number');
-                        expect(fulfillment).toBeGreaterThan(0);
-                        done();
-                    });
-            }
-        } catch (err) {
-            fail(err);
-            done();
-        }
+            });
+    });
 
 
+    // Test quoteController.addQuoteItem where user LACKS security permission -- TEST PASSED
+    it('quoteController.addQuoteItem DENIES a user without permission to own Quotes(s) to add an Item to a Quote', function (done) {
+        quote = {};
+        
+        var resultsForThisUser = quoteController.addQuoteItem(quoteItem, user);
 
+        expect(resultsForThisUser).toBeNull();
+        done();
     });
 
     // Author:  Dinesh.  Ran, passed & commented out on June 15, please do not edit without consulting Dinesh first
-    xit('quoteController.updateQuote DENIES a user without permission to own Quotes(s) to update a Quote', function (done) {
-
+    it('quoteController.updateQuote DENIES a user without permission to own Quotes(s) to update a Quote', function (done) {
         var user = {
             securityPermissions: []
         };
 
         var quoteId = 4; // an existing row in table quote to be updated
-
         var quote = {
             'quoteTypeId': 'PRODUCT_QUOTE',
             'partyId': '91',
@@ -132,7 +158,6 @@ describe('Quote module, ', function () {
                     // Call done to finish the async function
                     done();
                 }
-
             That is not a meaningful test, because of course I expect(resultsForThisUser === null).toBeTruthy() 
             if I put that expect() statement inside an IF block that gets triggered only in the event that 
             resultsForThisUser === null, which is the case because the controller returns for a user without permission!
@@ -154,8 +179,7 @@ describe('Quote module, ', function () {
     });
 
     // Author:  Dinesh.  Ran, passed & commented out on June 15, please do not edit without consulting Dinesh first
-    xit('quoteController.updateQuote allows a user with permission to update a Quote, and it returns the number of rows updated', function (done) {
-
+    it('quoteController.updateQuote allows a user with permission to update a Quote, and it returns the number of rows updated', function (done) {
         var user = {
             securityPermissions: ['CRMSFA_QUOTE_CREATE']
         };
@@ -163,30 +187,35 @@ describe('Quote module, ', function () {
         var quoteId = 5;
 
         var quote = {
-            "quoteTypeId": "PRODUCT_QUOTE",
-            "partyId": "70",
-            "issueDate": "2016-06-11 20:45:23",
-            "statusId": "QUOTE_FINALIZED",
-            "currencyUomId": "USD",
-            "salesChannelEnumId": "IND_AEROSPACE",
-            "validFromDate": "2016-06-11 20:45:23",
-            "validThruDate": "2016-09-11 20:45:23",
-            "quoteName": "test quote to add items to soon...",
-            "description": "UPDATED:  changed sales channel enum id",
-            "contactPartyId": "70",
-            "createdByPartyId": "100"
+            'quoteTypeId': 'PRODUCT_QUOTE',
+            'partyId': '70',
+            'issueDate': '2016-06-11 20:45:23',
+            'statusId': 'QUOTE_FINALIZED',
+            'currencyUomId': 'USD',
+            'salesChannelEnumId': 'IND_AEROSPACE',
+            'validFromDate': '2016-06-11 20:45:23',
+            'validThruDate': '2016-09-11 20:45:23',
+            'quoteName': 'test quote to add items to soon...',
+            'description': 'UPDATED:  changed sales channel enum id',
+            'contactPartyId': '70',
+            'createdByPartyId': '100'
         };
 
         var resultsForThisUser = quoteController.updateQuote(quoteId, quote, user);
 
-        resultsForThisUser.then(function (numRowsUpdated) {
-            expect(numRowsUpdated === 1).toBeTruthy();
-            done();
-        });
+        resultsForThisUser
+            .then(function (numRowsUpdated) {
+                expect(numRowsUpdated === 1).toBeTruthy();
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
 
     // Author:  Dinesh.  Ran, passed & commented out on June 15, please do not edit without consulting Dinesh first
-    xit('quoteController.addQuoteItem DENIES a user without permission to own Quotes(s) to add an Item to a Quote', function (done) {
+    it('quoteController.addQuoteItem DENIES a user without permission to own Quotes(s) to add an Item to a Quote', function (done) {
 
         var user = {
             securityPermissions: []
@@ -223,6 +252,9 @@ describe('Quote module, ', function () {
             securityPermissions: ['CRMSFA_QUOTE_CREATE']
         };
 
+        //maybe create a new quote each time?
+        //then you can use the id of that quote
+        //and you'll never have a duplication
         var quoteItem = {
             "quoteId": "5",
             "quoteItemSeqId": "4",
@@ -238,14 +270,19 @@ describe('Quote module, ', function () {
 
         var resultsForThisUser = quoteController.addQuoteItem(quoteItem, user);
 
-        resultsForThisUser.then(function (numRowsAdded) {
-            expect(numRowsAdded === 1).toBeTruthy();
-            done();
-        });
+        resultsForThisUser
+            .then(function (numRowsAdded) {
+                expect(numRowsAdded === 1).toBeTruthy();
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
 
     // Author:  Dinesh.  Ran, passed & commented out on June 15, please do not edit without consulting Dinesh first
-    xit('quoteController.updateQuoteItem DENIES a user without permission to own Quotes(s) to update an Item of a Quote', function (done) {
+    it('quoteController.updateQuoteItem DENIES a user without permission to own Quotes(s) to update an Item of a Quote', function (done) {
 
         var user = {
             securityPermissions: []
@@ -281,6 +318,9 @@ describe('Quote module, ', function () {
             securityPermissions: ['CRMSFA_QUOTE_CREATE']
         };
 
+        //maybe create a new quote each time?
+        //then you can use the id of that quote
+        //and you'll never have a duplication
         var quoteItem = {
             "quoteId": "5",
             "quoteItemSeqId": "1",
@@ -294,16 +334,19 @@ describe('Quote module, ', function () {
             "description": "customers stick with testProd1 out of loyalty"
         };
 
-        var resultsForThisUser = quoteController.updateQuoteItem(quoteItem, user);
-
-        resultsForThisUser.then(function (numRowsUpdated) {
-            expect(numRowsUpdated === 1).toBeTruthy();
-            done();
-        });
+        var resultsForThisUser = quoteController.updateQuoteItem(quoteItem, user)
+            .then(function (numRowsUpdated) {
+                expect(numRowsUpdated === 1).toBeTruthy();
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
 
     // Author:  Dinesh.  Ran, passed & commented out on June 15, please do not edit without consulting Dinesh first
-    xit('quoteController.addQuoteItemOption DENIES a user without permission to own Quotes(s) to add an Option to an Item of a Quote', function (done) {
+    it('quoteController.addQuoteItemOption DENIES a user without permission to own Quotes(s) to add an Option to an Item of a Quote', function (done) {
 
         var user = {
             securityPermissions: []
@@ -321,7 +364,11 @@ describe('Quote module, ', function () {
         // returning something to test, purposely set resultsForThisUser to a value that is clearly not null.
         var resultsForThisUser = 9999;
 
-        var resultsForThisUser = quoteController.addQuoteItemOption(quoteItemOption, user);
+        var resultsForThisUser = quoteController.addQuoteItemOption(quoteItemOption, user)
+            .then(null, function (err){
+                fail(err);
+                done();
+            });
 
         expect(resultsForThisUser).toBeNull();
         done();
@@ -335,6 +382,9 @@ describe('Quote module, ', function () {
             securityPermissions: ['CRMSFA_QUOTE_CREATE']
         };
 
+        //maybe create a new quote each time?
+        //then you can use the id of that quote
+        //and you'll never have a duplication
         var quoteItemOption = {
             "quoteId": "5",
             "quoteItemSeqId": "1",
@@ -343,16 +393,19 @@ describe('Quote module, ', function () {
             "quoteUnitPrice": "4.37"
         };
 
-        var resultsForThisUser = quoteController.addQuoteItemOption(quoteItemOption, user);
-
-        resultsForThisUser.then(function (numRowsAdded) {
-            expect(numRowsAdded === 1).toBeTruthy();
-            done();
-        });
+        quoteController.addQuoteItemOption(quoteItemOption, user)
+            .then(function (numRowsAdded) {
+                expect(numRowsAdded === 1).toBeTruthy();
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
-    
+
     // Author:  Dinesh.  Ran, passed & commented out on June 15, please do not edit without consulting Dinesh first
-    xit('quoteController.updateQuoteItemOption DENIES a user without permission to own Quotes(s) to update an Option of an Item of a Quote', function (done) {
+    it('quoteController.updateQuoteItemOption DENIES a user without permission to own Quotes(s) to update an Option of an Item of a Quote', function (done) {
 
         var user = {
             securityPermissions: []
@@ -377,7 +430,7 @@ describe('Quote module, ', function () {
     });
 
     // Author:  Dinesh.  Ran, passed & commented out on June 15, please do not edit without consulting Dinesh first
-    xit('quoteController.updateQuoteItemOption allows a user with permission to update an Option of an Item of a Quote, and it returns the number of rows updated', function (done) {
+    it('quoteController.updateQuoteItemOption allows a user with permission to update an Option of an Item of a Quote, and it returns the number of rows updated', function (done) {
 
         var user = {
             securityPermissions: ['CRMSFA_QUOTE_CREATE']
@@ -393,13 +446,18 @@ describe('Quote module, ', function () {
 
         var resultsForThisUser = quoteController.updateQuoteItemOption(quoteItemOption, user);
 
-        resultsForThisUser.then(function (numRowsUpdated) {
-            expect(numRowsUpdated === 1).toBeTruthy();
-            done();
-        });
+        resultsForThisUser
+            .then(function (numRowsUpdated) {
+                expect(numRowsUpdated === 1).toBeTruthy();
+                done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
     });
-    
-    xit('quoteController.addQuote allows user with authorization to add a Quote', function (done) {
+
+    it('quoteController.addQuote allows user with authorization to add a Quote', function (done) {
         var user = {
             userId: 'contactOwnerABC',
             securityPermissions: ['CRMSFA_QUOTE_CREATE']
@@ -419,10 +477,12 @@ describe('Quote module, ', function () {
             'contactPartyId': '91',
             'createdByPartyId': '100'
         };
-
-        var result = quoteController.addQuote(quote, user);
+        var result = quoteController.addQuote(quote, user)
+            .then(null, function (err) {
+                fail(err);
+                done();
+            });
         expect(result).not.toBeNull();
-
         done();
     });
 
@@ -436,13 +496,20 @@ describe('Quote module, ', function () {
             .then(function (quote) {
                 expect(quote instanceof Quote).toBeTruthy();
                 done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
             });
     });
-    
-    
+
+
     // test passed [Lucas]
     it('quoteController.getQuotesByAdvanced returns valid quotes', function (done) {
-        var propertyString = { quoteName: 'ano', salesChannel: 'ind_retail' };
+        var propertyString = {
+            quoteName: 'ano',
+            salesChannel: 'ind_retail'
+        };
         var user = {
             securityPermissions: ['CRMSFA_QUOTE_CREATE']
         };
@@ -450,8 +517,12 @@ describe('Quote module, ', function () {
             .then(function (quotes) {
                 expect(quotes[0] instanceof Quote).toBeTruthy();
                 done();
+            })
+            .then(null, function (err) {
+                fail(err);
+                done();
             });
     });
-    
+
 
 });

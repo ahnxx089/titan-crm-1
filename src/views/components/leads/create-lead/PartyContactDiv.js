@@ -11,6 +11,7 @@ var PartyContactDiv = React.createClass({
     // changed class to className, noon June 16
     // changed input type of three contact mechs to tel, url, email.
     // But React doesn't seem to support them. Will find out.
+    // Tel is only supported by Safari browser. 
     render: function () {
         /* jshint ignore:start */
         return (

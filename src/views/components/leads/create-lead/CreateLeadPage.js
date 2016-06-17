@@ -13,7 +13,8 @@ var PartyDiv = require('./PartyDiv');
 var PersonDiv = require('./PersonDiv');
 var PartySupplementalDiv = require('./PartySupplementalDiv');
 var PartyContactDiv = require('./PartyContactDiv');
-var SubmitButton = require('./SubmitButton');
+//var SubmitButton = require('./SubmitButton');
+var SubmitButton = require('../../common/SubmitButton');
 
 var LeadsStore = require('../../../stores/LeadsStore'); 
 var LeadsActions = require('../../../actions/LeadsActions'); 
