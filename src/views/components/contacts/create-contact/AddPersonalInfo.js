@@ -6,11 +6,53 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
+var CurrencyOption = require('./CurrencyOption');
+var CommonStore = require('../../../stores/CommonStore');
+var CommonActions = require('../../../actions/CommonActions');
 
 var AddPersonalInfo = React.createClass({
 
+    getInitialState: function () {
+        return {
+            currenciesObjArray: []
+        };
+    },
+
+    componentDidMount: function () {
+        // Event listener to fire when data retrieved-- 
+        // when Store emits, informs this View something happened
+        CommonStore.addGetAllCurrenciesListener(this._onGetData);
+        
+        // Call the async function to get all currencies
+        CommonActions.getAllCurrencies();
+    },
+
+    componentWillUnmount: function() {
+        // Avoids console error
+        CommonStore.removeListener('getAllCurrencies', this._onGetData);
+    },
+
+    // An event registered with the store-- fires when emitGet()
+    // is called inside getContactsByOwner's success callback
+    _onGetData: function () {
+        this.setState({
+            currenciesObjArray: CommonStore.getCurrenciesObjArray()
+        });
+    },
+    
     render: function(){
+        
         /* jshint ignore:start */
+        
+        var currencies = this.state.currenciesObjArray;        
+        var currenciesJSX = [];
+
+        for (var i = 0; i < currencies.length; i++) {
+            // See https://facebook.github.io/react/docs/multiple-components.html#dynamic-children
+            // for an explanation for passing a "key" prop to a child component in for loop
+            currenciesJSX.push(<CurrencyOption key={ 'currency_' + i } currency={ currencies[i] }/>);
+        }
+
         return (
             <div>
                 <form>
@@ -100,34 +142,13 @@ var AddPersonalInfo = React.createClass({
                                     <div className="input-group-addon">
                                         <i className="fa fa-usd" aria-hidden="true"></i>
                                     </div>
-                                    {/*
-                                    <!--
-                                    <Anurag>
-                                        The recommended approach is to fill up this dropdown through
-                                        a method in something like CommonStore (for reusability purpose).
-                                        Eg., CommonStore.getAllCurrencies()
-                                        Of course we would need a new API for this.
-                                        For reusability, we can create something like /api/common-data?type=uomCurrency
-                                        You do this in componentDidMount.
-                                    </Anurag>
-                                    --> 
-                                    <select id="currency" className="form-control">
-                                        <option value="USD">USD - American Dollar</option>
-                                        <option value="CAD">CAD - Canadian Dollar</option>
-                                        <option value="EUR">EUR - Euro</option>
+                                    <select 
+                                        className="form-control"
+                                        id="preferredCurrencyUomId"
+                                        onChange={ this.props.onChange }
+                                        value={ this.props.contact.preferredCurrencyUomId }>
+                                        { currenciesJSX }
                                     </select>
-
-                                    DINESH:  I WILL IMPLEMENT IN HERE SOON ONCE MORE BASIC FUNCTIONALITY OF THIS FORM IS WORKING.
-                                    DITTO FOR STATE/COUNTRY, ALL OTHER PULL-DOWN MENU VALUES.  RIGHT NOW, I AM DELIBERATELY
-                                    MAKING CURRENCY A TEXT BOX INPUT JUST LIKE FIRST NAME, IF THAT WORKS, I'LL REVISE INTO
-                                    A PULL-DOWN MENU SOON...
-                                    */}
-                                    <input type="text" 
-                                        className="form-control" 
-                                        id="preferredCurrencyUomId" 
-                                        placeholder="e.g., USD" 
-                                        onChange={ this.props.onChange } 
-                                        value={ this.props.contact.preferredCurrencyUomId } />
                                 </div>
                             </div>
                         </div>
