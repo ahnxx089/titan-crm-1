@@ -272,7 +272,7 @@ var quoteApi = function (knex) {
     var getQuoteById = function (req, res) {
 
         var quoteId = req.params.id;
-        var result = quoteController.getQuoteById(quoteId, req.user)
+        var result = quoteController.getQuoteById(quoteId, req.user);
         
         if (result) {
             result.then(function (contact) {

@@ -141,7 +141,7 @@ var accountApi = function (knex) {
         else {
             res.json({
                 'message': 'ERR: Nothing found from that GET route request.'
-            })
+            });
         }
     };
 

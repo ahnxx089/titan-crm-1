@@ -76,7 +76,6 @@ ContactsStore.addContact = function(contact) {
         type: 'POST',
         url: '/api/contacts/',
         headers: {  'x-access-token': Cookies.get('titanAuthToken') },
-        contentType:'application/json; charset=utf-8',
         data: contact,
         success: function(partyId) {
             addedContactPartyId = partyId; // contactApi.addContact returns partyId of successfully added Contact

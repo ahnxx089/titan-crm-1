@@ -7,8 +7,7 @@
 
 var React = require('react');
 
-// ON HOLD FOR NOW, THESE CHILDREN WILL BE IMPLEMENTED AS SOON AS I CAN...
-//var AddPersonalInfo = require('./AddPersonalInfo'); // child of this component
+var AddPersonalInfo = require('./AddPersonalInfo');
 //var AddContactMech = require('./AddContactMech'); // child of this component
 
 var AddContactForm = React.createClass({
@@ -141,7 +140,7 @@ var AddContactForm = React.createClass({
                                     */}
                                     <input type="text" 
                                         className="form-control" 
-                                        id="currency" 
+                                        id="preferredCurrencyUomId" 
                                         placeholder="e.g., USD" 
                                         onChange={ this.props.onChange } 
                                         value={ this.props.contact.preferredCurrencyUomId } />
@@ -179,9 +178,10 @@ var AddContactForm = React.createClass({
                                         id="description" 
                                         placeholder="enter any description here" 
                                         onChange={ this.props.onChange } 
-                                        value={ this.props.contact.comments } />
+                                        value={ this.props.contact.description } />
                                 </div>
                             </div>
+                        </div>
                         <div className="col-lg-6 col-xs-12">
                             <div className="form-group">
                                 <label htmlFor="comments">Comments</label>
@@ -198,18 +198,16 @@ var AddContactForm = React.createClass({
                                 </div>
                             </div>
                         </div>
-                        </div>
                     </div>
-                    
-                    {/* The submit button */}
-                    <div className="row">
-                        <div className="col-xs-12" text-right>
-                            <a className="btn btn-primary" href="#" role="button" 
-                                onClick={ this.props.onButtonClick }>Create Contact</a>
-                        </div>
-                    </div>
-                    
                 </form>
+                
+                {/* The submit button */}
+                <div className="row">
+                    <div className="col-xs-12" text-right>
+                        <a className="btn btn-primary" href="#" role="button" 
+                            onClick={ this.props.onButtonClick }>Create Contact</a>
+                    </div>
+                </div>
             </div>
         );
         /* jshint ignore:end */

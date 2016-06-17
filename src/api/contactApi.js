@@ -21,7 +21,7 @@ var contactApi = function (knex) {
     var addContact = function (req, res) {
         var contact = req.body;
         var user = req.user;
-
+        
         var resultsForThisUser = contactController.addContact(contact, user);
 
         /* Intepret the possible outcomes from the controller layer:
