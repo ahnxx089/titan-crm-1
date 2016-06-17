@@ -24,29 +24,48 @@ describe('Accounts API', function () {
 
     it('is inaccessible without a valid token', function (done) {
         request.get(apiBaseUrl, function (err, res, body) {
-            // Check the HTTP status code of response
-            expect(res.statusCode).toBe(403);
-            // Call done to finish the async function
-            done();
+            expect(err).toBeNull();
+            try {
+                // Check the HTTP status code of response
+                expect(res.statusCode).toBe(403);
+                // Call done to finish the async function
+                done();
+            } catch (err) {
+                fail(err);
+                done();
+            }
         });
     });
-    xit('getAccount returns all Accounts in system as an array', function (done) {
+    it('getAccount returns all Accounts in system as an array', function (done) {
         baseRequest.get(apiBaseUrl, function (err, res, body) {
-            var typeofAccounts = Object.prototype.toString.call(JSON.parse(body));
-            // Check whether the return value is an array
-            expect(typeofAccounts).toBe('[object Array]');
-            // Call done to finish the async function
-            done();
+            expect(err).toBeNull();
+            try {
+                var typeofAccounts = Object.prototype.toString.call(JSON.parse(body));
+                // Check whether the return value is an array
+                expect(typeofAccounts).toBe('[object Array]');
+                // Call done to finish the async function
+                done();
+            } catch (err) {
+                fail(err);
+                done();
+            }
         });
     });
-    xit('getAccount returns a valid Accounts entity', function (done) {
+    it('getAccount returns a valid Accounts entity', function (done) {
         baseRequest.get(apiBaseUrl + '/99', function (err, res, body) {
-            expect(JSON.parse(body).hasOwnProperty('partyId')).toBeTruthy();
-            // Call done to finish the async function
-            done();
+            expect(err).toBeNull();
+            try {
+                expect(JSON.parse(body).hasOwnProperty('partyId')).toBeTruthy();
+                // Call done to finish the async function
+                done();
+            } catch (err) {
+                fail(err);
+                done();
+            }
         });
     });
 
+    //test times out, then throws error when it tries to continue after Jasmine has finished
     xit('addAccount adds an account and successfully returns the new entry\'s single partyId', function (done) {
         var newAccount = {
             partyTypeId: 'ORGANIZATION',
@@ -68,16 +87,24 @@ describe('Accounts API', function () {
             webAddress: 'testwebsite.com',
             phoneNumber: '9990009999'
         };
-        baseRequest.post(apiBaseUrl, {form: newAccount}, function (err, res, body) {
-            var result = JSON.parse(body);
-            // Check whether return value is a partyId
-            expect(result.hasOwnProperty('partyId')).toBeTruthy();
-            // Check whether a single party id is returned
-            expect(result.partyId.length).toBe(1);
-            // Call done to finish the async function
-            done();
+        baseRequest.post(apiBaseUrl, {
+            form: newAccount
+        }, function (err, res, body) {
+            expect(err).toBeNull();
+            try {
+                var result = JSON.parse(body);
+                // Check whether return value is a partyId
+                expect(result.hasOwnProperty('partyId')).toBeTruthy();
+                // Check whether a single party id is returned
+                expect(result.partyId.length).toBe(1);
+                // Call done to finish the async function
+                done();
+            } catch (err) {
+                fail(err);
+                done();
+            }
         });
     });
-    
-    
+
+
 });

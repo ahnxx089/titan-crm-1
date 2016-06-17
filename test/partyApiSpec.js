@@ -16,38 +16,57 @@ var baseRequest = request.defaults({
     }
 });
 
-
-
 describe('Party API', function () {
 
     it('is inaccessible without a valid token', function (done) {
         request.get(apiBaseUrl, function (err, res, body) {
-            // Check the HTTP status code of response
-            expect(res.statusCode).toBe(403);
-            // Call done to finish the async function
-            done();
+
+            expect(err).toBeNull();
+            try {
+                // Check the HTTP status code of response
+                expect(res.statusCode).toBe(403);
+                // Call done to finish the async function
+                done();
+            } catch (err) {
+                fail(err);
+                done();
+            }
         });
     });
 
-    xit('getParties returns all parties in system as an array', function (done) {
+    it('getParties returns all parties in system as an array', function (done) {
         baseRequest.get(apiBaseUrl, function (err, res, body) {
-            var typeofParties = Object.prototype.toString.call(JSON.parse(body));
-            // Check whether the return value is an array
-            expect(typeofParties).toBe('[object Array]');
-            // Call done to finish the async function
-            done();
+
+            expect(err).toBeNull();
+            try {
+                var typeofParties = Object.prototype.toString.call(JSON.parse(body));
+                // Check whether the return value is an array
+                expect(typeofParties).toBe('[object Array]');
+                // Call done to finish the async function
+                done();
+            } catch (err) {
+                fail(err);
+                done();
+            }
         });
     });
 
-    xit('getParty returns a valid party entity', function (done) {
+    it('getParty returns a valid party entity', function (done) {
         baseRequest.get(apiBaseUrl + '/2', function (err, res, body) {
-            expect(JSON.parse(body).hasOwnProperty('partyId')).toBeTruthy();
-            // Call done to finish the async function
-            done();
+
+            expect(err).toBeNull();
+            try {
+                expect(JSON.parse(body).hasOwnProperty('partyId')).toBeTruthy();
+                // Call done to finish the async function
+                done();
+            } catch (err) {
+                fail(err);
+                done();
+            }
         });
     });
 
-    xit('addParty adds a party and returns a single party id', function (done) {
+    it('addParty adds a party and returns a single party id', function (done) {
         var newParty = {
             partyTypeId: 'PERSON',
             preferredCurrencyUomId: 'USD',
@@ -57,13 +76,20 @@ describe('Party API', function () {
         baseRequest.post(apiBaseUrl, {
             form: newParty
         }, function (err, res, body) {
-            var result = JSON.parse(body);
-            // Check whether return value is a partyId
-            expect(result.hasOwnProperty('partyId')).toBeTruthy();
-            // Check whether a single party id is returned
-            expect(result.partyId.length).toBe(1);
-            // Call done to finish the async function
-            done();
+
+            expect(err).toBeNull();
+            try {
+                var result = JSON.parse(body);
+                // Check whether return value is a partyId
+                expect(result.hasOwnProperty('partyId')).toBeTruthy();
+                // Check whether a single party id is returned
+                expect(result.partyId.length).toBe(1);
+                // Call done to finish the async function
+                done();
+            } catch (err) {
+                fail(err);
+                done();
+            }
         });
     });
 
