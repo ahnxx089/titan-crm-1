@@ -18,6 +18,18 @@ var commonData = function(knex) {
             .from('uom')
             .where({ uom_type_id: 'CURRENCY_MEASURE' });
     };
+
+    /**
+     * Gets all state or province Geo units from database
+     * @return {Object} promise - Fulfillment value is an array of Geo rows for countries
+    */
+    var getAllStatesOrProvinces = function() {
+        return knex.select('geo_id', 'abbreviation', 'geo_name')
+            .from('geo')
+            .where({ geo_type_id: 'STATE' })
+            .orWhere({ geo_type_id: 'PROVINCE' });
+    };
+
     
     /**
      * Gets all country Geo units from database
@@ -31,6 +43,7 @@ var commonData = function(knex) {
     
     return {
         getAllCurrencies: getAllCurrencies,
+        getAllStatesOrProvinces: getAllStatesOrProvinces,
         getAllCountries: getAllCountries
     };
 };

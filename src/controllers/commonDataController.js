@@ -32,10 +32,13 @@ var commonDataController = function (knex) {
         // Fetch data based on requested type
         switch (type) {
             case 'uomCurrency':
-                promise = commonData.getAllCurrencies()
+                promise = commonData.getAllCurrencies();
+                break;
+            case 'geoStateOrProvince':
+                promise = commonData.getAllStatesOrProvinces();
                 break;
             case 'geoCountry':
-                promise = commonData.getAllCountries()
+                promise = commonData.getAllCountries();
                 break;
             default:
                 // A new promise that returns empty array as its fulfillment value

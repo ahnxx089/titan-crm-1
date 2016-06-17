@@ -14,6 +14,12 @@ var ContactsActions = {
         TitanDispatcher.dispatch({
             actionType: ContactsConstants.GET_MY_CONTACTS
         });
+    },
+    addContact: function(contact) {
+        TitanDispatcher.dispatch({
+            actionType: ContactsConstants.ADD_CONTACT,
+            data: contact
+        });
     }
     
 };
