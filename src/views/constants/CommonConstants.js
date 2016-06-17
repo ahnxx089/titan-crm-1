@@ -6,7 +6,9 @@
 /////////////////////////////////////////////////
 
 var CommonConstants = {
-    GET_ALL_CURRENCIES: 'GET_ALL_CURRENCIES'
+    GET_ALL_CURRENCIES: 'GET_ALL_CURRENCIES',
+    GET_ALL_STATES_OR_PROVINCES: 'GET_ALL_STATES_OR_PROVINCES',
+    GET_ALL_COUNTRIES: 'GET_ALL_COUNTRIES'
 };
 
 module.exports = CommonConstants;

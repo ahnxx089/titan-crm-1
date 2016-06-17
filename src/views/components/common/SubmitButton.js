@@ -27,3 +27,13 @@ var SubmitButton = React.createClass({
 // It is not okay to use double slash // for comments within the render function, 
 // at least not after its return statement, OR at least not with HTML tags
 module.exports = SubmitButton;
+
+/*  DINESH'S NOTE TO LUCAS:  I attempted to use this SubmitButton in the AddContactForm but
+    could not figure out how to successfully pass down this.props.onButtonClick from that form to here.
+    I temporarily changed the <button> tag above to:
+    
+        <button type="submit" className="btn btn-primary" onClick = {this.props.onButtonClick}>Submit</button>
+    
+    But that did not work, therefore I restored the <button> tag to your version.  If I can use this button
+    on the AddContactForm, I would like to.
+*/

@@ -6,11 +6,63 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
+var StateProvinceOption = require('./StateProvinceOption');
+var CountryOption = require('./CountryOption');
+var CommonStore = require('../../stores/CommonStore');
+var CommonActions = require('../../actions/CommonActions');
 
 var AddContactMech = React.createClass({
 
+    getInitialState: function () {
+        return {
+            stateProvinceObjArray: [],
+            countriesObjArray: []
+        };
+    },
+
+    componentDidMount: function () {
+        CommonStore.addGetAllStatesOrProvincesListener(this._onGetData);  // register as listener with Store
+        CommonStore.addGetAllCountriesListener(this._onGetData);  // register as listener with Store
+        CommonActions.getAllStatesOrProvinces();    // initiate Flux unidirectional flow
+        CommonActions.getAllCountries();    // initiate Flux unidirectional flow
+    },
+
+    componentWillUnmount: function() {
+        CommonStore.removeListener('getAllStatesOrProvinces', this._onGetData);
+        CommonStore.removeListener('getAllCountries', this._onGetData);
+    },
+
+    _onGetData: function () {
+        this.setState({
+            stateProvinceObjArray: CommonStore.getStatesOrProvincesObjArray()
+        });
+        this.setState({
+            countriesObjArray: CommonStore.getCountriesObjArray()
+        });
+    },
+    
     render: function(){
+        
         /* jshint ignore:start */
+        
+        var statesProvinces = this.state.stateProvinceObjArray;        
+        var statesProvincesJSX = [];
+
+        for (var i = 0; i < statesProvinces.length; i++) {
+            // See https://facebook.github.io/react/docs/multiple-components.html#dynamic-children
+            // for an explanation for passing a "key" prop to a child component in for loop
+            statesProvincesJSX.push(<StateProvinceOption key={ 'stateProvince_' + i } stateProvince={ statesProvinces[i] }/>);
+        }
+        
+        var countries = this.state.countriesObjArray;        
+        var countriesJSX = [];
+
+        for (var i = 0; i < countries.length; i++) {
+            // See https://facebook.github.io/react/docs/multiple-components.html#dynamic-children
+            // for an explanation for passing a "key" prop to a child component in for loop
+            countriesJSX.push(<CountryOption key={ 'country_' + i } country={ countries[i] }/>);
+        }
+        
         return (
             <div>
 
@@ -231,12 +283,6 @@ var AddContactMech = React.createClass({
                                 </div>
                             </div>
                         </div>
-                        {/*
-                        <Anurag>
-                            The State field should be populated based on the selected country.
-                            That is, fill this dropdown in the onChange event of country dropdown.
-                        </Anurag>
-                        */}
                         <div className="col-lg-6 col-xs-12">
                             <div className="form-group">
                                 <label htmlFor="stateOrProvinceGeoId">State or Province (select)</label>
@@ -244,20 +290,13 @@ var AddContactMech = React.createClass({
                                     <div className="input-group-addon">
                                         <i className="fa fa-fw" aria-hidden="true"></i>
                                     </div>
-                                    {/* DINESH IS TEMPORARILY MAKING THIS NOTHING MORE THAN input type="text" FOR NOW, 
-                                    TO BE REPLACED BY DROP-DOWN SOON, FOR NOW JUST TRYING TO GET IT WORKING AT A BASIC LEVEL.
-                                    <select id="stateOrProvinceGeoId" className="form-control">
-                                        <option>IA</option>
-                                        <option>MN</option>
-                                        <option>WI</option>
+                                    <select 
+                                        className="form-control"
+                                        id="stateProvinceGeoId"
+                                        onChange={ this.props.onChange }
+                                        value={ this.props.contact.stateProvinceGeoId }>
+                                        { statesProvincesJSX }
                                     </select>
-                                    */}
-                                    <input type="text" 
-                                        className="form-control" 
-                                        id="stateProvinceGeoId" 
-                                        placeholder="AL, AK, AZ, etc." 
-                                        onChange={ this.props.onChange } 
-                                        value={ this.props.contact.stateProvinceGeoId } />
                                 </div>
                             </div>
                         </div>
@@ -280,11 +319,6 @@ var AddContactMech = React.createClass({
                                 </div>
                             </div>
                         </div>
-                        {/*}
-                        <Anurag>
-                            Data should come from something like /api/common-data?type=geoCountry
-                        </Anurag>
-                        */}
                         <div className="col-lg-6 col-xs-12">
                             <div className="form-group">
                                 <label htmlFor="countryGeoId">Country (select)</label>
@@ -292,20 +326,13 @@ var AddContactMech = React.createClass({
                                     <div className="input-group-addon">
                                         <i className="fa fa-globe" aria-hidden="true"></i>
                                     </div>
-                                    {/* DINESH IS TEMPORARILY MAKING THIS NOTHING MORE THAN input type="text" FOR NOW, 
-                                    TO BE REPLACED BY DROP-DOWN SOON, FOR NOW JUST TRYING TO GET IT WORKING AT A BASIC LEVEL.
-                                    <select id="countryGeoId" className="form-control">
-                                        <option>USA</option>
-                                        <option>CAN</option>
-                                        <option>MEX</option>
+                                    <select 
+                                        className="form-control"
+                                        id="countryGeoId"
+                                        onChange={ this.props.onChange }
+                                        value={ this.props.contact.countryGeoId }>
+                                        { countriesJSX }
                                     </select>
-                                    */}
-                                    <input type="text" 
-                                        className="form-control" 
-                                        id="countryGeoId" 
-                                        placeholder="e.g., USA"
-                                        onChange={ this.props.onChange } 
-                                        value={ this.props.contact.countryGeoId }/>
                                 </div>
                             </div>
                         </div>

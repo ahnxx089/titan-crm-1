@@ -16,6 +16,8 @@ var Cookies = require('js-cookie');
 // DATA
 //-----------------------------------------------
 var currenciesObjArray = [];
+var stateProvinceObjArray = [];
+var countriesObjArray = [];
 
 
 // STORE as EVENT EMITTER
@@ -35,6 +37,22 @@ CommonStore.emitGetAllCurrencies = function() {
     // Synchronously calls each of the listeners registered for the event named 'getCurrencies'.
     // In previous function addGetAllCurrenciesListener is where listeners registers to get emits.
     this.emit('getAllCurrencies');  
+};
+
+CommonStore.addGetAllStatesOrProvincesListener = function (listener) {
+    this.on('getAllStatesOrProvinces', listener);
+};
+
+CommonStore.emitGetAllStatesOrProvinces = function() {
+    this.emit('getAllStatesOrProvinces');  
+};
+
+CommonStore.addGetAllCountriesListener = function (listener) {
+    this.on('getAllCountries', listener);
+};
+
+CommonStore.emitGetAllCountries = function() {
+    this.emit('getAllCountries');  
 };
 
 
@@ -60,6 +78,46 @@ CommonStore.getCurrenciesObjArray = function() {
     return currenciesObjArray;
 };
 
+CommonStore.getAllStatesOrProvinces = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=geoStateOrProvince',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(allStatesOrProvinces) {
+            stateProvinceObjArray = allStatesOrProvinces;
+            thisCommonStore.emitGetAllStatesOrProvinces();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getStatesOrProvincesObjArray = function() {
+    return stateProvinceObjArray;
+};
+
+CommonStore.getAllCountries = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=geoCountry',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(allCountries) {
+            countriesObjArray = allCountries;
+            thisCommonStore.emitGetAllCountries();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getCountriesObjArray = function() {
+    return countriesObjArray;
+};
+
 
 // LINK BETWEEN DISPATCHER AND STORE
 //-----------------------------------------------
@@ -68,6 +126,14 @@ TitanDispatcher.register(function(action) {
     switch(action.actionType) {
         case CommonConstants.GET_ALL_CURRENCIES: {
             CommonStore.getAllCurrencies();
+            break;
+        }
+        case CommonConstants.GET_ALL_STATES_OR_PROVINCES: {
+            CommonStore.getAllStatesOrProvinces();
+            break;
+        }
+        case CommonConstants.GET_ALL_COUNTRIES: {
+            CommonStore.getAllCountries();
             break;
         }
     }

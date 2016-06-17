@@ -34,6 +34,9 @@ var commonDataController = function (knex) {
             case 'uomCurrency':
                 promise = commonData.getAllCurrencies();
                 break;
+            case 'geoStateOrProvince':
+                promise = commonData.getAllStatesOrProvinces();
+                break;
             case 'geoCountry':
                 promise = commonData.getAllCountries();
                 break;

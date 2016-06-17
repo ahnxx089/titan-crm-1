@@ -14,8 +14,19 @@ var CommonActions = {
         TitanDispatcher.dispatch({
             actionType: CommonConstants.GET_ALL_CURRENCIES
         });
-    }
+    },
     
+    getAllStatesOrProvinces: function() {
+        TitanDispatcher.dispatch({
+            actionType: CommonConstants.GET_ALL_STATES_OR_PROVINCES
+        });
+    },
+    
+    getAllCountries: function() {
+        TitanDispatcher.dispatch({
+            actionType: CommonConstants.GET_ALL_COUNTRIES
+        });
+    }
 };
 
 module.exports = CommonActions;
