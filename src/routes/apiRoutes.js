@@ -62,6 +62,7 @@ var router = function (knex) {
         .post(personApi.addPerson);
     
     
+    // Author: Xiaosiqi Yang, Divine Ndifongwa
     // LEADS, 7 in total: 1 post, 4 gets, 1 put, 1 delete
     var leadApi = require('../api/leadApi')(knex);
     apiRouter.route('/leads')
@@ -72,9 +73,8 @@ var router = function (knex) {
         .put(leadApi.updateLead)
         .delete(leadApi.deleteLead);
     
-//getLeadsByIdentity
-
-// getLeadsByPhoneNumber are not implemented yet
+//getLeadsByIdentity and
+//getLeadsByPhoneNumber are not implemented yet
     
     
 
@@ -140,6 +140,15 @@ var router = function (knex) {
     apiRouter.route('/quotes/:id')
         .get(quoteApi.getQuoteById)
         .put(quoteApi.updateQuote);
+
+
+    // COMMON DATA
+    // ==========================================
+    //    
+    var commonDataApi = require('../api/commonDataApi')(knex); 
+    
+    apiRouter.route('/common-data')
+        .get(commonDataApi.getCommonData);
     
     return apiRouter;
 };

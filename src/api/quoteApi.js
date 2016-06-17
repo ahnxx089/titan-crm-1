@@ -71,9 +71,7 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
-            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
-            // An object in result means it's a promise (returned only if validation succeeds).
+            // An integer (number of rows added) is returned only if validation succeeds
             else {
                 resultsForThisUser.then(function (numRowsInserted) {
                     res.json({
@@ -105,9 +103,7 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
-            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
-            // An object in result means it's a promise (returned only if validation succeeds)
+            // An integer (number of rows added) is returned only if validation succeeds
             else {
                 resultsForThisUser.then(function (numRowsInserted) {
                     res.json({
@@ -120,21 +116,21 @@ var quoteApi = function (knex) {
         // POST /api/quotes?note
         // 
         // addQuoteNote 
-            else if (req.query.hasOwnProperty('note')) {
+        else if (req.query.hasOwnProperty('note')) {
 
-                // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
-                res.json({
-                    'message': 'addQuoteNote functionality is under construction...',
-                    'reachedOn': 'This was reached on POST route /api/quotes?note'
-                });
-            }
+            // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
+            res.json({
+                'message': 'addQuoteNote functionality is under construction...',
+                'reachedOn': 'This was reached on POST route /api/quotes?note'
+            });
+        }
 
         // no other POST routes, return error message so the app does not hang
-            else {
-                res.json({
-                    'message': 'ERROR:  No such route to POST to...'
-                });
-            }
+        else {
+            res.json({
+                'message': 'ERROR:  No such route to POST to...'
+            });
+        }
     };
 
     // PUT /api/quotes
@@ -165,9 +161,7 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
-            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
-            // An object in result means it's a promise (returned only if validation succeeds)
+            // An integer (number of rows updated) is returned only if validation succeeds
             else {
                 resultsForThisUser.then(function (numRowsUpdated) {
                     res.json({
@@ -199,9 +193,7 @@ var quoteApi = function (knex) {
             else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
                 res.json(resultsForThisUser);
             }
-            // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
-            // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
-            // An object in result means it's a promise (returned only if validation succeeds)
+            // An integer (number of rows updated) is returned only if validation succeeds
             else {
                 resultsForThisUser.then(function (numRowsUpdated) {
                     res.json({
@@ -315,9 +307,7 @@ var quoteApi = function (knex) {
         else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
             res.json(resultsForThisUser);
         }
-        // DINESH WILL UPDATE THE FOLLOWING COMMENT, PENDING AMENDMENT OF THE UNIT TESTS,
-        // THE RUNNING OF WHICH IS THROWING NON-REPEATABLE ERRORS AT THE MOMENT...
-        // An object in result means it's a promise (returned only if validation succeeds)
+        // An integer (number of rows updated) is returned only if validation succeeds
         else {
             resultsForThisUser.then(function (numRowsUpdated) {
                 res.json({

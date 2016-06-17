@@ -135,6 +135,7 @@ describe('Account module', function () {
         expect(resultsForThisTest).toBeTruthy();
         done();
     });
+    
     it('accountController.delete account delete the query', function (done) {
         var accountId = 'Company2';
         var resultsForThisTest = accountController.deleteAccount(accountId);

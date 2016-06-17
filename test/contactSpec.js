@@ -16,7 +16,7 @@ var Contact = require('../src/entities/contact');
 
 describe('Contact module ', function () {
 
-    // Test contactController.addContact where a user has security permission to add a contact
+    // Author:  Dinesh
     it('contactController.addContact allows a user with permission to add a Contact', function (done) {
 
         // user contactOwnerDEF has permission to create Contacts
@@ -75,8 +75,7 @@ describe('Contact module ', function () {
             });
     });
 
-    // Test contactController.getContactsByOwner where a user has security permission
-    // (but does not actually own any contacts) -- TEST HAS PASSED
+    // Author:  Dinesh
     it('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
 
         // user contactOwnerDEF has permission to own Contacts (but does not actually own any)
@@ -113,8 +112,7 @@ describe('Contact module ', function () {
             });
     });
 
-    // Test contactController.getContactsByOwner where user owns a contact, does it return the correct
-    // contact?  Check the first one on the returned collection -- TEST PASSED
+    // Author:  Dinesh
     it('contactController.getContactsByOwner allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user', function (done) {
 
         // user contactOwnerDEF has permission to own Contacts (and owns at least one)
@@ -153,7 +151,7 @@ describe('Contact module ', function () {
             });
     });
 
-    // Test contactController.getContactsByOwner where user lacks security permission -- TEST PASSED
+    // Author:  Dinesh
     it('contactController.getContactsByOwner DENIES a user without permission to own Contact(s) to get the party_id of (any) Contacts', function (done) {
         // leadOwnerDEF has permission to own Leads, but not Contacts
         var user = {
@@ -187,7 +185,7 @@ describe('Contact module ', function () {
         }
     });
 
-    // Test of contactController.getContactsByIdentity where user has security permission -- TEST PASSED
+    // Author:  Dinesh
     it('contactController.getContactsByIdentity allows a user with permission to own Contact(s) to get the party_id of Contacts owned by that user (if any)', function (done) {
 
         // this search looks for any first name containing "w" AND last name containing "e"

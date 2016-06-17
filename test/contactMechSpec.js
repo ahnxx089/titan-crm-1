@@ -164,6 +164,7 @@ describe('updateContactMech', function () {
         expect(result).toBeNull();
         done();
     });
+    
     it('returns a promise for valid input', function (done) {
         var id = 23;
         var now = (new Date()).toISOString();

@@ -6,9 +6,20 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
+var withRouter = require('react-router').withRouter;
+var BrowserHistory = require('react-router').browserHistory;
 var Link = require('react-router').Link;
+var Cookies = require('js-cookie');
 
 var Header = React.createClass({
+    _Logout: function(event) {
+        event.preventDefault();
+        // Delete the auth cookies
+        Cookies.remove('titanAuthToken');
+        Cookies.remove('titanAuthUser');
+        // Redirect to Login page
+        this.props.router.replace('/login');
+    },
     render: function () {
         /* jshint ignore:start */
         return (
@@ -26,11 +37,14 @@ var Header = React.createClass({
                     <div id="navbar" className="navbar-collapse collapse">
                         <ul className="nav navbar-nav">
                             <li><Link to="/cp/home" activeClassName="active">Home</Link></li>
+            
                             <li className="dropdown">
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Leads <span className="caret"></span></a>
                                 <ul className="dropdown-menu">
-                                    <li><a href="#">My Leads</a></li>
-                                    <li><a href="#">Create Lead</a></li>
+                                    <li><a href="http://www.google.com">My Leads old</a></li>
+                                    <li><Link to="/cp/leads/my-leads" activeClassName="active">My Leads</Link></li>
+                                    <li><Link to="/cp/leads/create-lead" activeClassName="active">Create Lead</Link></li>
+                                    <li><a href="www.bing.com">Create Lead old</a></li>
                                     <li><a href="#">Find Leads</a></li>
                                 </ul>
                             </li>
@@ -70,11 +84,15 @@ var Header = React.createClass({
                         </ul>
                         
                         <ul className="nav navbar-nav navbar-right">
-                            <li>
-                                <a href="#">
+                            <li className="dropdown">
+                                <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     <i className="fa fa-user" aria-hidden="true"></i>&nbsp;
-                                    { this.props.username }
+                                    { this.props.username }&nbsp;
+                                    <span className="caret"></span>
                                 </a>
+                                <ul className="dropdown-menu">
+                                    <li><a onClick={ this._Logout } href="#">Logout</a></li>
+                                </ul>
                             </li>
                         </ul>
                     </div>
@@ -85,4 +103,4 @@ var Header = React.createClass({
     }
 });
 
-module.exports = Header;
+module.exports = withRouter(Header);

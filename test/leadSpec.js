@@ -11,9 +11,10 @@ var knex = require('../src/config/knexConfig')().getConfig();
 var leadController = require('../src/controllers/leadController')(knex);
 var Lead = require('../src/entities/lead');
 
-
+// Author: Xiaosiqi
 describe('Lead module', function () {
 
+    // Author: Xiaosiqi
     // this is same as the second 
     it('getLeads returns all leads in system as an array of Lead objects', function (done) {
         leadController.getLeadById(120)
@@ -33,7 +34,6 @@ describe('Lead module', function () {
             });
     });
 
-
     it('getLead returns a valid lead entity', function (done) {
         leadController.getLeadById(2)
             .then(function (lead) {
@@ -47,6 +47,8 @@ describe('Lead module', function () {
             });
     });
 
+
+    // Author: Xiaosiqi
     // Test leadController.addLead where a user has security permission to add a lead
     it('leadController.addLead allows a user with permission to add a Lead', function (done) {
 
@@ -93,7 +95,6 @@ describe('Lead module', function () {
         };
 
         var resultsForThisUser = leadController.addLead(lead, user);
-
         // The controller returns a promise, therefore the expect() and done() must be put in a 
         // .then() clause so that the promise can be fulfilled. Otherwise the adding of the Lead
         // does not actually happen before the expect() is reached and the done() executes.
@@ -112,7 +113,7 @@ describe('Lead module', function () {
             });
     });
 
-
+    // Author: Xiaosiqi
     // Test leadController.getLeadsByOwner where a user has security permission
     // (but does not actually own any leads) -- TEST HAS not PASSED
     it('leadController.getLeadsByOwner allows a user with permission to own Lead(s) to get the party_id of Lead owned by that user (if any)', function (done) {
@@ -130,7 +131,7 @@ describe('Lead module', function () {
             securityPermissions: ['CRMSFA_LEAD_CREATE', 'CRMSFA_ACT_ADMIN', 'CRMSFA_ACT_CLOSE', 'CRMSFA_ACT_CREATE', 'CRMSFA_ACT_UPDATE', 'CRMSFA_ACT_VIEW', 'CRMSFA_LEAD_DEACTIVATE', 'CRMSFA_LEAD_DELETE', 'CRMSFA_LEAD_REASSIGN', 'CRMSFA_LEAD_UPDATE', 'CRMSFA_LEAD_VIEW', 'CRMSFA_OPP_CREATE', 'CRMSFA_OPP_UPDATE', 'CRMSFA_OPP_VIEW']
         };
 
-        // when a user has Lead owner rights, the controller returns an object.  The object will
+        // when a user has Lead owner rights, the controller returns an object. The object will
         // be empty if the user does not actually own any leads, but the facts that user had 
         // permission to create (and therefore own) leads is what is being tested here.
         var resultsForThisUser = leadController.getLeadsByOwner(user);
