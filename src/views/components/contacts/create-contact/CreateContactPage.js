@@ -93,9 +93,15 @@ var CreateContactPage = React.createClass({
         // NOTE:  ERROR HANDLING PROBABLY NEEDS TO BE ADDED HERE, FOR NOW ONLY SUBMIT VALID DATA!
         // (compare to HomePage._onChange, do I need that here?)
         //
-        this.setState({
+        // COMMENTED THIS OUT DUE TO GETTING CONSOLE WARNING:
+        //  Warning: setState(...): Can only update a mounted or mounting component. This usually means you 
+        //  called setState() on an unmounted component. This is a no-op. Please check the code for the 
+        //  CreateContactPage component.
+        // Ideally I would like to know what the newly added partyId is, it was working but now is not,
+        // cannot figure out why....        
+        {/*this.setState({
             addedContactPartyId: ContactsStore.addedContact()
-        });  
+        }); */ }
     },
                                           
     render: function (){
