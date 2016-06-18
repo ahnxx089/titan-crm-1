@@ -89,31 +89,34 @@ var CreateContactPage = React.createClass({
 
     _onAddedContact: function() {
         
-        // After a successful ajax call in the store, calling ContactsStore.addedContact() will
-        // return one of the three things that contactApi.addContact returns-- handle with if else block
+        // After a successful ajax call in the store, calling ContactsStore.addedContact() will return 
+        // one of the three results from contactApi.addContact, handle with if-else-if-else block
         var result = ContactsStore.addedContact();
 
+        // User lacks security permission to addContact
         if (result.hasOwnProperty('message'))
         {
             this.props.updateErrorBox(result.message);
-            return;
+            //return; // prevents the redirect at end of this function
         }
+        // User has permission, but there were one or more validation errors
         else if (Object.prototype.toString.call(result) === '[object Array]') 
         {
-            console.log('\nINSIDE THE ELSE IF BLOCK NOW, INVOKE this.props.updateErrorBox(result)...');
             this.props.updateErrorBox(result);
-            return;
+            //return; // prevents the redirect at end of this function
         }
-        // user had permission and no validation errors-- api should return the new partyId
-        else {
+        // User had permission and no validation errors-- api should return the new partyId. 
+        // Note:  the new partyId won't actually get 
+        else if (result.hasOwnProperty('partyId')) {
             this.setState({
-                addedContactPartyId: result
+                addedContactPartyId: result.partyId
             });
+            
             console.log('\nCreateContactPage._onAddedContact:  after this.setState, this.state.addedContactPartyId = ', this.state.addedContactPartyId);
+            
+            // for successful post to database, redirect to MyContactsPage
+            this.props.router.replace('/cp/contacts/my-contacts');
         }
-        
-        // redirect to MyContactsPage
-        this.props.router.replace('/cp/contacts/my-contacts');
     },
                                           
     render: function (){
