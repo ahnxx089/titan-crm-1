@@ -10,6 +10,7 @@ var Cookies = require('js-cookie');
 var Header = require('./common/Header');
 var ErrorBox = require('./common/ErrorBox');
 var Footer = require('./common/Footer');
+var $ = require('jquery');
 
 var ControlPanel = React.createClass({
     getInitialState: function() {
@@ -22,6 +23,8 @@ var ControlPanel = React.createClass({
         this.setState({
             errorMessages: messages
         });
+        // Scroll to the top
+        $('html, body').animate({scrollTop : 0},800);
     },
     render: function () {
         /* jshint ignore:start */
