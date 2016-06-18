@@ -1,5 +1,6 @@
 /////////////////////////////////////////////////
 // A party supplemental data div on Add Lead page.
+// Dont use this. Use the one in ../../common/ instead
 //
 // @file:   PartySupplementalDiv.js
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
