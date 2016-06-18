@@ -33,37 +33,39 @@ gulp.task('style', function () {
     return gulp.src(jsFiles)
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish', {
-            verbose: true    
+            verbose: true
         }))
-    //    .pipe(eslint({
-	// 		'extends': 'eslint:recommended',
-	// 		'ecmaFeatures': {
-    //             'jsx': true,
-	// 			'modules': true
-    //         }
-    //    }))
-    //    .pipe(eslint.format())
-    //    //.pipe(eslint.failOnError())
+        //    .pipe(eslint({
+        // 		'extends': 'eslint:recommended',
+        // 		'ecmaFeatures': {
+        //             'jsx': true,
+        // 			'modules': true
+        //         }
+        //    }))
+        //    .pipe(eslint.format())
+        //    //.pipe(eslint.failOnError())
         .pipe(jscs());
 });
 
 // Gulp task to transpile our React JSX files into native ES5 ones
+// and reacts a nice (and ugly/minified) bundle out of them
 // Hint: https://gist.github.com/hecof/88813137c0309a4ab88f
-gulp.task('jsx2js', function () {
+var jsx2js = function () {
     browserify({
-            entries: './src/views/titan.js',
-            extensions: ['.js'],
-            debug: true
-        })
-        .transform('babelify', {
-            presets: ['react']
-        })
-        .bundle()
-        .pipe(source('bundle.js'))
-        .pipe(buffer())
-        .pipe(uglify())
-        .pipe(gulp.dest('./public/js/'));
-});
+        entries: './src/views/titan.js',
+        extensions: ['.js'],
+        debug: true
+    })
+    .transform('babelify', {
+        presets: ['react']
+    })
+    .bundle()
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(gulp.dest('./public/js/'));
+};
+gulp.task('jsx2js', jsx2js);
 
 // Gulp task to unit test the app
 gulp.task('test', function () {
@@ -90,7 +92,11 @@ gulp.task('serve', ['style', 'jsx2js'], function () {
         watch: jsFiles
     };
     return nodemon(options)
-        .on('restart', function (ev) {
+        .on('restart', function (changedFiles) {
             console.log('Restarting...');
+            // TODO: rebundle ONLY if at least one file in changedFiles array
+            // is a JSX file.
+            // console.log('Rebundling...');
+            // jsx2js();
         });
 });
