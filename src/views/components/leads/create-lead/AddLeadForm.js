@@ -28,6 +28,7 @@ var AddLeadForm = React.createClass({
     
     _onButtonClick: function(event) {
         event.preventDefault();
+        // this.props.onSubmit(); // Label A
         this.props.onButtonClick();
     },
     
@@ -36,6 +37,8 @@ var AddLeadForm = React.createClass({
         return (
             <div>
                 <form>
+                {/* <form onSubmit={ this._onButtonClick } > // Label A */}
+
                     <PartyDiv 
                         lead={ this.props.lead } 
                         onChange={ this.props.onChange } />     
@@ -57,7 +60,9 @@ var AddLeadForm = React.createClass({
                     {/* ON HOLD:  ATTEMPT AGAIN AT SOME POINT TO USE THE NEW COMMON SUBMIT BUTTON */}
                     {/*<SubmitButton onClick={ this.props.onButtonClick } />*/}
 
+                    {/* <SubmitButton /> */} {/* Label A */}
                     <SubmitButton onButtonClick={this._onButtonClick} />
+
 
                     {/* Locally defined submit button, would like to replace with <SubmitButton /> if possible... */}
                 {/*
