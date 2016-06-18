@@ -16,6 +16,11 @@ var UpdateContactPage = React.createClass({
     mixins: [
         ReactRouter.Navigation
     ],
+    getInitialState: function() {
+        return {
+            contact: {}
+        };
+    },
     componentDidMount: function() {
         // register with Store as a listener for emit of new party_id of the added Contact
         ContactsStore.addedContactListener(this._onUpdatedContact);
@@ -27,17 +32,15 @@ var UpdateContactPage = React.createClass({
     setContactState: function(event) {
         var field = event.target.id;
         var value = event.target.value;
-        this.state.contact[ field ] = value;
-        return this.setState( {contact: this.state.contact} );
+        return this.setState( {field: value} );
     },
         
     _updateContact: function(event) {
         ContactsActions.updateContact(this.state.contact);
     },
     _onUpdatedContact: function() {
-        
-        }
-    ,
+        //TODO
+    },
     render: function (){
         /* jshint ignore:start */    
         return (
