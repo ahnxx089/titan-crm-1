@@ -22,7 +22,7 @@ var contactDetails = {
   createdDate: 'NA',
   updatedDate: 'NA',
   salutation: 'Ms.',
-  firstName: 'Joan',
+  firstName: 'Joana',
   middleName: '',
   lastName: 'Doe',
   birthDate: 'NA',

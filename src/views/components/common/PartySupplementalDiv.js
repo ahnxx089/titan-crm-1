@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////
-// A party supplemental data div on Add Lead page.
+// A party supplemental data div on Add XX page.
 //
 // @file:   PartySupplementalDiv.js
 // @author: Xiaosiqi Yang <yang4131@umn.edu>

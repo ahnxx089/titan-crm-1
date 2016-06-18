@@ -1,4 +1,4 @@
-// not
+// not finished
 
 /////////////////////////////////////////////////
 // Create Lead page component.
@@ -11,7 +11,8 @@ var React = require('react');
 //var LeadRow = require('./LeadRow');
 var PartyDiv = require('./PartyDiv');
 var PersonDiv = require('./PersonDiv');
-var PartySupplementalDiv = require('./PartySupplementalDiv');
+//var PartySupplementalDiv = require('./PartySupplementalDiv');
+var PartySupplementalDiv = require('../../common/PartySupplementalDiv');
 var PartyContactDiv = require('./PartyContactDiv');
 //var SubmitButton = require('./SubmitButton');
 var SubmitButton = require('../../common/SubmitButton');
