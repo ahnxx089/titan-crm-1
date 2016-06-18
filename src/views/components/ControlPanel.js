@@ -20,7 +20,7 @@ var ControlPanel = React.createClass({
     },
     componentDidMount: function () {
         var thisControlPanel = this;
-        this.props.route.onChange = function () {
+        this.props.route.onChange = function (prevState, nextState) {
             thisControlPanel._updateErrorBox([]);
         };
     },

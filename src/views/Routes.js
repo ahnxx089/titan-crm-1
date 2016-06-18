@@ -24,10 +24,6 @@ function requireAuth(nextState, replace) {
     }
 }
 
-function clearErrorBox() {
-    console.log('Hello');
-}
-
 var routes = (
     /* jshint ignore:start */
     <Route path="/">
