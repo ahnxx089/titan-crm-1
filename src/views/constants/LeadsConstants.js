@@ -8,7 +8,8 @@
 
 var LeadsConstants = {
     // used as actionTypes
-    GET_MY_LEADS: 'GET_MY_LEADS'
+    GET_MY_LEADS: 'GET_MY_LEADS',
+    ADD_LEAD: 'ADD_LEAD'
 };
 
 module.exports = LeadsConstants;

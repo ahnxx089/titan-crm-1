@@ -13,11 +13,17 @@ var LeadsActions = {
     getLeadsByOwner: function() {
         TitanDispatcher.dispatch({
             actionType: LeadsConstants.GET_MY_LEADS
-//            actionType: 'GET_MY_LEADS'
-
+        });
+    },
+    
+    // should i pass in an argument? Yes
+    addLead: function (lead) {
+        TitanDispatcher.dispatch({
+            actionType: LeadsConstants.ADD_LEAD,
+            // this data is used in LeadsStore
+            data: lead
         });
     }
-    //, addLead: function () {...}
     
 };
 
