@@ -19,29 +19,28 @@ var AddContactMech = require('../../common/AddContactMech');
 var SubmitButton = require('../../common/SubmitButton');
 
 var AddContactForm = React.createClass({
+
+    componentDidMount: function(){
+        //('#addContactForm').validator();
+    },
     
     render: function() {
         /* jshint ignore:start */
         return (
             <div>
-                <AddPersonalInfo 
-                        contact={ this.props.contact } 
-                        onChange={ this.props.onChange } />     
-                <AddContactMech 
-                        contact={ this.props.contact } 
-                        onChange={ this.props.onChange } />     
-                
-                {/* ON HOLD:  ATTEMPT AGAIN AT SOME POINT TO USE THE NEW COMMON SUBMIT BUTTON */}
-                {/*<SubmitButton onClick={ this.props.onButtonClick } />*/}
-                
-                {/* Locally defined submit button, would like to replace with <SubmitButton /> if possible... */}
-                <div className="row">
-                    <div className="col-xs-12" text-right>
-                        <a className="btn btn-primary" href="#" role="button" 
-                            onClick={ this.props.onButtonClick }>Submit</a>
+                <form id="addContactForm" onSubmit={ this.props.onButtonClick }>
+                    <AddPersonalInfo 
+                            contact={ this.props.contact } 
+                            onChange={ this.props.onChange } />     
+                    <AddContactMech 
+                            contact={ this.props.contact } 
+                            onChange={ this.props.onChange } />     
+                    <div className="row">
+                        <div className="col-xs-12">
+                            <button className="btn btn-primary" type="submit" data-disable="true">Submit</button>
+                        </div>
                     </div>
-                </div>
-                
+                </form>                
             </div>
         );
         /* jshint ignore:end */
