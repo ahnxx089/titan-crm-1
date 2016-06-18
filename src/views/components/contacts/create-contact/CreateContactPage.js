@@ -6,7 +6,7 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
-var ReactRouter = require('react-router');
+var withRouter = require('react-router').withRouter;
 
 var AddContactForm = require('./AddContactForm'); 
 var ContactsStore = require('../../../stores/ContactsStore');
@@ -14,12 +14,8 @@ var ContactsActions = require('../../../actions/ContactsActions');
 
 var CreateContactPage = React.createClass({
     
-    // This mixins array is for redirecting to MyContactsPage after clicking "Create Contact".
-    mixins: [
-        ReactRouter.Navigation
-    ],
-    
     // protection against browsing away from page before submitting form
+    // THE "CONFIRM?" POP-UP IS NOT WORKING YET
     statics: {
         willTransitionFrom: function(transition, component){
             //if (component.state.dirty && !confirm('Leave this page without submitting?')){
@@ -30,6 +26,9 @@ var CreateContactPage = React.createClass({
     },
     
     getInitialState: function() {
+        // Note:  only two properties of contact state are set initially; declaring additional properties to empty
+        // strings is not really necessary, but helps keep track of all the properties which will be bubbling up
+        // from the child AddContactForm
         return {
             contact: {
                         partyTypeId: 'PERSON',
@@ -83,25 +82,38 @@ var CreateContactPage = React.createClass({
     },
         
     _addContact: function(event) {
+        event.preventDefault();
         ContactsActions.addContact(this.state.contact); // start the Flux unidirectional flow!
-        this.setState({ dirty: false });                // consider form empty again, safe to redirect
-        this.transitionTo('my-contacts');               // redirect to MyContactsPage -- NOT WORKING YET
+        this.setState({ dirty: false });                // consider form empty again, fields have been sent out
     },
 
     _onAddedContact: function() {
-        //
-        // NOTE:  ERROR HANDLING PROBABLY NEEDS TO BE ADDED HERE, FOR NOW ONLY SUBMIT VALID DATA!
-        // (compare to HomePage._onChange, do I need that here?)
-        //
-        // COMMENTED THIS OUT DUE TO GETTING CONSOLE WARNING:
-        //  Warning: setState(...): Can only update a mounted or mounting component. This usually means you 
-        //  called setState() on an unmounted component. This is a no-op. Please check the code for the 
-        //  CreateContactPage component.
-        // Ideally I would like to know what the newly added partyId is, it was working but now is not,
-        // cannot figure out why....        
-        {/*this.setState({
-            addedContactPartyId: ContactsStore.addedContact()
-        }); */ }
+        
+        // After a successful ajax call in the store, calling ContactsStore.addedContact() will
+        // return one of the three things that contactApi.addContact returns-- handle with if else block
+        var result = ContactsStore.addedContact();
+
+        if (result.hasOwnProperty('message'))
+        {
+            this.props.updateErrorBox(result.message);
+            return;
+        }
+        else if (Object.prototype.toString.call(result) === '[object Array]') 
+        {
+            console.log('\nINSIDE THE ELSE IF BLOCK NOW, INVOKE this.props.updateErrorBox(result)...');
+            this.props.updateErrorBox(result);
+            return;
+        }
+        // user had permission and no validation errors-- api should return the new partyId
+        else {
+            this.setState({
+                addedContactPartyId: result
+            });
+            console.log('\nCreateContactPage._onAddedContact:  after this.setState, this.state.addedContactPartyId = ', this.state.addedContactPartyId);
+        }
+        
+        // redirect to MyContactsPage
+        this.props.router.replace('/cp/contacts/my-contacts');
     },
                                           
     render: function (){
@@ -126,4 +138,6 @@ var CreateContactPage = React.createClass({
     }
 });
 
-module.exports = CreateContactPage;
+// when doing the usual module.exports, wrap CreateContactPage in with.router in order to have
+// property this.props.router.replace to do the redirect to MyContactsPage upon submitting form data
+module.exports = withRouter(CreateContactPage);
