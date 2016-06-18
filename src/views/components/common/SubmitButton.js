@@ -15,7 +15,7 @@ var SubmitButton = React.createClass({
         return (
             <div className="row">
                 <div className="col-xs-12">
-                    <button type="submit" className="btn btn-primary">Submit</button>
+                    <button type="submit" className="btn btn-primary" onClick={this.props.onButtonClick}>Submit</button>
                 </div>
             </div>
         );

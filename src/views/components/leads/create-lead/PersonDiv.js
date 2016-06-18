@@ -22,19 +22,19 @@ var PersonDiv = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="salutation">Salutation</label>
+                            <label htmlFor="salutation">Salutation</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="salutation" placeholder="Salutation" />
+                                <input type="text" className="form-control" id="salutation" placeholder="Salutation" onChange={ this.props.onChange } value={ this.props.lead.salutation} />
                             </div>
                         </div>
                     </div>                
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="firstName">First Name *</label>
+                            <label htmlFor="firstName">First Name *</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="firstName" placeholder="First Name" required /> 
+                                <input type="text" className="form-control" id="firstName" placeholder="First Name" onChange={ this.props.onChange } value={ this.props.lead.firstName} required /> 
                             </div>
                         </div>
                     </div>
@@ -43,19 +43,19 @@ var PersonDiv = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="middleName">Middle Name</label>
+                            <label htmlFor="middleName">Middle Name</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="middleName" placeholder="Middle Name"/>
+                                <input type="text" className="form-control" id="middleName" placeholder="Middle Name" onChange={ this.props.onChange } value={ this.props.lead.middleName} />
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="lastName">Last Name *</label>
+                            <label htmlFor="lastName">Last Name *</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="lastName" placeholder="Last Name" required/>
+                                <input type="text" className="form-control" id="lastName" placeholder="Last Name" onChange={ this.props.onChange } value={ this.props.lead.lastName} required/>
                             </div>
                         </div>
                     </div>
@@ -65,19 +65,19 @@ var PersonDiv = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="birthDate">Birth Date</label>
+                            <label htmlFor="birthDate">Birth Date</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-calendar" aria-hidden="true"></i></div>
-                                <input type="date" className="form-control" id="birthDate"/>
+                                <input type="date" className="form-control" id="birthDate" onChange={ this.props.onChange } value={ this.props.lead.birthDate} />
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="comments">Comments</label>
+                            <label htmlFor="comments">Comments</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <textarea className="form-control" id="comments" rows="4" placeholder="Comments of a person"></textarea>
+                                <textarea className="form-control" id="comments" rows="4" placeholder="Comments of a person" onChange={ this.props.onChange } value={ this.props.lead.comments}></textarea>
                             </div>
                         </div>
                     </div>

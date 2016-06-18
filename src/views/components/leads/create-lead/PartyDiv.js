@@ -12,7 +12,7 @@ var PartyDiv = React.createClass({
     render: function () {
         /* jshint ignore:start */
         return (
-            <div>/*hellothere I'm in party div*/
+            <div>{/*hellothere I'm in party div*/}
                 <div className="row">
                     <div className="col-xs-12">
                         <h2>Basic Info [PARTY]</h2>
@@ -22,11 +22,11 @@ var PartyDiv = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="partyTypeId">Party Type Id *</label>
+                            <label htmlFor="partyTypeId">Party Type Id *</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
                                 <select id="partyTypeId" className="form-control" required>
-                                 <option selected value="PERSON">PERSON</option>
+                                 <option value="PERSON">PERSON</option>
                                 </select>
                             </div>
                         </div>
@@ -34,10 +34,10 @@ var PartyDiv = React.createClass({
 
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="currency">Currency</label>
+                            <label htmlFor="currencyUomId">Currency</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-usd" aria-hidden="true"></i></div>
-                                <select id="currency" className="form-control">
+                                <select id="currencyUomId" className="form-control" onChange={ this.props.onChange } value={this.props.lead.currencyUomId} >
                                     <option value="USD">USD</option>
                                     <option value="CAD">CAD</option>
                                     <option value="EUR">EUR</option>
@@ -50,20 +50,20 @@ var PartyDiv = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="description">Description</label>
+                            <label htmlFor="description">Description</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <textarea className="form-control" id="description" rows="4" placeholder="description of a lead"></textarea>
+                                <textarea className="form-control" id="description" rows="4" placeholder="description of a lead" onChange={ this.props.onChange } value={this.props.lead.description}></textarea>
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="status">Status *</label>
+                            <label htmlFor="statusId">Status *</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <select id="status" className="form-control" required>
-                                    <option disabled selected value=''> -- select an option -- </option>
+                                <select id="statusId" className="form-control" onChange={ this.props.onChange} value={this.props.lead.statusId} required>
+                                    <option disabled value=''> -- select an option -- </option>
                                     <option value="PARTY_ENABLED">ENABLED</option>
                                     <option value="PARTY_DISABLED">DISABLED</option>
                                     <option value="PTYLEAD_CONVERTED">CONVERTED</option>
