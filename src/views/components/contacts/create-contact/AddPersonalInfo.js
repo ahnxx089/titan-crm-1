@@ -77,7 +77,9 @@ var AddPersonalInfo = React.createClass({
                                     id="firstName" 
                                     placeholder="Jane" 
                                     onChange={ this.props.onChange } 
-                                    value={ this.props.contact.firstName } />
+                                    value={ this.props.contact.firstName }
+                                    maxlength="100"
+                                    required />
                             </div>
                         </div>
                     </div>
