@@ -50,7 +50,7 @@ var AddPersonalInfo = React.createClass({
         var noCurrency = { uom_id: null, abbreviation: '', description:'' };
         
         // push one blank row onto currenciesJSX first, since the db allows null for party.preferred_currency_uom_id
-        currenciesJSX.push(<CurrencyOption key={ 'currency_'} currency={ noCurrency }/>);
+        currenciesJSX.push(<CurrencyOption key={ 'currency_' } currency={ noCurrency }/>);
         
         for (var i = 0; i < currencies.length; i++) {
             // See https://facebook.github.io/react/docs/multiple-components.html#dynamic-children
@@ -174,7 +174,7 @@ var AddPersonalInfo = React.createClass({
                     </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label htmlFor="birthDate">Birth Date (optional)</label>
+                            <label htmlFor="birthDate">Birth Date</label>
                             <div className="input-group">
                                 <div className="input-group-addon">
                                     <i className="fa fa-calendar" aria-hidden="true"></i>

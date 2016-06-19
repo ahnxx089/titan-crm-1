@@ -135,7 +135,7 @@ var CreateContactPage = React.createClass({
                         <AddContactForm 
                             contact={ this.state.contact } 
                             onChange={ this.setContactState } 
-                            onFormSubmit={ this._addContact }/>                                            
+                            onFormSubmit={ this._addContact } />                                            
                     </div>
                 </div>
             </div>

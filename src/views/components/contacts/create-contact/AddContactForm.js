@@ -35,11 +35,11 @@ var AddContactForm = React.createClass({
                 <form id="addContactForm">
                     <AddPersonalInfo
                         contact={ this.props.contact }
-                        onChange={ this.props.onChange } />
+                        onChange={ this.props.onChange } /> 
                     
                     <AddContactMech
                         contact={ this.props.contact }
-                        onChange={ this.props.onChange } />
+                        onChange={ this.props.onChange } />  
             
                     <div className="row">
                         <div className="col-xs-12">
