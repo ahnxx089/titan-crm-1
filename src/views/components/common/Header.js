@@ -61,7 +61,7 @@ var Header = React.createClass({
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Accounts <span className="caret"></span></a>
                                 <ul className="dropdown-menu">
                                     <li><a href="#">My Accounts</a></li>
-                                    <li><a href="#">Create Account</a></li>
+                                    <li><Link to="/cp/accounts/create-account" activeClassName="active">Create Account</Link></li>
                                     <li><a href="#">Find Accounts</a></li>
                                 </ul>
                             </li>

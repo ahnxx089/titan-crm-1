@@ -22,19 +22,19 @@ var PartySupplementalDiv = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="parentAccount">Parent Account</label>
+                            <label htmlFor="parentAccount">Parent Account</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="parentAccount" placeholder="Parent Account" />
+                                <input type="text" className="form-control" id="parentAccount" placeholder="Parent Account" onChange={ this.props.onChange } value={ this.props.ent.parentAccount} />
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="companyName">Company Name</label>
+                            <label htmlFor="companyName">Company Name</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="companyName" placeholder="Company Name" />
+                                <input type="text" className="form-control" id="companyName" placeholder="Company Name" onChange={ this.props.onChange } value={ this.props.ent.companyName} />
                             </div>
                         </div>
                     </div>
@@ -43,19 +43,19 @@ var PartySupplementalDiv = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="annualRevenue">Annual revenue</label>
+                            <label htmlFor="annualRevenue">Annual revenue</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-money" aria-hidden="true"></i></div>
-                                <input type="number" className="form-control" id="annualRevenue" placeholder="Annual revenue" />
+                                <input type="number" className="form-control" id="annualRevenue" placeholder="Annual revenue" onChange={ this.props.onChange } value={ this.props.ent.annualRevenue} />
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="numEmployees">Number of Employees</label>
+                            <label htmlFor="numEmployees">Number of Employees</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="number" className="form-control" id="numEmployees" placeholder="Number of Employees" />
+                                <input type="number" className="form-control" id="numEmployees" placeholder="Number of Employees" onChange={ this.props.onChange } value={ this.props.ent.numEmployees} />
                             </div>
                         </div>
                     </div>
@@ -64,10 +64,10 @@ var PartySupplementalDiv = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="industry">Industry</label>
+                            <label htmlFor="industry">Industry</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-industry" aria-hidden="true"></i></div>
-                                <select id="industry" className="form-control">
+                                <select id="industry" className="form-control" onChange={ this.props.onChange } value={ this.props.ent.industry} >
                                     <option disabled selected> -- select an option -- </option>
                                     <option value="IND_HARDWARE">HARDWARE</option>
                                     <option value="IND_FINANCE">FINANCE</option>
@@ -79,10 +79,10 @@ var PartySupplementalDiv = React.createClass({
                     </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="ownership">Ownership</label>
+                            <label htmlFor="ownership">Ownership</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-usd" aria-hidden="true"></i></div>
-                                <select id="ownership" className="form-control">
+                                <select id="ownership" className="form-control" onChange={ this.props.onChange } value={ this.props.ent.industry} >
                                     <option disabled selected> -- select an option -- </option>
                                     <option value="OWN_CCORP">CCORP</option>
                                     <option value="OWN_LLC_LLP">LLC_LLP</option>
@@ -97,19 +97,19 @@ var PartySupplementalDiv = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="ticker">Ticker Symbol</label>
+                            <label htmlFor="ticker">Ticker Symbol</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="ticker" placeholder="Type a Ticker Symbol" />
+                                <input type="text" className="form-control" id="ticker" placeholder="Type a Ticker Symbol" onChange={ this.props.onChange } value={ this.props.ent.ticker}/>
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label for="note">Important Note</label>
+                            <label htmlFor="note">Important Note</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <textarea className="form-control" id="note" rows="4" placeholder="Note"></textarea>
+                                <textarea className="form-control" id="note" rows="4" placeholder="Note" onChange={ this.props.onChange } value={ this.props.ent.note} ></textarea>
                             </div>
                         </div>
                     </div>
@@ -122,7 +122,4 @@ var PartySupplementalDiv = React.createClass({
 
 });
 
-// It is not okay to use double slash // for comments within the render function, 
-// at least not after its return statement, OR at least not with HTML tags
-// No             <!-- BASIC PERSON INFO heading -->             style comments either.
 module.exports = PartySupplementalDiv;

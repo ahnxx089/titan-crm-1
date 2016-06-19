@@ -19,6 +19,7 @@ var contactsOwned = [];
 var addedContactPartyId = '';   // for returning party_id of an added Contact
 var contactById = {};           // for returning single contact retrieved by partyId
 var contactsByIdentity = [];    // for returning contacts retrieved by identity (first and/or last name)
+var contactRetrieved = {};
 
 
 // STORE as EVENT EMITTER
@@ -40,6 +41,14 @@ ContactsStore.emitGetData = function() {
     // In previous function addGetDataListener is where listeners such as 
     // MyContactsPage._onGetData registered to get emits from this Store
     this.emit('getData');  
+};
+
+ContactsStore.addPutDataListener = function (listener) {
+    this.on('putData', listener);
+};
+
+ContactsStore.emitPutData = function() {
+    this.emit('putData');  
 };
 
 /* Next 2 functions:  for Views receiving emits after addContact */
@@ -72,6 +81,8 @@ ContactsStore.emitGetByIdentity = function() {
 
 // BUSINESS LOGIC
 //-----------------------------------------------
+//
+// Next two functions are called by MyContactsPage
 ContactsStore.getContactsByOwner = function() {
     var thisContactsStore = this;
     $.ajax({
@@ -91,6 +102,46 @@ ContactsStore.getContactsByOwner = function() {
 ContactsStore.getContactsOwned = function() {
     return contactsOwned;
 };
+
+ContactsStore.updateContact = function(contactId, contact) {
+    var thisContactsStore = this;
+    $.ajax({
+        type: 'PUT',
+        url: '/api/contacts/' + contactId,
+        headers: { 
+            'x-access-token': Cookies.get('titanAuthToken'),
+            'Content-Type': 'application/json'
+        },
+        success: function(contact) {
+            thisContactsStore.emitPutData();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+ContactsStore.getContactById = function(id) {
+    var thisContactsStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/contacts/' + id,
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(contact) {
+            console.log(contact);
+            contactRetrieved = contact;
+            thisContactsStore.emitGetData();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+ContactsStore.gotContact = function() {
+    return contactRetrieved;
+};
+
 
 // Next two functions are called by CreateContactPage
 ContactsStore.addContact = function(contact) {
@@ -115,7 +166,9 @@ ContactsStore.addedContact = function() {
 };
 
 // Next two functions are called by FindContactPage to getContactById
-ContactsStore.getContactById = function(partyId) {
+// NOTE:  THIS IS NOW RENAMED "findContactById" to avoid conflict with similar getContactById,
+// which is probably a result of Dinesh & Bill both working in this file simultaneously.
+ContactsStore.findContactById = function(partyId) {
     var thisContactsStore = this;
     $.ajax({
         type: 'GET',
@@ -181,7 +234,7 @@ TitanDispatcher.register(function(action) {
             break;
         }
         case ContactsConstants.GET_CONTACT_BY_ID: {
-            ContactsStore.getContactById(action.data);
+            ContactsStore.findContactById(action.data);
             break;
         }
         case ContactsConstants.GET_CONTACTS_BY_IDENTITY: {

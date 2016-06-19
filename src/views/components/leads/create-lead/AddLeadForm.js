@@ -9,8 +9,9 @@ var React = require('react');
 
 //var AddPersonalInfo = require('./AddPersonalInfo');
 //var AddContactMech = require('../../common/AddContactMech'); 
+//var PartyDiv = require('./PartyDiv');
 
-var PartyDiv = require('./PartyDiv');
+var PartyDiv = require('../../common/PartyDiv');
 var PersonDiv = require('./PersonDiv');
 var PartySupplementalDiv = require('../../common/PartySupplementalDiv');
 var PartyContactDiv = require('./PartyContactDiv');
@@ -37,18 +38,19 @@ var AddLeadForm = React.createClass({
         return (
             <div>
                 <form>
-                {/* <form onSubmit={ this._onButtonClick } > // Label A */}
+                {/* <form onSubmit={ this._onButtonClick */} > {/* Label A */}
 
                     <PartyDiv 
-                        lead={ this.props.lead } 
+                        ent={ this.props.lead } 
                         onChange={ this.props.onChange } />     
                     <PersonDiv 
                         lead={ this.props.lead } 
                         onChange={ this.props.onChange } />
-                {/*
                     <PartySupplementalDiv 
-                        lead={ this.props.lead } 
+                        ent={ this.props.lead } 
                         onChange={ this.props.onChange } />     
+            
+                {/*
                     <PartyContactDiv 
                         lead={ this.props.lead } 
                         onChange={ this.props.onChange } />     

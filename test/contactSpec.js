@@ -223,7 +223,8 @@ describe('Contact module ', function () {
     });
 
     it('getContactById returns a valid contact entity', function (done) {
-        contactController.getContactById(56)
+        user = {securityPermissions: ['CRMSFA_CONTACT_VIEW']};
+        contactController.getContactById(56, user)
             .then(function (contact) {
                 expect(contact).toBeTruthy();
                 expect(contact instanceof Contact).toBeTruthy();
