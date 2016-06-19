@@ -27,7 +27,8 @@ var commonData = function(knex) {
         return knex.select('geo_id', 'abbreviation', 'geo_name')
             .from('geo')
             .where({ geo_type_id: 'STATE' })
-            .orWhere({ geo_type_id: 'PROVINCE' });
+            .orWhere({ geo_type_id: 'PROVINCE' })
+            .orderBy('geo_name');
     };
 
     
@@ -38,7 +39,8 @@ var commonData = function(knex) {
     var getAllCountries = function() {
         return knex.select('geo_id', 'abbreviation', 'geo_name')
             .from('geo')
-            .where({ geo_type_id: 'COUNTRY' });
+            .where({ geo_type_id: 'COUNTRY' })
+            .orderBy('geo_name');
     };
     
     return {
