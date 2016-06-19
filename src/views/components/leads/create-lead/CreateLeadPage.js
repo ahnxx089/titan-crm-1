@@ -38,8 +38,8 @@ var MyLeadsPage = React.createClass({
                 birthDate: '',
                 comments: '',
                 
-                parentPartyId: '120',
-                roleTypeId: 'LEAD'
+                parentPartyId: '120', /* this is added ad hoc */
+                roleTypeId: 'LEAD' /* this is added ad hoc */
             },
             dirty: false
         };
@@ -115,7 +115,7 @@ var MyLeadsPage = React.createClass({
                         </form*/}
             
             
-                        <AddLeadForm lead={this.state.emptyLead} onChange={this.setLeadState}  onButtonClick={ this._addLead} />
+                        <AddLeadForm lead={this.state.emptyLead} onChange={this.setLeadState}  onButtonClick={ this._addLead} onSubmit={this._addLead} />
                     </div>
                 </div>
             </div>
