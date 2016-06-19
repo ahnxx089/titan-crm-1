@@ -128,7 +128,6 @@ ContactsStore.getContactById = function(id) {
         url: '/api/contacts/' + id,
         headers: { 'x-access-token': Cookies.get('titanAuthToken') },
         success: function(contact) {
-            console.log(contact);
             contactRetrieved = contact;
             thisContactsStore.emitGetData();
         },
@@ -234,7 +233,7 @@ TitanDispatcher.register(function(action) {
             break;
         }
         case ContactsConstants.GET_CONTACT_BY_ID: {
-            ContactsStore.findContactById(action.data);
+            ContactsStore.getContactById(action.data);
             break;
         }
         case ContactsConstants.GET_CONTACTS_BY_IDENTITY: {
