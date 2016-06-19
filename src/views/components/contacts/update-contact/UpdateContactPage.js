@@ -18,28 +18,38 @@ var UpdateContactPage = React.createClass({
     ],
     getInitialState: function() {
         return {
+            contactId: 20,
             contact: {}
         };
     },
     componentDidMount: function() {
-        // register with Store as a listener for emit of new party_id of the added Contact
-        ContactsStore.addedContactListener(this._onUpdatedContact);
+        // 
+        ContactsStore.addGetDataListener(this._onGetContact);
+        ContactsStore.addPutDataListener(this._refreshContact);
+        this._refreshContact();
     },
     componentWillUnmount: function() {
         // avoids console error, accompanies function call in componentDidMount
-        ContactsStore.removeListener('change', this._onUpdatedContact);
+        ContactsStore.removeListener('change', this._onGetContact);
     },
     setContactState: function(event) {
-        var field = event.target.id;
-        var value = event.target.value;
-        return this.setState( {field: value} );
-    },
+        var contact = this.state.contact;
+        contact[event.target.id] = event.target.value;
         
-    _updateContact: function(event) {
-        ContactsActions.updateContact(this.state.contact);
+        return this.setState({
+            contact: contact
+        });
     },
-    _onUpdatedContact: function() {
-        //TODO
+    _refreshContact: function(event) {
+        ContactsStore.getContactById(this.state.contactId);
+    },
+    _updateContact: function(event) {
+        ContactsActions.updateContact(this.state.contactId, this.state.contact);
+    },
+    _onGetContact: function(event) {
+        return this.setState({
+            contact: ContactsStore.gotContact()
+        });
     },
     render: function (){
         /* jshint ignore:start */    
