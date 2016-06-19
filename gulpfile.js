@@ -35,16 +35,16 @@ gulp.task('style', function () {
         .pipe(jshint.reporter('jshint-stylish', {
             verbose: true
         }))
-        //    .pipe(eslint({
-        // 		'extends': 'eslint:recommended',
-        // 		'ecmaFeatures': {
-        //             'jsx': true,
-        // 			'modules': true
-        //         }
-        //    }))
-        //    .pipe(eslint.format())
-        //    //.pipe(eslint.failOnError())
         .pipe(jscs());
+    //    .pipe(eslint({
+    // 		'extends': 'eslint:recommended',
+    // 		'ecmaFeatures': {
+    //             'jsx': true,
+    // 			'modules': true
+    //         }
+    //    }))
+    //    .pipe(eslint.format())
+    //    //.pipe(eslint.failOnError())
 });
 
 // Gulp task to transpile our React JSX files into native ES5 ones
@@ -56,14 +56,14 @@ var jsx2js = function () {
         extensions: ['.js'],
         debug: true
     })
-    .transform('babelify', {
-        presets: ['react']
-    })
-    .bundle()
-    .pipe(source('bundle.js'))
-    .pipe(buffer())
-    .pipe(uglify())
-    .pipe(gulp.dest('./public/js/'));
+        .transform('babelify', {
+            presets: ['react']
+        })
+        .bundle()
+        .pipe(source('bundle.js'))
+        .pipe(buffer())
+        .pipe(uglify())
+        .pipe(gulp.dest('./public/js/'));
 };
 gulp.task('jsx2js', jsx2js);
 
@@ -89,14 +89,17 @@ gulp.task('serve', ['style', 'jsx2js'], function () {
         env: {
             'PORT': 5000
         },
-        watch: jsFiles
+        watch: jsFiles,
+        /*tasks: function (changedFiles) {
+            var tasks = [];
+            // TODO: condition to check whether client- or server-side code has changed;
+            // add jsx2js only if client-side code has changed
+            tasks.push('jsx2js'); 
+            return tasks;
+        }*/
     };
     return nodemon(options)
         .on('restart', function (changedFiles) {
             console.log('Restarting...');
-            // TODO: rebundle ONLY if at least one file in changedFiles array
-            // is a JSX file.
-            // console.log('Rebundling...');
-            // jsx2js();
         });
 });

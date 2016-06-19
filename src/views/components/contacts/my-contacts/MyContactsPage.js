@@ -9,9 +9,6 @@ var React = require('react');
 var ContactRow = require('./ContactRow');
 var ContactsStore = require('../../../stores/ContactsStore');
 var ContactsActions = require('../../../actions/ContactsActions');
-// var $ = require('jquery'); // DO NOT COMMENT BACK IN, JSHINT IS WRONG ON THIS POINT.
-// var dataTable = require('datatables.net')(window, $);
-// var dtButtons = require('datatables.net-buttons')(window, $);
 
 var MyContactsPage = React.createClass({
 

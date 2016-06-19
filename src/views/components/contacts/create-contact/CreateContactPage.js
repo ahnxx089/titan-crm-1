@@ -2,7 +2,7 @@
 // Create Contact page component.
 //
 // @file:   CreateContactPage.js
-// @author: Dinesh Shenoy <astroshenoy@gmail.com>
+// @authors: Dinesh Shenoy <astroshenoy@gmail.com>
 /////////////////////////////////////////////////
 
 var React = require('react');
@@ -27,7 +27,7 @@ var CreateContactPage = React.createClass({
     
     getInitialState: function() {
         // Note:  only two properties of contact state are set initially; declaring additional properties to empty
-        // strings is not really necessary, but helps keep track of all the properties which will be bubbling up
+        // strings is not really necessary, but helps me keep track of all the properties which will be bubbling up
         // from the child AddContactForm
         return {
             contact: {
@@ -83,6 +83,9 @@ var CreateContactPage = React.createClass({
         
     _addContact: function(event) {
         event.preventDefault();
+        
+        console.log('\nCreateContactPage._addContact: this.state.contact = ', this.state.contact);
+        
         ContactsActions.addContact(this.state.contact); // start the Flux unidirectional flow!
         this.setState({ dirty: false });                // consider form empty again, fields have been sent out
     },
@@ -132,7 +135,7 @@ var CreateContactPage = React.createClass({
                         <AddContactForm 
                             contact={ this.state.contact } 
                             onChange={ this.setContactState } 
-                            onButtonClick={ this._addContact }/>                                            
+                            onFormSubmit={ this._addContact }/>                                            
                     </div>
                 </div>
             </div>

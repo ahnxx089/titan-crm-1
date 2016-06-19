@@ -8,120 +8,122 @@
 var React = require('react');
 
 var UpdateContactForm = React.createClass({
+    getInitialState: function () {
+        return {
+            contact: {}
+        }
+    },
     render: function () {
-        
+
         /* jshint ignore:start */
+        //this.setState({contact: this.props.contact});
         var contact = this.props.contact;
-        var onChange = this.props.onchange;
+        var onChange = this.props.onChange;
 
-        return ( 
-            <div class="container">
+        return (
+            <form name="updateContact" method="post" onSubmit={ this.props.onFormSubmit }>
 
-                <form name="updateContact" method="post">
 
-                    
-                    <div class="row">
-                        <div class="col-xs-12 bg-success">
-                            <h2>Personal Info</h2>
-                        </div>
+                <div className="row">
+                    <div className="col-xs-12 bg-success">
+                        <h2>Personal Info</h2>
                     </div>
-                    <br/>
+                </div>
+                <br/>
 
-                    
-                    <div class="row">
-                        <div class="col-lg-6 col-xs-12">
-                            <div class="form-group">
-                                <label for="firstName">First Name (Required)</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                    </div>
-                                    <input type="text" class="form-control" id="firstName" value={ contact.firstName } onChange={ onChange }></input>
+
+                <div className="row">
+                    <div className="col-lg-6 col-xs-12">
+                        <div className="form-group">
+                            <label htmlFor="firstName">First Name (Required) </label>
+                            <div className="input-group">
+                                <div className="input-group-addon">
+                                    <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-xs-12">
-                            <div class="form-group">
-                                <label for="middleName">Middle Name</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                    <input type="text" class="form-control" id="middleName"  value={ contact.middleName } onChange={ onChange }></input>
-                                </div>
+                                <input type="text" className="form-control" id="firstName" value={ contact.firstName || '' } onChange={ onChange }></input>
                             </div>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-lg-6 col-xs-12">
-                            <div class="form-group">
-                                <label for="lastName">Last Name (Required)</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                    <input type="text" class="form-control" id="lastName"  value={ contact.lastName } onChange={ onChange }></input>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-xs-12">
-                            <div class="form-group">
-                                <label for="salutation">Salutation</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                    <input type="text" class="form-control" id="salutation"  value={ contact.salutation } onChange={ onChange }></input>
-                                </div>
+                    <div className="col-lg-6 col-xs-12">
+                        <div className="form-group">
+                            <label htmlFor="middleName">Middle Name</label>
+                            <div className="input-group">
+                                <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
+                                <input type="text" className="form-control" id="middleName"  value={ contact.middleName || '' } onChange={ onChange }></input>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="row">
-                        <div class="col-lg-6 col-xs-12">
-                            <div class="form-group">
-                                <label for="currency">Currency</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-usd" aria-hidden="true"></i></div>
-                                    <select id="currency" class="form-control">
-                                        
-                                        <option>USD</option>
-                                        <option>CAD</option>
-                                        <option>EUR</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-xs-12">
-                            <div class="form-group">
-                                <label for="birthDate">Birth Date</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></div>
-                                    <input type="date" class="form-control" id="birthDate"  value={ contact.birthDate } onChange={ onChange }></input>
-                                </div>
+                <div className="row">
+                    <div className="col-lg-6 col-xs-12">
+                        <div className="form-group">
+                            <label htmlFor="lastName">Last Name (Required) </label>
+                            <div className="input-group">
+                                <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
+                                <input type="text" className="form-control" id="lastName"  value={ contact.lastName || '' } onChange={ onChange }></input>
                             </div>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label for="comments">Comments</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                    <textarea class="form-control" id="comments" rows="4" onChange={ onChange }>{ contact.comments }</textarea>
-                                </div>
+                    <div className="col-lg-6 col-xs-12">
+                        <div className="form-group">
+                            <label htmlFor="salutation">Salutation</label>
+                            <div className="input-group">
+                                <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
+                                <input type="text" className="form-control" id="salutation"  value={ contact.salutation || '' } onChange={ onChange }></input>
                             </div>
                         </div>
                     </div>
-                    <br/>
-                    <br/>
+                </div>
 
-                    
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <button type="submit" class="btn btn-primary" onClick={ this.props.onButtonClick }>Update Contact</button>
+                <div className="row">
+                    <div className="col-lg-6 col-xs-12">
+                        <div className="form-group">
+                            <label htmlFor="currency">Currency</label>
+                            <div className="input-group">
+                                <div className="input-group-addon"><i className="fa fa-usd" aria-hidden="true"></i></div>
+                                <select id="currency" className="form-control">
+
+                                    <option>USD</option>
+                                    <option>CAD</option>
+                                    <option>EUR</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
+                    <div className="col-lg-6 col-xs-12">
+                        <div className="form-group">
+                            <label htmlFor="birthDate">Birth Date</label>
+                            <div className="input-group">
+                                <div className="input-group-addon"><i className="fa fa-calendar" aria-hidden="true"></i></div>
+                                <input type="date" className="form-control" id="birthDate"  value={ contact.birthDate || '' } onChange={ onChange }></input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                </form>
+                <div className="row">
+                    <div className="col-xs-12">
+                        <div className="form-group">
+                            <label htmlFor="comments">Comments</label>
+                            <div className="input-group">
+                                <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
+                                <textarea className="form-control" id="comments" rows="4" value={ contact.comments || '' } onChange={ onChange }>{ contact.comments }</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <br/>
 
-            </div>
+
+                <div className="row">
+                    <div className="col-xs-12">
+                        <button type="submit" className="btn btn-primary">Update Contact</button>
+                    </div>
+                </div>
+
+            </form>
         );
         /* jshint ignore:end */
     }
