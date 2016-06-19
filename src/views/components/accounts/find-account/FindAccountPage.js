@@ -49,7 +49,7 @@ var FindAccountPage = React.createClass({
         /* jshint ignore:start */  
         var accounts = this.state.accountsOwned;
         var accountsJSX = [];
-        for (var i = 0; i < accounts.length; i++)
+        for (var i = 0; i < accounts.length; i++){
             
             accountsJSX.push(<AccountRow key={ 'account_' + i} account={ accounts[i]}/>);
             
@@ -57,41 +57,43 @@ var FindAccountPage = React.createClass({
     
         return (
             <div>
-                <div className="container">
-                    <div className="panel panel-default">
-                        <div className="panel-heading panel-heading-custom">
-                            <h1>Find Account</h1>
+                <div>
+                    <div className="container">
+                        <div className="panel panel-default">
+                            <div className="panel-heading panel-heading-custom">
+                                <h1>Find Account</h1>
+                            </div>
+                            <FindAccountForm
+                                onChange={ this.setAccountState } 
+                                onButtonClick={ this._findAccount }/>                        
                         </div>
-                        <FindAccountForm
-                            onChange={ this.setAccountState } 
-                            onButtonClick={ this._findAccount }/>                        
                     </div>
                 </div>
-            </div>
-            
-            <div>
-                <div className="container" >
-                    <div className="panel panel-default">
-                        <div className="panel-heading panel-heading-custom">
-                            <h4>Account Lists</h4>
-                        </div>
-                        <div className="panel-body">
-                            <table id="findAccountsTable" className='table table-bordered'>
-                                <thead>
-                                    <tr>
-                                        <th>Account ID</th>
-                                        <th>Account Name</th>
-                                        <th>Address Line</th>
-                                        <th>City</th>
-                                        <th>State</th>
-                                        <th>Phone Number</th>
-                                        <th>Email</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    { accountsJSX }
-                                </tbody>
-                            </table>
+
+                <div>
+                    <div className="container" >
+                        <div className="panel panel-default">
+                            <div className="panel-heading panel-heading-custom">
+                                <h4>Account Lists</h4>
+                            </div>
+                            <div className="panel-body">
+                                <table id="findAccountsTable" className='table table-bordered'>
+                                    <thead>
+                                        <tr>
+                                            <th>Account ID</th>
+                                            <th>Account Name</th>
+                                            <th>Address Line</th>
+                                            <th>City</th>
+                                            <th>State</th>
+                                            <th>Phone Number</th>
+                                            <th>Email</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        { accountsJSX }
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
