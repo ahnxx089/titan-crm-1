@@ -76,11 +76,9 @@ var AddPersonalInfo = React.createClass({
                                     className="form-control" 
                                     id="firstName" 
                                     placeholder="Jane" 
-                                    pattern="^[_A-z0-9]{1,}$" maxlength="100" required
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.firstName } />
                             </div>
-                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
@@ -93,11 +91,9 @@ var AddPersonalInfo = React.createClass({
                                     className="form-control" 
                                     id="middleName" 
                                     placeholder="Anne" 
-                                    pattern="^[_A-z0-9]{1,}$" maxlength="100" 
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.middleName } />
                             </div>
-                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                 </div>
@@ -114,11 +110,9 @@ var AddPersonalInfo = React.createClass({
                                     className="form-control" 
                                     id="lastName" 
                                     placeholder="Doe" 
-                                    pattern="^[_A-z0-9]{1,}$" maxlength="100" required
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.lastName } />
                             </div>
-                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
@@ -132,11 +126,9 @@ var AddPersonalInfo = React.createClass({
                                     className="form-control" 
                                     id="salutation" 
                                     placeholder="Mr., Ms., etc." 
-                                    pattern="^[_A-z0-9]{1,}$" maxlength="100" 
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.salutation } />
                             </div>
-                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                 </div>

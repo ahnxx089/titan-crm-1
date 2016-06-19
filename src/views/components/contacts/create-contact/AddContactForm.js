@@ -10,20 +10,13 @@ var React = require('react');
 var AddPersonalInfo = require('./AddPersonalInfo');
 var AddContactMech = require('../../common/AddContactMech'); 
 
-// ON HOLD:  I tried to use Lucas' new common Submit Button, see commented out 
-// <SubmitButton /> tag below in render.   I passed down this.props.onButtonClick 
-// to SubmitButton.js, in which I temporarily edited the <button> tag to include
-// onClick={ this.props.onButtonClick } but that did not make the button work.
-// So for now I restored SubmitButton to Lucas' original version and for now
-// am continuing to use the locally defined button in the render below.
-var SubmitButton = require('../../common/SubmitButton');
-
 var AddContactForm = React.createClass({
 
+    /* DEACTIVATED-- VALIDATION ATTEMPTS ON HOLD
     componentDidMount: function(){
-        //('#addContactForm').validator();
+        ('#addContactForm').validator();
     },
-    
+    */
     render: function() {
         /* jshint ignore:start */
         return (
