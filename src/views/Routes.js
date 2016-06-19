@@ -50,6 +50,7 @@ var routes = (
             {/* Accounts module pages */}
             <Route path="accounts">
                 <Route path="create-account" component={require('./components/accounts/create-account/CreateAccountPage') } />
+                <Route path="find-account" component={require('./components/accounts/find-account/FindAccountPage') } />
             </Route>
             
         </Route>
