@@ -10,12 +10,15 @@ var TitanDispatcher = require('../dispatcher/TitanDispatcher');
 var ContactsConstants = require('../constants/ContactsConstants');
 var $ = require('jquery');
 var Cookies = require('js-cookie');
+var validation = require('../../common/validation')();
 
 
 // DATA
 //-----------------------------------------------
 var contactsOwned = [];
-var addedContactPartyId = ''; // for returning party_id of an added Contact
+var addedContactPartyId = '';   // for returning party_id of an added Contact
+var contactById = {};           // for returning single contact retrieved by partyId
+var contactsByIdentity = [];    // for returning contacts retrieved by identity (first and/or last name)
 
 
 // STORE as EVENT EMITTER
@@ -25,6 +28,7 @@ var ContactsStore = new EventEmitter();
 
 // CUSTOM METHODS
 //-----------------------------------------------
+/* Next 2 functions:  for Views receiving emits after getContactsByOwner */
 ContactsStore.addGetDataListener = function (listener) {
     // see https://nodejs.org/api/events.html#events_emitter_on_eventname_listener
     this.on('getData', listener);
@@ -38,12 +42,31 @@ ContactsStore.emitGetData = function() {
     this.emit('getData');  
 };
 
+/* Next 2 functions:  for Views receiving emits after addContact */
 ContactsStore.addedContactListener = function (listener) {
     this.on('addedContact', listener);
 };
 
 ContactsStore.emitAddedContact = function() {
     this.emit('addedContact');  
+};
+
+/* Next 2 functions:  for Views receiving emits after getContactById */
+ContactsStore.addGetByIdListener = function (listener) {
+    this.on('getById', listener);
+};
+
+ContactsStore.emitGetById = function() {
+    this.emit('getById');  
+};
+
+/* Next 2 functions:  for Views receiving emits after getContactsByIdentity (first or last name) */
+ContactsStore.addGetByIdentityListener = function (listener) {
+    this.on('getByIdentity', listener);
+};
+
+ContactsStore.emitGetByIdentity = function() {
+    this.emit('getByIdentity');  
 };
 
 
@@ -91,6 +114,57 @@ ContactsStore.addedContact = function() {
     return addedContactPartyId;
 };
 
+// Next two functions are called by FindContactPage to getContactById
+ContactsStore.getContactById = function(partyId) {
+    var thisContactsStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/contacts/' + partyId,
+        headers: {  'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(contact) {
+            contactById = contact; // contactApi.getContactById returns a Contact entity object
+            thisContactsStore.emitGetById();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+ContactsStore.getById = function() {
+    return contactById;
+};
+
+// Next two functions are called by FindContactPage to getContactsByIdentity
+ContactsStore.getContactsByIdentity = function(identity) {
+    var thisContactsStore = this;
+    
+    // an empty search box for first or last name comes in as empty string, keep as empty string;
+    // if not empty then clean off any whitespaces (reminder: cannot not send empty string to validation.sanitizeInput,
+    // which returns null in that case, which would make e.g. var lastName = null instead of = '' )
+    var firstName = (identity.firstName === '' ? '' : validation.sanitizeInput(identity.firstName));
+    var lastName  = (identity.lastName  === '' ? '' : validation.sanitizeInput(identity.lastName ));
+
+    //var queryString = '?firstName=' + firstName + '&lastName=' + lastName;
+    var queryString = '?firstName=' + firstName + '&lastName=' + lastName;
+    
+    $.ajax({
+        type: 'GET',
+        url: '/api/contacts' + queryString,
+        headers: {  'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(contact) {
+            contactsByIdentity = contact; // contactApi.getContactsByIdentity returns an array of Contact entities
+            thisContactsStore.emitGetByIdentity();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+ContactsStore.getByIdentity = function() {
+    return contactsByIdentity;
+};
 
 
 // LINK BETWEEN DISPATCHER AND STORE
@@ -104,6 +178,14 @@ TitanDispatcher.register(function(action) {
         }
         case ContactsConstants.ADD_CONTACT: {
             ContactsStore.addContact(action.data);
+            break;
+        }
+        case ContactsConstants.GET_CONTACT_BY_ID: {
+            ContactsStore.getContactById(action.data);
+            break;
+        }
+        case ContactsConstants.GET_CONTACTS_BY_IDENTITY: {
+            ContactsStore.getContactsByIdentity(action.data);
             break;
         }
     }
