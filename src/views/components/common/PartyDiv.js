@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////
-// A party info div on Add Lead page.
+// A party info div on Add XX page.
 //
 // @file:   PartyDiv.js
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
@@ -12,13 +12,13 @@ var PartyDiv = React.createClass({
     render: function () {
         /* jshint ignore:start */
         return (
-            <div>{/*hellothere I'm in party div*/}
+            <div>
                 <div className="row">
                     <div className="col-xs-12">
                         <h2>Basic Info [PARTY]</h2>
                     </div>
                 </div>
-
+            {/* ent stands for entity, either a lead or account */}
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
@@ -27,6 +27,7 @@ var PartyDiv = React.createClass({
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
                                 <select id="partyTypeId" className="form-control" required>
                                  <option value="PERSON">PERSON</option>
+                                 <option value="ORGANIZATION">Organization</option>
                                 </select>
                             </div>
                         </div>
@@ -37,7 +38,7 @@ var PartyDiv = React.createClass({
                             <label htmlFor="currencyUomId">Currency</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-usd" aria-hidden="true"></i></div>
-                                <select id="currencyUomId" className="form-control" onChange={ this.props.onChange } value={this.props.lead.currencyUomId} >
+                                <select id="currencyUomId" className="form-control" onChange={ this.props.onChange } value={this.props.ent.currencyUomId} >
                                     <option value="USD">USD</option>
                                     <option value="CAD">CAD</option>
                                     <option value="EUR">EUR</option>
@@ -53,7 +54,7 @@ var PartyDiv = React.createClass({
                             <label htmlFor="description">Description</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <textarea className="form-control" id="description" rows="4" placeholder="description of a lead" onChange={ this.props.onChange } value={this.props.lead.description}></textarea>
+                                <textarea className="form-control" id="description" rows="4" placeholder="description of a lead/account " onChange={ this.props.onChange } value={this.props.ent.description}></textarea>
                             </div>
                         </div>
                     </div>
@@ -62,7 +63,7 @@ var PartyDiv = React.createClass({
                             <label htmlFor="statusId">Status *</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <select id="statusId" className="form-control" onChange={ this.props.onChange} value={this.props.lead.statusId} required>
+                                <select id="statusId" className="form-control" onChange={ this.props.onChange} value={this.props.ent.statusId} required >
                                     <option disabled value=''> -- select an option -- </option>
                                     <option value="PARTY_ENABLED">ENABLED</option>
                                     <option value="PARTY_DISABLED">DISABLED</option>

@@ -9,6 +9,9 @@ var React = require('react');
 var ContactRow = require('./ContactRow');
 var ContactsStore = require('../../../stores/ContactsStore');
 var ContactsActions = require('../../../actions/ContactsActions');
+// var $ = require('jquery'); // DO NOT COMMENT BACK IN, JSHINT IS WRONG ON THIS POINT.
+// var dataTable = require('datatables.net')(window, $);
+// var dtButtons = require('datatables.net-buttons')(window, $);
 
 var MyContactsPage = React.createClass({
 
@@ -22,12 +25,12 @@ var MyContactsPage = React.createClass({
         // Event listener to fire when data retrieved-- 
         // when Store emits,informs this View something happened
         ContactsStore.addGetDataListener(this._onGetData);
-        
+
         // Call the async function to get my contacts
         ContactsActions.getContactsByOwner();
     },
 
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         // Avoids console error
         ContactsStore.removeListener('getData', this._onGetData);
     },
@@ -38,18 +41,20 @@ var MyContactsPage = React.createClass({
         this.setState({
             contactsOwned: ContactsStore.getContactsOwned()
         });
+        // Convert the My Contacts HTML table into a nice looking jQuery DataTable
+        $('#myContactsTable').DataTable();
     },
 
     render: function () {
 
-        /* jshint ignore:start */        
-        var contacts = this.state.contactsOwned;        
+        /* jshint ignore:start */
+        var contacts = this.state.contactsOwned;
         var contactsJSX = [];
 
         for (var i = 0; i < contacts.length; i++) {
             // See https://facebook.github.io/react/docs/multiple-components.html#dynamic-children
             // for an explanation for passing a "key" prop to a child component in for loop
-            contactsJSX.push(<ContactRow key={ 'contact_' + i } contact={ contacts[i] }/>);
+            contactsJSX.push(<ContactRow key={ 'contact_' + i } contact={ contacts[i]}/>);
         }
 
         return (
@@ -59,19 +64,21 @@ var MyContactsPage = React.createClass({
                         <div className="panel-heading panel-heading-custom">
                             <h1>My Contacts</h1>
                         </div>
-                        <table className='table'>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Salutation</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                { contactsJSX }
-                            </tbody>
-                        </table>
+                        <div className="panel-body">
+                            <table id="myContactsTable" className='table'>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Salutation</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    { contactsJSX }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

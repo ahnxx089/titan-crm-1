@@ -8,14 +8,15 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
-//var LeadRow = require('./LeadRow');
+//var PartySupplementalDiv = require('./PartySupplementalDiv');
+//var SubmitButton = require('./SubmitButton');
 var PartyDiv = require('./PartyDiv');
 var PersonDiv = require('./PersonDiv');
-//var PartySupplementalDiv = require('./PartySupplementalDiv');
 var PartySupplementalDiv = require('../../common/PartySupplementalDiv');
 var PartyContactDiv = require('./PartyContactDiv');
-//var SubmitButton = require('./SubmitButton');
 var SubmitButton = require('../../common/SubmitButton');
+
+var AddLeadForm = require('./AddLeadForm');
 
 var LeadsStore = require('../../../stores/LeadsStore'); 
 var LeadsActions = require('../../../actions/LeadsActions'); 
@@ -24,44 +25,77 @@ var MyLeadsPage = React.createClass({
 
     getInitialState: function () {
         return {
-//            leadsOwned: []
+            emptyLead: {
+                partyTypeId: 'PERSON',
+                currencyUomId: '',
+                description: '',
+                statusId: 'PARTY_ENABLED',
+                
+                salutation: '',
+                firstName: '',
+                middleName: '',
+                lastName: '',
+                birthDate: '',
+                comments: '',
+                
+                parentPartyId: '120', /* this is added ad hoc */
+                roleTypeId: 'LEAD' /* this is added ad hoc */
+            },
+            dirty: false
         };
     },
 
-//    componentDidMount: function () {
-//        // Event listener to fire when data retrieved-- 
-//        // when Store emits,informs this View something happened
-//        LeadsStore.addGetDataListener(this._onGetData);
-//        
-//        // Call the async function to get my leads
-//        LeadsActions.getLeadsByOwner();
-//    },
-
-//    componentWillUnmount: function() {
-//        // Avoids console error
-//        LeadsStore.removeListener('getData', this._onGetData);
-//    },
+    // Look at https://facebook.github.io/react/docs/component-specs.html for lifecycle functions
+    /*
+    componentDidMount: function () {
+        // Event listener to fire when data retrieved-- 
+        // when Store emits,informs this View something happened
+        console.log('mounted');
+        LeadsStore.addListener(this._onGetData);
+    },
+    
+    componentWillUnmount: function() {
+        // Avoids console error
+        console.log('will mount');
+        LeadsStore.removeListener(this._onGetData);
+    },
+    */
 
     // An event registered with the store-- fires when emitGet()
     // is called inside getLeadsByOwner's success callback
+    // THIS IS BROKEN. NEED FIX WHEN ACTUALLY DEALING WITH RE-RENDERING THE PAGE (with listeners etc)
 //    _onGetData: function () {
-//        this.setState({
-//            leadsOwned: LeadsStore.getLeadsOwned()
-//        });
+//        this.setLeadState();
 //    },
+    
+    // not used any more as I created a form
+    _onAddLeadFormSubmit: function(event) {
+        event.preventDefault();
+        LeadsActions.addLead(this.state.emptyLead);
+    },
+    
+    // working
+    setLeadState: function(event) {
+        console.log('in set lead state');
+        this.setState( { dirty: true } );
+        var field = event.target.id;
+        var value = event.target.value;
+        this.state.emptyLead[ field ] = value;
+        console.log(this.state.emptyLead);
+        this.setState( {emptyLead: this.state.emptyLead} );
+    },
+    
+    _addLead: function() {
+        console.log('in _ add lead');
+        LeadsActions.addLead(this.state.emptyLead); 
+        this.setState({ dirty: false }); 
+    },
 
+    
     render: function () {
-
-        /* jshint ignore:start */        
-//        var leads = this.state.leadsOwned;        
-//        var leadsJSX = [];
-
-//        for (var i = 0; i < leads.length; i++) {
-            // See https://facebook.github.io/react/docs/multiple-components.html#dynamic-children
-            // for an explanation for passing a "key" prop to a child component in for loop
-//            leadsJSX.push(<LeadRow key={ 'lead_' + i } lead={ leads[i] }/>);
-//        }
-
+        console.log('in render ');
+        /* jshint ignore:start */
+        
         return (
             <div>
                 <div className="container" >
@@ -69,15 +103,19 @@ var MyLeadsPage = React.createClass({
                         <div className="panel-heading panel-heading-custom">
                             <h2>Create Lead</h2>
                         </div>
-                        Hello1
-                        <p>Hello2</p>
-                        <form method="post" action="https://www.google.com">
-                            <PartyDiv/>
-                            <PersonDiv/>
+                        { /* <form method="post" action="https://www.google.com"> */ }
+                        { /* Comments between tags */ }
+            
+                        {/*form method="post" onSubmit={this._onAddLeadFormSubmit} >
+                            <PartyDiv onChange={ this.props.onChange } />
+                            <PersonDiv onChange={ this.props.onChange } />
                             <PartySupplementalDiv/>
                             <PartyContactDiv/>
                             <SubmitButton/>
-                        </form>
+                        </form*/}
+            
+            
+                        <AddLeadForm lead={this.state.emptyLead} onChange={this.setLeadState}  onButtonClick={ this._addLead} onSubmit={this._addLead} />
                     </div>
                 </div>
             </div>

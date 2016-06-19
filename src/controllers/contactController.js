@@ -210,7 +210,7 @@ var contactController = function (knex) {
      */
     var getContactById = function (contactId, user) {
         // Check user's security permission to own contacts
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_VIEW');
         if (hasPermission !== -1) {
             var promise = contactData.getContactById(contactId)
                 .then(function (contacts) {
@@ -256,7 +256,7 @@ var contactController = function (knex) {
      */
     var getContactsByOwner = function (user) {
         // Check user's security permission to own contacts
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_VIEW');
         if (hasPermission !== -1) {
             // user has permission, proceed to the data layer
             var promise = contactData.getContactsByOwner(user.partyId)
@@ -303,7 +303,7 @@ var contactController = function (knex) {
      */
     var getContactsByIdentity = function (query, user) {
         // Check security permissions of user against accepted permissions for this function
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_VIEW');
         if (hasPermission !== -1) {
             // user has permission, proceed towards data layer
 

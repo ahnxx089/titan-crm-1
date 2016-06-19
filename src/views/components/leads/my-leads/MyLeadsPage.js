@@ -62,10 +62,13 @@ var MyLeadsPage = React.createClass({
                         <table className='table'>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>Lead ID</th>
                                     <th>Salutation</th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
+                                    <th>Description</th>
+                                    <th>Parent Party ID</th>
+                                    <th>Created Date</th>
                                 </tr>
                             </thead>
                             <tbody>

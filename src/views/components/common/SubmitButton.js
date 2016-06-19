@@ -15,7 +15,10 @@ var SubmitButton = React.createClass({
         return (
             <div className="row">
                 <div className="col-xs-12">
-                    <button type="submit" className="btn btn-primary">Submit</button>
+                    <button type="submit" className="btn btn-primary" onClick={this.props.onButtonClick}>Submit</button>
+                    {/* <button type="submit" className="btn btn-primary" >Submit</button> */} {/* Label A */}
+            
+                    {/*<input type="submit" value="SUBMiT" />*/}
                 </div>
             </div>
         );
@@ -25,7 +28,8 @@ var SubmitButton = React.createClass({
 });
 
 // It is not okay to use double slash // for comments within the render function, 
-// at least not after its return statement, OR at least not with HTML tags
+// Comment #1 (between tags): {/* comment here */}
+// Commnet #2 (in element tag): <button type="submit" /* comment here */ onClick=myFn()> </button>
 module.exports = SubmitButton;
 
 /*  DINESH'S NOTE TO LUCAS:  I attempted to use this SubmitButton in the AddContactForm but
