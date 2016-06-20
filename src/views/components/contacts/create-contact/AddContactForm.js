@@ -36,11 +36,9 @@ var AddContactForm = React.createClass({
                     <AddPersonalInfo
                         contact={ this.props.contact }
                         onChange={ this.props.onChange } /> 
-                    
                     <AddContactMech
                         contact={ this.props.contact }
                         onChange={ this.props.onChange } />  
-            
                     <div className="row">
                         <div className="col-xs-12">
                             <button className="btn btn-primary" type="submit" data-disable="true">Submit</button>

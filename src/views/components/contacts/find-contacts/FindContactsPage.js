@@ -21,12 +21,14 @@ var FindContactsPage = React.createClass({
     },
 
     componentDidMount: function() {
-        ContactsStore.addGetByIdListener(this._onGetById);
+        ContactsStore.addGetDataListener(this._onGetById);
+        //ContactsStore.addGetByIdListener(this._onGetById);    // OLD VERSION
         ContactsStore.addGetByIdentityListener(this._onGetByIdentity);
     },
     
     componentWillUnmount: function() {
-        ContactsStore.removeListener('getById', this._onGetById);
+        ContactsStore.removeListener('getData', this._onGetById);
+        //ContactsStore.removeListener('getById', this._onGetById);     // OLD VERSION
         ContactsStore.removeListener('getByIdentity', this._onGetByIdentity);
     },
     
@@ -56,9 +58,16 @@ var FindContactsPage = React.createClass({
         
     },
     
+    _resetForm: function(event){
+        this.setState({
+            searchBy: { partyId: '', firstName: '', lastName: '' }
+        });
+    },
+    
     _onGetById: function(){
         this.setState({
-            contactsFound: ContactsStore.getById()
+            //contactsFound: ContactsStore.getById()    // OLD VERSION
+            contactsFound: ContactsStore.gotContact()
         });
     },
     
@@ -100,7 +109,8 @@ var FindContactsPage = React.createClass({
                             <SearchForm 
                                 searchBy={ this.state.searchBy } 
                                 onChange={ this.setSearchByState } 
-                                onFormSubmit={ this._findContacts }/>                                            
+                                onFormSubmit={ this._findContacts }
+                                onFormReset={ this._resetForm } />                                            
                         </div>
                     </div>
 
