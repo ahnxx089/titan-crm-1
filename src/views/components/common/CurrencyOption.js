@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////
-// A currency option on AddPersonalInfo page.
+// A currency option component for inclusion in pages.
 //
 // @file:   CurrencyOption.js
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>

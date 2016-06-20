@@ -139,11 +139,10 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-phone" aria-hidden="true"></i>
                                 </div>
-                                <input type="text" 
+                                <input type="number" 
                                     className="form-control" 
                                     id="countryCode" 
                                     placeholder="1"
-                                    pattern="^[0-9]{1,10}$"
                                     maxlength="10" 
                                     data-error="(max length 10 digits)"
                                     onChange={ this.props.onChange } 
