@@ -34,7 +34,7 @@ var PersonDiv = React.createClass({
                             <label htmlFor="firstName">First Name *</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="firstName" placeholder="First Name" onChange={ this.props.onChange } value={ this.props.lead.firstName} required /> 
+                                <input type="text" className="form-control" id="firstName" placeholder="First Name" maxlength="100" onChange={ this.props.onChange } value={ this.props.lead.firstName} required /> 
                             </div>
                         </div>
                     </div>
@@ -46,7 +46,7 @@ var PersonDiv = React.createClass({
                             <label htmlFor="middleName">Middle Name</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="middleName" placeholder="Middle Name" onChange={ this.props.onChange } value={ this.props.lead.middleName} />
+                                <input type="text" className="form-control" id="middleName" placeholder="Middle Name" maxlength="100" onChange={ this.props.onChange } value={ this.props.lead.middleName} />
                             </div>
                         </div>
                     </div>
@@ -55,7 +55,7 @@ var PersonDiv = React.createClass({
                             <label htmlFor="lastName">Last Name *</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="lastName" placeholder="Last Name" onChange={ this.props.onChange } value={ this.props.lead.lastName} required/>
+                                <input type="text" className="form-control" id="lastName" placeholder="Last Name" maxlength="100" onChange={ this.props.onChange } value={ this.props.lead.lastName} required/>
                             </div>
                         </div>
                     </div>

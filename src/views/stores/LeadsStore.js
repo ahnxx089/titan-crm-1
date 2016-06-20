@@ -34,8 +34,19 @@ LeadsStore.emitGetData = function() {
     this.emit('getData');
 };
 
-// nothing added here. Will need something for re-rendering. 
 
+LeadsStore.addedLeadListener = function (listener) {
+    // .on method, firstArg: eventName, secondArg: listener, both req
+    this.on('addLead', listener);  
+};
+
+LeadsStore.emitAddedLead = function (listener) {
+    // .emit method, firstArg: eventName [req], 
+    // consequent args: listeners [opt]
+    // Synchronously calls each of the listeners registered for the event named 'addLead'.
+    // Returns true if the event had listeners, false otherwise.
+    this.emit('addLead');
+};
 
 // BUSINESS LOGIC
 //-----------------------------------------------

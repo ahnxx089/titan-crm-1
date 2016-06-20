@@ -34,7 +34,7 @@ var PartySupplementalDiv = React.createClass({
                             <label htmlFor="companyName">Company Name</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="companyName" placeholder="Company Name" onChange={ this.props.onChange } value={ this.props.ent.companyName} />
+                                <input type="text" className="form-control" id="companyName" placeholder="Company Name" maxlength="100" onChange={ this.props.onChange } value={ this.props.ent.companyName} />
                             </div>
                         </div>
                     </div>
