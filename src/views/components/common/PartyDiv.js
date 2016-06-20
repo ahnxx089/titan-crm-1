@@ -6,8 +6,7 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
-//var CurrencyOption = require('./CurrencyOption'); // SHOULD COME FROM common folder
-var CurrencyOption = require('../contacts/create-contact/CurrencyOption'); // TO BE MOVED and CHANGED
+var CurrencyOption = require('./CurrencyOption'); 
 var CommonStore = require('../../stores/CommonStore');
 var CommonActions = require('../../actions/CommonActions');
 

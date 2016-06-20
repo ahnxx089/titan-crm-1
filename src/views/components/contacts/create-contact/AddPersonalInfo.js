@@ -6,7 +6,7 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
-var CurrencyOption = require('./CurrencyOption');
+var CurrencyOption = require('../../common/CurrencyOption');
 var CommonStore = require('../../../stores/CommonStore');
 var CommonActions = require('../../../actions/CommonActions');
 
