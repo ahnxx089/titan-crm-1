@@ -8,14 +8,6 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
-//var PartySupplementalDiv = require('./PartySupplementalDiv');
-//var SubmitButton = require('./SubmitButton');
-var PartyDiv = require('./PartyDiv');
-var PersonDiv = require('./PersonDiv');
-var PartySupplementalDiv = require('../../common/PartySupplementalDiv');
-var PartyContactDiv = require('./PartyContactDiv');
-var SubmitButton = require('../../common/SubmitButton');
-
 var AddLeadForm = require('./AddLeadForm');
 
 var LeadsStore = require('../../../stores/LeadsStore'); 
@@ -68,7 +60,7 @@ var MyLeadsPage = React.createClass({
 //        this.setLeadState();
 //    },
     
-    // not used any more as I created a form
+    // not used any more as I created a form. Can be deleted. 
     _onAddLeadFormSubmit: function(event) {
         event.preventDefault();
         LeadsActions.addLead(this.state.emptyLead);
@@ -103,19 +95,8 @@ var MyLeadsPage = React.createClass({
                         <div className="panel-heading panel-heading-custom">
                             <h2>Create Lead</h2>
                         </div>
-                        { /* <form method="post" action="https://www.google.com"> */ }
-                        { /* Comments between tags */ }
             
-                        {/*form method="post" onSubmit={this._onAddLeadFormSubmit} >
-                            <PartyDiv onChange={ this.props.onChange } />
-                            <PersonDiv onChange={ this.props.onChange } />
-                            <PartySupplementalDiv/>
-                            <PartyContactDiv/>
-                            <SubmitButton/>
-                        </form*/}
-            
-            
-                        <AddLeadForm lead={this.state.emptyLead} onChange={this.setLeadState}  onButtonClick={ this._addLead} onSubmit={this._addLead} />
+                        <AddLeadForm lead={this.state.emptyLead} onChange={this.setLeadState} onSubmit={this._addLead} />
                     </div>
                 </div>
             </div>

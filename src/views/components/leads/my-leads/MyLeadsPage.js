@@ -38,6 +38,8 @@ var MyLeadsPage = React.createClass({
         this.setState({
             leadsOwned: LeadsStore.getLeadsOwned()
         });
+        // Convert the My Contacts HTML table into a nice looking jQuery DataTable
+        $('#myLeadsTable').DataTable();
     },
 
     render: function () {
@@ -59,22 +61,24 @@ var MyLeadsPage = React.createClass({
                         <div className="panel-heading panel-heading-custom">
                             <h2>My Leads</h2>
                         </div>
-                        <table className='table'>
-                            <thead>
-                                <tr>
-                                    <th>Lead ID</th>
-                                    <th>Salutation</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Description</th>
-                                    <th>Parent Party ID</th>
-                                    <th>Created Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                { leadsJSX }
-                            </tbody>
-                        </table>
+                        <div className="panel-body">
+                            <table id="myLeadsTable" className='table'>
+                                <thead>
+                                    <tr>
+                                        <th>Lead ID</th>
+                                        <th>Salutation</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Description</th>
+                                        <th>Parent Party ID</th>
+                                        <th>Created Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    { leadsJSX }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

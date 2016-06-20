@@ -91,8 +91,7 @@ var leadData = function (knex) {
                 return knex('party_role')
                     .insert({
                         party_id: res[0],
-//                        role_type_id: lead.roleTypeId,
-                        role_type_id: 'LEAD', // just so
+                        role_type_id: lead.roleTypeId, // Replaced this dummy data in controller layer
                         created_date: lead.createdDate,
                         updated_date: lead.updatedDate
                     })

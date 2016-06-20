@@ -6,11 +6,62 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
+//var CurrencyOption = require('./CurrencyOption'); // SHOULD COME FROM common folder
+var CurrencyOption = require('../contacts/create-contact/CurrencyOption'); // TO BE MOVED and CHANGED
+var CommonStore = require('../../stores/CommonStore');
+var CommonActions = require('../../actions/CommonActions');
+
 
 var PartyDiv = React.createClass({
-    // changed class to className, noon June 16
+    
+    getInitialState: function () {
+        return {
+            currenciesObjArray: []
+        };
+    },
+    
+    componentDidMount: function () {
+        // Event listener to fire when data retrieved-- 
+        // when Store emits, informs this View something happened
+        CommonStore.addGetAllCurrenciesListener(this._onGetData);
+        
+        // Call the async function to get all currencies
+        CommonActions.getAllCurrencies();
+    },
+
+    componentWillUnmount: function() {
+        // Avoids console error
+        CommonStore.removeListener('getAllCurrencies', this._onGetData);
+    },
+
+    // An event registered with the store-- fires when emitGet()
+    // is called inside getContactsByOwner's success callback
+    _onGetData: function () {
+        this.setState({
+            currenciesObjArray: CommonStore.getCurrenciesObjArray()
+        });
+    },
+    
+    
+    
     render: function () {
+        
         /* jshint ignore:start */
+        var currencies = this.state.currenciesObjArray;        
+        var currenciesJSX = [];
+        
+        var noCurrency = { uom_id: null, abbreviation: '', description:'' };
+        
+        // push one blank row onto currenciesJSX first, since the db allows null for party.preferred_currency_uom_id
+        currenciesJSX.push(<CurrencyOption key={ 'currency_' } currency={ noCurrency }/>);
+        
+        for (var i = 0; i < currencies.length; i++) {
+            // See https://facebook.github.io/react/docs/multiple-components.html#dynamic-children
+            // for an explanation for passing a "key" prop to a child component in for loop
+            currenciesJSX.push(<CurrencyOption key={ 'currency_' + i } currency={ currencies[i] }/>);
+        }
+        
+        
         return (
             <div>
                 <div className="row">
@@ -39,9 +90,12 @@ var PartyDiv = React.createClass({
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-usd" aria-hidden="true"></i></div>
                                 <select id="currencyUomId" className="form-control" onChange={ this.props.onChange } value={this.props.ent.currencyUomId} >
+                               {/*
                                     <option value="USD">USD</option>
                                     <option value="CAD">CAD</option>
                                     <option value="EUR">EUR</option>
+                               */}
+                                    { currenciesJSX }
                                 </select>
                             </div>
                         </div>

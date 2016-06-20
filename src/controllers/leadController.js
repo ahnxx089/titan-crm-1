@@ -165,12 +165,11 @@ var leadController = function (knex) {
             var leadEntity = new Lead(
                 // ok to put dummy data here, eg, null and birthDate
                 // Single quotes are must.
-                null,
-                // will be PERSON anyway
-                lead.partyTypeId, 
+                null, // lead.partyId, auto_incremented in DB
+                'PERSON', // lead.partyTypeId, will set be PERSON no matter
                 lead.currencyUomId,
                 lead.description,
-                lead.statusId,
+                'PARTY_ENABLED', // lead.statusId, set ENABLED here
                 user.userId, // use 'admin' for testing 
                 now,
                 now,
@@ -179,8 +178,7 @@ var leadController = function (knex) {
                 lead.firstName,
                 lead.middleName,
                 lead.lastName,
-                // lead.birthDate,
-                dob,
+                dob, // lead.birthDate,
                 lead.comments,
                 // for person
                 lead.parentPartyId,
@@ -192,14 +190,14 @@ var leadController = function (knex) {
                 lead.ownershipEnumId,
                 lead.tickerSymbol,
                 lead.importantNote,
-                // for party_supplemental_data (partially). 
+                // for party_supplemental_data (partially). The rest of party_supplemental_data will be done at updatePSD
 
 //                lead.primaryPostalAddressId,
 //                lead.primaryTelecomNumberId,
 //                lead.primaryEmailId,
                 
-                // will be LEAD anyway
-                lead.roleTypeId
+                'LEAD' //lead.roleTypeId. Will be LEAD anyway
+
 
                 /*
                 lead.contactMechId,
