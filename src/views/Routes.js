@@ -40,11 +40,17 @@ var routes = (
                 <Route path="my-contacts" component={require('./components/contacts/my-contacts/MyContactsPage') } />
                 <Route path="create-contact" component={require('./components/contacts/create-contact/CreateContactPage')} />
                 <Route path="update-contact" component={require('./components/contacts/update-contact/UpdateContactPage')} />
+                <Route path="find-contacts" component={require('./components/contacts/find-contacts/FindContactsPage')} />
             </Route>
             {/* Leads module pages */}
             <Route path="leads">
                 <Route path="my-leads" component={ require('./components/leads/my-leads/MyLeadsPage') } />
                 <Route path="create-lead" component={ require('./components/leads/create-lead/CreateLeadPage') } />
+            </Route>
+            {/* Accounts module pages */}
+            <Route path="accounts">
+                <Route path="create-account" component={require('./components/accounts/create-account/CreateAccountPage') } />
+                <Route path="find-account" component={require('./components/accounts/find-account/FindAccountPage') } />
             </Route>
             
         </Route>

@@ -9,10 +9,9 @@ var TitanDispatcher = require('../dispatcher/TitanDispatcher');
 var AccountsConstants = require('../constants/AccountsConstants');
 
 var AccountsActions = {
-    getAccountsByOwner: function (id) {
+    getAccountsByOwner: function () {
         TitanDispatcher.dispatch({
-            actionType: AccountsConstants.GET_MY_ACCOUNTS,
-            id: id
+            actionType: AccountsConstants.GET_MY_ACCOUNTS
         });
     },
     
