@@ -1,5 +1,6 @@
 /////////////////////////////////////////////////
 // A party info div on Add Lead page.
+// This is NOT used now. Use the one in ../../common/ instead
 //
 // @file:   PartyDiv.js
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
@@ -27,6 +28,7 @@ var PartyDiv = React.createClass({
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
                                 <select id="partyTypeId" className="form-control" required>
                                  <option value="PERSON">PERSON</option>
+                                 <option value="ORGANIZATION">Organization</option>
                                 </select>
                             </div>
                         </div>
