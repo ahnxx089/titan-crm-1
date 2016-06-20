@@ -15,7 +15,7 @@ var SearchForm = React.createClass({
 
         /* jshint ignore:start */
         return(
-            <form onSubmit={ this.props.onFormSubmit }>
+            <form onSubmit={ this.props.onFormSubmit } onReset={ this.props.onFormReset }>
                 <div className="row">
                     <div className="col-lg-4 col-xs-12">
                         <div className="form-group">
@@ -68,8 +68,12 @@ var SearchForm = React.createClass({
 
                 {/* Submit button on row below search boxes */}
                 <div className="row">
-                    <div className="col-xs-12">
+                    <div className="col-lg-1 col-xs-12">
                         <button className="btn btn-primary" type="submit">Submit</button>
+                    </div>
+                    <div className="col-lg-10"></div>
+                    <div className="col-lg-1 col-xs-12">
+                        <button className="btn btn-primary" type="reset">Reset</button>
                     </div>
                 </div>
             </form>

@@ -14,21 +14,7 @@ var ContactsActions = require('../../../actions/ContactsActions');
 
 var CreateContactPage = React.createClass({
     
-    // protection against browsing away from page before submitting form
-    // THE "CONFIRM?" POP-UP IS NOT WORKING YET
-    statics: {
-        willTransitionFrom: function(transition, component){
-            //if (component.state.dirty && !confirm('Leave this page without submitting?')){
-            if (component.state.dirty){
-                transition.abort();
-            }
-        }
-    },
-    
     getInitialState: function() {
-        // Note:  only two properties of contact state are set initially; declaring additional properties to empty
-        // strings is not really necessary, but helps me keep track of all the properties which will be bubbling up
-        // from the child AddContactForm
         return {
             contact: {
                         partyTypeId: 'PERSON',
@@ -58,7 +44,6 @@ var CreateContactPage = React.createClass({
                         zipOrPostalCode: '',
                         countryGeoId: ''
                     },
-            dirty: false,
             addedContactPartyId: ''
         };
     },
@@ -74,7 +59,6 @@ var CreateContactPage = React.createClass({
     },
 
     setContactState: function(event) {
-        this.setState( { dirty: true } );
         var field = event.target.id;
         var value = event.target.value;
         this.state.contact[ field ] = value;
@@ -83,11 +67,7 @@ var CreateContactPage = React.createClass({
         
     _addContact: function(event) {
         event.preventDefault();
-        
-        console.log('\nCreateContactPage._addContact: this.state.contact = ', this.state.contact);
-        
         ContactsActions.addContact(this.state.contact); // start the Flux unidirectional flow!
-        this.setState({ dirty: false });                // consider form empty again, fields have been sent out
     },
 
     _onAddedContact: function() {
@@ -100,23 +80,19 @@ var CreateContactPage = React.createClass({
         if (result.hasOwnProperty('message'))
         {
             this.props.updateErrorBox(result.message);
-            //return; // prevents the redirect at end of this function
         }
         // User has permission, but there were one or more validation errors
         else if (Object.prototype.toString.call(result) === '[object Array]') 
         {
             this.props.updateErrorBox(result);
-            //return; // prevents the redirect at end of this function
         }
         // User had permission and no validation errors-- api should return the new partyId. 
-        // Note:  the new partyId won't actually get 
+        // Note:  the new partyId won't actually get rendered on this page, but I still want
+        // it to reach here for diagnostic purposes and to really prove we closed the loop.
         else if (result.hasOwnProperty('partyId')) {
             this.setState({
                 addedContactPartyId: result.partyId
             });
-            
-            console.log('\nCreateContactPage._onAddedContact:  after this.setState, this.state.addedContactPartyId = ', this.state.addedContactPartyId);
-            
             // for successful post to database, redirect to MyContactsPage
             this.props.router.replace('/cp/contacts/my-contacts');
         }
