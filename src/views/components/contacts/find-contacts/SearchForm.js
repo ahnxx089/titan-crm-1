@@ -23,7 +23,15 @@ var SearchForm = React.createClass({
                 
                 <div id="accordion">
 
-                    <h2><span className="label label-default">Find By ID #</span></h2>
+                    {/*
+                        <Anurag>
+                            Changes made from UX perspective:
+                            1. Added a background color to the <h2> heading to make it more pronounced and heading-like.
+                            2. Added an anchor inside <h2> to let the user know that this thing is clickable.
+                            3. Added a minor CSS rule for this. Please check line 88 in titan.css.
+                        </Anurag>
+                    */}
+                    <h2 className="bg-info"><a href="#">Find By ID #</a></h2>
                     <div className="row">
                         <div className="col-xs-12">
                             <div className="form-group">
@@ -43,7 +51,7 @@ var SearchForm = React.createClass({
                         </div>
                     </div>
 
-                    <h2><span className="label label-default">Find By Name</span></h2>
+                    <h2 className="bg-info"><a href="#">Find By Name</a></h2>
                     <div className="row">
                         <div className="col-lg-6 col-xs-12">
                             <div className="form-group">
