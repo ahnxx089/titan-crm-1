@@ -14,6 +14,8 @@ var Cookies = require('js-cookie');
 // DATA
 //-----------------------------------------------
 var leadsOwned = [];
+var addedLeadId = '';  // ajax call does not return anything. Have to put the value in a variable, then retrieve that variable later
+
 
 // STORE as EVENT EMITTER
 //-----------------------------------------------
@@ -37,7 +39,7 @@ LeadsStore.emitGetData = function() {
 
 LeadsStore.addedLeadListener = function (listener) {
     // .on method, firstArg: eventName, secondArg: listener, both req
-    this.on('addLead', listener);  
+    this.on('addedLead', listener);  
 };
 
 LeadsStore.emitAddedLead = function (listener) {
@@ -45,7 +47,7 @@ LeadsStore.emitAddedLead = function (listener) {
     // consequent args: listeners [opt]
     // Synchronously calls each of the listeners registered for the event named 'addLead'.
     // Returns true if the event had listeners, false otherwise.
-    this.emit('addLead');
+    this.emit('addedLead');
 };
 
 // BUSINESS LOGIC
@@ -81,11 +83,21 @@ LeadsStore.addLead = function(lead) {
 //            thisLeadsStore.emitAddedLead();
 //            thisLeadsStore.emitGetData();
             console.log(partyId);
+            addedLeadId = partyId;
+            // emit seems to be async as well
+            thisLeadsStore.emitAddedLead();
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(errorThrown);
         }
     });
+};
+
+
+// TODO: change to a more meaningful name
+LeadsStore.addedLead = function() {
+//    console.log('in addedLead');
+    return addedLeadId;
 };
 
 
