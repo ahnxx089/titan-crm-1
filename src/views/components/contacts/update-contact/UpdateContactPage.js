@@ -7,6 +7,7 @@
 
 var React = require('react');
 var ReactRouter = require('react-router');
+var Link = require('react-router').Link;
 
 var UpdateContactForm = require('./UpdateContactForm');
 var ContactsStore = require('../../../stores/ContactsStore');
@@ -50,6 +51,10 @@ var UpdateContactPage = React.createClass({
         /* jshint ignore:start */
         return (
             <div>
+                <Link to="/cp/contacts/my-contacts" className="btn btn-primary">
+                    <span className="fa fa-arrow-left"></span> Back
+                </Link>
+                <br />
                 <div className="panel panel-default">
                     <div className="panel-heading panel-heading-custom">
                         <h1>Update Contact</h1>
