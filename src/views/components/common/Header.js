@@ -53,7 +53,8 @@ var Header = React.createClass({
                                 <ul className="dropdown-menu">
                                     <li><Link to="/cp/contacts/my-contacts" activeClassName="active">My Contacts</Link></li>
                                     <li><Link to="/cp/contacts/create-contact" activeClassName="active">Create Contact</Link></li>
-                                    <li><Link to="/cp/contacts/update-contact" activeClassName="active">Update Contact Test</Link></li>
+                                    <li><Link to="/cp/contacts/update-contact/20" activeClassName="active">Update Contact #20</Link></li>
+                                    <li><Link to="/cp/contacts/update-contact/21" activeClassName="active">Update Contact #21</Link></li>
                                     <li><Link to="/cp/contacts/find-contacts" activeClassName="active">Find Contacts</Link></li>
                                 </ul>
                             </li>

@@ -13,12 +13,9 @@ var ContactsStore = require('../../../stores/ContactsStore');
 var ContactsActions = require('../../../actions/ContactsActions');
 
 var UpdateContactPage = React.createClass({
-    mixins: [
-        ReactRouter.Navigation
-    ],
     getInitialState: function () {
         return {
-            contactId: 20,
+            contactId: this.props.params.id,
             contact: {}
         };
     },
@@ -40,9 +37,6 @@ var UpdateContactPage = React.createClass({
             contact: contact
         });
     },
-    /*_refreshContact: function(event) {
-        ContactsActions.getContactById(this.state.contactId);
-    },*/
     _updateContact: function (event) {
         event.preventDefault();
         ContactsActions.updateContact(this.state.contactId, this.state.contact);

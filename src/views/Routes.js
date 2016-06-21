@@ -39,7 +39,7 @@ var routes = (
             <Route path="contacts">
                 <Route path="my-contacts" component={require('./components/contacts/my-contacts/MyContactsPage') } />
                 <Route path="create-contact" component={require('./components/contacts/create-contact/CreateContactPage')} />
-                <Route path="update-contact" component={require('./components/contacts/update-contact/UpdateContactPage')} />
+                <Route path="update-contact/:id" component={require('./components/contacts/update-contact/UpdateContactPage')} />
                 <Route path="find-contacts" component={require('./components/contacts/find-contacts/FindContactsPage')} />
             </Route>
             {/* Leads module pages */}
@@ -49,7 +49,7 @@ var routes = (
             </Route>
             {/* Accounts module pages */}
             <Route path="accounts">
-                <Route path="create-account" component={require('./components/accounts/create-account/CreateAccountPage') } />
+                <Route path="create-account/" component={require('./components/accounts/create-account/CreateAccountPage') } />
             </Route>
             
         </Route>
