@@ -68,11 +68,11 @@ var SearchForm = React.createClass({
 
                 {/* Submit button on row below search boxes */}
                 <div className="row">
-                    <div className="col-lg-1 col-xs-12">
+                    <div className="col-lg-1 col-xs-6">
                         <button className="btn btn-primary" type="submit">Submit</button>
                     </div>
-                    <div className="col-lg-10"></div>
-                    <div className="col-lg-1 col-xs-12">
+                    <div className="col-lg-10 "></div>
+                    <div className="col-lg-1 col-xs-6">
                         <button className="btn btn-primary" type="reset">Reset</button>
                     </div>
                 </div>
