@@ -39,13 +39,13 @@ LeadsStore.emitGetData = function() {
 
 LeadsStore.addedLeadListener = function (listener) {
     // .on method, firstArg: eventName, secondArg: listener, both req
-    this.on('addedLead', listener);  
+    this.on('addedLead', listener);
 };
 
 LeadsStore.emitAddedLead = function (listener) {
     // .emit method, firstArg: eventName [req], 
     // consequent args: listeners [opt]
-    // Synchronously calls each of the listeners registered for the event named 'addLead'.
+    // Synchronously calls each of the listeners registered for the event named 'addedLead'.
     // Returns true if the event had listeners, false otherwise.
     this.emit('addedLead');
 };
@@ -73,16 +73,14 @@ LeadsStore.getLeadsOwned = function() {
 // Next function is called by CreateLeadPage
 LeadsStore.addLead = function(lead) {
     var thisLeadsStore = this;
-    console.log('here');
+//    console.log('here');
     $.ajax({
         type: 'POST',
         url: '/api/leads/',
         headers: {  'x-access-token': Cookies.get('titanAuthToken') },
         data: lead,
         success: function(partyId) {
-//            thisLeadsStore.emitAddedLead();
-//            thisLeadsStore.emitGetData();
-            console.log(partyId);
+//            console.log(partyId);
             addedLeadId = partyId;
             // emit seems to be async as well
             thisLeadsStore.emitAddedLead();
@@ -94,8 +92,7 @@ LeadsStore.addLead = function(lead) {
 };
 
 
-// TODO: change to a more meaningful name
-LeadsStore.addedLead = function() {
+LeadsStore.getAddedLead = function() {
 //    console.log('in addedLead');
     return addedLeadId;
 };
@@ -104,14 +101,12 @@ LeadsStore.addedLead = function() {
 // LINK BETWEEN DISPATCHER AND STORE
 //-----------------------------------------------
 TitanDispatcher.register(function(action) {
-    console.log('here 3');
     switch(action.actionType) {
         case LeadsConstants.GET_MY_LEADS: {
             LeadsStore.getLeadsByOwner();
             break;
         }
         case LeadsConstants.ADD_LEAD: {
-            console.log('here 2');
             LeadsStore.addLead(action.data);
             break;
         }

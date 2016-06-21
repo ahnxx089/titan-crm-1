@@ -46,7 +46,7 @@ var PersonDiv = React.createClass({
                             <label htmlFor="middleName">Middle Name</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="middleName" placeholder="Middle Name" maxlength="100" onChange={ this.props.onChange } value={ this.props.lead.middleName} />
+                                <input type="text" className="form-control" id="middleName" placeholder="Middle Name" maxlength="80" onChange={ this.props.onChange } value={ this.props.lead.middleName} />
                             </div>
                         </div>
                     </div>

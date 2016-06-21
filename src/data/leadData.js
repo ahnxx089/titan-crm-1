@@ -44,7 +44,7 @@ var leadData = function (knex) {
             .insert({
                 // ok to put dummy data here
                 party_type_id: lead.partyTypeId, // should have made sure this is PERSON
-                preferred_currency_uom_id: lead.currencyUomId,
+                preferred_currency_uom_id: lead.preferredCurrencyUomId,
                 description: lead.description,
                 status_id: lead.statusId,
                 created_by: lead.createdBy,
@@ -73,7 +73,7 @@ var leadData = function (knex) {
                         parent_party_id: lead.parentPartyId,
                         company_name: lead.companyName,
                         annual_revenue: lead.annualRevenue,
-                        currency_uom_id: lead.currencyUomId, // the same. Was renamed.
+                        currency_uom_id: lead.preferredCurrencyUomId, // the same. Was renamed.
                         num_employees: lead.numEmployees,
                         created_date: lead.createdDate,
                         updated_date: lead.updatedDate, 

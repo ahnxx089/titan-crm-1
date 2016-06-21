@@ -8,6 +8,7 @@
 /* jshint camelcase: false */
 /* jshint shadow:true */
 /* jshint maxcomplexity: false */
+/*jshint esversion: 6 */
 
 // WARNING! 
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
@@ -59,7 +60,12 @@ var leadController = function (knex) {
             .then(function (result) {
                 return result; // 1 here: 1 row was updated. This could be changed to partyId which makes more sense.
             });
-        promise.catch(function (error) {
+        
+        // Trying new arrow function in ES6
+//        promise.catch(function (error) {
+//            winston.error(error);
+//        });
+        promise.catch(error => {
             winston.error(error);
         });
         return promise;
