@@ -62,7 +62,7 @@ var CreateContactPage = React.createClass({
         var field = event.target.id;
         var value = event.target.value;
         this.state.contact[ field ] = value;
-        return this.setState( {contact: this.state.contact} );
+        this.setState( {contact: this.state.contact} );
     },
         
     _addContact: function(event) {

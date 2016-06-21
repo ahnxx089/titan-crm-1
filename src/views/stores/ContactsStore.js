@@ -99,10 +99,10 @@ ContactsStore.updateContact = function(contactId, contact) {
         type: 'PUT',
         url: '/api/contacts/' + contactId,
         headers: { 
-            'x-access-token': Cookies.get('titanAuthToken'),
-            'Content-Type': 'application/json'
+            'x-access-token': Cookies.get('titanAuthToken')
         },
-        success: function(contact) {
+        data: contact,
+        success: function(rows) {
             thisContactsStore.emitPutData();
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -204,6 +204,10 @@ TitanDispatcher.register(function(action) {
         }
         case ContactsConstants.GET_CONTACTS_BY_IDENTITY: {
             ContactsStore.getContactsByIdentity(action.data);
+            break;
+        }
+        case ContactsConstants.UPDATE_CONTACT: {
+            ContactsStore.updateContact(action.data.contactId, action.data.contact);
             break;
         }
     }

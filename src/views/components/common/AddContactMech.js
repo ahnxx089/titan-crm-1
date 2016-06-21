@@ -113,8 +113,9 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="webAddress" 
                                     placeholder="www.google.com"
-                                    pattern="^[?,.;:'!@#$%^&*()_-=+A-z0-9]{1,}$"
-                                    maxlength="255" data-error="(max length 255 characters)"
+                                    pattern="^[._-=+A-z0-9]{1,255}$"
+                                    maxlength="255"
+                                    data-error="(max length 255 characters)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.webAddress } />
                             </div>
@@ -143,7 +144,7 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="countryCode" 
                                     placeholder="1"
-                                    maxlength="10" 
+                                    max="9999999999" 
                                     data-error="(max length 10 digits)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.countryCode } />
@@ -158,12 +159,11 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-phone" aria-hidden="true"></i>
                                 </div>
-                                <input type="text" 
+                                <input type="number" 
                                     className="form-control" 
                                     id="areaCode" 
                                     placeholder="202"
-                                    pattern="^[0-9]{1,10}$"
-                                    maxlength="10" 
+                                    max="9999999999" 
                                     data-error="(max length 10 digits)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.areaCode } />
@@ -205,7 +205,7 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="askForName" 
                                     placeholder="Jane"
-                                    pattern="^[?,.;:'!@#$%^&*()_-=+A-z0-9]{1,100}$"
+                                    pattern="^[.-A-z0-9]{1,100}$"
                                     maxlength="100" 
                                     data-error="(max length 100 characters)"
                                     onChange={ this.props.onChange } 
@@ -236,7 +236,7 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="toName" 
                                     placeholder="Jane Doe"
-                                    pattern="^[A-z0-9]{1,100}$"
+                                    pattern="^[.-A-z0-9]{1,100}$"
                                     maxlength="100" data-error="(max length 100 characters)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.toName }/>
@@ -255,7 +255,7 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="attnName" 
                                     placeholder="Jane Doe"
-                                    pattern="^[A-z0-9]{1,100}$"
+                                    pattern="^[.-A-z0-9]{1,100}$"
                                     maxlength="100" data-error="(max length 100 characters)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.attnName }/>
@@ -277,7 +277,7 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="address1" 
                                     placeholder="123 Anywhere Lane"
-                                    pattern="^[?,.;:'!@#$%^&*()_-=+A-z0-9]{1,255}$"
+                                    pattern="^[.-A-z0-9]{1,255}$"
                                     maxlength="255" data-error="(max length 255 characters)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.address1 }/>
@@ -296,7 +296,7 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="address2" 
                                     placeholder="Suite #100"
-                                    pattern="^[?,.;:'!@#$%^&*()_-=+A-z0-9]{1,255}$"
+                                    pattern="^[.-A-z0-9]{1,255}$"
                                     maxlength="255" data-error="(max length 255 characters)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.address2 }/>
@@ -318,7 +318,7 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="city" 
                                     placeholder="My Town"
-                                    pattern="^[?,.;:'!@#$%^&*()_-=+A-z0-9]{1,100}$"
+                                    pattern="^[.-A-z0-9]{1,100}$"
                                     maxlength="100" data-error="(max length 100 characters)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.city }/>
