@@ -17,7 +17,6 @@ var validation = require('../../common/validation')();
 //-----------------------------------------------
 var contactsOwned = [];
 var addedContactPartyId = '';   // for returning party_id of an added Contact
-var contactById = {};           // for returning single contact retrieved by partyId
 var contactsByIdentity = [];    // for returning contacts retrieved by identity (first and/or last name)
 var contactRetrieved = {};
 
@@ -58,15 +57,6 @@ ContactsStore.addedContactListener = function (listener) {
 
 ContactsStore.emitAddedContact = function() {
     this.emit('addedContact');  
-};
-
-/* Next 2 functions:  for Views receiving emits after getContactById */
-ContactsStore.addGetByIdListener = function (listener) {
-    this.on('getById', listener);
-};
-
-ContactsStore.emitGetById = function() {
-    this.emit('getById');  
 };
 
 /* Next 2 functions:  for Views receiving emits after getContactsByIdentity (first or last name) */
@@ -141,7 +131,6 @@ ContactsStore.gotContact = function() {
     return contactRetrieved;
 };
 
-
 // Next two functions are called by CreateContactPage
 ContactsStore.addContact = function(contact) {
     var thisContactsStore = this;
@@ -162,29 +151,6 @@ ContactsStore.addContact = function(contact) {
 
 ContactsStore.addedContact = function() {
     return addedContactPartyId;
-};
-
-// Next two functions are called by FindContactPage to getContactById
-// NOTE:  THIS IS NOW RENAMED "findContactById" to avoid conflict with similar getContactById,
-// which is probably a result of Dinesh & Bill both working in this file simultaneously.
-ContactsStore.findContactById = function(partyId) {
-    var thisContactsStore = this;
-    $.ajax({
-        type: 'GET',
-        url: '/api/contacts/' + partyId,
-        headers: {  'x-access-token': Cookies.get('titanAuthToken') },
-        success: function(contact) {
-            contactById = contact; // contactApi.getContactById returns a Contact entity object
-            thisContactsStore.emitGetById();
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.log(errorThrown);
-        }
-    });
-};
-
-ContactsStore.getById = function() {
-    return contactById;
 };
 
 // Next two functions are called by FindContactPage to getContactsByIdentity

@@ -16,7 +16,8 @@ var commonData = function(knex) {
     var getAllCurrencies = function() {
         return knex.select('uom_id', 'abbreviation', 'description')
             .from('uom')
-            .where({ uom_type_id: 'CURRENCY_MEASURE' });
+            .where({ uom_type_id: 'CURRENCY_MEASURE' })
+            .orderBy('description');
     };
 
     /**

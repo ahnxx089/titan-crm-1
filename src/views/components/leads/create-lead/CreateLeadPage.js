@@ -8,14 +8,6 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
-//var PartySupplementalDiv = require('./PartySupplementalDiv');
-//var SubmitButton = require('./SubmitButton');
-var PartyDiv = require('./PartyDiv');
-var PersonDiv = require('./PersonDiv');
-var PartySupplementalDiv = require('../../common/PartySupplementalDiv');
-var PartyContactDiv = require('./PartyContactDiv');
-var SubmitButton = require('../../common/SubmitButton');
-
 var AddLeadForm = require('./AddLeadForm');
 
 var LeadsStore = require('../../../stores/LeadsStore'); 
@@ -41,38 +33,61 @@ var MyLeadsPage = React.createClass({
                 parentPartyId: '120', /* this is added ad hoc */
                 roleTypeId: 'LEAD' /* this is added ad hoc */
             },
-            dirty: false
+            dirty: false,
+            addedLeadId: ''
         };
     },
 
     // Look at https://facebook.github.io/react/docs/component-specs.html for lifecycle functions
-    /*
+    
     componentDidMount: function () {
         // Event listener to fire when data retrieved-- 
         // when Store emits,informs this View something happened
         console.log('mounted');
-        LeadsStore.addListener(this._onGetData);
+        LeadsStore.addedLeadListener(this._onAddedLead);
     },
     
     componentWillUnmount: function() {
         // Avoids console error
-        console.log('will mount');
-        LeadsStore.removeListener(this._onGetData);
+        console.log('will un mount');
+        LeadsStore.removeListener('addedLead', this._onAddedLead);
     },
-    */
-
-    // An event registered with the store-- fires when emitGet()
-    // is called inside getLeadsByOwner's success callback
-    // THIS IS BROKEN. NEED FIX WHEN ACTUALLY DEALING WITH RE-RENDERING THE PAGE (with listeners etc)
-//    _onGetData: function () {
-//        this.setLeadState();
-//    },
     
-    // not used any more as I created a form
-    _onAddLeadFormSubmit: function(event) {
-        event.preventDefault();
-        LeadsActions.addLead(this.state.emptyLead);
+    
+    // listener function
+    _onAddedLead: function() {
+        console.log('in on added lead');
+
+        // ajax call does not return anything. Had to put the value in a variable, then RETRIEVE that variable later
+        // this value can be no-permission, validation errors, or success-msg-that-is-the-party-id
+        var result = LeadsStore.addedLead(); // yes
+
+        // User lacks security permission to addLead
+        if (result.hasOwnProperty('message')) {
+            // still unsure about the error box
+            console.log('no permission to add lead');
+            this.props.updateErrorBox(result.message);
+        }
+        // User has permission, but there were one or more validation errors
+        else if (Object.prototype.toString.call(result) === '[object Array]') {
+            console.log('add lead validation errors');
+            this.props.updateErrorBox(result);
+        }
+        // User had permission and no validation errors-- api should return the new partyId. 
+        // Note:  the new partyId won't actually get rendered on this page, but I still want
+        // it to reach here for diagnostic purposes and to really prove we closed the loop.
+        else if (result.hasOwnProperty('partyId')) {
+            // setState seems to be async
+            this.setState({
+                addedLeadId: result.partyId
+            });
+            console.log('successful added lead. New added lead id is ' + result.partyId /* addedLeadId wont work here */);
+            // for successful post to database, redirect to MyLeadsPage
+            //this.props.router.replace('/cp/leads/my-leads');
+        }
     },
+    
+    
     
     // working
     setLeadState: function(event) {
@@ -103,19 +118,8 @@ var MyLeadsPage = React.createClass({
                         <div className="panel-heading panel-heading-custom">
                             <h2>Create Lead</h2>
                         </div>
-                        { /* <form method="post" action="https://www.google.com"> */ }
-                        { /* Comments between tags */ }
             
-                        {/*form method="post" onSubmit={this._onAddLeadFormSubmit} >
-                            <PartyDiv onChange={ this.props.onChange } />
-                            <PersonDiv onChange={ this.props.onChange } />
-                            <PartySupplementalDiv/>
-                            <PartyContactDiv/>
-                            <SubmitButton/>
-                        </form*/}
-            
-            
-                        <AddLeadForm lead={this.state.emptyLead} onChange={this.setLeadState}  onButtonClick={ this._addLead} onSubmit={this._addLead} />
+                        <AddLeadForm lead={this.state.emptyLead} onChange={this.setLeadState} onSubmit={this._addLead} />
                     </div>
                 </div>
             </div>

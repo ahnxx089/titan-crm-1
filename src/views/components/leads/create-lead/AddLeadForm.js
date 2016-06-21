@@ -1,8 +1,8 @@
 /////////////////////////////////////////////////
-// Add Lead form component.
+// Add Lead form component. Currently loaded in CreateLeadPage.
 //
 // @file:   AddLeadForm.js
-// @author: Dinesh Shenoy <astroshenoy@gmail.com>
+// @author: Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
 var React = require('react');
@@ -10,11 +10,15 @@ var React = require('react');
 //var AddPersonalInfo = require('./AddPersonalInfo');
 //var AddContactMech = require('../../common/AddContactMech'); 
 //var PartyDiv = require('./PartyDiv');
+//var PartySupplementalDiv = require('./PartySupplementalDiv');
+//var PartyContactDiv = require('./PartyContactDiv');
+
 
 var PartyDiv = require('../../common/PartyDiv');
 var PersonDiv = require('./PersonDiv');
 var PartySupplementalDiv = require('../../common/PartySupplementalDiv');
-var PartyContactDiv = require('./PartyContactDiv');
+var AddContactMech = require('../../common/AddContactMech');
+
 
 
 // ON HOLD:  I tried to use Lucas' new common Submit Button, see commented out 
@@ -27,18 +31,12 @@ var SubmitButton = require('../../common/SubmitButton');
 
 var AddLeadForm = React.createClass({
     
-    _onButtonClick: function(event) {
-        event.preventDefault();
-        // this.props.onSubmit(); // Label A
-        this.props.onButtonClick();
-    },
-    
     render: function() {
         /* jshint ignore:start */
         return (
             <div>
-                <form>
-                {/* <form onSubmit={ this._onButtonClick */} > {/* Label A */}
+                {/*<form>*/} {/* Label B */}
+                <form onSubmit={ this.props.onSubmit} > 
 
                     <PartyDiv 
                         ent={ this.props.lead } 
@@ -49,34 +47,22 @@ var AddLeadForm = React.createClass({
                     <PartySupplementalDiv 
                         ent={ this.props.lead } 
                         onChange={ this.props.onChange } />     
-            
+                    <AddContactMech 
+                        contact={ this.props.lead } 
+                        onChange={ this.props.onChange } />    
                 {/*
                     <PartyContactDiv 
                         lead={ this.props.lead } 
                         onChange={ this.props.onChange } />     
+                        
                     <SubmitButton 
                         lead={ this.props.lead } 
                         onChange={ this.props.onChange } />       
                 */}
 
-                    {/* ON HOLD:  ATTEMPT AGAIN AT SOME POINT TO USE THE NEW COMMON SUBMIT BUTTON */}
-                    {/*<SubmitButton onClick={ this.props.onButtonClick } />*/}
-
-                    {/* <SubmitButton /> */} {/* Label A */}
-                    <SubmitButton onButtonClick={this._onButtonClick} />
-
-
-                    {/* Locally defined submit button, would like to replace with <SubmitButton /> if possible... */}
-                {/*
-                    <div className="row">
-                        <div className="col-xs-12" text-right>
-                            <a className="btn btn-primary" href="#" role="button" 
-                                onClick={ this.props.onButtonClick }>Submit</a>
-                        </div>
-                    </div>
-                */}
-            </form>
-                
+                    <SubmitButton />
+                    {/*<SubmitButton onButtonClick={this._onButtonClick} />*/} {/* Label B */}
+                </form>
             </div>
         );
         /* jshint ignore:end */
