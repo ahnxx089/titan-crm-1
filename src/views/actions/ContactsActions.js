@@ -32,6 +32,15 @@ var ContactsActions = {
             actionType: ContactsConstants.GET_CONTACTS_BY_IDENTITY,
             data: identity
         });
+    },
+    updateContact: function(contactId, contact) {
+        TitanDispatcher.dispatch({
+            actionType: ContactsConstants.UPDATE_CONTACT,
+            data: {
+                contactId: contactId,
+                contact: contact
+            }
+        });
     }
     
 };
