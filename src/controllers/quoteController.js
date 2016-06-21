@@ -31,7 +31,6 @@ var quoteController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new contact
      */
     var addQuote = function (quote, user) {
-        // NOTE TO DUKJIN: should the premission be CRMSFA_QUOTE_CREATE?
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
