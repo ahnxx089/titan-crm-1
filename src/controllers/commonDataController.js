@@ -6,6 +6,7 @@
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
+/* jshint maxcomplexity: false */
 
 var winston = require('winston');
 var validation = require('../common/validation')();

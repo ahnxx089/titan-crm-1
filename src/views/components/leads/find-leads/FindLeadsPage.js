@@ -51,11 +51,16 @@ var FindLeadsPage = React.createClass({
         event.preventDefault();
         LeadsActions.getLeadById(this.state.searchBy.partyId);
     },
+    
+//    _findLeads: function() {
+//        console.log('find leads 2');
+//        LeadsActions.getLeadById(this.state.searchBy.partyId);
+//    },
 
     _onGetById: function(){
         console.log('on get by id');
         this.setState({
-            leadFoundById: LeadsStore.getLeadFound() //not
+            leadFoundById: LeadsStore.getLeadFound()
         });
     },
     
@@ -80,6 +85,7 @@ var FindLeadsPage = React.createClass({
                         </div>
                         <div className="panel-body">
                             <SearchForm 
+                                // onSubmit={ this._findLeads }
                                 
                                 searchBy={ this.state.searchBy } 
                                 
