@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "./node_modules/.bin/jasmine-node test",
-    "start": "node app.js"
+    "start": "node app.js",
+    "postinstall": "./node_modules/gulp/bin/gulp jsx2js"
   },
   "author": "Team Titan",
   "license": "ISC",
@@ -27,9 +28,9 @@
     "react-router": "^2.4.1",
     "request": "^2.72.0",
     "validator": "^5.2.0",
-    "winston": "^2.2.0"
-  },
-  "devDependencies": {
+    "winston": "^2.2.0",
+  //},
+  //"devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-preset-react": "^6.5.0",
     "babelify": "^7.3.0",
