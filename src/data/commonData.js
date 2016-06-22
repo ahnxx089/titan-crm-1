@@ -66,12 +66,13 @@ var commonData = function(knex) {
     
     /**
      * Gets all party_id values from database where party_role.role_type_id = 'CONTACT'
-     * @return {Object} promise - Fulfillment value is an array of party_ids for Contacts (only)
+     * @return {Object} promise - Fulfillment value is an array of party_ids for Contacts (only), with names
     */
     var getContactParties = function() {
-        return knex.select('party_role.party_id')
+        return knex.select('party_role.party_id','person.first_name','person.last_name')
             .from('party_role')
-            .where('role_type_id', 'CONTACT');
+            .innerJoin('person','party_role.party_id','person.party_id')
+            .where('party_role.role_type_id', 'CONTACT');
     };
     
     /**

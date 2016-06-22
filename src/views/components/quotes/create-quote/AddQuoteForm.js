@@ -99,7 +99,7 @@ var AddQuoteForm = React.createClass({
         // SELECT party_role.party_id FROM party_role WHERE role_type_id = 'CONTACT';
         var contactParties = this.state.contactPartiesObjArray;        
         var contactPartiesJSX = [];
-        var noContactParty = { party_id: null };
+        var noContactParty = { party_id: null, first_name: null, last_name: null };
         contactPartiesJSX.push(<ContactPartyOption key={ 'contactParty_' } contactParty={ noContactParty }/>);
         for (var i = 0; i < contactParties.length; i++) {
             contactPartiesJSX.push(<ContactPartyOption key={ 'contactParty_' + i } contactParty={ contactParties[i] }/>);

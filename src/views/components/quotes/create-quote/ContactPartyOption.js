@@ -13,7 +13,7 @@ var ContactPartyOption = React.createClass({
         /* jshint ignore:start */
         return (
             <option value={ this.props.contactParty.party_id }>
-                { this.props.contactParty.party_id }
+                { this.props.contactParty.party_id } - { this.props.contactParty.first_name } { this.props.contactParty.last_name }
             </option>
         );
         /* jshint ignore:end */
