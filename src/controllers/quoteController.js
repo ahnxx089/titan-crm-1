@@ -14,6 +14,7 @@ var Quote = require('../entities/quote');
 var QuoteItem = require('../entities/quoteItem');
 var QuoteItemOption = require('../entities/quoteItemOption');
 var _ = require('lodash');
+var validation = require('../common/validation')();
 
 var quoteController = function (knex) {
     // Get a reference to data layer module
@@ -34,13 +35,12 @@ var quoteController = function (knex) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
-
             var quoteEntity = new Quote(
                 null,
                 quote.quoteTypeId,
                 quote.partyId,
-                quote.issueDate,
-                quote.statusId,
+                now,
+                'QUOTE_CREATED',
                 quote.currencyUomId,
                 quote.salesChannelEnumId,
                 quote.validFromDate,
@@ -48,7 +48,7 @@ var quoteController = function (knex) {
                 quote.quoteName,
                 quote.description,
                 quote.contactPartyId,
-                quote.createdByPartyId,
+                user.partyId,
                 now,
                 now
             );
@@ -63,7 +63,7 @@ var quoteController = function (knex) {
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
-                var promise = quoteData.addQuote(quote)
+                var promise = quoteData.addQuote(quoteEntity)
                     .then(function (quoteId) {
                         return quoteId; //quoteData.addQuoteRole(quoteId);
                     });
@@ -214,8 +214,8 @@ var quoteController = function (knex) {
             // proceed towards data layer
             var now = (new Date()).toISOString();
 
-            // build Quote Entity.  (Reminder to self on how created_by column will not
-            // be affected:  UI will be filling quote.createdDate with the value that this
+            // build Quote Entity.  (Reminder to self on how issue_date and created_by column will not
+            // be affected:  UI will be filling quote.issueDate and quote.createdDate with the value that this
             // quote already has.  Only updated_date column is receiving new value called "now")
             var quoteEntity = new Quote(
                 quoteId,
@@ -444,7 +444,6 @@ var quoteController = function (knex) {
      */
     var getQuotesByOwner = function (user) {
         // Check user's security permission to own quotes
-        console.log(user.securityPermissions);
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
             // user has permission, proceed to the data layer

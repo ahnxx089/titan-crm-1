@@ -18,6 +18,8 @@ var Cookies = require('js-cookie');
 var currenciesObjArray = [];
 var stateProvinceObjArray = [];
 var countriesObjArray = [];
+var quoteTypesObjArray = [];
+var accountPartiesObjArray = [];
 
 
 // STORE as EVENT EMITTER
@@ -53,6 +55,22 @@ CommonStore.addGetAllCountriesListener = function (listener) {
 
 CommonStore.emitGetAllCountries = function() {
     this.emit('getAllCountries');  
+};
+
+CommonStore.addGetQuoteTypesListener = function (listener) {
+    this.on('getQuoteTypes', listener);
+};
+
+CommonStore.emitGetQuoteTypes = function() {
+    this.emit('getQuoteTypes');  
+};
+
+CommonStore.addGetAccountPartiesListener = function (listener) {
+    this.on('getAccountParties', listener);
+};
+
+CommonStore.emitGetAccountParties = function() {
+    this.emit('getAccountParties');  
 };
 
 
@@ -118,6 +136,45 @@ CommonStore.getCountriesObjArray = function() {
     return countriesObjArray;
 };
 
+CommonStore.getQuoteTypes = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=quoteType',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(quoteTypes) {
+            quoteTypesObjArray = quoteTypes;
+            thisCommonStore.emitGetQuoteTypes();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getQuoteTypesObjArray = function() {
+    return quoteTypesObjArray;
+};
+
+CommonStore.getAccountParties = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=accountParty',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(accountParties) {
+            accountPartiesObjArray = accountParties;
+            thisCommonStore.emitGetAccountParties();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getAccountPartiesObjArray = function() {
+    return accountPartiesObjArray;
+};
 
 // LINK BETWEEN DISPATCHER AND STORE
 //-----------------------------------------------
@@ -134,6 +191,14 @@ TitanDispatcher.register(function(action) {
         }
         case CommonConstants.GET_ALL_COUNTRIES: {
             CommonStore.getAllCountries();
+            break;
+        }
+        case CommonConstants.GET_QUOTE_TYPES: {
+            CommonStore.getQuoteTypes();
+            break;
+        }
+        case CommonConstants.GET_ACCOUNT_PARTIES: {
+            CommonStore.getAccountParties();
             break;
         }
     }

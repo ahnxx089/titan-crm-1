@@ -76,9 +76,9 @@ var Header = React.createClass({
                             <li className="dropdown">
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Quotes <span className="caret"></span></a>
                                 <ul className="dropdown-menu">
-                                    <li><a href="#">My Quotes</a></li>
-                                    <li><a href="#">Create Quote</a></li>
-                                    <li><a href="#">Find Quotes</a></li>
+                                    <li><Link to="/cp/quotes/my-quotes" activeClassName="active">My Quotes</Link></li>
+                                    <li><Link to="/cp/quotes/create-quote" activeClassName="active">Create Quote</Link></li>
+                                    <li><Link to="/cp/quotes/find-quotes" activeClassName="active">Find Quotes</Link></li>
                                 </ul>
                             </li>
                             <li><Link to="/cp/about" activeClassName="active">About</Link></li>

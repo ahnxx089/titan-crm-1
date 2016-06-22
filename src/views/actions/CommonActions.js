@@ -26,6 +26,18 @@ var CommonActions = {
         TitanDispatcher.dispatch({
             actionType: CommonConstants.GET_ALL_COUNTRIES
         });
+    },
+    
+    getQuoteTypes: function() {
+        TitanDispatcher.dispatch({
+            actionType: CommonConstants.GET_QUOTE_TYPES
+        });
+    },
+
+    getAccountParties: function() {
+        TitanDispatcher.dispatch({
+            actionType: CommonConstants.GET_ACCOUNT_PARTIES
+        });
     }
 };
 

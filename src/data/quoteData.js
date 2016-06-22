@@ -17,12 +17,11 @@ var quoteData = function (knex) {
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is id of new contact
      */
-    var addQuote = function (quote, user) {
+    var addQuote = function (quote) {
         return knex('quote')
             .returning('quote_id')
             //passing through
             .insert({
-                //quote_id: quote.quoteId,
                 quote_type_id: quote.quoteTypeId,
                 party_id: quote.partyId,
                 issue_date: quote.issueDate,
@@ -40,11 +39,10 @@ var quoteData = function (knex) {
             })
             .then(function (quoteId) {
                 return knex('quote_role')
-                    //.returning('quote_id')
                     .insert({
-                        quote_id: quoteId, //quote.quoteId,
-                        party_id: quote.partyId,
-                        role_type_id: 'CONTACT', //quote.roleTypeId,
+                        quote_id: quoteId, 
+                        party_id: quote.createdByPartyId,
+                        role_type_id: 'PERSON_ROLE', 
                         created_date: quote.createdDate,
                         updated_date: quote.updatedDate
                     })
@@ -52,7 +50,6 @@ var quoteData = function (knex) {
                         return quoteId;
                     });
             });
-
     };
 
     /**
