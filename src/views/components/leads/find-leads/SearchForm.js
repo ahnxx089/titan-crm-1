@@ -20,6 +20,7 @@ var SearchForm = React.createClass({
         return (
             <form onSubmit={ this.props.onFormSubmit } onReset={ this.props.onFormReset }>
                 <div id="tabs">
+                    Bear with the style, for some days
                   <ul>
                     <li><a href="#tabs-1">Search By ID</a></li>
                     <li><a href="#tabs-2">Search By Name</a></li>

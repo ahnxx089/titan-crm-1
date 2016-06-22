@@ -113,8 +113,7 @@ LeadsStore.findLeadById = function(passedId) {
             console.log('here 2');
             foundLead = lead;
             console.log(foundLead);
-            
-//            thisLeadsStore.emitAddedLead(); //not
+            thisLeadsStore.emitGetData(); //yes
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log('an error happened... ');
@@ -131,7 +130,7 @@ LeadsStore.findLeadById = function(passedId) {
     });
 };
 LeadsStore.getLeadFound = function() {
-    console.log('in retrieving...not used');
+    console.log('in retrieving...now used');
     console.log(foundLead);
     return foundLead;
 };

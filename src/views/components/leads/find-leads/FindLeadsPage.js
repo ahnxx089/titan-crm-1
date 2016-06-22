@@ -53,7 +53,7 @@ var FindLeadsPage = React.createClass({
     },
 
     _onGetById: function(){
-//        console.log('on get by id');
+        console.log('on get by id');
         this.setState({
             leadFoundById: LeadsStore.getLeadFound() //not
         });
@@ -68,7 +68,7 @@ var FindLeadsPage = React.createClass({
         var leadById = this.state.leadFoundById;
         var leadsJSX = [];
         leadsJSX.push(<LeadRow key={ 'lead_' } lead={ leadById }/>)
-        
+
         return(
             <div>
                 <div className="container">
