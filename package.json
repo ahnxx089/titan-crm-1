@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/jasmine-node test",
     "start": "node app.js",
-    "postinstall": "./node_modules/gulp/bin/gulp jsx2js"
+    "postinstall": "gulp jsx2js"
   },
   "author": "Team Titan",
   "license": "ISC",
