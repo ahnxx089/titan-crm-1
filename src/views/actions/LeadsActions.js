@@ -23,6 +23,14 @@ var LeadsActions = {
             // this data is used in LeadsStore
             data: lead
         });
+    },
+    
+    getLeadById: function(id) {
+//        console.log('in action');
+        TitanDispatcher.dispatch({
+            actionType: LeadsConstants.GET_LEAD_BY_ID,
+            data: id
+        });
     }
     
 };
