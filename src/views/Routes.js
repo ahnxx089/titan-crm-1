@@ -38,9 +38,9 @@ var routes = (
             {/* Contacts module pages */}
             <Route path="contacts">
                 <Route path="my-contacts" component={require('./components/contacts/my-contacts/MyContactsPage') } />
-                <Route path="create-contact" component={require('./components/contacts/create-contact/CreateContactPage')} />
-                <Route path="update-contact/:id" component={require('./components/contacts/update-contact/UpdateContactPage')} />
-                <Route path="find-contacts" component={require('./components/contacts/find-contacts/FindContactsPage')} />
+                <Route path="create" component={require('./components/contacts/create-contact/CreateContactPage')} />
+                <Route path="update/:id" component={require('./components/contacts/update-contact/UpdateContactPage')} />
+                <Route path="find" component={require('./components/contacts/find-contacts/FindContactsPage')} />
             </Route>
             {/* Leads module pages */}
             <Route path="leads">
