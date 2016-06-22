@@ -19,18 +19,17 @@ var UpdateContactForm = React.createClass({
         //this.setState({contact: this.props.contact});
         var contact = this.props.contact;
         var onChange = this.props.onChange;
+        var currencies = this.props.currencies;
+        var currenciesJsx = [];
+        
+        for (var i=0; i < currencies.length; i++) {
+            var uomId = currencies[i].uom_id;
+            var label = currencies[i].abbreviation;
+            currenciesJsx.push(<option value={uomId}>{label}</option>);
+        }
 
         return (
             <form name="updateContact" method="post" onSubmit={ this.props.onFormSubmit }>
-
-
-                <div className="row">
-                    <div className="col-xs-12 bg-success">
-                        <h2>Personal Info</h2>
-                    </div>
-                </div>
-                <br/>
-
 
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
@@ -82,11 +81,9 @@ var UpdateContactForm = React.createClass({
                             <label htmlFor="currency">Currency</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-usd" aria-hidden="true"></i></div>
-                                <select id="currency" className="form-control">
-
-                                    <option>USD</option>
-                                    <option>CAD</option>
-                                    <option>EUR</option>
+                                <select id="preferredCurrencyUomId" className="form-control" value={ contact.preferredCurrencyUomId} onChange={ onChange }>
+                                    <option value={null}></option>
+                                    {currenciesJsx}
                                 </select>
                             </div>
                         </div>
@@ -113,10 +110,7 @@ var UpdateContactForm = React.createClass({
                         </div>
                     </div>
                 </div>
-                <br/>
-                <br/>
-
-
+                
                 <div className="row">
                     <div className="col-xs-12">
                         <button type="submit" className="btn btn-primary">Update Contact</button>

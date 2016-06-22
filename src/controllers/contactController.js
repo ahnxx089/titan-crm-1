@@ -220,7 +220,7 @@ var contactController = function (knex) {
                         contactEntity = new Contact(
                             contacts[0].party_id,
                             contacts[0].party_type_id,
-                            contacts[0].currency_uom_id,
+                            contacts[0].preferred_currency_uom_id,
                             contacts[0].description,
                             contacts[0].status_id,
                             contacts[0].created_by,
@@ -267,7 +267,7 @@ var contactController = function (knex) {
                         var contact = new Contact(
                             contacts[i].party_id,
                             contacts[i].party_type_id,
-                            contacts[i].currency_uom_id,
+                            contacts[i].preferred_currency_uom_id,
                             contacts[i].description,
                             contacts[i].status_id,
                             contacts[i].created_by,
