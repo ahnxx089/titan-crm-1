@@ -36,7 +36,7 @@ var CreateQuotePage = React.createClass({
     },
     
     componentWillUnmount: function() {
-        QuotesStore.removeListener('change', this._onAddedQuote);
+        QuotesStore.removeListener('addedQuote', this._onAddedQuote);
     },
 
     setQuoteState: function(event) {

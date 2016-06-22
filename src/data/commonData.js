@@ -64,12 +64,33 @@ var commonData = function(knex) {
             .where('role_type_id', 'ACCOUNT');
     };
     
+    /**
+     * Gets all party_id values from database where party_role.role_type_id = 'CONTACT'
+     * @return {Object} promise - Fulfillment value is an array of party_ids for Contacts (only)
+    */
+    var getContactParties = function() {
+        return knex.select('party_role.party_id')
+            .from('party_role')
+            .where('role_type_id', 'CONTACT');
+    };
+    
+    /**
+     * Gets all sales channel enum values from database 
+     * @return {Object} promise - Fulfillment value is an array of enumeration.enum_id values
+    */
+    var getSalesChannels = function() {
+        return knex.select('enumeration.enum_id')
+            .from('enumeration');
+    };
+    
     return {
         getAllCurrencies: getAllCurrencies,
         getAllStatesOrProvinces: getAllStatesOrProvinces,
         getAllCountries: getAllCountries,
         getQuoteTypes: getQuoteTypes,
-        getAccountParties: getAccountParties
+        getAccountParties: getAccountParties,
+        getContactParties: getContactParties,
+        getSalesChannels: getSalesChannels
     };
 };
 

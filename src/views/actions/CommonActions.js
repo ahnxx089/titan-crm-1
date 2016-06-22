@@ -38,6 +38,18 @@ var CommonActions = {
         TitanDispatcher.dispatch({
             actionType: CommonConstants.GET_ACCOUNT_PARTIES
         });
+    },
+
+    getContactParties: function() {
+        TitanDispatcher.dispatch({
+            actionType: CommonConstants.GET_CONTACT_PARTIES
+        });
+    },
+
+    getSalesChannels: function() {
+        TitanDispatcher.dispatch({
+            actionType: CommonConstants.GET_SALES_CHANNELS
+        });
     }
 };
 

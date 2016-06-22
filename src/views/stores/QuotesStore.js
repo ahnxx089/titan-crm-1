@@ -16,8 +16,7 @@ var validation = require('../../common/validation')();
 // DATA
 //-----------------------------------------------
 var quotesOwned = [];
-var addedQuotePartyId = '';   // for returning party_id of an added Quote
-var quotesByIdentity = [];    // for returning quotes retrieved by identity (first and/or last name)
+var addedQuoteId = '';   // for returning quote_id of an added Quote
 var quoteRetrieved = {};
 
 
@@ -57,15 +56,6 @@ QuotesStore.addedQuoteListener = function (listener) {
 
 QuotesStore.emitAddedQuote = function() {
     this.emit('addedQuote');  
-};
-
-/* Next 2 functions:  for Views receiving emits after getQuotesByIdentity (first or last name) */
-QuotesStore.addGetByIdentityListener = function (listener) {
-    this.on('getByIdentity', listener);
-};
-
-QuotesStore.emitGetByIdentity = function() {
-    this.emit('getByIdentity');  
 };
 
 
@@ -139,8 +129,8 @@ QuotesStore.addQuote = function(quote) {
         url: '/api/quotes/',
         headers: {  'x-access-token': Cookies.get('titanAuthToken') },
         data: quote,
-        success: function(partyId) {
-            addedQuotePartyId = partyId; // quoteApi.addQuote returns partyId of successfully added Quote
+        success: function(quoteId) {
+            addedQuoteId = quoteId; // quoteApi.addQuote returns quote_id of successfully added Quote
             thisQuotesStore.emitAddedQuote();
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -150,38 +140,7 @@ QuotesStore.addQuote = function(quote) {
 };
 
 QuotesStore.addedQuote = function() {
-    return addedQuotePartyId;
-};
-
-// Next two functions are called by FindQuotePage to getQuotesByIdentity
-QuotesStore.getQuotesByIdentity = function(identity) {
-    var thisQuotesStore = this;
-    
-    // an empty search box for first or last name comes in as empty string, keep as empty string;
-    // if not empty then clean off any whitespaces (reminder: cannot not send empty string to validation.sanitizeInput,
-    // which returns null in that case, which would make e.g. var lastName = null instead of = '' )
-    var firstName = (identity.firstName === '' ? '' : validation.sanitizeInput(identity.firstName));
-    var lastName  = (identity.lastName  === '' ? '' : validation.sanitizeInput(identity.lastName ));
-
-    //var queryString = '?firstName=' + firstName + '&lastName=' + lastName;
-    var queryString = '?firstName=' + firstName + '&lastName=' + lastName;
-    
-    $.ajax({
-        type: 'GET',
-        url: '/api/quotes' + queryString,
-        headers: {  'x-access-token': Cookies.get('titanAuthToken') },
-        success: function(quote) {
-            quotesByIdentity = quote; // quoteApi.getQuotesByIdentity returns an array of Quote entities
-            thisQuotesStore.emitGetByIdentity();
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.log(errorThrown);
-        }
-    });
-};
-
-QuotesStore.getByIdentity = function() {
-    return quotesByIdentity;
+    return addedQuoteId;
 };
 
 
@@ -200,10 +159,6 @@ TitanDispatcher.register(function(action) {
         }
         case QuotesConstants.GET_QUOTE_BY_ID: {
             QuotesStore.getQuoteById(action.data);
-            break;
-        }
-        case QuotesConstants.GET_QUOTES_BY_IDENTITY: {
-            QuotesStore.getQuotesByIdentity(action.data);
             break;
         }
         case QuotesConstants.UPDATE_QUOTE: {

@@ -20,6 +20,8 @@ var stateProvinceObjArray = [];
 var countriesObjArray = [];
 var quoteTypesObjArray = [];
 var accountPartiesObjArray = [];
+var contactPartiesObjArray = [];
+var salesChannelsObjArray = [];
 
 
 // STORE as EVENT EMITTER
@@ -71,6 +73,22 @@ CommonStore.addGetAccountPartiesListener = function (listener) {
 
 CommonStore.emitGetAccountParties = function() {
     this.emit('getAccountParties');  
+};
+
+CommonStore.addGetContactPartiesListener = function (listener) {
+    this.on('getContactParties', listener);
+};
+
+CommonStore.emitGetContactParties = function() {
+    this.emit('getContactParties');  
+};
+
+CommonStore.addGetSalesChannelsListener = function (listener) {
+    this.on('getSalesChannels', listener);
+};
+
+CommonStore.emitGetSalesChannels = function() {
+    this.emit('getSalesChannels');  
 };
 
 
@@ -176,6 +194,47 @@ CommonStore.getAccountPartiesObjArray = function() {
     return accountPartiesObjArray;
 };
 
+CommonStore.getContactParties = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=contactParty',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(contactParties) {
+            contactPartiesObjArray = contactParties;
+            thisCommonStore.emitGetContactParties();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getContactPartiesObjArray = function() {
+    return contactPartiesObjArray;
+};
+
+CommonStore.getSalesChannels = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=salesChannel',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(salesChannels) {
+            salesChannelsObjArray = salesChannels;
+            thisCommonStore.emitGetSalesChannels();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getSalesChannelsObjArray = function() {
+    return salesChannelsObjArray;
+};
+
+
 // LINK BETWEEN DISPATCHER AND STORE
 //-----------------------------------------------
 TitanDispatcher.register(function(action) {
@@ -199,6 +258,14 @@ TitanDispatcher.register(function(action) {
         }
         case CommonConstants.GET_ACCOUNT_PARTIES: {
             CommonStore.getAccountParties();
+            break;
+        }
+        case CommonConstants.GET_CONTACT_PARTIES: {
+            CommonStore.getContactParties();
+            break;
+        }
+        case CommonConstants.GET_SALES_CHANNELS: {
+            CommonStore.getSalesChannels();
             break;
         }
     }
