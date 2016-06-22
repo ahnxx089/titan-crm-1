@@ -9,9 +9,6 @@ var React = require('react');
 var ContactRow = require('./ContactRow');
 var ContactsStore = require('../../../stores/ContactsStore');
 var ContactsActions = require('../../../actions/ContactsActions');
-// var $ = require('jquery'); // DO NOT COMMENT BACK IN, JSHINT IS WRONG ON THIS POINT.
-// var dataTable = require('datatables.net')(window, $);
-// var dtButtons = require('datatables.net-buttons')(window, $);
 
 var MyContactsPage = React.createClass({
 
@@ -27,6 +24,12 @@ var MyContactsPage = React.createClass({
         ContactsStore.addGetDataListener(this._onGetData);
 
         // Call the async function to get my contacts
+        // <Anurag>
+        // We should have this list sorted in descending order of ID (most recent first)
+        // a. that is more natural
+        // b. when we are redirected here by Create Contact page, we can see our new contact
+        // right at the top
+        // </Anurag>
         ContactsActions.getContactsByOwner();
     },
 
@@ -41,8 +44,12 @@ var MyContactsPage = React.createClass({
         this.setState({
             contactsOwned: ContactsStore.getContactsOwned()
         });
-        // Convert the My Contacts HTML table into a nice looking jQuery DataTable
-        $('#myContactsTable').DataTable();
+        // Convert the My Contacts HTML table into a nice looking jQuery DataTable, sorting so that
+        // most recently added Contacts (descending party_id) is at top. 
+        // See: https://datatables.net/examples/basic_init/table_sorting.html
+        $('#myContactsTable').DataTable({
+            "order": [[ 0, "desc"]]
+        });
     },
 
     render: function () {
@@ -72,6 +79,7 @@ var MyContactsPage = React.createClass({
                                         <th>Salutation</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>

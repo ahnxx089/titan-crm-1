@@ -16,6 +16,7 @@ var ContactInfoDiv = React.createClass({
     render: function () {
         /* jshint ignore: start */
         return (
+            <div>
             <div className="row">
                 <div className="h2">
                     <div className="btn-toolbar pull-right">
@@ -37,6 +38,10 @@ var ContactInfoDiv = React.createClass({
                     
                 </div>
 
+            </div>
+            <div className="row">
+                
+            </div>
             </div>
 
         );

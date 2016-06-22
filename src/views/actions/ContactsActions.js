@@ -20,6 +20,27 @@ var ContactsActions = {
             actionType: ContactsConstants.ADD_CONTACT,
             data: contact
         });
+    },
+    getContactById: function(partyId) {
+        TitanDispatcher.dispatch({
+            actionType: ContactsConstants.GET_CONTACT_BY_ID,
+            data: partyId
+        });
+    },
+    getContactsByIdentity: function(identity) {
+        TitanDispatcher.dispatch({
+            actionType: ContactsConstants.GET_CONTACTS_BY_IDENTITY,
+            data: identity
+        });
+    },
+    updateContact: function(contactId, contact) {
+        TitanDispatcher.dispatch({
+            actionType: ContactsConstants.UPDATE_CONTACT,
+            data: {
+                contactId: contactId,
+                contact: contact
+            }
+        });
     }
     
 };

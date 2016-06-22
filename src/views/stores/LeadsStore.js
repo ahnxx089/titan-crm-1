@@ -14,6 +14,9 @@ var Cookies = require('js-cookie');
 // DATA
 //-----------------------------------------------
 var leadsOwned = [];
+var addedLeadId = '';  // ajax call does not return anything. Have to put the value in a variable, then retrieve that variable later
+var foundLead = {};
+
 
 // STORE as EVENT EMITTER
 //-----------------------------------------------
@@ -34,11 +37,25 @@ LeadsStore.emitGetData = function() {
     this.emit('getData');
 };
 
-// nothing added here. Will need something for re-rendering. 
+
+LeadsStore.addedLeadListener = function (listener) {
+    // .on method, firstArg: eventName, secondArg: listener, both req
+    this.on('addedLead', listener);
+};
+
+LeadsStore.emitAddedLead = function (listener) {
+    // .emit method, firstArg: eventName [req], 
+    // consequent args: listeners [opt]
+    // Synchronously calls each of the listeners registered for the event named 'addedLead'.
+    // Returns true if the event had listeners, false otherwise.
+    this.emit('addedLead');
+};
+
 
 
 // BUSINESS LOGIC
 //-----------------------------------------------
+// Next two functions are called by MyLeadsPage
 LeadsStore.getLeadsByOwner = function() {
     var thisLeadsStore = this;
     $.ajax({
@@ -51,45 +68,90 @@ LeadsStore.getLeadsByOwner = function() {
         }
     });
 };
-
 LeadsStore.getLeadsOwned = function() {
     return leadsOwned;
 };
 
 
-// Next function is called by CreateLeadPage
+// Next two functions are called by CreateLeadPage
 LeadsStore.addLead = function(lead) {
     var thisLeadsStore = this;
-    console.log('here');
+//    console.log('here');
     $.ajax({
         type: 'POST',
         url: '/api/leads/',
         headers: {  'x-access-token': Cookies.get('titanAuthToken') },
         data: lead,
         success: function(partyId) {
-//            thisLeadsStore.emitAddedLead();
-//            thisLeadsStore.emitGetData();
-            console.log(partyId);
+//            console.log(partyId);
+            addedLeadId = partyId;
+            // emit seems to be async as well
+            thisLeadsStore.emitAddedLead();
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(errorThrown);
         }
     });
 };
+LeadsStore.getAddedLead = function() {
+//    console.log('in addedLead');
+    return addedLeadId;
+};
+
+
+//
+// Next two functions are called by FindLeadsPage
+LeadsStore.findLeadById = function(passedId) {
+    console.log('in store');
+    var thisLeadsStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/leads/' + passedId,
+        headers: {  'x-access-token': Cookies.get('titanAuthToken') },
+        data: passedId,
+        success: function(lead) {
+            console.log('here 2');
+            foundLead = lead;
+            console.log(foundLead);
+            thisLeadsStore.emitGetData(); //yes
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('an error happened... ');
+            if(jqXHR.hasOwnProperty('status')) {
+                if(jqXHR.status == '200') {
+                    console.log('error is 200. no such lead');
+                    return;
+                }
+            }
+//            console.log(jqXHR);
+//            console.log(textStatus);
+            console.log(errorThrown);
+        }
+    });
+};
+LeadsStore.getLeadFound = function() {
+    console.log('in retrieving...now used');
+    console.log(foundLead);
+    return foundLead;
+};
+
 
 
 // LINK BETWEEN DISPATCHER AND STORE
 //-----------------------------------------------
 TitanDispatcher.register(function(action) {
-    console.log('here 3');
     switch(action.actionType) {
         case LeadsConstants.GET_MY_LEADS: {
             LeadsStore.getLeadsByOwner();
             break;
         }
         case LeadsConstants.ADD_LEAD: {
-            console.log('here 2');
             LeadsStore.addLead(action.data);
+            break;
+        }
+        case LeadsConstants.GET_LEAD_BY_ID: {
+            console.log('in case');
+            LeadsStore.findLeadById(action.data);
             break;
         }
     }

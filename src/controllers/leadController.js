@@ -8,6 +8,7 @@
 /* jshint camelcase: false */
 /* jshint shadow:true */
 /* jshint maxcomplexity: false */
+/* jshint esversion: 6 */
 
 // WARNING! 
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
@@ -59,7 +60,12 @@ var leadController = function (knex) {
             .then(function (result) {
                 return result; // 1 here: 1 row was updated. This could be changed to partyId which makes more sense.
             });
-        promise.catch(function (error) {
+        
+        // Trying new arrow function in ES6
+//        promise.catch(function (error) {
+//            winston.error(error);
+//        });
+        promise.catch(error => {
             winston.error(error);
         });
         return promise;
@@ -155,22 +161,14 @@ var leadController = function (knex) {
                 dob = null;
             }
             
-            // ALL DONE
-            // TODO: Use the helper Eric wrote. Done
-            // TODO: contact_mech does take care of validations correct but does not let the user know. Done.
-            // TODO: Link contact_mech with party. Done (taken care by contactMechController.linkContactMechToParty)
-            // TODO: Link contact_mech with party_supplemental_data. DONE.
-            // TODO: Figure out possible duplicate entries. Done. 
-            
             var leadEntity = new Lead(
                 // ok to put dummy data here, eg, null and birthDate
                 // Single quotes are must.
-                null,
-                // will be PERSON anyway
-                lead.partyTypeId, 
+                null, // lead.partyId, auto_incremented in DB
+                'PERSON', // lead.partyTypeId, will set be PERSON no matter
                 lead.currencyUomId,
                 lead.description,
-                lead.statusId,
+                'PARTY_ENABLED', // lead.statusId, set ENABLED here
                 user.userId, // use 'admin' for testing 
                 now,
                 now,
@@ -179,8 +177,7 @@ var leadController = function (knex) {
                 lead.firstName,
                 lead.middleName,
                 lead.lastName,
-                // lead.birthDate,
-                dob,
+                dob, // lead.birthDate,
                 lead.comments,
                 // for person
                 lead.parentPartyId,
@@ -192,14 +189,14 @@ var leadController = function (knex) {
                 lead.ownershipEnumId,
                 lead.tickerSymbol,
                 lead.importantNote,
-                // for party_supplemental_data (partially). 
+                // for party_supplemental_data (partially). The rest of party_supplemental_data will be done at updatePSD
 
 //                lead.primaryPostalAddressId,
 //                lead.primaryTelecomNumberId,
 //                lead.primaryEmailId,
                 
-                // will be LEAD anyway
-                lead.roleTypeId
+                'LEAD' //lead.roleTypeId. Will be LEAD anyway
+
 
                 /*
                 lead.contactMechId,
@@ -337,7 +334,7 @@ var leadController = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of lead entities
      */
     var getLeadsByOwner = function (user) {
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_VIEW');
         // if found
         if (hasPermission !== -1) {
             var userId = user.userId;
@@ -397,6 +394,7 @@ var leadController = function (knex) {
      * @param {Number} leadId - Unique id (actually partyId) of the lead to be fetched
      * @return {Object} promise - Fulfillment value is a lead entity
      */
+    // TODO: check user permission? 
     var getLeadById = function (leadId) {
         var promise = leadData.getLeadById(leadId)
             .then(function (leads) {

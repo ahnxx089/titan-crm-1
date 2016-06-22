@@ -6,7 +6,7 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
-var CurrencyOption = require('./CurrencyOption');
+var CurrencyOption = require('../../common/CurrencyOption');
 var CommonStore = require('../../../stores/CommonStore');
 var CommonActions = require('../../../actions/CommonActions');
 
@@ -46,7 +46,12 @@ var AddPersonalInfo = React.createClass({
         
         var currencies = this.state.currenciesObjArray;        
         var currenciesJSX = [];
-
+        
+        var noCurrency = { uom_id: null, abbreviation: '', description:'' };
+        
+        // push one blank row onto currenciesJSX first, since the db allows null for party.preferred_currency_uom_id
+        currenciesJSX.push(<CurrencyOption key={ 'currency_' } currency={ noCurrency }/>);
+        
         for (var i = 0; i < currencies.length; i++) {
             // See https://facebook.github.io/react/docs/multiple-components.html#dynamic-children
             // for an explanation for passing a "key" prop to a child component in for loop
@@ -75,17 +80,20 @@ var AddPersonalInfo = React.createClass({
                                 <input type="text" 
                                     className="form-control" 
                                     id="firstName" 
-                                    placeholder="Jane" 
+                                    placeholder="Jane"
+                                    pattern="^[A-z0-9]{1,}$"
+                                    maxlength="100" 
+                                    data-error="First Name required (max length 100 characters, alphanumeric only)"
+                                    required
                                     onChange={ this.props.onChange } 
-                                    value={ this.props.contact.firstName }
-                                    maxlength="100"
-                                    required />
+                                    value={ this.props.contact.firstName } />
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label htmlFor="middleName">Middle Name (optional)</label>
+                            <label htmlFor="middleName">Middle Name</label>
                             <div className="input-group">
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i></div>
@@ -93,9 +101,12 @@ var AddPersonalInfo = React.createClass({
                                     className="form-control" 
                                     id="middleName" 
                                     placeholder="Anne" 
+                                    pattern="^[A-z0-9]{1,}$"
+                                    maxlength="100" data-error="(max length 100 characters, alphanumeric only)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.middleName } />
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                 </div>
@@ -112,9 +123,14 @@ var AddPersonalInfo = React.createClass({
                                     className="form-control" 
                                     id="lastName" 
                                     placeholder="Doe" 
+                                    pattern="^[A-z0-9]{1,}$"
+                                    maxlength="100" 
+                                    data-error="Last Name required (max length 100 characters, alphanumeric only)"
+                                    required
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.lastName } />
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
@@ -128,9 +144,12 @@ var AddPersonalInfo = React.createClass({
                                     className="form-control" 
                                     id="salutation" 
                                     placeholder="Mr., Ms., etc." 
+                                    pattern="^[.A-z0-9]{1,}$"
+                                    maxlength="100" data-error="(max length 100 characters, alphanumeric only)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.salutation } />
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                 </div>
@@ -155,7 +174,7 @@ var AddPersonalInfo = React.createClass({
                     </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label htmlFor="birthDate">Birth Date (optional)</label>
+                            <label htmlFor="birthDate">Birth Date</label>
                             <div className="input-group">
                                 <div className="input-group-addon">
                                     <i className="fa fa-calendar" aria-hidden="true"></i>
@@ -179,12 +198,15 @@ var AddPersonalInfo = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
-                                <input type="text"
+                                <textarea
                                     className="form-control" 
                                     id="description" 
-                                    placeholder="enter any description here" 
+                                    rows="4"
+                                    placeholder="(1000 characters or less)" 
+                                    pattern="^[?,.;:'!@#$%^&*()_-=+A-z0-9]{1,}$"
+                                    data-error="(check characters)"
                                     onChange={ this.props.onChange } 
-                                    value={ this.props.contact.description } />
+                                    value={ this.props.contact.description } ></textarea>
                             </div>
                         </div>
                     </div>
@@ -195,12 +217,15 @@ var AddPersonalInfo = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
-                                <input type="text"
+                                <textarea 
                                     className="form-control" 
                                     id="comments" 
-                                    placeholder="enter any comments here" 
+                                    rows="4"
+                                    placeholder="(255 characters or less)" 
+                                    pattern="^[?,.;:'!@#$%^&*()_-=+A-z0-9]{1,}$"
+                                    data-error="(check characters)"
                                     onChange={ this.props.onChange } 
-                                    value={ this.props.contact.comments } />
+                                    value={ this.props.contact.comments } ></textarea>
                             </div>
                         </div>
                     </div>

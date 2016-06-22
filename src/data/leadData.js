@@ -44,7 +44,7 @@ var leadData = function (knex) {
             .insert({
                 // ok to put dummy data here
                 party_type_id: lead.partyTypeId, // should have made sure this is PERSON
-                preferred_currency_uom_id: lead.currencyUomId,
+                preferred_currency_uom_id: lead.preferredCurrencyUomId,
                 description: lead.description,
                 status_id: lead.statusId,
                 created_by: lead.createdBy,
@@ -73,7 +73,7 @@ var leadData = function (knex) {
                         parent_party_id: lead.parentPartyId,
                         company_name: lead.companyName,
                         annual_revenue: lead.annualRevenue,
-                        currency_uom_id: lead.currencyUomId, // the same. Was renamed.
+                        currency_uom_id: lead.preferredCurrencyUomId, // the same. Was renamed.
                         num_employees: lead.numEmployees,
                         created_date: lead.createdDate,
                         updated_date: lead.updatedDate, 
@@ -91,8 +91,7 @@ var leadData = function (knex) {
                 return knex('party_role')
                     .insert({
                         party_id: res[0],
-//                        role_type_id: lead.roleTypeId,
-                        role_type_id: 'LEAD', // just so
+                        role_type_id: lead.roleTypeId, // Replaced this dummy data in controller layer
                         created_date: lead.createdDate,
                         updated_date: lead.updatedDate
                     })
@@ -184,14 +183,13 @@ var leadData = function (knex) {
             .innerJoin('party', 'person.party_id', 'party.party_id')
             .innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id')
             .innerJoin('party_role', 'person.party_id', 'party_role.party_id')
-            .innerJoin('party_contact_mech', 'person.party_id', 'party_contact_mech.party_id')
+            // change to left join?
+            .leftJoin('party_contact_mech', 'person.party_id', 'party_contact_mech.party_id')
             .leftJoin('contact_mech', 'party_contact_mech.contact_mech_id', '=', 'contact_mech.contact_mech_id')
             .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
             .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')
             .where('person.party_id', id)
-            .andWhere('party_role.role_type_id', 'LEAD');
-        // potential TODO: limit results to LEAD type (party_role.role_type_id) [CHECK]
-        
+            .andWhere('party_role.role_type_id', 'LEAD');        
         
         
 //        return knex.from('person')

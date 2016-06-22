@@ -1,5 +1,3 @@
-// not finished
-
 /////////////////////////////////////////////////
 // Create Lead page component.
 //
@@ -8,75 +6,79 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
-//var PartySupplementalDiv = require('./PartySupplementalDiv');
-//var SubmitButton = require('./SubmitButton');
-var PartyDiv = require('./PartyDiv');
-var PersonDiv = require('./PersonDiv');
-var PartySupplementalDiv = require('../../common/PartySupplementalDiv');
-var PartyContactDiv = require('./PartyContactDiv');
-var SubmitButton = require('../../common/SubmitButton');
+var withRouter = require('react-router').withRouter;
 
 var AddLeadForm = require('./AddLeadForm');
-
 var LeadsStore = require('../../../stores/LeadsStore'); 
 var LeadsActions = require('../../../actions/LeadsActions'); 
 
-var MyLeadsPage = React.createClass({
+// As long as this var (component name) matches the one used in the last line (module.exports), it is good. 
+// Since the project is browserified, other components refer this component by its path, not by its component name
+var CreateLeadPage = React.createClass({
 
     getInitialState: function () {
         return {
             emptyLead: {
                 partyTypeId: 'PERSON',
-                currencyUomId: '',
-                description: '',
                 statusId: 'PARTY_ENABLED',
-                
-                salutation: '',
-                firstName: '',
-                middleName: '',
-                lastName: '',
-                birthDate: '',
-                comments: '',
-                
-                parentPartyId: '120', /* this is added ad hoc */
-                roleTypeId: 'LEAD' /* this is added ad hoc */
+                parentPartyId: '120' /* this is added ad hoc */
+                // I (Lucas) am thinking about this. How would a user or a worker know the party id of parent of a lead? That is a party id of a company/organization! 
             },
-            dirty: false
+            dirty: false,
+            addedLeadId: ''
         };
     },
 
     // Look at https://facebook.github.io/react/docs/component-specs.html for lifecycle functions
-    /*
+    
     componentDidMount: function () {
         // Event listener to fire when data retrieved-- 
         // when Store emits,informs this View something happened
-        console.log('mounted');
-        LeadsStore.addListener(this._onGetData);
+        LeadsStore.addedLeadListener(this._onAddedLead);
     },
     
     componentWillUnmount: function() {
+        this.setState({ dirty: false }); 
         // Avoids console error
-        console.log('will mount');
-        LeadsStore.removeListener(this._onGetData);
+        LeadsStore.removeListener('addedLead', this._onAddedLead);
     },
-    */
+    
+    
+    // listener function
+    _onAddedLead: function() {
 
-    // An event registered with the store-- fires when emitGet()
-    // is called inside getLeadsByOwner's success callback
-    // THIS IS BROKEN. NEED FIX WHEN ACTUALLY DEALING WITH RE-RENDERING THE PAGE (with listeners etc)
-//    _onGetData: function () {
-//        this.setLeadState();
-//    },
-    
-    // not used any more as I created a form
-    _onAddLeadFormSubmit: function(event) {
-        event.preventDefault();
-        LeadsActions.addLead(this.state.emptyLead);
+        // ajax call does not return anything. Had to put the value in a variable, then RETRIEVE that variable later
+        // This value can be no-permission, validation errors, or success-msg-that-is-the-party-id
+        var result = LeadsStore.getAddedLead();
+
+        // User lacks security permission to addLead
+        if (result.hasOwnProperty('message')) {
+            // still unsure about the error box.
+            // Now I get it: error boxes, as well as this page, are children of controlPanel page
+            this.props.updateErrorBox(result.message);
+        }
+        // User has permission, but there were one or more validation errors
+        else if (Object.prototype.toString.call(result) === '[object Array]') {
+            this.props.updateErrorBox(result);
+        }
+        // User had permission and no validation errors-- api should return the new partyId. 
+        // Note:  the new partyId won't actually get rendered on this page, but I still want
+        // it to reach here for diagnostic purposes and to really prove we closed the loop.
+        else if (result.hasOwnProperty('partyId')) {
+            // setState seems to be async
+            this.setState({
+                addedLeadId: result.partyId
+            });
+//            console.log('Success. New added lead id is ' + result.partyId /* addedLeadId wont work here */);
+            // for successful post to database, redirect to MyLeadsPage
+            this.props.router.replace('/cp/leads/my-leads');
+        }
     },
     
-    // working
+    
+    
     setLeadState: function(event) {
-        console.log('in set lead state');
+//        console.log('in set lead state');
         this.setState( { dirty: true } );
         var field = event.target.id;
         var value = event.target.value;
@@ -85,17 +87,20 @@ var MyLeadsPage = React.createClass({
         this.setState( {emptyLead: this.state.emptyLead} );
     },
     
-    _addLead: function() {
-        console.log('in _ add lead');
-        LeadsActions.addLead(this.state.emptyLead); 
+//    _addLead: function() {
+//        this.setState({ dirty: false }); 
+//        LeadsActions.addLead(this.state.emptyLead); 
+//    },
+    
+    _addLead: function(event) {
+        event.preventDefault(); // this line may do its job when not wrapping module.export with a router
         this.setState({ dirty: false }); 
+        LeadsActions.addLead(this.state.emptyLead); 
     },
 
     
     render: function () {
-        console.log('in render ');
         /* jshint ignore:start */
-        
         return (
             <div>
                 <div className="container" >
@@ -103,19 +108,7 @@ var MyLeadsPage = React.createClass({
                         <div className="panel-heading panel-heading-custom">
                             <h2>Create Lead</h2>
                         </div>
-                        { /* <form method="post" action="https://www.google.com"> */ }
-                        { /* Comments between tags */ }
-            
-                        {/*form method="post" onSubmit={this._onAddLeadFormSubmit} >
-                            <PartyDiv onChange={ this.props.onChange } />
-                            <PersonDiv onChange={ this.props.onChange } />
-                            <PartySupplementalDiv/>
-                            <PartyContactDiv/>
-                            <SubmitButton/>
-                        </form*/}
-            
-            
-                        <AddLeadForm lead={this.state.emptyLead} onChange={this.setLeadState}  onButtonClick={ this._addLead} onSubmit={this._addLead} />
+                        <AddLeadForm lead={this.state.emptyLead} onChange={this.setLeadState} onFormSubmitBSV={this._addLead} />
                     </div>
                 </div>
             </div>
@@ -124,4 +117,6 @@ var MyLeadsPage = React.createClass({
     }
 });
 
-module.exports = MyLeadsPage;
+//module.exports = CreateLeadPage;
+//See LoginPage, Header and CreateContactPage for more detail
+module.exports = withRouter(CreateLeadPage);

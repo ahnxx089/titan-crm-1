@@ -1,5 +1,6 @@
 /////////////////////////////////////////////////
 // A party contact info div on Add Lead page.
+// Not used. Use Dinesh's AddContactMech instead. 
 //
 // @file:   PartyContactDiv.js
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
