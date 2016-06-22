@@ -53,6 +53,12 @@ var routes = (
                 <Route path="create-account" component={require('./components/accounts/create-account/CreateAccountPage') } />
                 <Route path="find-account" component={require('./components/accounts/find-account/FindAccountPage') } />
             </Route>
+
+            {/* Quotes module pages */}
+            <Route path="quotes">
+                <Route path="my-quotes" component={require('./components/quotes/my-quotes/MyQuotesPage') } />
+                <Route path="create-quote" component={require('./components/quotes/create-quote/CreateQuotePage')} />
+            </Route>
             
         </Route>
         <Route path="login" component={require('./components/login/LoginPage') } />
