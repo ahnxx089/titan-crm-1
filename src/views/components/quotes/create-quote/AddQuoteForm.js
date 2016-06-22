@@ -166,9 +166,9 @@ var AddQuoteForm = React.createClass({
                                     </div>
                                     <select 
                                         className="form-control"
-                                        id="preferredCurrencyUomId"
+                                        id="currencyUomId"
                                         onChange={ this.props.onChange }
-                                        value={ this.props.quote.preferredCurrencyUomId }>
+                                        value={ this.props.quote.currencyUomId }>
                                         { currenciesJSX }
                                     </select>
                                 </div>

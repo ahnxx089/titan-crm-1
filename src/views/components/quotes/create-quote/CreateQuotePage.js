@@ -19,7 +19,7 @@ var CreateQuotePage = React.createClass({
             quote: {
                         quoteTypeId: '',
                         partyId: '',
-                        preferredCurrencyUomId: '',
+                        currencyUomId: '',
                         salesChannelEnumId: '',
                         validFromDate: '',
                         validThruDate: '',
