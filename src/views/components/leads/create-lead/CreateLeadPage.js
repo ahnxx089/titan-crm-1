@@ -1,5 +1,3 @@
-// not finished
-
 /////////////////////////////////////////////////
 // Create Lead page component.
 //
@@ -8,12 +6,15 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
-var AddLeadForm = require('./AddLeadForm');
+var withRouter = require('react-router').withRouter;
 
+var AddLeadForm = require('./AddLeadForm');
 var LeadsStore = require('../../../stores/LeadsStore'); 
 var LeadsActions = require('../../../actions/LeadsActions'); 
 
-var MyLeadsPage = React.createClass({
+// As long as this var (component name) matches the one used in the last line (module.exports), it is good. 
+// Since the project is browserified, other components refer this component by its path, not by its component name
+var CreateLeadPage = React.createClass({
 
     getInitialState: function () {
         return {
@@ -23,15 +24,7 @@ var MyLeadsPage = React.createClass({
                 description: '',
                 statusId: 'PARTY_ENABLED',
                 
-                salutation: '',
-                firstName: '',
-                middleName: '',
-                lastName: '',
-                birthDate: '',
-                comments: '',
-                
-                parentPartyId: '120', /* this is added ad hoc */
-                roleTypeId: 'LEAD' /* this is added ad hoc */
+                parentPartyId: '120' /* this is added ad hoc */
             },
             dirty: false,
             addedLeadId: ''
@@ -43,34 +36,31 @@ var MyLeadsPage = React.createClass({
     componentDidMount: function () {
         // Event listener to fire when data retrieved-- 
         // when Store emits,informs this View something happened
-        console.log('mounted');
         LeadsStore.addedLeadListener(this._onAddedLead);
     },
     
     componentWillUnmount: function() {
+        this.setState({ dirty: false }); 
         // Avoids console error
-        console.log('will un mount');
         LeadsStore.removeListener('addedLead', this._onAddedLead);
     },
     
     
     // listener function
     _onAddedLead: function() {
-        console.log('in on added lead');
 
         // ajax call does not return anything. Had to put the value in a variable, then RETRIEVE that variable later
-        // this value can be no-permission, validation errors, or success-msg-that-is-the-party-id
-        var result = LeadsStore.addedLead(); // yes
+        // This value can be no-permission, validation errors, or success-msg-that-is-the-party-id
+        var result = LeadsStore.getAddedLead();
 
         // User lacks security permission to addLead
         if (result.hasOwnProperty('message')) {
-            // still unsure about the error box
-            console.log('no permission to add lead');
+            // still unsure about the error box.
+            // Now I get it: error boxes, as well as this page, are children of controlPanel page
             this.props.updateErrorBox(result.message);
         }
         // User has permission, but there were one or more validation errors
         else if (Object.prototype.toString.call(result) === '[object Array]') {
-            console.log('add lead validation errors');
             this.props.updateErrorBox(result);
         }
         // User had permission and no validation errors-- api should return the new partyId. 
@@ -81,17 +71,16 @@ var MyLeadsPage = React.createClass({
             this.setState({
                 addedLeadId: result.partyId
             });
-            console.log('successful added lead. New added lead id is ' + result.partyId /* addedLeadId wont work here */);
+//            console.log('Success. New added lead id is ' + result.partyId /* addedLeadId wont work here */);
             // for successful post to database, redirect to MyLeadsPage
-            //this.props.router.replace('/cp/leads/my-leads');
+            this.props.router.replace('/cp/leads/my-leads');
         }
     },
     
     
     
-    // working
     setLeadState: function(event) {
-        console.log('in set lead state');
+//        console.log('in set lead state');
         this.setState( { dirty: true } );
         var field = event.target.id;
         var value = event.target.value;
@@ -100,17 +89,22 @@ var MyLeadsPage = React.createClass({
         this.setState( {emptyLead: this.state.emptyLead} );
     },
     
-    _addLead: function() {
-        console.log('in _ add lead');
-        LeadsActions.addLead(this.state.emptyLead); 
+//    _addLead: function() {
+////        console.log('in _ add lead');
+//        this.setState({ dirty: false }); 
+//        LeadsActions.addLead(this.state.emptyLead); 
+//    },
+    
+    _addLead: function(event) {
+//        console.log('in _ add lead');
+        event.preventDefault();
         this.setState({ dirty: false }); 
+        LeadsActions.addLead(this.state.emptyLead); 
     },
 
     
     render: function () {
-        console.log('in render ');
         /* jshint ignore:start */
-        
         return (
             <div>
                 <div className="container" >
@@ -118,8 +112,7 @@ var MyLeadsPage = React.createClass({
                         <div className="panel-heading panel-heading-custom">
                             <h2>Create Lead</h2>
                         </div>
-            
-                        <AddLeadForm lead={this.state.emptyLead} onChange={this.setLeadState} onSubmit={this._addLead} />
+                        <AddLeadForm lead={this.state.emptyLead} onChange={this.setLeadState} onFormSubmitBSV={this._addLead} />
                     </div>
                 </div>
             </div>
@@ -128,4 +121,6 @@ var MyLeadsPage = React.createClass({
     }
 });
 
-module.exports = MyLeadsPage;
+//module.exports = CreateLeadPage;
+//See LoginPage, Header and CreateContactPage for more detail
+module.exports = withRouter(CreateLeadPage);

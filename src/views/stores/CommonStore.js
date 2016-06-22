@@ -18,6 +18,10 @@ var Cookies = require('js-cookie');
 var currenciesObjArray = [];
 var stateProvinceObjArray = [];
 var countriesObjArray = [];
+var quoteTypesObjArray = [];
+var accountPartiesObjArray = [];
+var contactPartiesObjArray = [];
+var salesChannelsObjArray = [];
 
 
 // STORE as EVENT EMITTER
@@ -53,6 +57,38 @@ CommonStore.addGetAllCountriesListener = function (listener) {
 
 CommonStore.emitGetAllCountries = function() {
     this.emit('getAllCountries');  
+};
+
+CommonStore.addGetQuoteTypesListener = function (listener) {
+    this.on('getQuoteTypes', listener);
+};
+
+CommonStore.emitGetQuoteTypes = function() {
+    this.emit('getQuoteTypes');  
+};
+
+CommonStore.addGetAccountPartiesListener = function (listener) {
+    this.on('getAccountParties', listener);
+};
+
+CommonStore.emitGetAccountParties = function() {
+    this.emit('getAccountParties');  
+};
+
+CommonStore.addGetContactPartiesListener = function (listener) {
+    this.on('getContactParties', listener);
+};
+
+CommonStore.emitGetContactParties = function() {
+    this.emit('getContactParties');  
+};
+
+CommonStore.addGetSalesChannelsListener = function (listener) {
+    this.on('getSalesChannels', listener);
+};
+
+CommonStore.emitGetSalesChannels = function() {
+    this.emit('getSalesChannels');  
 };
 
 
@@ -118,6 +154,86 @@ CommonStore.getCountriesObjArray = function() {
     return countriesObjArray;
 };
 
+CommonStore.getQuoteTypes = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=quoteType',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(quoteTypes) {
+            quoteTypesObjArray = quoteTypes;
+            thisCommonStore.emitGetQuoteTypes();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getQuoteTypesObjArray = function() {
+    return quoteTypesObjArray;
+};
+
+CommonStore.getAccountParties = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=accountParty',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(accountParties) {
+            accountPartiesObjArray = accountParties;
+            thisCommonStore.emitGetAccountParties();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getAccountPartiesObjArray = function() {
+    return accountPartiesObjArray;
+};
+
+CommonStore.getContactParties = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=contactParty',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(contactParties) {
+            contactPartiesObjArray = contactParties;
+            thisCommonStore.emitGetContactParties();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getContactPartiesObjArray = function() {
+    return contactPartiesObjArray;
+};
+
+CommonStore.getSalesChannels = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=salesChannel',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(salesChannels) {
+            salesChannelsObjArray = salesChannels;
+            thisCommonStore.emitGetSalesChannels();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getSalesChannelsObjArray = function() {
+    return salesChannelsObjArray;
+};
+
 
 // LINK BETWEEN DISPATCHER AND STORE
 //-----------------------------------------------
@@ -134,6 +250,22 @@ TitanDispatcher.register(function(action) {
         }
         case CommonConstants.GET_ALL_COUNTRIES: {
             CommonStore.getAllCountries();
+            break;
+        }
+        case CommonConstants.GET_QUOTE_TYPES: {
+            CommonStore.getQuoteTypes();
+            break;
+        }
+        case CommonConstants.GET_ACCOUNT_PARTIES: {
+            CommonStore.getAccountParties();
+            break;
+        }
+        case CommonConstants.GET_CONTACT_PARTIES: {
+            CommonStore.getContactParties();
+            break;
+        }
+        case CommonConstants.GET_SALES_CHANNELS: {
+            CommonStore.getSalesChannels();
             break;
         }
     }

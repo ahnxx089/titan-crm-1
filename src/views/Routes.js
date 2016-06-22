@@ -38,9 +38,9 @@ var routes = (
             {/* Contacts module pages */}
             <Route path="contacts">
                 <Route path="my-contacts" component={require('./components/contacts/my-contacts/MyContactsPage') } />
-                <Route path="create-contact" component={require('./components/contacts/create-contact/CreateContactPage')} />
-                <Route path="update-contact/:id" component={require('./components/contacts/update-contact/UpdateContactPage')} />
-                <Route path="find-contacts" component={require('./components/contacts/find-contacts/FindContactsPage')} />
+                <Route path="create" component={require('./components/contacts/create-contact/CreateContactPage')} />
+                <Route path="update/:id" component={require('./components/contacts/update-contact/UpdateContactPage')} />
+                <Route path="find" component={require('./components/contacts/find-contacts/FindContactsPage')} />
             </Route>
             {/* Leads module pages */}
             <Route path="leads">
@@ -51,6 +51,12 @@ var routes = (
             <Route path="accounts">
                 <Route path="create-account" component={require('./components/accounts/create-account/CreateAccountPage') } />
                 <Route path="find-account" component={require('./components/accounts/find-account/FindAccountPage') } />
+            </Route>
+
+            {/* Quotes module pages */}
+            <Route path="quotes">
+                <Route path="my-quotes" component={require('./components/quotes/my-quotes/MyQuotesPage') } />
+                <Route path="create-quote" component={require('./components/quotes/create-quote/CreateQuotePage')} />
             </Route>
             
         </Route>

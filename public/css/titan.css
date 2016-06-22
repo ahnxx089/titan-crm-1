@@ -85,6 +85,10 @@
     border: 3px solid grey;
 }
 
+#accordion h2 {
+    padding: 10px;
+}
+
 @media (max-width: 420px) {
     .team img {
         width: 50px;

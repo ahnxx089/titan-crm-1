@@ -6,6 +6,7 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
+var Link = require('react-router').Link;
 
 var ContactRow = React.createClass({
 
@@ -13,10 +14,19 @@ var ContactRow = React.createClass({
         /* jshint ignore:start */
         return (
             <tr>
-                <td>{ this.props.contact.partyId }</td>
+                <td>
+                    <Link to={ '/cp/contacts/details/' + this.props.contact.partyId }>
+                        { this.props.contact.partyId }
+                    </Link>
+                </td>
                 <td>{ this.props.contact.salutation }</td>
                 <td>{ this.props.contact.firstName }</td>
                 <td>{ this.props.contact.lastName }</td>
+                <td>
+                    <Link to={ '/cp/contacts/update/' + this.props.contact.partyId } className="btn btn-primary btn-xs">
+                        <span className="fa fa-pencil-square-o"></span> Edit
+                    </Link>
+                </td>
             </tr>
         );
         /* jshint ignore:end */

@@ -51,10 +51,8 @@ var Header = React.createClass({
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contacts <span className="caret"></span></a>
                                 <ul className="dropdown-menu">
                                     <li><Link to="/cp/contacts/my-contacts" activeClassName="active">My Contacts</Link></li>
-                                    <li><Link to="/cp/contacts/create-contact" activeClassName="active">Create Contact</Link></li>
-                                    <li><Link to="/cp/contacts/update-contact/20" activeClassName="active">Update Contact #20</Link></li>
-                                    <li><Link to="/cp/contacts/update-contact/21" activeClassName="active">Update Contact #21</Link></li>
-                                    <li><Link to="/cp/contacts/find-contacts" activeClassName="active">Find Contacts</Link></li>
+                                    <li><Link to="/cp/contacts/create" activeClassName="active">Create Contact</Link></li>
+                                    <li><Link to="/cp/contacts/find" activeClassName="active">Find Contacts</Link></li>
                                 </ul>
                             </li>
                             <li className="dropdown">
@@ -76,8 +74,8 @@ var Header = React.createClass({
                             <li className="dropdown">
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Quotes <span className="caret"></span></a>
                                 <ul className="dropdown-menu">
-                                    <li><a href="#">My Quotes</a></li>
-                                    <li><a href="#">Create Quote</a></li>
+                                    <li><Link to="/cp/quotes/my-quotes" activeClassName="active">My Quotes</Link></li>
+                                    <li><Link to="/cp/quotes/create-quote" activeClassName="active">Create Quote</Link></li>
                                     <li><a href="#">Find Quotes</a></li>
                                 </ul>
                             </li>

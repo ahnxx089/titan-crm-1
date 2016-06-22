@@ -24,7 +24,7 @@ var quoteApi = function (knex) {
 
         // POST /api/quotes
         // 
-        // addQuote:  the default if no property for adding a note
+        // addQuote:  the default if no property for adding an item, itemOption, or note
         if (Object.keys(req.query).length === 0) {
 
             var quote = req.body;

@@ -40,6 +40,18 @@ var commonDataController = function (knex) {
             case 'geoCountry':
                 promise = commonData.getAllCountries();
                 break;
+            case 'quoteType':
+                promise = commonData.getQuoteTypes();
+                break;
+            case 'accountParty':
+                promise = commonData.getAccountParties();
+                break;
+            case 'contactParty':
+                promise = commonData.getContactParties();
+                break;
+            case 'salesChannel':
+                promise = commonData.getSalesChannels();
+                break;
             default:
                 // A new promise that returns empty array as its fulfillment value
                 promise = new Promise(function(resolve, reject) {

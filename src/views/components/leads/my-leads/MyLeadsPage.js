@@ -17,7 +17,7 @@ var MyLeadsPage = React.createClass({
             leadsOwned: []
         };
     },
-
+    
     componentDidMount: function () {
         // Event listener to fire when data retrieved-- 
         // when Store emits,informs this View something happened

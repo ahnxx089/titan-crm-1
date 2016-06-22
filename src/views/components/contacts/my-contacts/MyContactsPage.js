@@ -69,6 +69,7 @@ var MyContactsPage = React.createClass({
                                         <th>Salutation</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
