@@ -50,5 +50,8 @@
     "jshint-stylish": "^2.2.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "engines": {
+    "node": "6.2.0"
   }
 }
