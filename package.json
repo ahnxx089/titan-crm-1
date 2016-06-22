@@ -29,8 +29,6 @@
     "request": "^2.72.0",
     "validator": "^5.2.0",
     "winston": "^2.2.0",
-  //},
-  //"devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-preset-react": "^6.5.0",
     "babelify": "^7.3.0",
