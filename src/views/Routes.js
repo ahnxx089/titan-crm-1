@@ -49,6 +49,7 @@ var routes = (
             {/* Accounts module pages */}
             <Route path="accounts">
                 <Route path="create-account" component={require('./components/accounts/create-account/CreateAccountPage') } />
+                <Route path="account-details" component={require('./components/accounts/account-details/AccountDetailsPage') } />
             </Route>
             
         </Route>

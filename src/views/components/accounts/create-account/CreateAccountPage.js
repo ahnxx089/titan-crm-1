@@ -8,6 +8,7 @@
 /////////////////////////////////////////////////
 var React = require('react');
 var Link = require('react-router');
+var OrganizationDiv = require('./OrganizationDiv');
 var PartySupplementalDiv = require('../../common/PartySupplementalDiv');
 var PartyContactDiv = require('../../leads/create-lead/PartyContactDiv');
 var SubmitButton = require('./SubmitButton');
@@ -15,7 +16,29 @@ var AccountForm = require('./AccountForm');
 var CreateAccountPage = React.createClass({
     
     getInitialState: function () {
-        return ({});
+        return ({
+            emptyAccount: {
+                accountName: '',
+                parentAccount: '',
+                statusId: 'PARTY_ENABLED',
+                orgName: '',
+                companyName: '',
+                officeSiteName: '',
+                currencyUomId: '',
+                preferredCurrencyUomId: '',
+                annualRevenue: '',
+                numEmployees: '',
+                industryEnumId: '',
+                ownershipEnumId: '',
+                comments: '',
+                tickerSymbol: '', 
+                importantNote: '', 
+                description: '',//TODO: Add in an input field for this
+                logoImgURL: '',
+                contactMech: '', //TODO: Replace with what people are using to initialize contact mech fields
+            },
+            dirty: false
+        });
     },
     /* jshint ignore: start */
     render: function () {
@@ -29,8 +52,9 @@ var CreateAccountPage = React.createClass({
                 <div className="row">
                     <div className="col-md-8 col-lg-12 col-md-offset-2 col-lg-offset-1">
             {/*<AccountForm /> */}
-                        <PartySupplementalDiv />
-                        <PartyContactDiv />
+                        <OrganizationDiv />
+                        <PartySupplementalDiv ent={this.state.emptyAccount} />
+                        
                     </div>
                 </div>
     
