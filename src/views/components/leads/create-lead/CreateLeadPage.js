@@ -20,11 +20,9 @@ var CreateLeadPage = React.createClass({
         return {
             emptyLead: {
                 partyTypeId: 'PERSON',
-                currencyUomId: '',
-                description: '',
                 statusId: 'PARTY_ENABLED',
-                
                 parentPartyId: '120' /* this is added ad hoc */
+                // I (Lucas) am thinking about this. How would a user or a worker know the party id of parent of a lead? That is a party id of a company/organization! 
             },
             dirty: false,
             addedLeadId: ''
@@ -90,14 +88,12 @@ var CreateLeadPage = React.createClass({
     },
     
 //    _addLead: function() {
-////        console.log('in _ add lead');
 //        this.setState({ dirty: false }); 
 //        LeadsActions.addLead(this.state.emptyLead); 
 //    },
     
     _addLead: function(event) {
-//        console.log('in _ add lead');
-        event.preventDefault();
+        event.preventDefault(); // this line may do its job when not wrapping module.export with a router
         this.setState({ dirty: false }); 
         LeadsActions.addLead(this.state.emptyLead); 
     },

@@ -8,12 +8,6 @@
 var React = require('react');
 
 //var AddPersonalInfo = require('./AddPersonalInfo');
-//var AddContactMech = require('../../common/AddContactMech'); 
-//var PartyDiv = require('./PartyDiv');
-//var PartySupplementalDiv = require('./PartySupplementalDiv');
-//var PartyContactDiv = require('./PartyContactDiv');
-
-
 var PartyDiv = require('../../common/PartyDiv');
 var PersonDiv = require('./PersonDiv');
 var PartySupplementalDiv = require('../../common/PartySupplementalDiv');
