@@ -44,8 +44,12 @@ var MyContactsPage = React.createClass({
         this.setState({
             contactsOwned: ContactsStore.getContactsOwned()
         });
-        // Convert the My Contacts HTML table into a nice looking jQuery DataTable
-        $('#myContactsTable').DataTable();
+        // Convert the My Contacts HTML table into a nice looking jQuery DataTable, sorting so that
+        // most recently added Contacts (descending party_id) is at top. 
+        // See: https://datatables.net/examples/basic_init/table_sorting.html
+        $('#myContactsTable').DataTable({
+            "order": [[ 0, "desc"]]
+        });
     },
 
     render: function () {

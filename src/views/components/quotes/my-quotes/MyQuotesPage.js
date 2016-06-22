@@ -34,7 +34,9 @@ var MyQuotesPage = React.createClass({
             quotesOwned: QuotesStore.getQuotesOwned()
         });
         // Convert the My Quotes HTML table into a nice looking jQuery DataTable
-        $('#myQuotesTable').DataTable();
+        $('#myQuotesTable').DataTable({
+            "order": [[ 0, "desc" ]]
+        });
     },
 
     render: function () {
