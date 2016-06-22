@@ -24,6 +24,12 @@ var MyContactsPage = React.createClass({
         ContactsStore.addGetDataListener(this._onGetData);
 
         // Call the async function to get my contacts
+        // <Anurag>
+        // We should have this list sorted in descending order of ID (most recent first)
+        // a. that is more natural
+        // b. when we are redirected here by Create Contact page, we can see our new contact
+        // right at the top
+        // </Anurag>
         ContactsActions.getContactsByOwner();
     },
 
