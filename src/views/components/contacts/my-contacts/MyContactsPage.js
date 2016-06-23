@@ -48,7 +48,7 @@ var MyContactsPage = React.createClass({
         // most recently added Contacts (descending party_id) is at top. 
         // See: https://datatables.net/examples/basic_init/table_sorting.html
         $('#myContactsTable').DataTable({
-            "order": [[ 0, "desc"]]
+            'order': [[ 0, 'desc']]
         });
     },
 
