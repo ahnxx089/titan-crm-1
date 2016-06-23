@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////
-// Find Contacts page component -- THIS WORKS, RESTORE IF NEW FindContactsPage.js DOES NOT PAN OUT ULTIMATELY.
+// Find Contacts page component -- DEACTIVATED, DELETE EVENTUALLY
 //
 // @file:   FindContactsPage.js
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>
@@ -28,6 +28,74 @@ var FindContactsPage = React.createClass({
     componentDidMount: function () {
         ContactsStore.addGetDataListener(this._onGetById);
         ContactsStore.addGetByIdentityListener(this._onGetByIdentity);
+
+        /* When this page has loaded the very first time, the URL appears as:
+        
+            http://localhost:5000/#/cp/contacts/find?_k=wyyv21 
+
+        (the wyyv21 is a random string tacked on, the important part is #/cp/contacts/find)
+
+        On that first use of this page, the user fills in either a partyId number or fills in a
+        firstName and/or lastName and clicks the Submit button.  In SearchForm.js the form tag 
+        <form method="GET" action="#/cp/contacts/find" onReset={ this.props.onFormReset } >
+        results in redirecting to this same page.  The goal is to have the URL now loaded up with 
+        query strings containing either the partyId or the firstName/lastName the user wanted to search by.
+        Whatever query string comes in, it should be able to be parse and, depending whether partyId
+        is non-zero length or firstName/lastName is non-zero length, I would call the appropriate
+        action with a simple logic block such as:
+
+            if (partyId.length > 0){
+                ContactsActions.getContactById(partyId);
+            }
+            if ( (firstName.length > 0) || (lastName.length > 0) ){
+                ContactsActions.getContactsByIdentity(identity);
+            }
+
+        Right now, however, when clicking Submit causes the redirect to this same page, the URL is not 
+        quite like the Google example depicted in the <Anurag> tags above the render function below.
+        For example, if on a first use of this page I submit a search for Jane Doe then upon redirect
+        to this page the URL has changed to:
+
+            http://localhost:5000/?partyId=&firstName=Jane&lastName=Doe#/cp/contacts/find?_k=tmr11e
+
+        The query string portion ?partyId=&firstName=Jane&lastName=Doe preceeds the #/cp/contacts/find?
+
+        Or for example if instead of searching by name I search for partyId=142 and click Submit, then
+        I see the URL change to:  
+
+            http://localhost:5000/?partyId=142&firstName=&lastName=#/cp/contacts/find?_k=bo1e7u
+
+        Again, the query string ?partyId=142&firstName=&lastName= preceeds the #/cp/contacts/find?
+
+        Maybe where the query string appears in the URL does not matter so much, as long as I can access it...
+        But I cannot figure out how to access the query string.  I believe the query string should be 
+        among the "injected props" that this page has.  I am not sure about this page having "injected props", 
+        since I have not wrapped this page in withRouter.  I did not seem to need wrap this page in withRouter
+        in order to find out this page has "injected props" as discussed on the react-router page:
+
+                https://github.com/reactjs/react-router/blob/master/docs/API.md#route-components
+
+        What I do know for sure is that the following diagnostic console.log statement when viewed in the 
+        dev tools console shows that this.props contains this.props.location.query.  That makes it
+        look like I should be able to access the query string and parse it out and initiate the appropriate
+        Action to result in either _onGetById or _onGetByIdentity below eventually receiving an emit
+        from the Store with the Contact(s) (if any) to render in the table.  Here's the diagnostic console.log 
+        statement:  */
+
+        console.log('in componentDidMount, this.props = ', this.props);
+
+        /* Within this.props are:
+
+            this.props.location
+            this.props.location.query
+            this.props.params
+
+        I cannot find the query string in any of these.  (There are also this.props.route, this.props.routeParams, 
+        and this.routes.   I through them as well but cannot find the query string, and anyway it seems more likely
+        that the query string would be in this.props.location.query or this.props.params).
+
+        */
+
     },
 
     componentWillUnmount: function () {
@@ -61,27 +129,6 @@ var FindContactsPage = React.createClass({
         });
     },
 
-    // setXxxXxxState functions above ensure this function receives only one
-    // non-zero-length string, so only one Action is initiated
-    _findContacts: function (event) {
-        event.preventDefault();
-
-        var partyId = this.state.idField.partyId;
-        var firstName = this.state.nameField.firstName;
-        var lastName = this.state.nameField.lastName;
-        var identity = {
-            firstName: firstName,
-            lastName: lastName
-        };
-
-        if (partyId.length > 0){
-            ContactsActions.getContactById(partyId);
-        }
-        if ( (firstName.length > 0) || (lastName.length > 0) ){
-            ContactsActions.getContactsByIdentity(identity);
-        }
-    },
-
     _onGetById: function () {
         this.setState({
             contactsFound: ContactsStore.gotContact()
@@ -92,6 +139,10 @@ var FindContactsPage = React.createClass({
         this.setState({
             contactsFound: ContactsStore.getByIdentity()
         });
+        $('#findContactsTable').DataTable({
+            'order': [[ 0, 'desc']]
+        });
+
     },
 
     // <Anurag>
@@ -154,7 +205,6 @@ var FindContactsPage = React.createClass({
                                 nameField={ this.state.nameField }
                                 onIdFieldChange={ this.setIdFieldState }
                                 onNameFieldChange={ this.setNameFieldState }
-                                onFormSubmit={ this._findContacts }
                                 onFormReset={ this._resetForm } />
                         </div>
                     </div>
