@@ -40,12 +40,12 @@ var SearchForm = React.createClass({
                                     <div className="input-group-addon">
                                         <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                     </div>
-                                    <input type="text" 
+                                    <input type="number" 
                                         className="form-control" 
                                         id="partyId" 
                                         placeholder="123" 
-                                        onChange={ this.props.onChange } 
-                                        value={ this.props.searchBy.partyId } />
+                                        onChange={ this.props.onIdFieldChange } 
+                                        value={ this.props.idField.partyId } />
                                 </div>
                             </div>
                         </div>
@@ -63,8 +63,8 @@ var SearchForm = React.createClass({
                                         className="form-control" 
                                         id="firstName" 
                                         placeholder="Jane"  
-                                        onChange={ this.props.onChange } 
-                                        value={ this.props.searchBy.firstName } />
+                                        onChange={ this.props.onNameFieldChange } 
+                                        value={ this.props.nameField.firstName } />
                                 </div>
                             </div>
                         </div>
@@ -79,8 +79,8 @@ var SearchForm = React.createClass({
                                         className="form-control" 
                                         id="lastName" 
                                         placeholder="Doe"  
-                                        onChange={ this.props.onChange } 
-                                        value={ this.props.searchBy.lastName } />
+                                        onChange={ this.props.onNameFieldChange } 
+                                        value={ this.props.nameField.lastName } />
                                 </div>
                             </div>
                         </div>

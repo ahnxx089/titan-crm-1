@@ -15,9 +15,9 @@ var FindContactsPage = React.createClass({
 
     getInitialState: function () {
         return {
-            searchBy: { partyId: '', firstName: '', lastName: '' },
-            contactFoundById: [],
-            contactsFoundByIdentity: [],
+            idField: { partyId: '' }, 
+            nameField: { firstName: '', lastName: '' },
+            contactsFound: null
         };
     },
 
@@ -31,40 +31,58 @@ var FindContactsPage = React.createClass({
         ContactsStore.removeListener('getByIdentity', this._onGetByIdentity);
     },
 
-    setSearchByState: function (event) {
+    setIdFieldState: function (event) {
         var field = event.target.id;
         var value = event.target.value;
-        this.state.searchBy[field] = value;
-        this.setState({ searchBy: this.state.searchBy });
+        this.state.idField[field] = value;
+        this.setState({ idField: this.state.idField });
+        this.setState({ nameField: { firstName: '', lastName: '' } });
+    },
+
+    setNameFieldState: function (event) {
+        var field = event.target.id;
+        var value = event.target.value;
+        this.state.nameField[field] = value;
+        this.setState({ nameField: this.state.nameField });
+        this.setState({ idField: { partyId: '' } });
     },
 
     _resetForm: function (event) {
         this.setState({
-            searchBy: { partyId: '', firstName: '', lastName: '' },
-            contactFoundById: [],
-            contactsFoundByIdentity: [],
+            idField: { partyId: '' }, 
+            nameField: { firstName: '', lastName: '' },
+            contactsFound: null
         });
     },
 
     _findContacts: function (event) {
         event.preventDefault();
+
+        var partyId = this.state.idField.partyId;
+        var firstName = this.state.nameField.firstName;
+        var lastName = this.state.nameField.lastName;
         var identity = {
-            firstName: this.state.searchBy.firstName,
-            lastName: this.state.searchBy.lastName
+            firstName: firstName,
+            lastName: lastName
         };
-        ContactsActions.getContactsByIdentity(identity);
-        ContactsActions.getContactById(this.state.searchBy.partyId);
+
+        if (partyId.length > 0){
+            ContactsActions.getContactById(partyId);
+        }
+        if ( (firstName.length > 0) || (lastName.length > 0) ){
+            ContactsActions.getContactsByIdentity(identity);
+        }
     },
 
     _onGetById: function () {
         this.setState({
-            contactFoundById: ContactsStore.gotContact()
+            contactsFound: ContactsStore.gotContact()
         });
     },
 
     _onGetByIdentity: function () {
         this.setState({
-            contactsFoundByIdentity: ContactsStore.getByIdentity()
+            contactsFound: ContactsStore.getByIdentity()
         });
     },
 
@@ -93,14 +111,26 @@ var FindContactsPage = React.createClass({
     render: function () {
 
         /* jshint ignore:start */
-        var contactById = this.state.contactFoundById;
-        var contactsByIdentity = this.state.contactsFoundByIdentity;
+
+        console.log('in render, this.state.contactsFound = ', this.state.contactsFound);
+
+        var contacts = this.state.contactsFound;
         var contactsJSX = [];
 
-        contactsJSX.push(<ContactRow key={ 'contact_' } contact={ contactById }/>)
+        // for a result from contactApi.getContactById
+        if ( Object.prototype.toString.call(contacts) === '[object Object]' ){
+            // when search by Id turns up no result, the returned object lacks a partyId, 
+            // so this prevents an empty row from rendering
+            if (contacts.hasOwnProperty('partyId')){
+                contactsJSX.push(<ContactRow key={ 'contact_0' } contact={ contacts }/>);
+            }
+        }
 
-        for (var i = 0; i < contactsByIdentity.length; i++) {
-            contactsJSX.push(<ContactRow key={ 'contact_' + i } contact={ contactsByIdentity[i]}/>);
+        // for a result from contactApi.getContactsByIdentity
+        if ( Object.prototype.toString.call(contacts) === '[object Array]' ){
+            for (var i = 0; i < contacts.length; i++) {
+                contactsJSX.push(<ContactRow key={ 'contact_' + i } contact={ contacts[i]}/>);
+            }
         }
 
         return (
@@ -114,20 +144,15 @@ var FindContactsPage = React.createClass({
                         </div>
                         <div className="panel-body">
                             <SearchForm
-                                searchBy={ this.state.searchBy }
-                                onChange={ this.setSearchByState }
+                                idField={ this.state.idField }
+                                nameField={ this.state.nameField }
+                                onIdFieldChange={ this.setIdFieldState }
+                                onNameFieldChange={ this.setNameFieldState }
                                 onFormSubmit={ this._findContacts }
                                 onFormReset={ this._resetForm } />
                         </div>
                     </div>
 
-                    {/*
-                        <Anurag>
-                            By default, this table shows 1 row with no values for
-                            id, salutation, first name and last name.
-                            But one can see the Edit button in that row.
-                        </Anurag>
-                    */}
                     {/* Second panel:  holds Table with results */}
                     <div className="panel panel-default">
                         <div className="panel-heading panel-heading-custom">
