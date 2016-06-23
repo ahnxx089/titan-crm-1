@@ -201,6 +201,7 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
+                                {/* Something is wrong here. */}
                                 <input type="text" 
                                     className="form-control" 
                                     id="askForName" 

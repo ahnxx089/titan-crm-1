@@ -63,7 +63,7 @@ var routes = (
         </Route>
         <Route path="login" component={require('./components/login/LoginPage') } />
         {/*<NotFoundRoute handler={require('./components/notFoundPage')} />*/}
-        {/*<Redirect from="authurs" to="authors" />
+        {/*<Redirect from="authors" to="authors" />
     <Redirect from="about/*" to="about" />*/}
     </Route>
     /* jshint ignore:end */
