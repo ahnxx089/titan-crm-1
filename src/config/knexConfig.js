@@ -11,12 +11,7 @@ var knexConfig = function() {
     var getConfig = function() {
         return knex({
             client: 'mysql',
-            connection: {
-                host     : 'localhost',
-                user     : 'root',
-                password : '',
-                database : 'titan_crm'
-            }
+            connection: process.env.JAWSDB_URL || 'mysql://root:@localhost/titan_crm'
         });
     };
     

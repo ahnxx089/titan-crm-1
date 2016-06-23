@@ -22,7 +22,8 @@ var redisClient = (function () {
     };
 
     // Attempt to create a new instance of an actual redis client
-    var c = redis.createClient({
+    var connectionString = process.env.REDIS_URL || 'redis://localhost:6379';
+    var c = redis.createClient(connectionString, {
         retry_strategy: function (options) {
             if (options.error.code === 'ECONNREFUSED') {
                 // This will suppress the ECONNREFUSED unhandled exception
