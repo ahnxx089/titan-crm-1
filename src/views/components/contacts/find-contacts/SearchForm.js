@@ -11,7 +11,8 @@ var ReactDOM = require('react-dom');
 var SearchForm = React.createClass({
 
     componentDidMount: function(){
-        $('#accordion').accordion();    // for jquery-ui accordion
+        //$('#accordion').accordion();    // for jquery-ui accordion
+        $('#tabs').tabs();    // for jquery-ui tabs
     },
     
     render: function(){
@@ -21,7 +22,8 @@ var SearchForm = React.createClass({
         return(
             <form onSubmit={ this.props.onFormSubmit } onReset={ this.props.onFormReset }>
                 
-                <div id="accordion">
+                {/* <div id="accordion"> */}
+                <div id="tabs">
 
                     {/*
                         <Anurag>
@@ -31,56 +33,68 @@ var SearchForm = React.createClass({
                             3. Added a minor CSS rule for this. Please check line 88 in titan.css.
                         </Anurag>
                     */}
-                    <h2 className="bg-info"><a href="#">Find By ID #</a></h2>
-                    <div className="row">
-                        <div className="col-xs-12">
-                            <div className="form-group">
-                                <label htmlFor="partyId">ID #</label>
-                                <div className="input-group">
-                                    <div className="input-group-addon">
-                                        <i className="fa fa-file-text-o" aria-hidden="true"></i>
+
+                    {/* <h2 className="bg-info"><a href="#">Find By ID #</a></h2> */}
+
+                    <ul>
+                        <li><a href="#tabs-1">Find By ID #</a></li>
+                        <li><a href="#tabs-2">Find By Name</a></li>
+                    </ul>
+
+                    <div id="tabs-1">
+                        <div className="row">
+                            <div className="col-xs-12">
+                                <div className="form-group">
+                                    <label htmlFor="partyId">ID #</label>
+                                    <div className="input-group">
+                                        <div className="input-group-addon">
+                                            <i className="fa fa-file-text-o" aria-hidden="true"></i>
+                                        </div>
+                                        <input type="number" 
+                                            className="form-control" 
+                                            id="partyId" 
+                                            placeholder="123" 
+                                            onChange={ this.props.onIdFieldChange } 
+                                            value={ this.props.idField.partyId } />
                                     </div>
-                                    <input type="number" 
-                                        className="form-control" 
-                                        id="partyId" 
-                                        placeholder="123" 
-                                        onChange={ this.props.onIdFieldChange } 
-                                        value={ this.props.idField.partyId } />
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <h2 className="bg-info"><a href="#">Find By Name</a></h2>
-                    <div className="row">
-                        <div className="col-lg-6 col-xs-12">
-                            <div className="form-group">
-                                <label htmlFor="firstName">First Name</label>
-                                <div className="input-group">
-                                    <div className="input-group-addon">
-                                        <i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                    <input type="text" 
-                                        className="form-control" 
-                                        id="firstName" 
-                                        placeholder="Jane"  
-                                        onChange={ this.props.onNameFieldChange } 
-                                        value={ this.props.nameField.firstName } />
+                    {/* <h2 className="bg-info"><a href="#">Find By Name</a></h2> */}
+ 
+                    <div id="tabs-2">
+                        <div className="row">
+                            <div className="col-lg-6 col-xs-12">
+                                <div className="form-group">
+                                    <label htmlFor="firstName">First Name</label>
+                                    <div className="input-group">
+                                        <div className="input-group-addon">
+                                            <i className="fa fa-file-text-o" aria-hidden="true"></i></div>
+                                        <input type="text" 
+                                            className="form-control" 
+                                            id="firstName" 
+                                            placeholder="Jane"  
+                                            onChange={ this.props.onNameFieldChange } 
+                                            value={ this.props.nameField.firstName } />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-lg-6 col-xs-12">
-                            <div className="form-group">
-                                <label htmlFor="lastName">Last Name</label>
-                                <div className="input-group">
-                                    <div className="input-group-addon">
-                                        <i className="fa fa-file-text-o" aria-hidden="true"></i>
+                            <div className="col-lg-6 col-xs-12">
+                                <div className="form-group">
+                                    <label htmlFor="lastName">Last Name</label>
+                                    <div className="input-group">
+                                        <div className="input-group-addon">
+                                            <i className="fa fa-file-text-o" aria-hidden="true"></i>
+                                        </div>
+                                        <input type="text" 
+                                            className="form-control" 
+                                            id="lastName" 
+                                            placeholder="Doe"  
+                                            onChange={ this.props.onNameFieldChange } 
+                                            value={ this.props.nameField.lastName } />
                                     </div>
-                                    <input type="text" 
-                                        className="form-control" 
-                                        id="lastName" 
-                                        placeholder="Doe"  
-                                        onChange={ this.props.onNameFieldChange } 
-                                        value={ this.props.nameField.lastName } />
                                 </div>
                             </div>
                         </div>
