@@ -9,6 +9,7 @@
 var express = require('express');
 var pkgJson = require('./package.json');
 var bodyParser = require('body-parser');
+var responseTime = require('response-time');
 require('./src/common/logging')();
 
 
@@ -27,6 +28,8 @@ var app = express();
 // Basic configuration
 var appName = pkgJson.name; // DO NOT hard-code app name here
 var PORT = process.env.PORT || 5000;
+// Response time
+app.use(responseTime());
 // Set static folders
 app.use(express.static('public'));
 app.use(express.static('src/views'));
@@ -36,7 +39,6 @@ app.use(bodyParser.json());
 // Routes configuration
 var apiRouter = require('./src/routes/apiRoutes')(knex);
 app.use('/api', apiRouter);
-// TODO: HTTP Error handling
 
 
 // Start the application server
