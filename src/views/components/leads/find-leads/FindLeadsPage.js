@@ -46,12 +46,14 @@ var FindLeadsPage = React.createClass({
         });
     },
 
+    // JSX component onFormSubmit version (has [submit] event arg)
     _findLeads: function(event){
         console.log('find leads');
         event.preventDefault();
         LeadsActions.getLeadById(this.state.searchBy.partyId);
     },
     
+    // Native HTML Form onSubmit version (has no event arg)
 //    _findLeads: function() {
 //        console.log('find leads 2');
 //        LeadsActions.getLeadById(this.state.searchBy.partyId);
@@ -85,11 +87,11 @@ var FindLeadsPage = React.createClass({
                         </div>
                         <div className="panel-body">
                             <SearchForm 
-                                // onSubmit={ this._findLeads }
+//                                onSubmit={ this._findLeads }
                                 
-                                searchBy={ this.state.searchBy } 
-                                
+                                searchBy={ this.state.searchBy }
                                 onChange={ this.setSearchByState } 
+                      
                                 onFormSubmit={ this._findLeads }
                                 onFormReset={ this._resetForm } 
                                 // should have at least a space between */ and the next /
