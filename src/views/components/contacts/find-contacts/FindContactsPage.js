@@ -112,8 +112,6 @@ var FindContactsPage = React.createClass({
 
         /* jshint ignore:start */
 
-        console.log('in render, this.state.contactsFound = ', this.state.contactsFound);
-
         var contacts = this.state.contactsFound;
         var contactsJSX = [];
 
