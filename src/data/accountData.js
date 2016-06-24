@@ -85,19 +85,19 @@ var accountData = function (knex) {
         
         //NOTE: right now, no upper-layer functions actually send in a contact 
         //object when calling this function
-        if(contact) {
+        if (contact) {
             return knex.insert({
-                    party_id_from: contact.partyId,
-                    party_id_to: account.partyId,
-                    role_type_id_from: 'CONTACT',
-                    role_type_id_to: 'ACCOUNT', 
-                    from_date: account.createdDate,
-                    thru_date: null, 
-                    status_id: null,
-                    party_relationship_type_id: 'CONTACT_REL_INV',
-                    created_date: account.createdDate,
-                    updated_date: account.updatedDate    
-                }).into('party_relationship');
+                party_id_from: contact.partyId,
+                party_id_to: account.partyId,
+                role_type_id_from: 'CONTACT',
+                role_type_id_to: 'ACCOUNT',
+                from_date: account.createdDate,
+                thru_date: null,
+                status_id: null,
+                party_relationship_type_id: 'CONTACT_REL_INV',
+                created_date: account.createdDate,
+                updated_date: account.updatedDate
+            }).into('party_relationship');
         }
             
         
@@ -113,8 +113,8 @@ var accountData = function (knex) {
                 role_type_id_from: 'ACCOUNT',
                 role_type_id_to: 'PERSON_ROLE',
                 from_date: account.createdDate,
-                thru_date: null, 
-                status_id: null, 
+                thru_date: null,
+                status_id: null,
                 party_relationship_type_id: 'RESPONSIBLE_FOR',
                 created_date: account.createdDate,
                 updated_date: account.updatedDate
@@ -143,7 +143,7 @@ var accountData = function (knex) {
 
                             });
                     });
-            });       
+            });
     };
     
     /** 
@@ -153,8 +153,8 @@ var accountData = function (knex) {
      */
     var getAccountsByOwner = function (ownerId) {
         return knex.select('party_supplemental_data.party_id', 'party_supplemental_data.parent_party_id', 'company_name', 'organization.organization_name', 'organization.office_site_name', 'party_supplemental_data.annual_revenue',
-            'party_supplemental_data.currency_uom_id', 'party_supplemental_data.num_employees', 'industry_enum_id', 'ownership_enum_id', 
-            'party_supplemental_data.ticker_symbol', 'organization.comments', 
+            'party_supplemental_data.currency_uom_id', 'party_supplemental_data.num_employees', 'industry_enum_id', 'ownership_enum_id',
+            'party_supplemental_data.ticker_symbol', 'organization.comments',
             'important_note', 'primary_postal_address_id', 'primary_telecom_number_id', 'primary_email_id',
             'party_supplemental_data.created_date', 'party_supplemental_data.updated_date', 'organization.logo_image_url', 'party.description', 'party.status_id')
             .from('party_supplemental_data')
@@ -171,7 +171,7 @@ var accountData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getAccountById = function (accountId) {
-        return knex.select('party.party_id', 'parent_party_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'organization.organization_name','party_supplemental_data.company_name', 'party_supplemental_data.annual_revenue',
+        return knex.select('party.party_id', 'parent_party_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'organization.organization_name', 'party_supplemental_data.company_name', 'party_supplemental_data.annual_revenue',
         'party_supplemental_data.currency_uom_id', 'party_supplemental_data.num_employees', 'party_supplemental_data.industry_enum_id', 'party_supplemental_data.ownership_enum_id', 'party_supplemental_data.ticker_symbol',
         'party_supplemental_data.important_note', 'party_supplemental_data.primary_postal_address_id', 'party_supplemental_data.primary_telecom_number_id', 'party_supplemental_data.primary_email_id',
         'party.created_date', 'party.updated_date', 'organization.logo_image_url')
@@ -202,7 +202,7 @@ var accountData = function (knex) {
             .where('primary_telecom_number_id', phoneNumber);
     };
     
-     var getAccountsByIdentity = function (accountId, accountName) {
+    var getAccountsByIdentity = function (accountId, accountName) {
         var accountNameLike = '%' + accountName + '%';
         return knex.select('party.party_id', 'parent_party_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'organization.organization_name','party_supplemental_data.company_name', 'party_supplemental_data.annual_revenue',
         'party_supplemental_data.currency_uom_id', 'party_supplemental_data.num_employees', 'party_supplemental_data.industry_enum_id', 'party_supplemental_data.ownership_enum_id', 'party_supplemental_data.ticker_symbol',
@@ -213,7 +213,7 @@ var accountData = function (knex) {
             .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
             .innerJoin('party_role', 'party_supplemental_data.party_id',  'party_role.party_id')
             .where('party.party_id', accountId)
-            .andWhere('organization_name', 'like', accountNameLike) ;      
+            .andWhere('organization_name', 'like', accountNameLike);
     };
 
 
@@ -307,7 +307,8 @@ var accountData = function (knex) {
                                     });
                             });
                     });
-            });};
+            });
+    };
     
     return {
         addAccount: addAccount,
@@ -316,7 +317,7 @@ var accountData = function (knex) {
         getAccountByPhoneNumber: getAccountByPhoneNumber,
         getAccountsByIdentity: getAccountsByIdentity,
         updateAccount: updateAccount,
-        deleteAccount: deleteAccount      
+        deleteAccount: deleteAccount
     };
     
 

@@ -13,6 +13,7 @@ var React = require('react');
 var MainInfoDiv = React.createClass({
     
     render: function () {
+        var account = this.props.account;
         /* jshint ignore: start */
         return (
             <div>
@@ -35,46 +36,46 @@ var MainInfoDiv = React.createClass({
                 <div className="well">
                     <div className="row">
                         <div className="col-xs-12 col-md-6 col-lg-3">
-                            <span><strong>Local Name: </strong></span>
+                            <span><strong>Local Name: </strong>{account.companyName}</span>
                         </div>
                         <div className="col-xs-12 col-md-6 col-lg-3">
-                            <span><strong>Site Name: </strong></span>
+                            <span><strong>Site Name: </strong>{account.officeSiteName}</span>
                         </div>
                         <div className="col-xs-12 col-md-6 col-lg-3">
-                            <span><strong>Annual Revenue: </strong></span>
+                            <span><strong>Annual Revenue: </strong>{account.annualRevenue}</span>
                         </div>
                         <div className="col-xs-12 col-md-6 col-lg-3">
-                            <span><strong>Preferred Currency: </strong></span>
+                            <span><strong>Preferred Currency: </strong>{account.currencyUomId || account.preferredCurrencyUomId}</span>
                         </div>
                     </div>
                     
                     <div className="row">
                         <div className="col-xs-12 col-md-6 col-lg-3">
-                            <span><strong>Industry: </strong></span>
+                            <span><strong>Industry: </strong>{account.industryEnumId}</span>
                         </div>
                         <div className="col-xs-12 col-md-6 col-lg-3">
-                            <span><strong>Ownership: </strong></span>
+                            <span><strong>Ownership: </strong>{account.ownershipEnumId}</span>
                         </div>
                         <div className="col-xs-12 col-md-6 col-lg-3">
-                            <span><strong>Number of Employees: </strong></span>
+                            <span><strong>Number of Employees: </strong>{account.numEmployees}</span>
                         </div>
                         <div className="col-xs-12 col-md-6 col-lg-3">
-                            <span><strong>Ticker Symbol: </strong></span>
+                            <span><strong>Ticker Symbol: </strong>{account.tickerSymbol}</span>
                         </div>
                     </div>
                     <br />
                     <div className="row">
                         <div className="col-xs-12 col-md-6 col-lg-3">
-                            <span><strong>Description: </strong></span>
+                            <span><strong>Description: </strong>{account.description}</span>
                         </div>
                         <div className="col-xs-12 col-md-6 col-lg-3">
-                            <span><strong>Comments: </strong></span>
+                            <span><strong>Comments: </strong>{account.comments}</span>
                         </div>
                         <div className="col-xs-12 col-md-6 col-lg-3">
-                            <span><strong>Important Note: </strong></span>
+                            <span><strong>Important Note: </strong>{account.importantNote}</span>
                         </div>
                         <div className="col-xs-12 col-md-6 col-lg-3">
-                            <span><strong>Person Responsible For: </strong></span>
+                            <span><strong>Person Responsible For: </strong>{account.createdBy}</span>
                         </div>
                     </div>
                 </div>

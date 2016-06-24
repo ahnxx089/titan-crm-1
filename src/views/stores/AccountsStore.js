@@ -14,6 +14,7 @@ var Cookies = require('js-cookie');
 // DATA
 //-----------------------------------------------
 var accountsOwned = [];
+var singleAccount = {};
 
 // STORE as EVENT EMITTER
 //-----------------------------------------------
@@ -67,10 +68,29 @@ AccountsStore.getAccountsByOwner = function() {
     });
 };
 
+AccountsStore.getAccountById = function (id) {
+    var thisAccountsStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/accounts/' + id,
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function (account) {
+            singleAccount = account;
+            thisAccountsStore.emitGetData();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
 AccountsStore.getAccountsOwned = function() {
     return accountsOwned;
 };
 
+AccountsStore.getSingleAccount = function () {
+    return singleAccount;
+};
 
 // Next function is called by CreateAccountPage
 AccountsStore.addAccounts = function(account) {
@@ -104,6 +124,10 @@ TitanDispatcher.register(function(action) {
             AccountsStore.addAccounts(action.data);
             break;
         }
+        case AccountsConstants.GET_ACCOUNT_BY_ID: {
+            AccountsStore.getAccountById(action.id);
+            break;
+        }    
     }
     
 });

@@ -14,13 +14,14 @@ var React = require('react');
 var DetailsHeading = React.createClass({
     
     render: function () {
+        var account = this.props.account;
         /* jshint ignore: start */
         return (
             <div className="row placeholder">
                 <div className="col-xs-6 col-sm-3 center-align">
-                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" className="img-responsive" alt="Thumbnail image of the account's logo" />
-                    <h4>Account Name <span>(Ticker Placeholder)</span></h4>
-                        <span className="text-muted"><strong>Parent Account: </strong>(Name/ID w/ link)</span>
+                    <img src={account.logoImgURL} width="200" height="200" className="img-responsive" alt="Thumbnail image of the account's logo" />
+                    <h4>{account.orgName} <span>{account.tickerSymbol}</span></h4>
+                        <span className="text-muted"><strong>Parent Account: </strong>{account.parentPartyId}</span>
                 </div>
             </div>
         );

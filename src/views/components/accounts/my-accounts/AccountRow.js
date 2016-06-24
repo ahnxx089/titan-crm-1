@@ -22,16 +22,16 @@ var AccountRow = React.createClass({
                     </label>
                 </td>
                 <td>
-                    <a href="#">{account.partyId}</a>
+                    <Link to={"/cp/accounts/account-details/"+account.partyId}>{account.partyId}</Link>
                 </td>
                 <td>
-                    <a href="#">{account.orgName}</a>
+                    <Link to={"/cp/accounts/account-details/"+account.partyId}>{account.orgName}</Link>
                 </td>
                 <td>
                     {account.officeSiteName}
                 </td>
                 <td>
-                    <a href="#">{account.parentPartyId}</a>
+                    <Link to={"/cp/accounts/account-details/"+account.parentPartyId}>{account.parentPartyId}</Link>
                 </td>
                 <td>
                     {account.statusId}
