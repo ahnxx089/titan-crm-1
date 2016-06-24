@@ -8,11 +8,14 @@
 
 /* jshint shadow:true */
 
+var redisClient = require('../config/redisClient');
+
 var contactApi = function (knex) {
 
     // Get a reference to data layer module
     //
     var contactController = require('../controllers/contactController')(knex);
+
 
     // API methods
     // ==========================================
@@ -21,7 +24,7 @@ var contactApi = function (knex) {
     var addContact = function (req, res) {
         var contact = req.body;
         var user = req.user;
-        
+
         var resultsForThisUser = contactController.addContact(contact, user);
 
         /* Intepret the possible outcomes from the controller layer:
@@ -58,20 +61,34 @@ var contactApi = function (knex) {
         // getContactsByOwner:  The default if no query strings for identity or phone number
         //
         if (Object.keys(req.query).length === 0) {
-
-            var resultsForThisUser = contactController.getContactsByOwner(req.user);
-            // IF ELSE block interprets controller returning an object or null
-            if (resultsForThisUser === null) {
-                res.json({
-                    'message': 'You do not have permission to own contacts!'
-                });
-            } else {
-                resultsForThisUser.then(function (contacts) {
-                    res.json(contacts);
-                    //console.log('typeof contacts = ', typeof contacts);
-                    //console.log('contacts = ', contacts);
-                });
-            }
+            // If the requested data is in cache, get it from there and return it;
+            // otherwise call the controller and cache data before sending out
+            var redis = redisClient.getClient();
+            var cacheKeyName = 'contacts_for_party_id_' + req.user.partyId; // unique key
+            redis.get(cacheKeyName, function (err, result) {
+                // Data is in the cache
+                if (result) {
+                    // Convert the cached data string back into JSON before sending out
+                    res.json(JSON.parse(result));
+                }
+                // Data is NOT in the cache
+                else {
+                    var resultsForThisUser = contactController.getContactsByOwner(req.user);
+                    // IF ELSE block interprets controller returning an object or null
+                    if (resultsForThisUser === null) {
+                        res.json({
+                            'message': 'You do not have permission to own contacts!'
+                        });
+                    } else {
+                        resultsForThisUser.then(function (contacts) {
+                            // Cache the data as a JSON string;
+                            // set it to expire after 60 secs
+                            redis.setex(cacheKeyName, 60, JSON.stringify(contacts));
+                            res.json(contacts);
+                        });
+                    }
+                }
+            });
         }
 
         // GET /api/contacts?firstName=&lastName=

@@ -8,7 +8,7 @@
 /* jshint camelcase: false */
 /* jshint shadow:true */
 /* jshint maxcomplexity: false */
-/*jshint esversion: 6 */
+/* jshint esversion: 6 */
 
 // WARNING! 
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
@@ -160,13 +160,6 @@ var leadController = function (knex) {
             } else {
                 dob = null;
             }
-            
-            // ALL DONE
-            // TODO: Use the helper Eric wrote. Done
-            // TODO: contact_mech does take care of validations correct but does not let the user know. Done.
-            // TODO: Link contact_mech with party. Done (taken care by contactMechController.linkContactMechToParty)
-            // TODO: Link contact_mech with party_supplemental_data. DONE.
-            // TODO: Figure out possible duplicate entries. Done. 
             
             var leadEntity = new Lead(
                 // ok to put dummy data here, eg, null and birthDate
@@ -341,7 +334,7 @@ var leadController = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of lead entities
      */
     var getLeadsByOwner = function (user) {
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_VIEW');
         // if found
         if (hasPermission !== -1) {
             var userId = user.userId;
@@ -401,6 +394,7 @@ var leadController = function (knex) {
      * @param {Number} leadId - Unique id (actually partyId) of the lead to be fetched
      * @return {Object} promise - Fulfillment value is a lead entity
      */
+    // TODO: check user permission? 
     var getLeadById = function (leadId) {
         var promise = leadData.getLeadById(leadId)
             .then(function (leads) {

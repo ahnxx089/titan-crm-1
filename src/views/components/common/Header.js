@@ -44,7 +44,7 @@ var Header = React.createClass({
                                     <li><a href="http://www.google.com">My Leads old</a></li>
                                     <li><Link to="/cp/leads/my-leads" activeClassName="active">My Leads</Link></li>
                                     <li><Link to="/cp/leads/create-lead" activeClassName="active">Create Lead</Link></li>
-                                    <li><a href="www.bing.com">Find Leads</a></li>
+                                    <li><Link to="/cp/leads/find-leads" activeClassName="active">Find Leads</Link></li>
                                 </ul>
                             </li>
                             <li className="dropdown">

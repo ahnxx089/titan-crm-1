@@ -38,7 +38,7 @@ var MyLeadsPage = React.createClass({
         this.setState({
             leadsOwned: LeadsStore.getLeadsOwned()
         });
-        // Convert the My Contacts HTML table into a nice looking jQuery DataTable
+        // Convert the My Leads HTML table into a nice looking jQuery DataTable
         $('#myLeadsTable').DataTable();
     },
 

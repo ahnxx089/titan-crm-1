@@ -22,11 +22,11 @@ var PartySupplementalDiv = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label htmlFor="parentAccount">Parent Account * </label>
+                            <label htmlFor="parentPartyId">Parent Account * </label>
                             {/* TODO: need to make this really required, rather than setting up in CreateLeadPage */}
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="parentAccount" placeholder="Parent Account" onChange={ this.props.onChange } value={ this.props.ent.parentAccount} />
+                                <input type="text" className="form-control" id="parentPartyId" placeholder="Parent Account, default 120" onChange={ this.props.onChange } /*value={ this.props.ent.parentPartyId}*/ />
                             </div>
                         </div>
                     </div>

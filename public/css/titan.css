@@ -89,6 +89,10 @@
     padding: 10px;
 }
 
+#tabs {
+    border: 10px;
+}
+
 @media (max-width: 420px) {
     .team img {
         width: 50px;

@@ -185,7 +185,8 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="contactNumber" 
                                     placeholder="555-1234"
-                                    pattern="^[-0-9]{1,60}$"
+                                    // NewLine, [dash literals, any decimals, space], upto 60 times, EndOfLine
+                                    pattern="^[-\d ]{1,60}$"
                                     maxlength="60" 
                                     data-error="(max length 60 digits)"
                                     onChange={ this.props.onChange } 
@@ -201,11 +202,14 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
+                                {/* Something was wrong here. */}
                                 <input type="text" 
                                     className="form-control" 
                                     id="askForName" 
-                                    placeholder="Jane"
-                                    pattern="^[.-A-z0-9]{1,100}$"
+                                    placeholder="Jane, not Napoléon"
+                                    // This was an overkill: A-z contains more than letters, but []\^`, etc
+                                    // NL, [dash lit., A-Z, a-z, 0-9, space], upto 100 times, EOL
+                                    pattern="^[-A-Za-z0-9 ]{1,100}$"
                                     maxlength="100" 
                                     data-error="(max length 100 characters)"
                                     onChange={ this.props.onChange } 
@@ -236,8 +240,12 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="toName" 
                                     placeholder="Jane Doe"
-                                    pattern="^[.-A-z0-9]{1,100}$"
-                                    maxlength="100" data-error="(max length 100 characters)"
+//                                    Dinesh: what is the dot . following the opening braket [ ? Is it ANY_SINGLE_CHAR?
+//                                    pattern="^[.-A-z0-9]{1,100}$"
+                                    // NL, [dash lit., A-Z, a-z, 0-9, space], upto 100 times, EOL
+                                    pattern="^[-A-Za-z0-9 ]{1,100}$"
+                                    maxlength="100" 
+                                    data-error="(max length 100 characters)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.toName }/>
                             </div>
@@ -255,7 +263,7 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="attnName" 
                                     placeholder="Jane Doe"
-                                    pattern="^[.-A-z0-9]{1,100}$"
+                                    pattern="^[-A-Za-z0-9 ]{1,100}$"
                                     maxlength="100" data-error="(max length 100 characters)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.attnName }/>
@@ -277,7 +285,13 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="address1" 
                                     placeholder="123 Anywhere Lane"
-                                    pattern="^[.-A-z0-9]{1,255}$"
+                                    // This would not pass, because of lacking support of whitespace
+                                    // I think it is better to have loose control in such text fields
+                                    // pattern="^[.-A-z0-9]{1,255}$"
+                              
+                                    // [Any Visible characters and the space character], upto 255 times
+                                    // See http://www.regular-expressions.info/posixbrackets.html, or Wikipedia for more detail
+                                    pattern="[\x20-\x7E]{0,255}"
                                     maxlength="255" data-error="(max length 255 characters)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.address1 }/>
@@ -296,7 +310,8 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="address2" 
                                     placeholder="Suite #100"
-                                    pattern="^[.-A-z0-9]{1,255}$"
+                                    // [Any Visible characters and the space character], upto 255 times
+                                    pattern="[\x20-\x7E]{0,255}"
                                     maxlength="255" data-error="(max length 255 characters)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.address2 }/>
@@ -318,7 +333,8 @@ var AddContactMech = React.createClass({
                                     className="form-control" 
                                     id="city" 
                                     placeholder="My Town"
-                                    pattern="^[.-A-z0-9]{1,100}$"
+                                    pattern="[\x20-\x7E]{0,100}"
+                                    //pattern="^[.-A-z0-9]{1,100}$"
                                     maxlength="100" data-error="(max length 100 characters)"
                                     onChange={ this.props.onChange } 
                                     value={ this.props.contact.city }/>
