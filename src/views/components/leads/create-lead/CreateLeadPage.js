@@ -83,7 +83,7 @@ var CreateLeadPage = React.createClass({
         var field = event.target.id;
         var value = event.target.value;
         this.state.emptyLead[ field ] = value;
-        console.log(this.state.emptyLead);
+//        console.log(this.state.emptyLead);
         this.setState( {emptyLead: this.state.emptyLead} );
     },
     

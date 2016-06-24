@@ -19,6 +19,7 @@ var contactsOwned = [];
 var addedContactPartyId = '';   // for returning party_id of an added Contact
 var contactsByIdentity = [];    // for returning contacts retrieved by identity (first and/or last name)
 var contactRetrieved = {};
+var updateRes = null;
 
 
 // STORE as EVENT EMITTER
@@ -102,13 +103,18 @@ ContactsStore.updateContact = function(contactId, contact) {
             'x-access-token': Cookies.get('titanAuthToken')
         },
         data: contact,
-        success: function(rows) {
+        success: function(res) {
+            updateRes = res;
             thisContactsStore.emitPutData();
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(errorThrown);
         }
     });
+};
+
+ContactsStore.getUpdateRes = function() {
+    return updateRes;
 };
 
 ContactsStore.getContactById = function(id) {

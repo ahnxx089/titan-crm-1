@@ -33,7 +33,7 @@ var SearchForm = React.createClass({
                         <div className="row">
                             <div className="col-xs-12">
                                 <div className="form-group">
-                                    <label htmlFor="partyId">ID #</label>
+                                    <label htmlFor="partyId">ID No.</label>
                                     <div className="input-group">
                                         <div className="input-group-addon">
                                             <i className="fa fa-file-text-o" aria-hidden="true"></i>

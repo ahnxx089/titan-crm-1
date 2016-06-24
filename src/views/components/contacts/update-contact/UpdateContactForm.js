@@ -19,18 +19,17 @@ var UpdateContactForm = React.createClass({
         //this.setState({contact: this.props.contact});
         var contact = this.props.contact;
         var onChange = this.props.onChange;
+        var currencies = this.props.currencies;
+        var currenciesJsx = [];
+        
+        for (var i=0; i < currencies.length; i++) {
+            var uomId = currencies[i].uom_id;
+            var label = currencies[i].abbreviation;
+            currenciesJsx.push(<option value={uomId}>{label}</option>);
+        }
 
         return (
-            <form name="updateContact" method="post" onSubmit={ this.props.onFormSubmit }>
-
-
-                <div className="row">
-                    <div className="col-xs-12 bg-success">
-                        <h2>Personal Info</h2>
-                    </div>
-                </div>
-                <br/>
-
+            <form data-toggle="validator" name="updateContact" method="put" onSubmit={ this.props.onFormSubmit }>
 
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
@@ -40,8 +39,19 @@ var UpdateContactForm = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
-                                <input type="text" className="form-control" id="firstName" value={ contact.firstName || '' } onChange={ onChange }></input>
+                                <input 
+                                    type="text" 
+                                    className="form-control" 
+                                    id="firstName" 
+                                    value={ contact.firstName || '' } 
+                                    onChange={ onChange }
+                                    pattern="^[A-z0-9]{1,100}$"
+                                    data-error="First Name required (max length 100 characters, alphanumeric only)"
+                                    required
+                                ></input>
+                                <div className="help-block"></div>
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
@@ -61,8 +71,19 @@ var UpdateContactForm = React.createClass({
                             <label htmlFor="lastName">Last Name (Required) </label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="lastName"  value={ contact.lastName || '' } onChange={ onChange }></input>
+                                <input 
+                                    type="text" 
+                                    className="form-control" 
+                                    id="lastName"  
+                                    value={ contact.lastName || '' } 
+                                    onChange={ onChange }
+                                    pattern="^[A-z0-9]{1,100}$"
+                                    data-error="First Name required (max length 100 characters, alphanumeric only)"
+                                    required
+                                ></input>
+                                
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
@@ -82,11 +103,9 @@ var UpdateContactForm = React.createClass({
                             <label htmlFor="currency">Currency</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-usd" aria-hidden="true"></i></div>
-                                <select id="currency" className="form-control">
-
-                                    <option>USD</option>
-                                    <option>CAD</option>
-                                    <option>EUR</option>
+                                <select id="preferredCurrencyUomId" className="form-control" value={ contact.preferredCurrencyUomId} onChange={ onChange }>
+                                    <option value={null}></option>
+                                    {currenciesJsx}
                                 </select>
                             </div>
                         </div>
@@ -108,15 +127,19 @@ var UpdateContactForm = React.createClass({
                             <label htmlFor="comments">Comments</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <textarea className="form-control" id="comments" rows="4" value={ contact.comments || '' } onChange={ onChange }>{ contact.comments }</textarea>
+                                <textarea 
+                                    className="form-control" 
+                                    id="comments" 
+                                    rows="4" 
+                                    value={ contact.comments || '' } 
+                                    onChange={ onChange }
+                                    pattern="^[?,.;:'!@#$%^&*()_-=+A-z0-9]{1,255}$"
+                                >{ contact.comments }</textarea>
                             </div>
                         </div>
                     </div>
                 </div>
-                <br/>
-                <br/>
-
-
+                
                 <div className="row">
                     <div className="col-xs-12">
                         <button type="submit" className="btn btn-primary">Update Contact</button>
