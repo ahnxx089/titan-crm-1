@@ -64,10 +64,10 @@ var accountController = function (knex) {
         // Convert the received object into an entity
         var accountEntity = new Account(
             null,
-            account.partyTypeId,
+            'ORGANIZATION',
             account.preferredCurrencyUomId,
             account.description,
-            account.statusId,
+            'PARTY_ENABLED',
             user.userId,
             now,
             now,
@@ -253,7 +253,7 @@ var accountController = function (knex) {
                         accounts[i].ticker_symbol,
                         accounts[i].comments,
                         accounts[i].logo_image_url,
-                        accounts[i].party_parent_id,
+                        accounts[i].parent_party_id,
                         accounts[i].industry_enum_id,
                         accounts[i].ownership_enum_id,
                         accounts[i].important_note,

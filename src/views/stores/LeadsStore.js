@@ -102,7 +102,7 @@ LeadsStore.getAddedLead = function() {
 //
 // Next two functions are called by FindLeadsPage
 LeadsStore.findLeadById = function(passedId) {
-    console.log('in store');
+//    console.log('here 2 in find lead by id');
     var thisLeadsStore = this;
     $.ajax({
         type: 'GET',
@@ -110,10 +110,10 @@ LeadsStore.findLeadById = function(passedId) {
         headers: {  'x-access-token': Cookies.get('titanAuthToken') },
         data: passedId,
         success: function(lead) {
-            console.log('here 2');
+//            console.log('find lead by id success');
             foundLead = lead;
             console.log(foundLead);
-            thisLeadsStore.emitGetData(); //yes
+            thisLeadsStore.emitGetData(); 
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log('an error happened... ');
@@ -130,8 +130,8 @@ LeadsStore.findLeadById = function(passedId) {
     });
 };
 LeadsStore.getLeadFound = function() {
-    console.log('in retrieving...now used');
-    console.log(foundLead);
+//    console.log('in retrieving...now used');
+//    console.log(foundLead);
     return foundLead;
 };
 
@@ -150,7 +150,7 @@ TitanDispatcher.register(function(action) {
             break;
         }
         case LeadsConstants.GET_LEAD_BY_ID: {
-            console.log('in case');
+//            console.log('in case');
             LeadsStore.findLeadById(action.data);
             break;
         }

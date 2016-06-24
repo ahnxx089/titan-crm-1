@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////
 // Contact Details component.
-// Currently used only on home page.
+// Currently used only on home page. + LeadDetailPage
 // But is 100% reusable.
 //
 // @file:   ContactDetails.js

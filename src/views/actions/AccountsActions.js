@@ -15,6 +15,13 @@ var AccountsActions = {
         });
     },
     
+    getAccountById: function (id) {
+        TitanDispatcher.dispatch({
+            actionType: AccountsConstants.GET_ACCOUNT_BY_ID, 
+            id: id
+        });
+    },
+    
     addAccount: function (id) {
         TitanDispatcher.dispatch({
             actionType: AccountsConstants.ADD_ACCOUNT,
