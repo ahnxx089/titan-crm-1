@@ -8,6 +8,7 @@
 
 var AccountsConstants = {
     GET_MY_ACCOUNTS: 'GET_MY_ACCOUNTS',
+    GET_ACCOUNT_BY_ID: 'GET_ACCOUNT_BY_ID',
     ADD_ACCOUNT: 'ADD_ACCOUNT'
 };
 
