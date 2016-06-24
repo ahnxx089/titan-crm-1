@@ -34,11 +34,23 @@ AccountsStore.emitGetData = function() {
     this.emit('getData');
 };
 
-// nothing added here. Will need something for re-rendering. 
+
 
 
 // BUSINESS LOGIC
 //-----------------------------------------------
+
+//Note from Eric: I'm willing to follow this same logic flow as the other teams
+//for the sake of speed in development, I suppose. But it is not at all apparent 
+//to me why we have to set up a complicated event emitting/listening chain for the
+//SOLE purpose of retrieving the array of results from the below .ajax() call. 
+//Given that we are using jQuery version 3.x, which is now compliant with the 
+//A+/Promises specification, which in turn means that jQuery promises should be 
+//resolved to a single value and ".thenable" blah blah blah, is there any good 
+//reason why we cannot or should not simply use the single getAccountsByOwner store 
+//method below (changed to return the "accounts" result variable) and call that from 
+//MyAccountsPage's componentDidMount, thus being able to update the state more simply?
+//This extra batch of code doesn't entirely sit well with me. 
 AccountsStore.getAccountsByOwner = function() {
     var thisAccountsStore = this;
     $.ajax({

@@ -18,21 +18,19 @@ var CreateAccountPage = React.createClass({
     getInitialState: function () {
         return ({
             emptyAccount: {
-                accountName: '',
+                orgName: '',
                 parentAccount: '',
                 statusId: 'PARTY_ENABLED',
-                orgName: '',
                 companyName: '',
                 officeSiteName: '',
-                currencyUomId: '',
                 preferredCurrencyUomId: '',
                 annualRevenue: '',
                 numEmployees: '',
                 industryEnumId: '',
                 ownershipEnumId: '',
                 comments: '',
-                tickerSymbol: '', 
-                importantNote: '', 
+                tickerSymbol: '',
+                importantNote: '',
                 description: '',//TODO: Add in an input field for this
                 logoImgURL: '',
                 contactMech: '', //TODO: Replace with what people are using to initialize contact mech fields
@@ -61,11 +59,8 @@ var CreateAccountPage = React.createClass({
             </div>
         );
         /* jshint ignore:end */
-    },
-    
-    handleClick: function(ev) {
-        
     }
+    
     
 });
 
