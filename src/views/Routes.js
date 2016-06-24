@@ -41,6 +41,7 @@ var routes = (
                 <Route path="create" component={require('./components/contacts/create-contact/CreateContactPage')} />
                 <Route path="update/:id" component={require('./components/contacts/update-contact/UpdateContactPage')} />
                 <Route path="find" component={require('./components/contacts/find-contacts/FindContactsPage')} />
+                <Route path="details/:id" component={ require('./components/contacts/contact-details/ContactDetailsPage') } />
             </Route>
             {/* Leads module pages */}
             <Route path="leads">

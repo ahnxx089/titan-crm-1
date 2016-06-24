@@ -112,7 +112,7 @@ var caseApi = function (knex) {
                 }
         });
     };
-
+    
     // PUT /api/cases/:id
     var updateCase = function (req, res) {
         var caseId = req.params.id;

@@ -78,7 +78,7 @@ var UpdateContactForm = React.createClass({
                                     value={ contact.lastName || '' } 
                                     onChange={ onChange }
                                     pattern="^[A-z0-9]{1,100}$"
-                                    data-error="First Name required (max length 100 characters, alphanumeric only)"
+                                    data-error="Last Name required (max length 100 characters, alphanumeric only)"
                                     required
                                 ></input>
                                 

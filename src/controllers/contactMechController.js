@@ -145,25 +145,25 @@ var contactMechController = function (knex) {
                 var contactMechEntities = [];
                 for (var i = 0; i < contactMechs.length; i++) {
                     var contactMech = new ContactMech(
-                        contactMechs[i].contactMechId,
-                        contactMechs[i].contactMechTypeId,
-                        contactMechs[i].contactMechPuproseTypeId,
-                        contactMechs[i].infoString,
-                        contactMechs[i].createdDate,
-                        contactMechs[i].updatedDate,
-                        contactMechs[i].countryCode,
-                        contactMechs[i].areaCode,
-                        contactMechs[i].contactNumber,
-                        contactMechs[i].askForName,
-                        contactMechs[i].toName,
-                        contactMechs[i].attnName,
+                        contactMechs[i].contact_mech_id,
+                        contactMechs[i].contact_mech_type_id,
+                        contactMechs[i].contact_mech_purpose_type_id,
+                        contactMechs[i].info_string,
+                        contactMechs[i].created_date,
+                        contactMechs[i].updated_date,
+                        contactMechs[i].country_code,
+                        contactMechs[i].area_code,
+                        contactMechs[i].contact_number,
+                        contactMechs[i].ask_for_name,
+                        contactMechs[i].to_name,
+                        contactMechs[i].attn_name,
                         contactMechs[i].address1,
                         contactMechs[i].address2,
                         contactMechs[i].directions,
                         contactMechs[i].city,
-                        contactMechs[i].stateProvinceGeoId,
-                        contactMechs[i].zipOrPostalCode,
-                        contactMechs[i].countryGeoId
+                        contactMechs[i].state_province_geo_id,
+                        contactMechs[i].zip_or_postal_code,
+                        contactMechs[i].country_geo_id
                     );
 
                     contactMechEntities.push(contactMech);
