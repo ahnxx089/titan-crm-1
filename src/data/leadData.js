@@ -162,7 +162,7 @@ var leadData = function (knex) {
      */
     var getLeadById = function (id) {
         return knex.select('person.party_id', 'person.salutation', 'person.first_name', 'person.middle_name',
-                           'person.last_name', 'person.birth_date', 'person.comments', 'person.created_date', 'person.updated_date',
+                           'person.last_name', 'person.birth_date', 'person.comments as p_comments', 'person.created_date', 'person.updated_date',
                            'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 
                            'party.created_by', 
                            'party_supplemental_data.parent_party_id', 'party_supplemental_data.company_name', 

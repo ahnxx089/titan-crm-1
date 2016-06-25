@@ -313,7 +313,7 @@ var leadController = function (knex) {
 //                    lead.fromDate = leads[i].from_date;
 //                    lead.thruDate = leads[i].thru_date;
 //                    lead.verified = leads[i].verified;
-//                    lead.pc_comments = leads[i].comments;
+//                    lead.comments = leads[i].pc_comments;
 
                     leadEntities.push(lead);
                 }
@@ -372,6 +372,8 @@ var leadController = function (knex) {
                             leads[i].important_note,
 
                             leads[i].role_type_id//,
+                            
+//                            because this does not JOIN with contactMech related relations, some fields are not present 
                             
                         );
                         leadEntities.push(lead);
@@ -435,9 +437,9 @@ var leadController = function (knex) {
                         leads[0].party_id,
                         //
                         leads[0].party_type_id,
-                        leads[0].preferred_currency_uom_Id,
+                        leads[0].preferred_currency_uom_id,
                         leads[0].description,
-                        leads[0].statusId,
+                        leads[0].status_id,
                         leads[0].created_by,
                         leads[0].created_date,
                         leads[0].updated_date,
@@ -447,7 +449,7 @@ var leadController = function (knex) {
                         leads[0].middle_name,
                         leads[0].last_name,
                         leads[0].birth_date,
-                        leads[0].comments,
+                        leads[0].p_comments,
                         //
                         leads[0].parent_party_id,
                         leads[0].company_name,
