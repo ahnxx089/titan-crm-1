@@ -11,6 +11,7 @@
 // updateLead, deleteLead may not behave as expected! 
 // addLead, getLeadById, getLeadsByOwner are tested and functional. 
 // getLeads may need revision. It is not used now. Don't remove yet. 
+// deleteLead, updateLead, getLeadsByPhoneNumber and getLeadsByIdentity are wrong and deleted now since June 25. 
 
 var leadData = function (knex) {
 
@@ -226,20 +227,20 @@ var leadData = function (knex) {
     //@params {string} firstName -  The first name of the lead you want
     //@params {string} lastName - The last name of the lead you want
     //@return {object} promise - The fulfilmment object is an array of searched values
-    var getLeadByIdentity = function (firstName, lastName){
+    var getLeadByIdentity = function (firstName, lastName) {
         var leadByIdentity = ['party.party_id', 'party.party_type_id',
                               'party.preferred_currency_uom_id',
-                              'party.description', 'party.status_id', 
-                              'party.created_by', 'party.created_date', 
-                              'party.updated_date', 'person.salutation', 
-                              'person.first_name', 'person.middle_name', 
-                              'person.last_name', 'person.birth_date', 
+                              'party.description', 'party.status_id',
+                              'party.created_by', 'party.created_date',
+                              'party.updated_date', 'person.salutation',
+                              'person.first_name', 'person.middle_name',
+                              'person.last_name', 'person.birth_date',
                               'person.comments'
         ];
-    var firstNameLike = '%' + firstName + '%';
-    var lastNameLike = '%' + lastName + '%';
-    //search with only the first name
-    if (firstName.length > 0 && lastName.length === 0) {
+        var firstNameLike = '%' + firstName + '%';
+        var lastNameLike = '%' + lastName + '%';
+        //search with only the first name
+        if (firstName.length > 0 && lastName.length === 0) {
             firstNameLike = '%' + firstName + '%';
             return knex.select(leadByIdentity)
                 .from('party_relationship')
@@ -248,8 +249,8 @@ var leadData = function (knex) {
                 .andWhere('role_type_id_from', 'LEAD')
                 .andWhere('first_name', 'like', firstNameLike);
         }
-    //search with only the last name
-    if (firstName.length === 0 && lastName.length > 0) {
+        //search with only the last name
+        if (firstName.length === 0 && lastName.length > 0) {
             lastNameLike = '%' + lastName + '%';
             return knex.select(leadByIdentity)
                 .from('party_relationship')
@@ -258,8 +259,8 @@ var leadData = function (knex) {
                 .andWhere('role_type_id_from', 'LEAD')
                 .andWhere('last_name', 'like', lastNameLike);
         }
-    // search using both the first name and the last name
-    if (firstName.length > 0 && lastName.length > 0) {
+        // search using both the first name and the last name
+        if (firstName.length > 0 && lastName.length > 0) {
             firstNameLike = '%' + firstName + '%';
             lastNameLike = '%' + lastName + '%';
             return knex.select(leadByIdentity)
@@ -270,9 +271,9 @@ var leadData = function (knex) {
                 .andWhere('first_name', 'like', firstNameLike)
                 .andWhere('last_name', 'like', lastNameLike);
         }
-    
-    // if nothing is entered
-    else {
+
+        // if nothing is entered
+        else {
             return knex.select(leadByIdentity)
                 .from('party_relationship')
                 .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
@@ -281,117 +282,6 @@ var leadData = function (knex) {
                 .andWhere('first_name', 'like', '')
                 .andWhere('last_name', 'like', '');
         }
-        
-    };
-
-    /**
-     * Update a lead in database
-     * @param {Object} lead - The lead entity that contains updated data
-     * @return {Object} promise - Fulfillment value is number of rows updated
-     */
-    var updateLead = function (leadId) {
-        return knex('party_contact_mech')
-            .where({
-                party_id: leadId
-            })
-            .update()
-            .then(function (partyLinkRows) {
-                return knex('contact_mech')
-                    .where({
-                        party_id: leadId
-                    })
-                    .update()
-                    .then(function (contactMechRows) {
-                        return knex('party_role')
-                            .where({
-                                party_id: leadId
-
-                            })
-                            .update()
-                            .then(function (partyRoleRows) {
-                                return knex('party_supplemental_data')
-                                    .where({
-                                        party_id: leadId
-                                    })
-                                    .update()
-                                    .then(function (partySuppRows) {
-                                        return knex('person')
-                                            .where({
-                                                party_id: leadId
-
-                                            })
-                                            .update()
-                                            .then(function (personRows) {
-                                                return knex('party')
-                                                    .where({
-                                                        party_id: leadId
-                                                    })
-                                                    .update()
-                                                    .then(function (partyRows) {
-                                                        return partyRows + personRows + partyRoleRows + partySuppRows + contactMechRows + partyLinkRows;
-                                                    });
-
-                                            });
-                                    });
-                            });
-                    });
-            });
-    };
-    // Divine: Follow my example of adding leads. 
-    // You need to delete the leads from Party_supplemental_data, Person and serveral other tables, 
-    // before deleting (the rest of) that lead in Party table
-    /**
-     * Delete a lead from database
-     * @param {Number} leadId - Unique id (actually partyId) of the lead to be deleted
-     * @return {Object} promise - Fulfillment value is number of rows deleted
-     */
-    var deleteLead = function (leadId) {
-        return knex('party_contact_mech')
-            .where({
-                party_id: leadId
-            })
-            .del()
-            .then(function (partyLinkRows) {
-                return knex('contact_mech')
-                    .where({
-                        party_id: leadId
-                    })
-                    .del()
-                    .then(function (contactMechRows) {
-                        return knex('party_role')
-                            .where({
-                                party_id: leadId
-
-                            })
-                            .del()
-                            .then(function (partyRoleRows) {
-                                return knex('party_supplemental_data')
-                                    .where({
-                                        party_id: leadId
-                                    })
-                                    .del()
-                                    .then(function (partySuppRows) {
-                                        return knex('person')
-                                            .where({
-                                                party_id: leadId
-
-                                            })
-                                            .del()
-                                            .then(function (personRows) {
-                                                return knex('party')
-                                                    .where({
-                                                        party_id: leadId
-                                                    })
-                                                    .del()
-                                                    .then(function (partyRows) {
-                                                        return partyRows + personRows + partyRoleRows + partySuppRows + contactMechRows + partyLinkRows;
-                                                    });
-
-                                            });
-                                    });
-                            });
-                    });
-            });
     };
 
     return {
@@ -399,11 +289,10 @@ var leadData = function (knex) {
         getLeadsByOwner: getLeadsByOwner,
         getLeads: getLeads,
         getLeadById: getLeadById,
-        updatePSD: updatePSD,
-        updateLead: updateLead,
-        deleteLead: deleteLead
+        updatePSD: updatePSD
+//        updateLead: updateLead,
+//        deleteLead: deleteLead
     };
-
 };
 
 module.exports = leadData;

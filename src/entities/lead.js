@@ -150,10 +150,12 @@ Lead.prototype.validateForInsert = function () {
 // NOT FINISHED YET
 Lead.prototype.validateForUpdate = function () {
     // Call Person's validation function
-    Person.prototype.validateForUpdate.call(this);
+    var errors = Person.prototype.validateForUpdate.call(this);
     // Person-specific validation code
     var specificValidations = [
     ];
+    
+    return errors;
 };
 
 

@@ -13,12 +13,13 @@
 // WARNING! 
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
 // getLeads is not finished, not used. Lucas will look at it later. 
-// deleteLead and updateLead are (maybe not) wrong. 
+// deleteLead, updateLead, getLeadsByPhoneNumber and getLeadsByIdentity are wrong and deleted now since June 25. 
 // getLeadsByPhoneNumber is not declared. Canceled by Anurag. 
-// getLeadsByIdentity is using wrong permission and is not returned. Lucas returned this.
-
 
 var winston = require('winston');
+// Require is RequireJS, used by Node. It is always singleton. 
+// In case we don't want to use singleton, we can do it like what we did in entity directory. 
+// This winston is a singleton. Notice app.js requires the same winston, and runs the exported function, in an IFIE style. Every time we 
 var Lead = require('../entities/lead');
 var ContactMech = require('../entities/contactMech');
 var _ = require('lodash');
@@ -130,7 +131,6 @@ var leadController = function (knex) {
     };
     
     
-    
     // Lucas's taking this
     /**
      * Create a new lead entity, validate, pass it to leadData to create a new lead if valid. Otherwise return errors. 
@@ -164,6 +164,7 @@ var leadController = function (knex) {
             var leadEntity = new Lead(
                 // ok to put dummy data here, eg, null and birthDate
                 // Single quotes are must.
+                
                 null, // lead.partyId, auto_incremented in DB
                 'PERSON', // lead.partyTypeId, will set be PERSON no matter
                 lead.currencyUomId,
@@ -475,129 +476,15 @@ var leadController = function (knex) {
         return promise;
     };
     
-    
-    //@params {string} firstName -  The first name of the lead you want
-    //@params {string} lastName - The last name of the lead you want
-    //@return {object} promise - The fulfilmment object is an array of searched values
-    var getLeadsByIdenity = function (query, user) {
-        // check user's security permissions
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
-        if (hasPermission !== -1) {
-            // Declare variables for input
-            var firstName = query.firstName;
-            var lastName = query.lastName;
-
-            if (firstName === undefined) {
-                firstName = '';
-            }
-            if (lastName === undefined) {
-                lastName = '';
-            }
-            var promise = leadData.getLeadsByIdentity(firstName, lastName)
-                .then(function (leads) {
-                    // Fill the leads Entity
-                    var leadsEntities = [];
-                    for (var i = 0; i < leads.length; i++) {
-                        var lead = new Lead(
-                            leads[i].party_id,
-                            leads[i].party_type_id,
-                            leads[i].currency_uom_id,
-                            leads[i].description,
-                            leads[i].status_id,
-                            leads[i].created_by,
-                            leads[i].created_date,
-                            leads[i].updated_date,
-                            leads[i].salutation,
-                            leads[i].first_name,
-                            leads[i].middle_name,
-                            leads[i].last_name,
-                            leads[i].birth_date,
-                            leads[i].comments
-                        );
-                        leadsEntities.push(lead);
-                    }
-                    return leadsEntities;
-                });
-            promise.catch(function (error) {
-                // Log the error
-                winston.error(error);
-            });
-            return promise;
-        } else {
-            // user does not have permissions of a contact owner, return null
-            return null;
-        }
-    };
-    
-    /**
-     * Update a lead in database
-     * @param {Number} leadId - Unique id of the lead to be updated
-     * @param {Object} lead - The object that contains updated data
-     * @return {Object} promise - Fulfillment value is number of rows updated
-     */
-    var updateLead = function (leadId, lead) {
-        //Converty lead to an entity
-        var leadEntity = new Lead(
-            leadId,
-            lead.partyTypeId,
-            lead.currencyUomId,
-            lead.description,
-            lead.statusId,
-            lead.createdBy,
-            lead.createdDate,
-            lead.updatedDate,
-            lead.salutation,
-            lead.firstName,
-            lead.middleName,
-            lead.lastName,
-            lead.birthDate,
-            lead.p_comments
-        );
-
-        // Validate the data before going ahead
-
-        var validationErrors = leadEntity.validateForUpdate();
-        if (validationErrors.length === 0) {
-            // Pass on the entity to be added to the data layer
-            var promise = leadData.updateLead(leadEntity)
-                .then(function (leadId) {
-                    return leadId;
-                });
-            promise.catch(function (error) {
-                winston.error(error);
-            });
-            return promise;
-        } else {
-            return null;
-        }
-    };
-
-    /**
-     * Delete a lead
-     * @param {Number} leadId - Unique id of the lead (actually lead id in DB) to be deleted
-     * @return {Object} promise - Fulfillment value is number of rows deleted
-     */
-    var deleteLead = function (leadId) {
-        var promise = leadData.deleteLead(leadId)
-            .then(function (result) {
-                return result;
-            });
-        promise.catch(function (error) {
-            // Log the error
-            winston.error(error);
-        });
-        return promise;
-
-    };
 
     return {
         getLeads: getLeads,
         getLeadById: getLeadById,
         getLeadsByOwner: getLeadsByOwner,
-        getLeadsByIdenity: getLeadsByIdenity,
-        addLead: addLead,
-        updateLead: updateLead,
-        deleteLead: deleteLead
+//        getLeadsByIdenity: getLeadsByIdenity,
+        addLead: addLead
+//        updateLead: updateLead,
+//        deleteLead: deleteLead
     };
 };
 
