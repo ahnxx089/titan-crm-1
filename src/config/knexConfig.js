@@ -12,6 +12,8 @@ var knexConfig = function() {
         return knex({
             client: 'mysql',
             connection: process.env.JAWSDB_URL || 'mysql://root:@localhost/titan_crm'
+            // Use env variable from Heroku in priority whenever possible
+            // connection string (one liner way to how to connect): type of connect://userName:password@host/databaseName
         });
     };
     

@@ -21,8 +21,8 @@ var WebEntry = React.createClass({
                     <dd>{contactMech.infoString}</dd>
                     <dt>Purpose</dt>
                     <dd>{contactMech.contactMechPurposeTypeId}</dd>
-                    <dt>Purpose</dt>
-                    <dd>{contactMech.contactMechPurposeTypeId}</dd>
+            {/* <dt>Purpose</dt>
+                    <dd>{contactMech.contactMechPurposeTypeId}</dd> */}
                 </dl>
             </div>
         );

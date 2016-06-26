@@ -9,10 +9,9 @@
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
 // We have a separate wroking getLeadsByOwner, different from Dinesh's approach. Need to consult Anurag for more detail. 
 // getLeads is not added in apiRoutes, or called from anywhere. Do not remove it yet. 
-// getLeadsByIdentity, getLeadsByPhoneNumber, updateLead, deleteLead are not tested. 
+// getLeadsByIdentity, getLeadsByPhoneNumber, updateLead, deleteLead are deleted. 
 
 var leadApi = function (knex) {
-
 
     // Get a reference to data layer module
     var leadController = require('../controllers/leadController')(knex);
@@ -37,14 +36,11 @@ var leadApi = function (knex) {
      * @param {Object} req - The request from presentation layer (ARC)
      * @param {Object} res - The response to presentation layer (ARC)
      */
-    // good at 2:35PM May 29
     var addLead = function (req, res) {
         // lead and user here are striped params from request
         var lead = req.body;
         var user = req.user;
 //        console.log('user in add is ' + user);
-
-        //        var result = leadController.addLead(lead, user); // changed var name later
 
         var resultsForThisUser = leadController.addLead(lead, user);
 
@@ -156,12 +152,11 @@ var leadApi = function (knex) {
     };
 
     // Implemented now. 
-    // NOTE TO DIVINE: you did not check the lead ID. This will return every lead that matches the given name
+    // NOTE TO DIVINE: you did not check the lead ID. This will return every lead that matches the given name.
+    // And the corresponding method in controller layer is checking the wrong permission
     // GET /api/leads/?leadId=&firstName=&lastName=&companyName=
     var getLeadsByIdentity = function (req, res) {
-        
         if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
-
             var resultsForUser = leadController.getLeadsByIdentity(req.query, req.user);
             if (resultsForUser === null) {
                 res.json({
@@ -171,11 +166,11 @@ var leadApi = function (knex) {
                 resultsForUser.then(function (leads) {
                     res.json(leads);
                 });
-    }
+            }
         }
     };
 
-    // Possibly not implemented or used now. 
+    // Not implemented or used now. 
     // GET /api/leads/?phoneNumber=
     var getLeadsByPhoneNumber = function (req, res) {
         var leadId = req.params.id;
@@ -185,7 +180,7 @@ var leadApi = function (knex) {
             });
     };
 
-    // Potential TODO: add security permission check here
+    // Potential TODO: add security permission check here. 
     // Lucas's taking this
     // GET /api/leads/:id
     var getLeadById = function (req, res) {
@@ -196,40 +191,16 @@ var leadApi = function (knex) {
             });
     };
 
-    // PUT /api/leads/:id
-    var updateLead = function (req, res) {
-        var leadId = req.params.id;
-        var lead = req.body;
-        leadController.updateLead(leadId, lead)
-            .then(function (result) {
-                res.json({
-                    updated: result
-                });
-            });
-
-    };
-
-    // DELETE /api/leads/:id
-    var deleteLead = function (req, res) {
-        var leadId = req.params.id;
-        leadController.deleteLead(leadId)
-            .then(function (result) {
-                res.json({
-                    deleted: result
-                });
-            });
-
-    };
 
     return {
         addLead: addLead,
         getLeads: getLeads,
         getLeadsByOwner: getLeadsByOwner,
-        getLeadsByIdentity: getLeadsByIdentity,
-        getLeadsByPhoneNumber: getLeadsByPhoneNumber,
-        getLeadById: getLeadById,
-        updateLead: updateLead,
-        deleteLead: deleteLead
+//        getLeadsByIdentity: getLeadsByIdentity,
+//        getLeadsByPhoneNumber: getLeadsByPhoneNumber,
+        getLeadById: getLeadById
+//        updateLead: updateLead
+//        deleteLead: deleteLead
 
     };
 };

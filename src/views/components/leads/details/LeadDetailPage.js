@@ -9,6 +9,7 @@
 var React = require('react');
 var LeadsStore = require('../../../stores/LeadsStore');
 var LeadsActions = require('../../../actions/LeadsActions');
+var ContactMechEntry = require('../../contacts/contact-details/ContactMechEntry');
 
 const timezoneOffset = new Date().getTimezoneOffset(); // 300 in CDT
 
@@ -84,6 +85,18 @@ var LeadDetailPage = React.createClass({
         var originalInLocal = new Date(alreadyChanged); // Date Object
         originalInLocal.setMinutes(originalInLocal.getMinutes() - timezoneOffset);
         
+        
+        var contactMechs = leadDetails.partyContactMechs || [];
+//        console.log(typeof leadDetails.partyContactMechs);
+//        console.log(contactMechs.length + "contactMechs.length");
+        var contactMechsJSX = [];
+        for (var i = 0; i < contactMechs.length; i++) {
+            contactMechsJSX.push(<ContactMechEntry key={ 'contact_mech_' + i } contactMech={ contactMechs[i]}/>);
+        }
+//        console.log(contactMechsJSX.length);
+
+        
+        
         return (
             <div className="panel panel-info">
                 <div className="panel-heading">
@@ -96,8 +109,8 @@ var LeadDetailPage = React.createClass({
                             { leadDetails.partyId }
                         </div>
                         <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Party Type</span>&nbsp;
-                            { leadDetails.partyTypeId }
+                            <span className="label label-default">Party Type (Role) </span>&nbsp;
+                            { leadDetails.partyTypeId } ({ leadDetails.roleTypeId })
                         </div>
                     </div>
                     <div className="row">
@@ -115,18 +128,130 @@ var LeadDetailPage = React.createClass({
                             <span className="label label-default">Created By</span>&nbsp;
                             { leadDetails.createdBy }
                         </div>
+
+                        <div className="col-xs-12 col-lg-6">
+                            <span className="label label-default">Status</span>&nbsp;
+                            { leadDetails.statusId }
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-xs-12 col-lg-12">
+                            <span className="label label-default">Description of this lead</span>&nbsp;
+                            { leadDetails.description }
+                        </div>
+                        <br/><hr/>
+                    </div>
+                    
+                    
+                    <div className="row">
                         <div className="col-xs-12 col-lg-6">
                             <span className="label label-default">Created Date</span>&nbsp;
                             {/* leadDetails.createdDate */}
                             { originalInLocal.toString() }
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-xs-12 col-lg-12">
-                            <span className="label label-default">Description</span>&nbsp;
-                            { leadDetails.description }
+                        <div className="col-xs-12 col-lg-6">
+                            <span className="label label-default">Updated Date (?)</span>&nbsp;
+                            {/* leadDetails.createdDate */}
+                            { originalInLocal.toString() }
                         </div>
                     </div>
+                        
+                    <div className="row">
+                        <div className="col-xs-12 col-lg-6">
+                            <span className="label label-default">Currency</span>&nbsp;
+                            { leadDetails.preferredCurrencyUomId }
+                        </div>
+                        <div className="col-xs-12 col-lg-6">
+                            <span className="label label-default">Birthday</span>&nbsp;
+                            { leadDetails.birthDate }
+                        </div>
+                    </div>
+                        
+                    <div className="row">
+                        <div className="col-xs-12 col-lg-12">
+                            <span className="label label-default">Comments about this person</span>&nbsp;
+                            { leadDetails.comments }
+                        </div>
+                        <br/><hr/>
+                    </div>
+                        
+                    
+                    <div className="row">
+                        <div className="col-xs-12 col-lg-6">
+                            <span className="label label-default">Company (ID)</span>&nbsp;
+                            { leadDetails.companyName } ({ leadDetails.parentPartyId })
+                        </div>
+                        <div className="col-xs-12 col-lg-6">
+                            <span className="label label-default">Annual Revenue</span>&nbsp;
+                            { leadDetails.annualRevenue }
+                        </div>
+                    </div>
+                        
+                    <div className="row">
+                        <div className="col-xs-12 col-lg-6">
+                            <span className="label label-default">Ticker Symbol</span>&nbsp;
+                            { leadDetails.tickerSymbol }
+                        </div>
+                        <div className="col-xs-12 col-lg-6">
+                            <span className="label label-default">Num of Employees</span>&nbsp;
+                            { leadDetails.numEmployees }
+                        </div>
+                    </div>
+                        
+                        
+                    <div className="row">
+                        <div className="col-xs-12 col-lg-6">
+                            <span className="label label-default">Industry</span>&nbsp;
+                            { leadDetails.industryEnumId }
+                        </div>
+                        <div className="col-xs-12 col-lg-6">
+                            <span className="label label-default">Ownership</span>&nbsp;
+                            { leadDetails.ownershipEnumId }
+                        </div>
+                    </div>
+                        
+                    <div className="row">
+                        <div className="col-xs-12 col-lg-12">
+                            <span className="label label-default">Important notes about company</span>&nbsp;
+                            { leadDetails.importantNote }
+                        </div>
+                        <br/><hr/>
+                    </div>
+                        
+                        
+                    {/*<div className="row">
+                        <div className="col-xs-12">
+                            <h2>Contact Information</h2>
+                        </div>
+                        <div className="panel-body">
+                            { contactMechsJSX }
+                        </div>
+                    </div>*/}
+                    
+                    <div className="row">
+                        <div className="col-xs-12">
+                            <h4>Contact Information</h4>
+                        </div>
+                    </div>
+                    
+                    <div className="row">
+                        <div className="col-xs-6">
+                            { contactMechsJSX[0] }
+                        </div>
+                        <div className="col-xs-6">
+                            { contactMechsJSX[1] }
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col-xs-6">
+                            { contactMechsJSX[2] }
+                        </div>
+                        <div className="col-xs-6">
+                            { contactMechsJSX[3] }
+                        </div>
+                    </div>
+
                 </div>
             </div>
         );
