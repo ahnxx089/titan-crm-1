@@ -9,7 +9,7 @@
 var React = require('react');
 var LeadsStore = require('../../../stores/LeadsStore');
 var LeadsActions = require('../../../actions/LeadsActions');
-var ContactMechEntry = require('../../contacts/contact-details/ContactMechEntry');
+var ContactMechEntry = require('../../common/ContactMechRow');
 
 const timezoneOffset = new Date().getTimezoneOffset(); // 300 in CDT
 

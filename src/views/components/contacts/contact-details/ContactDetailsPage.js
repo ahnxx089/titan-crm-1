@@ -9,7 +9,7 @@ var React = require('react');
 var ReactRouter = require('react-router');
 var Link = require('react-router').Link;
 var withRouter = require('react-router').withRouter;
-var ContactMechEntry = require('./ContactMechEntry');
+var ContactMechRow = require('../../common/ContactMechRow');
 
 var ContactsStore = require('../../../stores/ContactsStore');
 var ContactsActions = require('../../../actions/ContactsActions');
@@ -49,7 +49,7 @@ var ContactDetailPage = React.createClass({
         
         for (var i = 0; i < contactMechs.length; i++) {
             /* jshint ignore:start */
-            contactMechsJSX.push(<ContactMechEntry key={ 'contact_mech_' + i } contactMech={ contactMechs[i]}/>);
+            contactMechsJSX.push(<ContactMechRow key={ 'contact_mech_' + i } contactMech={ contactMechs[i]}/>);
             /* jshint ignore:end */
         }
         
@@ -62,57 +62,133 @@ var ContactDetailPage = React.createClass({
                 </Link>
                 <div className="panel panel-default">
                     <div className="panel-heading panel-heading-custom">
-                        <h1>Update Contact</h1>
+                        <h1>View Contact</h1>
                     </div>
-                    <div className="panel-body">
-                        <div className="row">
-                            <div className="col-xs-12">
-                                <h2>Contact</h2>
+                                 
+                                 
+                    <div className="panel panel-info">
+                        <div className="panel-heading">
+                            <h3 className="panel-title">Contact</h3>
+                        </div>
+                        <div className="panel-body">
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Salutation</span>&nbsp;
+                                    { contact.salutation }
+                                </div>
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Last Name</span>&nbsp;
+                                    { contact.lastName }
+                                </div>
                             </div>
-                            <div>
-                                <dl>
-                                    <dt>Salutation</dt>
-                                    <dd>{contact.salutation}</dd>
-                                    <dt>First Name</dt>
-                                    <dd>{contact.firstName}</dd>
-                                    <dt>Middle Name</dt>
-                                    <dd>{contact.middleName}</dd>
-                                    <dt>Last Name</dt>
-                                    <dd>{contact.lastName}</dd>
-                                    <dt>Salutation</dt>
-                                    <dd>{contact.salutation}</dd>
-                                    <dt>Currency</dt>
-                                    <dd>{contact.preferredCurrencyUomId}</dd>
-                                    <dt>Birth Date</dt>
-                                    <dd>{contact.birthDate}</dd>
-                                    <dt>Comments</dt>
-                                    <dd>{contact.comments}</dd>
-                                    <dt>Description</dt>
-                                    <dd>{contact.description}</dd>
-                                    <dt>Birth Date</dt>
-                                    <dd>{contact.birthDate}</dd>
-                                </dl>
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">First Nmae</span>&nbsp;
+                                    { contact.firstName }
+                                </div>
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Middle Name</span>&nbsp;
+                                    { contact.middleName }
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Preferred Currency</span>&nbsp;
+                                    { contact.preferredCurrencyUomId }
+                                </div>
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Birth Date</span>&nbsp;
+                                    { contact.birthDate }
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Status</span>&nbsp;
+                                    { contact.statusId }
+                                </div>
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Created By</span>&nbsp;
+                                    { contact.createdBy }
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Created Date</span>&nbsp;
+                                    { contact.createdDate }
+                                </div>
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Updated Date</span>&nbsp;
+                                    { contact.updatedDate }
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-12">
+                                    <span className="label label-default">Comments</span>&nbsp;
+                                    { contact.comments }
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-12">
+                                    <span className="label label-default">Description</span>&nbsp;
+                                    { contact.description }
+                                </div>
                             </div>
                         </div>
-                        <div className="row">
-                            <div className="col-xs-12">
-                                <h2>Contact Information</h2>
-                            </div>
-                            <div className="panel-body">
+                    </div>
+                    <div className="panel panel-info">
+                        <div className="panel-heading">
+                            <h3 className="panel-title">Contact Information</h3>
+                        </div>
+                        <table id="contactMechsTable" className='table'>
+                            <thead>
+                                <tr>
+                                    <th>Contact Type</th>
+                                    <th>Contact Information</th>
+                                    <th>Purpose</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 { contactMechsJSX }
-                            </div>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="panel panel-info">
+                        <div className="panel-heading">
+                            <h3 className="panel-title">Accounts</h3>
                         </div>
-                        <div className="row">
-                            <div className="col-xs-12">
-                                <h2>Accounts</h2>
-                            </div>
+                        <table id="AccountsTable" className='table'>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Account Name</th>
+                                    <th>Site Name</th>
+                                    <th>Parent ID</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="panel panel-info">
+                        <div className="panel-heading">
+                            <h3 className="panel-title">Cases</h3>
                         </div>
-                        <div className="row">
-                            <div className="col-xs-12">
-                                <h2>Cases</h2>
-                            </div>
-                        </div>
-                        
+                        <table id="contactsTable" className='table'>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>???</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

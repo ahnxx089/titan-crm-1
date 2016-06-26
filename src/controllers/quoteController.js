@@ -26,7 +26,7 @@ var quoteController = function (knex) {
     //
 
     /**
-     * Add a new quote  
+     * Add a new quote
      * @param {Object} quote - The new quote to be added
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is id of new contact
@@ -122,8 +122,8 @@ var quoteController = function (knex) {
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to the data layer, which returns an object holding
-                // a RowDataPacket. A RowDataPacket is an object holding one key-value pair.  The key 
-                // is called 'count(*)'.  The value is the count of the number of rows inserted into 
+                // a RowDataPacket. A RowDataPacket is an object holding one key-value pair.  The key
+                // is called 'count(*)'.  The value is the count of the number of rows inserted into
                 // the quote_item table.
                 var promise = quoteData.addQuoteItem(quoteItemEntity)
                     .then(function (objectHoldingRDP) {
@@ -178,8 +178,8 @@ var quoteController = function (knex) {
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to the data layer, which returns an object holding
-                // a RowDataPacket. A RowDataPacket is an object holding one key-value pair.  The key 
-                // is called 'count(*)'.  The value is the count of the number of rows inserted into 
+                // a RowDataPacket. A RowDataPacket is an object holding one key-value pair.  The key
+                // is called 'count(*)'.  The value is the count of the number of rows inserted into
                 // the quote_item table.
                 var promise = quoteData.addQuoteItemOption(quoteItemOptionEntity)
                     .then(function (objectHoldingRDP) {
@@ -246,8 +246,8 @@ var quoteController = function (knex) {
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity by the data layer, which returns an object holding
-                // a RowDataPacket. A RowDataPacket is an object holding one key-value pair.  The key 
-                // is called 'count(*)'.  The value is the count of the number of rows updated in  
+                // a RowDataPacket. A RowDataPacket is an object holding one key-value pair.  The key
+                // is called 'count(*)'.  The value is the count of the number of rows updated in
                 // the quote table.
                 var promise = quoteData.updateQuote(quoteEntity)
                     .then(function (objectHoldingRDP) {
@@ -268,7 +268,7 @@ var quoteController = function (knex) {
     };
 
     /**
-     * Update an item of a quote 
+     * Update an item of a quote
      * @param {Object} quoteItem - entity containing info of item to be updated
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is number of rows updated
@@ -308,8 +308,8 @@ var quoteController = function (knex) {
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to the data layer, which returns an object holding
-                // a RowDataPacket. A RowDataPacket is an object holding one key-value pair.  The key 
-                // is called 'count(*)'.  The value is the count of the number of rows updated in 
+                // a RowDataPacket. A RowDataPacket is an object holding one key-value pair.  The key
+                // is called 'count(*)'.  The value is the count of the number of rows updated in
                 // the quote_item table.
                 var promise = quoteData.updateQuoteItem(quoteItemEntity)
                     .then(function (objectHoldingRDP) {
@@ -330,7 +330,7 @@ var quoteController = function (knex) {
     };
 
     /**
-     * Update an option of an item of a quote 
+     * Update an option of an item of a quote
      * @param {Object} quoteItemOption - entity containing info of option of item to be updated
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is number of rows updated
@@ -380,17 +380,6 @@ var quoteController = function (knex) {
             // user does not have permissions to add a quote, return null
             return null;
         }
-    };
-
-    /**
-     * Add a new quote note
-     * @param {Number} quoteId - Unique quote_id of the quote to add a note to
-     * @param {String} quoteNote - Note to be added
-     * @param {Object} user - The logged in user
-     * @return {Object} promise - Fulfillment value is note_id of new note
-     */
-    var addQuoteNote = function (quoteId, quoteNote, user) {
-
     };
 
     /**
@@ -484,7 +473,7 @@ var quoteController = function (knex) {
         }
     };
 
-    /** 
+    /**
      * Gets quotes by advanced search
      * @param {String} query - query string: SOME ARGUMENT
      * @param {Object} user - The logged in user
@@ -522,7 +511,7 @@ var quoteController = function (knex) {
 
 
                         // quotes[i].status_id is varchar(20), and is NULLABLE
-                        // status_id will be shown in a drop-down menu. There is no need to do substring match here. 
+                        // status_id will be shown in a drop-down menu. There is no need to do substring match here.
                         var emptyString = status == null;
                         var emptyColumn = quotes[i].status_id == null;
                         //                    console.log(emptyString);
@@ -531,7 +520,7 @@ var quoteController = function (knex) {
                         var test3 = (!emptyString && emptyColumn) ? false : true;
                         // If we search for something, in some columns, we need to compare
                         test3 = (!emptyString && !emptyColumn) ? quotes[i].status_id.toUpperCase() === status.toUpperCase() : test3;
-                        //                    The line above is same as 
+                        //                    The line above is same as
                         //                    if(!emptyString && !emptyColumn) {
                         //                        test3 = quotes[i].status_id.toUpperCase() == status.toUpperCase();
                         //                    }
@@ -540,7 +529,7 @@ var quoteController = function (knex) {
                         var test4 = account == null ? true : quotes[i].party_id === +account;
 
                         // quotes[i].sales_channel_enum_id is varchar(20)
-                        // Good column! I love it. 
+                        // Good column! I love it.
                         var test5 = salesChannel == null ? true : quotes[i].sales_channel_enum_id.toUpperCase() === salesChannel.toUpperCase();
 
 
@@ -579,7 +568,7 @@ var quoteController = function (knex) {
             return null;
         }
     };
-    
+
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,
@@ -587,7 +576,6 @@ var quoteController = function (knex) {
         updateQuote: updateQuote,
         updateQuoteItem: updateQuoteItem,
         updateQuoteItemOption: updateQuoteItemOption,
-        addQuoteNote: addQuoteNote,
         getQuoteById: getQuoteById,
         getQuotesByOwner: getQuotesByOwner,
         getQuotesByAdvanced: getQuotesByAdvanced
