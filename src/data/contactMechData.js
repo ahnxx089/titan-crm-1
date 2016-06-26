@@ -104,13 +104,14 @@ var contactMechData = function (knex) {
                 'telecom_number.area_code', 'telecom_number.contact_number', 'telecom_number.ask_for_name',
                 'postal_address.to_name', 'postal_address.attn_name', 'postal_address.address1',
                 'postal_address.address2', 'postal_address.directions', 'postal_address.city',
-                'postal_address.postal_code', 'postal_address.country_geo_id', 'postal_address.state_province_geo_id')
+                'postal_address.postal_code', 'postal_address.country_geo_id', 'postal_address.state_province_geo_id',
+                'party_contact_mech.contact_mech_purpose_type_id')
             .from('party_contact_mech')
             .leftJoin('contact_mech', 'party_contact_mech.contact_mech_id', '=', 'contact_mech.contact_mech_id')
             .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
             .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')
             .where({
-                'contact_mech.party_id': partyId
+                'party_contact_mech.party_id': partyId
             });
     };
 

@@ -69,12 +69,9 @@ var router = function (knex) {
         .post(leadApi.addLead) 
         .get(leadApi.getLeadsByOwner);
     apiRouter.route('/leads/:id')
-        .get(leadApi.getLeadById)
-        .put(leadApi.updateLead)
-        .delete(leadApi.deleteLead);
+        .get(leadApi.getLeadById);
     
-//getLeadsByIdentity and
-//getLeadsByPhoneNumber are not implemented yet
+// updateLead, deleteLead, getLeadsByIdentity and getLeadsByPhoneNumber are not implemented yet, and deleted now. 
     
     
 

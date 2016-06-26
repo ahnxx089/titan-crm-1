@@ -233,10 +233,18 @@ var contactController = function (knex) {
                             contacts[0].birth_date,
                             contacts[0].comments
                         );
+
+                        //get and attach contactMechs
+                        return contactMechController.getContactMechsByParty(contactId)
+                            .then(function (mechEntityArray) {
+                                contactEntity.contactMechs = mechEntityArray;
+                                return contactEntity;
+                            });
                     } else {
                         contactEntity = new Contact();
+                        return contactEntity;
                     }
-                    return contactEntity;
+                    //return contactEntity;
                 });
             promise.catch(function (error) {
                 // Log the error

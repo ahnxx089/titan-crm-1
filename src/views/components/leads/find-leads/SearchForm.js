@@ -25,7 +25,7 @@ var SearchForm = React.createClass({
                       <i>Bear with the style, for some days</i>
                       <ul>
                         <li><a href="#tabs-1">Search By ID</a></li>
-                        <li><a href="#tabs-2">Search By Name</a></li>
+                        <li><a href="#tabs-2">Search By Identity</a></li>
                         <li><a href="#tabs-3">Search By Phone</a></li>
                       </ul>
 

@@ -22,9 +22,7 @@ var AboutPage = React.createClass({
                     <div className="col-xs-10 col-lg-10">
                         <h3>Dinesh Shenoy</h3>
                         <p>
-                            Became played unwittingly yikes and aboard rat ungracefully walking excluding
-                            snooty some lorikeet fortuitous parrot crud resignedly that far oh demonstrable
-                            pernicious versus crud one some a while reset more this meretricious hey.
+                            I earned my PhD in Astrophysics at the University of Minnesota by developing custom Python scripts and modules to analyze mass-loss from hypergiant stars.  Now I use my analytical skills to create enterprise-level applications with a focus on just-in-time development.
                         </p>
                     </div>
                 </div>
@@ -69,10 +67,10 @@ var AboutPage = React.createClass({
                 </div>
                 <div className="row well">
                     <div className="col-xs-2 col-lg-2 text-center">
-                        <img src='img/avatar.jpg' alt='' />
+                        <img src='img/Xiaosiqi_avatar_large.JPG' alt='' width='100px' height='100px'/>
                     </div>
                     <div className="col-xs-10 col-lg-10">
-                        <h3>Lucas Yang</h3>
+                        <h3>Xiaosiqi "Lucas" Yang</h3>
                         <p>
                             Crab other but more lamely jauntily inside across against without sniffed giraffe
                             more besides much with amiable permissively the on husky went and exact groundhog
