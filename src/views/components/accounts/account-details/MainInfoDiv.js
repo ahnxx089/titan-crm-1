@@ -18,7 +18,7 @@ var MainInfoDiv = React.createClass({
         return (
             <div>
                 <div className="row">
-                    <div className="col-md-8">
+                    <div className="col-md-12">
                         <div className="h2">
                             
                             <div className="btn-toolbar pull-right">
