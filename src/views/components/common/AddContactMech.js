@@ -40,41 +40,48 @@ var AddContactMech = React.createClass({
             countriesObjArray: CommonStore.getCountriesObjArray()
         });
     },
-    
+
     render: function(){
-        
+
         /* jshint ignore:start */
-        
-        var statesProvinces = this.state.stateProvinceObjArray;        
+
+        var statesProvinces = this.state.stateProvinceObjArray;
         var statesProvincesJSX = [];
 
         var noStateProvince = { geo_id: null, abbreviation: '', geo_name:'' };
-        
+
         // push one blank row onto currenciesJSX first, since the db allows null for party.preferred_currency_uom_id
         statesProvincesJSX.push(<StateProvinceOption key={ 'stateProvince_' } stateProvince={ noStateProvince }/>);
-        
+
         for (var i = 0; i < statesProvinces.length; i++) {
             // See https://facebook.github.io/react/docs/multiple-components.html#dynamic-children
             // for an explanation for passing a "key" prop to a child component in for loop
             statesProvincesJSX.push(<StateProvinceOption key={ 'stateProvince_' + i } stateProvince={ statesProvinces[i] }/>);
         }
-        
-        var countries = this.state.countriesObjArray;        
+
+        var countries = this.state.countriesObjArray;
         var countriesJSX = [];
 
         var noCountry = { geo_id: null, abbreviation: '', geo_name:'' };
-        
+
         // push one blank row onto currenciesJSX first, since the db allows null for party.preferred_currency_uom_id
         countriesJSX.push(<CountryOption key={ 'country_' } country={ noCountry }/>);
-        
+
         for (var i = 0; i < countries.length; i++) {
             // See https://facebook.github.io/react/docs/multiple-components.html#dynamic-children
             // for an explanation for passing a "key" prop to a child component in for loop
             countriesJSX.push(<CountryOption key={ 'country_' + i } country={ countries[i] }/>);
         }
-        
+
         return (
             <div>
+
+                {/* Regex notes for validations used below:  We use regex to specify number and
+                    type of characters permitted in many of the input type="text" field below.
+                    [\x20-\x7E] gets us any visible character and a space.
+                    [\u00C0-\u00FC] includes many accented characters including é ô ò ñ ö ç Ç ß å Å
+                    See e.g., http://www.regular-expressions.info/posixbrackets.html
+                    A good tester to use for trying out regexs is:  http://regexr.com/   */}
 
                 {/* E-CONTACT INFO heading */}
                 <div className="row">
@@ -91,12 +98,12 @@ var AddContactMech = React.createClass({
                             <div className="input-group">
                                 <div className="input-group-addon">
                                     <i className="fa fa-envelope-o" aria-hidden="true"></i></div>
-                                <input type="email" 
-                                    className="form-control" 
-                                    id="emailAddress" 
-                                    placeholder="janedoe@gmail.com" 
+                                <input type="email"
+                                    className="form-control"
+                                    id="emailAddress"
+                                    placeholder="janedoe@gmail.com"
                                     data-error="Invalid email address"
-                                    onChange={ this.props.onChange } 
+                                    onChange={ this.props.onChange }
                                     value={ this.props.contact.emailAddress } />
                             </div>
                             <div className="help-block with-errors"></div>
@@ -109,14 +116,14 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-globe" aria-hidden="true"></i>
                                 </div>
-                                <input type="text" 
-                                    className="form-control" 
-                                    id="webAddress" 
+                                <input type="text"
+                                    className="form-control"
+                                    id="webAddress"
                                     placeholder="www.google.com"
                                     pattern="^[._-=+A-z0-9]{1,255}$"
                                     maxlength="255"
                                     data-error="(max length 255 characters)"
-                                    onChange={ this.props.onChange } 
+                                    onChange={ this.props.onChange }
                                     value={ this.props.contact.webAddress } />
                             </div>
                             <div className="help-block with-errors"></div>
@@ -140,13 +147,13 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-phone" aria-hidden="true"></i>
                                 </div>
-                                <input type="number" 
-                                    className="form-control" 
-                                    id="countryCode" 
+                                <input type="number"
+                                    className="form-control"
+                                    id="countryCode"
                                     placeholder="1"
-                                    max="9999999999" 
+                                    max="9999999999"
                                     data-error="(max length 10 digits)"
-                                    onChange={ this.props.onChange } 
+                                    onChange={ this.props.onChange }
                                     value={ this.props.contact.countryCode } />
                             </div>
                             <div className="help-block with-errors"></div>
@@ -159,13 +166,13 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-phone" aria-hidden="true"></i>
                                 </div>
-                                <input type="number" 
-                                    className="form-control" 
-                                    id="areaCode" 
+                                <input type="number"
+                                    className="form-control"
+                                    id="areaCode"
                                     placeholder="202"
-                                    max="9999999999" 
+                                    max="9999999999"
                                     data-error="(max length 10 digits)"
-                                    onChange={ this.props.onChange } 
+                                    onChange={ this.props.onChange }
                                     value={ this.props.contact.areaCode } />
                             </div>
                             <div className="help-block with-errors"></div>
@@ -181,15 +188,14 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-phone" aria-hidden="true"></i>
                                 </div>
-                                <input type="text" 
-                                    className="form-control" 
-                                    id="contactNumber" 
+
+                                <input type="text"
+                                    className="form-control"
+                                    id="contactNumber"
                                     placeholder="555-1234"
-                                    // NewLine, [dash literals, any decimals, space], upto 60 times, EndOfLine
                                     pattern="^[-\d ]{1,60}$"
-                                    maxlength="60" 
-                                    data-error="(max length 60 digits)"
-                                    onChange={ this.props.onChange } 
+                                    data-error="Max 60 digits, dashes, spaces only"
+                                    onChange={ this.props.onChange }
                                     value={ this.props.contact.contactNumber }/>
                             </div>
                             <div className="help-block with-errors"></div>
@@ -202,17 +208,13 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
-                                {/* Something was wrong here. */}
-                                <input type="text" 
-                                    className="form-control" 
-                                    id="askForName" 
-                                    placeholder="Jane, not Napoléon"
-                                    // This was an overkill: A-z contains more than letters, but []\^`, etc
-                                    // NL, [dash lit., A-Z, a-z, 0-9, space], upto 100 times, EOL
-                                    pattern="^[-A-Za-z0-9 ]{1,100}$"
-                                    maxlength="100" 
-                                    data-error="(max length 100 characters)"
-                                    onChange={ this.props.onChange } 
+                                <input type="text"
+                                    className="form-control"
+                                    id="askForName"
+                                    placeholder="Jane"
+                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
+                                    data-error="Max length 100 characters, alphanumeric including accents"
+                                    onChange={ this.props.onChange }
                                     value={ this.props.contact.askForName }/>
                             </div>
                             <div className="help-block with-errors"></div>
@@ -236,17 +238,13 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
-                                <input type="text" 
-                                    className="form-control" 
-                                    id="toName" 
+                                <input type="text"
+                                    className="form-control"
+                                    id="toName"
                                     placeholder="Jane Doe"
-//                                    Dinesh: what is the dot . following the opening braket [ ? Is it ANY_SINGLE_CHAR?
-//                                    pattern="^[.-A-z0-9]{1,100}$"
-                                    // NL, [dash lit., A-Z, a-z, 0-9, space], upto 100 times, EOL
-                                    pattern="^[-A-Za-z0-9 ]{1,100}$"
-                                    maxlength="100" 
+                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
                                     data-error="(max length 100 characters)"
-                                    onChange={ this.props.onChange } 
+                                    onChange={ this.props.onChange }
                                     value={ this.props.contact.toName }/>
                             </div>
                             <div className="help-block with-errors"></div>
@@ -259,13 +257,13 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
-                                <input type="text" 
-                                    className="form-control" 
-                                    id="attnName" 
+                                <input type="text"
+                                    className="form-control"
+                                    id="attnName"
                                     placeholder="Jane Doe"
-                                    pattern="^[-A-Za-z0-9 ]{1,100}$"
-                                    maxlength="100" data-error="(max length 100 characters)"
-                                    onChange={ this.props.onChange } 
+                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
+                                    data-error="(max length 100 characters)"
+                                    onChange={ this.props.onChange }
                                     value={ this.props.contact.attnName }/>
                             </div>
                             <div className="help-block with-errors"></div>
@@ -281,19 +279,13 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
-                                <input type="text" 
-                                    className="form-control" 
-                                    id="address1" 
+                                <input type="text"
+                                    className="form-control"
+                                    id="address1"
                                     placeholder="123 Anywhere Lane"
-                                    // This would not pass, because of lacking support of whitespace
-                                    // I think it is better to have loose control in such text fields
-                                    // pattern="^[.-A-z0-9]{1,255}$"
-                              
-                                    // [Any Visible characters and the space character], upto 255 times
-                                    // See http://www.regular-expressions.info/posixbrackets.html, or Wikipedia for more detail
-                                    pattern="[\x20-\x7E]{0,255}"
-                                    maxlength="255" data-error="(max length 255 characters)"
-                                    onChange={ this.props.onChange } 
+                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,255}$"
+                                    data-error="(max length 255 characters)"
+                                    onChange={ this.props.onChange }
                                     value={ this.props.contact.address1 }/>
                             </div>
                             <div className="help-block with-errors"></div>
@@ -306,14 +298,13 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
-                                <input type="text" 
-                                    className="form-control" 
-                                    id="address2" 
+                                <input type="text"
+                                    className="form-control"
+                                    id="address2"
                                     placeholder="Suite #100"
-                                    // [Any Visible characters and the space character], upto 255 times
-                                    pattern="[\x20-\x7E]{0,255}"
-                                    maxlength="255" data-error="(max length 255 characters)"
-                                    onChange={ this.props.onChange } 
+                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,255}$"
+                                    data-error="(max length 255 characters)"
+                                    onChange={ this.props.onChange }
                                     value={ this.props.contact.address2 }/>
                             </div>
                             <div className="help-block with-errors"></div>
@@ -329,14 +320,13 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
-                                <input type="text" 
-                                    className="form-control" 
-                                    id="city" 
+                                <input type="text"
+                                    className="form-control"
+                                    id="city"
                                     placeholder="My Town"
-                                    pattern="[\x20-\x7E]{0,100}"
-                                    //pattern="^[.-A-z0-9]{1,100}$"
+                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
                                     maxlength="100" data-error="(max length 100 characters)"
-                                    onChange={ this.props.onChange } 
+                                    onChange={ this.props.onChange }
                                     value={ this.props.contact.city }/>
                             </div>
                             <div className="help-block with-errors"></div>
@@ -349,7 +339,7 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-globe" aria-hidden="true"></i>
                                 </div>
-                                <select 
+                                <select
                                     className="form-control"
                                     id="stateProvinceGeoId"
                                     onChange={ this.props.onChange }
@@ -369,14 +359,13 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
-                                <input type="text" 
-                                    className="form-control" 
-                                    id="zipOrPostalCode" 
+                                <input type="text"
+                                    className="form-control"
+                                    id="zipOrPostalCode"
                                     placeholder="12345-6789"
-                                    pattern="^[-0-9]{1,20}$"
-                                    maxlength="20" 
+                                    pattern="^[-\d ]{1,20}$"
                                     data-error="(max length 20 digits)"
-                                    onChange={ this.props.onChange } 
+                                    onChange={ this.props.onChange }
                                     value={ this.props.contact.zipOrPostalCode }/>
                             </div>
                             <div className="help-block with-errors"></div>
@@ -389,7 +378,7 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-globe" aria-hidden="true"></i>
                                 </div>
-                                <select 
+                                <select
                                     className="form-control"
                                     id="countryGeoId"
                                     onChange={ this.props.onChange }
@@ -409,25 +398,25 @@ var AddContactMech = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-compass" aria-hidden="true"></i>
                                 </div>
-                                <input type="text" 
-                                    className="form-control" 
-                                    id="directions" 
+                                <input type="text"
+                                    className="form-control"
+                                    id="directions"
                                     placeholder=""
-                                    pattern="^[?,.;:'!@#$%^&*()_-=+A-z0-9]{1,255}$"
-                                    maxlength="255" data-error="(max length 255 characters)"
-                                    onChange={ this.props.onChange } 
+                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,255}$"
+                                    data-error="(max length 255 characters)"
+                                    onChange={ this.props.onChange }
                                     value={ this.props.contact.directions }/>
                             </div>
                             <div className="help-block with-errors"></div>
                         </div>
                     </div>
                 </div>
-                    
+
             </div>
         );
         /* jshint ignore:end */
     }
-    
+
 });
 
 module.exports = AddContactMech;

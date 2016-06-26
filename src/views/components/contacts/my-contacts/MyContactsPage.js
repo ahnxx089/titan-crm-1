@@ -19,17 +19,11 @@ var MyContactsPage = React.createClass({
     },
 
     componentDidMount: function () {
-        // Event listener to fire when data retrieved-- 
+        // Event listener to fire when data retrieved--
         // when Store emits,informs this View something happened
         ContactsStore.addGetDataListener(this._onGetData);
 
         // Call the async function to get my contacts
-        // <Anurag>
-        // We should have this list sorted in descending order of ID (most recent first)
-        // a. that is more natural
-        // b. when we are redirected here by Create Contact page, we can see our new contact
-        // right at the top
-        // </Anurag>
         ContactsActions.getContactsByOwner();
     },
 
@@ -45,7 +39,7 @@ var MyContactsPage = React.createClass({
             contactsOwned: ContactsStore.getContactsOwned()
         });
         // Convert the My Contacts HTML table into a nice looking jQuery DataTable, sorting so that
-        // most recently added Contacts (descending party_id) is at top. 
+        // most recently added Contacts (descending party_id) is at top.
         // See: https://datatables.net/examples/basic_init/table_sorting.html
         $('#myContactsTable').DataTable({
             'order': [[ 0, 'desc']]
