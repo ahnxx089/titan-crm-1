@@ -23,6 +23,9 @@ var ContactRow = React.createClass({
                 <td>{ this.props.contact.firstName }</td>
                 <td>{ this.props.contact.lastName }</td>
                 <td>
+                    <Link to={ '/cp/contacts/details/' + this.props.contact.partyId } className="btn btn-primary btn-xs">
+                        <span className="fa fa-eye"></span> View
+                    </Link>
                     <Link to={ '/cp/contacts/update/' + this.props.contact.partyId } className="btn btn-primary btn-xs">
                         <span className="fa fa-pencil-square-o"></span> Edit
                     </Link>
