@@ -21,7 +21,7 @@ var AccountDetailsPage = React.createClass({
     },
     
     componentDidMount: function () {
-        var id = this.props.partyId;    
+        var id = this.props.params.id;    
         AccountsStore.addGetDataListener(this._onGetData);
         
         AccountsActions.getAccountById(id);
