@@ -67,14 +67,14 @@ var AboutPage = React.createClass({
                 </div>
                 <div className="row well">
                     <div className="col-xs-2 col-lg-2 text-center">
-                        <img src='img/Xiaosiqi_avatar_large.JPG' alt='' width='100px' height='100px'/>
+                        <img src='img/Xiaosiqi_avatar_large.JPG' alt='Xiaosiqi_Yang' width='100px' height='100px'/>
                     </div>
                     <div className="col-xs-10 col-lg-10">
                         <h3>Xiaosiqi "Lucas" Yang</h3>
                         <p>
-                            Crab other but more lamely jauntily inside across against without sniffed giraffe
-                            more besides much with amiable permissively the on husky went and exact groundhog
-                            tentatively.
+                            I recently graduated from University of Minnesota with a Master's Degree in Computer Science. 
+                            I was in the spatial Database research group, and did my graduation project on spatial data clustering and prediction in agricultural crop yield. I worked as TA before. <br/>
+                            My previous work experience mostly lies in Web Developing (full statck) and Android Developing (in both academy and industry). I love programming and seeing people use tools I built. 
                         </p>
                     </div>
                 </div>
