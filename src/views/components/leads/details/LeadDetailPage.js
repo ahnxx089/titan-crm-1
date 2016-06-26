@@ -48,10 +48,10 @@ var LeadDetailPage = React.createClass({
     _onGetData: function() {
         var result = LeadsStore.getLeadFound();
         // If it's is an error, eg. permission error, add it to ErrorBox
-        // Cite from HomePage.js, but why????? 
 //        if (!result.hasOwnProperty('leadId') && result.hasOwnProperty('message')) {
+        // this if is actually not needed, because user is not able to access/click on leads that does not exist.
         if (Object.keys(result).length === 0 && result.constructor === Object) {
-            this.props.updateErrorBox("No such lead");
+            this.props.updateErrorBox('No such lead');
         }
         
         // Otherwise we have received our expected result;

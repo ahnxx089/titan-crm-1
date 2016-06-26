@@ -63,7 +63,7 @@ var FindLeadsPage = React.createClass({
         console.log(result);
 //        if (!result.hasOwnProperty('leadId') && result.hasOwnProperty('message')) {
         if (Object.keys(result).length === 0 && result.constructor === Object) {
-            this.props.updateErrorBox("No such lead");
+            this.props.updateErrorBox('No such lead');
         } else {
             this.props.updateErrorBox([]); // clear the ErrorBox
             this.setState({
