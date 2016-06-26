@@ -13,10 +13,14 @@ var UpdateContactForm = React.createClass({
             contact: {}
         }
     },
+    componentDidMount: function () {
+        var thisUpdateContactForm = this;
+        
+        $('#updateContact').validator();
+    },
     render: function () {
 
         /* jshint ignore:start */
-        //this.setState({contact: this.props.contact});
         var contact = this.props.contact;
         var onChange = this.props.onChange;
         var currencies = this.props.currencies;
@@ -29,8 +33,7 @@ var UpdateContactForm = React.createClass({
         }
 
         return (
-            <form data-toggle="validator" name="updateContact" method="put" onSubmit={ this.props.onFormSubmit }>
-
+            <form name="updateContact" method="put" onSubmit={ this.props.onFormSubmit }>
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
@@ -46,7 +49,7 @@ var UpdateContactForm = React.createClass({
                                     value={ contact.firstName || '' } 
                                     onChange={ onChange }
                                     pattern="^[A-z0-9]{1,100}$"
-                                    data-error="First Name required (max length 100 characters, alphanumeric only)"
+                                    data-error="Hey, look!  A cunstom error!"
                                     required
                                 ></input>
                                 <div className="help-block"></div>
@@ -81,7 +84,7 @@ var UpdateContactForm = React.createClass({
                                     data-error="Last Name required (max length 100 characters, alphanumeric only)"
                                     required
                                 ></input>
-                                
+                                <div className="help-block"></div>
                             </div>
                             <div className="help-block with-errors"></div>
                         </div>
@@ -92,7 +95,9 @@ var UpdateContactForm = React.createClass({
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
                                 <input type="text" className="form-control" id="salutation"  value={ contact.salutation || '' } onChange={ onChange }></input>
+                                <div className="help-block"></div>
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                 </div>
@@ -116,7 +121,9 @@ var UpdateContactForm = React.createClass({
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-calendar" aria-hidden="true"></i></div>
                                 <input type="date" className="form-control" id="birthDate"  value={ contact.birthDate || '' } onChange={ onChange }></input>
+                                <div className="help-block"></div>
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                 </div>
@@ -135,7 +142,9 @@ var UpdateContactForm = React.createClass({
                                     onChange={ onChange }
                                     pattern="^[?,.;:'!@#$%^&*()_-=+A-z0-9]{1,255}$"
                                 >{ contact.comments }</textarea>
+                                <div className="help-block"></div>
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                 </div>
