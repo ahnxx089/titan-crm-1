@@ -171,10 +171,10 @@ var accountData = function (knex) {
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     var getAccountById = function (accountId) {
-        return knex.select('party.party_id', 'parent_party_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'organization.organization_name', 'party_supplemental_data.company_name', 'party_supplemental_data.annual_revenue',
+        return knex.select('party.party_id', 'parent_party_id', 'preferred_currency_uom_id', 'party.description', 'status_id', 'party.created_by', 'organization.organization_name', 'organization.office_site_name', 'party_supplemental_data.company_name', 'party_supplemental_data.annual_revenue',
         'party_supplemental_data.currency_uom_id', 'party_supplemental_data.num_employees', 'party_supplemental_data.industry_enum_id', 'party_supplemental_data.ownership_enum_id', 'party_supplemental_data.ticker_symbol',
         'party_supplemental_data.important_note', 'party_supplemental_data.primary_postal_address_id', 'party_supplemental_data.primary_telecom_number_id', 'party_supplemental_data.primary_email_id',
-        'party.created_date', 'party.updated_date', 'organization.logo_image_url')
+        'party.created_date', 'party.updated_date', 'organization.logo_image_url', 'organization.comments')
             .from('party')
             .innerJoin('party_supplemental_data', 'party.party_id', 'party_supplemental_data.party_id')
             .innerJoin('organization', 'party_supplemental_data.party_id', 'organization.party_id')
