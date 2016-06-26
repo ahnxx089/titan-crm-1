@@ -38,9 +38,7 @@ var AccountDetailsPage = React.createClass({
     },
     
     render: function () {
-        AccountDetailsPage.propTypes = {
-            params: React.propType.object
-        };
+        
         var account = this.state.account;
         
         return (
