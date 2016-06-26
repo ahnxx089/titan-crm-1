@@ -33,7 +33,7 @@ var ContactMechRow = React.createClass({
                 break;
             case 'TELECOM_NUMBER':
                 type = <td>Telephone</td>
-                information = <td>{ formatNumber() }</td>;
+                information = <td>{ formatTelecom() }</td>;
                 break;
             case 'POSTAL_ADDRESS':
                 type = <td>Address</td>
