@@ -9,6 +9,7 @@
 /* jshint shadow:true */
 
 var redisClient = require('../config/redisClient');
+var winston = require('winston');
 
 var contactApi = function (knex) {
 
@@ -73,6 +74,9 @@ var contactApi = function (knex) {
                 }
                 // Data is NOT in the cache
                 else {
+                    // Log the error
+                    winston.error(err);
+                    // Get contacts from the database
                     var resultsForThisUser = contactController.getContactsByOwner(req.user);
                     // IF ELSE block interprets controller returning an object or null
                     if (resultsForThisUser === null) {
