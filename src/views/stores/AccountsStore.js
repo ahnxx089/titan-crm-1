@@ -10,11 +10,13 @@ var TitanDispatcher = require('../dispatcher/TitanDispatcher');
 var AccountsConstants = require('../constants/AccountsConstants');
 var $ = require('jquery');
 var Cookies = require('js-cookie');
+var validation = require('../../common/validation')();
 
 // DATA
 //-----------------------------------------------
 var accountsOwned = [];
 var singleAccount = {};
+var getByIdentity = {};
 
 // STORE as EVENT EMITTER
 //-----------------------------------------------
@@ -35,6 +37,13 @@ AccountsStore.emitGetData = function() {
     this.emit('getData');
 };
 
+AccountsStore.addGetByIdentityListener = function (listener) {
+    this.on('getByIdentity', listener);
+};
+
+AccountsStore.emitGetByIdentity = function() {
+    this.emit('getByIdentity');  
+};
 
 
 
@@ -110,6 +119,34 @@ AccountsStore.addAccounts = function(account) {
     });
 };
 
+AccountsStore.getAccountsByIdentity = function(identity) {
+    var thisAccountsStore = this;
+    
+    // an empty search box for first or last name comes in as empty string, keep as empty string;
+    // if not empty then clean off any whitespaces (reminder: cannot not send empty string to validation.sanitizeInput,
+    // which returns null in that case, which would make e.g. var lastName = null instead of = '' )
+    var accountId = (identity.accountId === '' ? '' : validation.sanitizeInput(identity.accountId));
+    var accountName = (identity.accountName === '' ? '' : validation.sanitizeInput(identity.accountName));
+
+    var queryString = '?accountId=' + accountId + '&accountName'+ accountName;
+    
+    $.ajax({
+        type: 'GET',
+        url: '/api/accounts' + queryString,
+        headers: {  'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(account) {
+            accountsByIdentity = account; // contactApi.getContactsByIdentity returns an array of Contact entities
+            thisAccountsStore.emitGetByIdentity();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+AccountsStore.getByIdentity = function() {
+    return accountsByIdentity;
+};
 
 // LINK BETWEEN DISPATCHER AND STORE
 //-----------------------------------------------
@@ -128,6 +165,10 @@ TitanDispatcher.register(function(action) {
             AccountsStore.getAccountById(action.id);
             break;
         }
+        case AccountsConstants.GET_ACCOUNTS_BY_IDENTITY: {
+            AccountsStore.getAccountsByIdentity(action.data);
+            break;
+        }    
     }
     
 });
