@@ -8,12 +8,12 @@
 var React = require('react');
 var withRouter = require('react-router').withRouter;
 
-var AddContactForm = require('./AddContactForm'); 
+var AddContactForm = require('./AddContactForm');
 var ContactsStore = require('../../../stores/ContactsStore');
 var ContactsActions = require('../../../actions/ContactsActions');
 
 var CreateContactPage = React.createClass({
-    
+
     getInitialState: function() {
         return {
             contact: {
@@ -47,14 +47,15 @@ var CreateContactPage = React.createClass({
             addedContactPartyId: ''
         };
     },
-    
+
     componentDidMount: function() {
         // register with Store as a listener for emit of new party_id of the added Contact
         ContactsStore.addedContactListener(this._onAddedContact);
     },
-    
+
     componentWillUnmount: function() {
-        // avoids console error, accompanies function call in componentDidMount
+        // make sure to stop listening before unmounting, so that if/when mounted again
+        // in the future, not adding more and more listeners . . .
         ContactsStore.removeListener('change', this._onAddedContact);
     },
 
@@ -64,15 +65,15 @@ var CreateContactPage = React.createClass({
         this.state.contact[ field ] = value;
         this.setState( {contact: this.state.contact} );
     },
-        
+
     _addContact: function(event) {
         event.preventDefault();
         ContactsActions.addContact(this.state.contact); // start the Flux unidirectional flow!
     },
 
     _onAddedContact: function() {
-        
-        // After a successful ajax call in the store, calling ContactsStore.addedContact() will return 
+
+        // After a successful ajax call in the store, calling ContactsStore.addedContact() will return
         // one of the three results from contactApi.addContact, handle with if-else-if-else block
         var result = ContactsStore.addedContact();
 
@@ -82,11 +83,11 @@ var CreateContactPage = React.createClass({
             this.props.updateErrorBox(result.message);
         }
         // User has permission, but there were one or more validation errors
-        else if (Object.prototype.toString.call(result) === '[object Array]') 
+        else if (Object.prototype.toString.call(result) === '[object Array]')
         {
             this.props.updateErrorBox(result);
         }
-        // User had permission and no validation errors-- api should return the new partyId. 
+        // User had permission and no validation errors-- api should return the new partyId.
         // Note:  the new partyId won't actually get rendered on this page, but I still want
         // it to reach here for diagnostic purposes and to really prove we closed the loop.
         else if (result.hasOwnProperty('partyId')) {
@@ -97,10 +98,10 @@ var CreateContactPage = React.createClass({
             this.props.router.replace('/cp/contacts/my-contacts');
         }
     },
-                                          
+
     render: function (){
-        
-        /* jshint ignore:start */    
+
+        /* jshint ignore:start */
         return (
             <div>
                 <div className="panel panel-default">
@@ -108,10 +109,10 @@ var CreateContactPage = React.createClass({
                         <h1>Create Contact</h1>
                     </div>
                     <div className="panel-body">
-                        <AddContactForm 
-                            contact={ this.state.contact } 
-                            onChange={ this.setContactState } 
-                            onFormSubmit={ this._addContact } />                                            
+                        <AddContactForm
+                            contact={ this.state.contact }
+                            onChange={ this.setContactState }
+                            onFormSubmit={ this._addContact } />
                     </div>
                 </div>
             </div>

@@ -14,7 +14,7 @@ var AddContactForm = React.createClass({
 
     componentDidMount: function () {
         var thisAddContactForm = this;
-        
+
         // NOTE: to get bootstrap validator working, this jQuery statement to attach .on('submit',...)
         // must come after the the validations are enabled on the form (down in its children)
         // Therefore it is placed here inside componentDidMount so that the form is rendered first.
@@ -26,6 +26,7 @@ var AddContactForm = React.createClass({
                 thisAddContactForm.props.onFormSubmit(e);
             }
         });
+        // FOR FURTHER EXPLANATION, SEE:  http://www.ofssam.com/forums/showthread.php?tid=64
     },
 
     render: function () {
@@ -35,10 +36,10 @@ var AddContactForm = React.createClass({
                 <form id="addContactForm">
                     <AddPersonalInfo
                         contact={ this.props.contact }
-                        onChange={ this.props.onChange } /> 
+                        onChange={ this.props.onChange } />
                     <AddContactMech
                         contact={ this.props.contact }
-                        onChange={ this.props.onChange } />  
+                        onChange={ this.props.onChange } />
                     <div className="row">
                         <div className="col-xs-12">
                             <button className="btn btn-primary" type="submit" data-disable="true">Submit</button>
