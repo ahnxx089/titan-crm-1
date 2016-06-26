@@ -48,9 +48,8 @@ var FindLeadsPage = React.createClass({
 
     // JSX component onFormSubmit version (has [submit] event arg)
     _findLeads: function(event){
-        console.log('find leads');
         event.preventDefault();
-        LeadsActions.getLeadById(this.state.searchBy.partyId);
+        LeadsActions.getLeadById(this.state.searchBy.partyId); // send out an action
     },
     
     // Native HTML Form onSubmit version (has no event arg)
@@ -59,17 +58,24 @@ var FindLeadsPage = React.createClass({
 //        LeadsActions.getLeadById(this.state.searchBy.partyId);
 //    },
 
-    _onGetById: function(){
-        console.log('on get by id');
-        this.setState({
-            leadFoundById: LeadsStore.getLeadFound()
+    _onGetById: function() {
+        var result = LeadsStore.getLeadFound();
+        console.log(result);
+//        if (!result.hasOwnProperty('leadId') && result.hasOwnProperty('message')) {
+        if (Object.keys(result).length === 0 && result.constructor === Object) {
+            this.props.updateErrorBox("No such lead");
+        } else {
+            this.props.updateErrorBox([]); // clear the ErrorBox
+            this.setState({
+            leadFoundById: result
         });
+        }
+        
+
     },
     
     
     render: function() {
-//        console.log('in render');
-
         /* jshint ignore:start */
 
         var leadById = this.state.leadFoundById;

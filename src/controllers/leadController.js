@@ -398,82 +398,88 @@ var leadController = function (knex) {
      * @return {Object} promise - Fulfillment value is a lead entity
      */
     // TODO: check user permission? 
-    var getLeadById = function (leadId) {
-        var promise = leadData.getLeadById(leadId)
-            .then(function (leads) {
-                var leadEntity;
-                var partyContactMechs = [];
-                if (leads.length > 0) {
-                    // Map the retrieved result set to corresponding entity
-                    for(var i = 0; i < leads.length; i++){
-                        var newPartyContactMech = new ContactMech(
-                            leads[i].contact_mech_id,
-                            leads[i].contact_mech_type_id,
-                            leads[i].contact_mech_purpose_type_id,
-                            leads[i].info_string,
-                            leads[i].created_date,
-                            leads[i].updated_date,
-                            
-                            leads[i].country_code,
-                            leads[i].area_code,
-                            leads[i].contact_number,
-                            leads[i].ask_for_name,
-                            leads[i].to_name,
-                            leads[i].attn_name,
-                            leads[i].address1,
-                            leads[i].address2,
-                            leads[i].directions,
-                            leads[i].city,
-                            leads[i].state_province_geo_id,
-                            leads[i].postal_code,
-                            leads[i].country_geo_id
+    var getLeadById = function (leadId, user) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_VIEW');
+        if (hasPermission !== -1) {
+            var promise = leadData.getLeadById(leadId)
+                .then(function (leads) {
+                    var leadEntity;
+                    var partyContactMechs = [];
+                    if (leads.length > 0) {
+                        // Map the retrieved result set to corresponding entity
+                        for(var i = 0; i < leads.length; i++){
+                            var newPartyContactMech = new ContactMech(
+                                leads[i].contact_mech_id,
+                                leads[i].contact_mech_type_id,
+                                leads[i].contact_mech_purpose_type_id,
+                                leads[i].info_string,
+                                leads[i].created_date,
+                                leads[i].updated_date,
+
+                                leads[i].country_code,
+                                leads[i].area_code,
+                                leads[i].contact_number,
+                                leads[i].ask_for_name,
+                                leads[i].to_name,
+                                leads[i].attn_name,
+                                leads[i].address1,
+                                leads[i].address2,
+                                leads[i].directions,
+                                leads[i].city,
+                                leads[i].state_province_geo_id,
+                                leads[i].postal_code,
+                                leads[i].country_geo_id
+                            );
+                            partyContactMechs.push(newPartyContactMech);
+                        }
+    //                    console.log('type of party id is '+  typeof leads[0].party_id); // number
+
+                        leadEntity = new Lead(
+                            // this is the order in which values show
+                            // the order in which keys show, is determined by knex
+                            leads[0].party_id,
+                            //
+                            leads[0].party_type_id,
+                            leads[0].preferred_currency_uom_id,
+                            leads[0].description,
+                            leads[0].status_id,
+                            leads[0].created_by,
+                            leads[0].created_date,
+                            leads[0].updated_date,
+                            //
+                            leads[0].salutation,
+                            leads[0].first_name,
+                            leads[0].middle_name,
+                            leads[0].last_name,
+                            leads[0].birth_date,
+                            leads[0].p_comments,
+                            //
+                            leads[0].parent_party_id,
+                            leads[0].company_name,
+                            leads[0].annual_revenue,
+                            leads[0].num_employees,
+                            leads[0].industry_enum_id,
+                            leads[0].ownership_enum_id,
+                            leads[0].ticker_symbol,
+                            leads[0].important_note,
+                            //
+                            leads[0].role_type_id,
+                            //
+                            partyContactMechs
+
                         );
-                        partyContactMechs.push(newPartyContactMech);
                     }
-//                    console.log('type of party id is '+  typeof leads[0].party_id); // number
-                    
-                    leadEntity = new Lead(
-                        // this is the order in which values show
-                        // the order in which keys show, is determined by knex
-                        leads[0].party_id,
-                        //
-                        leads[0].party_type_id,
-                        leads[0].preferred_currency_uom_id,
-                        leads[0].description,
-                        leads[0].status_id,
-                        leads[0].created_by,
-                        leads[0].created_date,
-                        leads[0].updated_date,
-                        //
-                        leads[0].salutation,
-                        leads[0].first_name,
-                        leads[0].middle_name,
-                        leads[0].last_name,
-                        leads[0].birth_date,
-                        leads[0].p_comments,
-                        //
-                        leads[0].parent_party_id,
-                        leads[0].company_name,
-                        leads[0].annual_revenue,
-                        leads[0].num_employees,
-                        leads[0].industry_enum_id,
-                        leads[0].ownership_enum_id,
-                        leads[0].ticker_symbol,
-                        leads[0].important_note,
-                        //
-                        leads[0].role_type_id,
-                        //
-                        partyContactMechs
-                        
-                    );
-                }
-                return leadEntity;
+                    return leadEntity;
+                });
+
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
             });
-        promise.catch(function (error) {
-            // Log the error
-            winston.error(error);
-        });
-        return promise;
+            return promise;
+        } else {
+            return null;
+        }
     };
     
 
