@@ -127,7 +127,7 @@ TitanDispatcher.register(function(action) {
         case AccountsConstants.GET_ACCOUNT_BY_ID: {
             AccountsStore.getAccountById(action.id);
             break;
-        }    
+        }
     }
     
 });
