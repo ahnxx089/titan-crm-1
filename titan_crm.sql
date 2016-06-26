@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.2
+-- version 4.5.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Jun 02, 2016 at 03:24 AM
--- Server version: 10.1.13-MariaDB
--- PHP Version: 5.6.20
+-- Host: 127.0.0.1
+-- Generation Time: Jun 26, 2016 at 09:18 PM
+-- Server version: 10.1.9-MariaDB
+-- PHP Version: 7.0.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -49,7 +49,7 @@ CREATE TABLE `case_` (
 
 INSERT INTO `case_` (`case_id`, `case_type_id`, `case_category_id`, `status_id`, `from_party_id`, `priority`, `case_date`, `response_required_date`, `case_name`, `description`, `resolution_id`, `created_by`, `created_date`, `updated_date`) VALUES
 (1, 'RF_SUPPORT', 'CRCAT_NEW_PROB', 'CASE_ACCEPTED', 62, '5', '2016-05-28 12:31:26', '2016-05-28 12:31:26', 'Red light keeps flashing', 'Customer expects a few niceties first, before getting down to business', NULL, 'fullAdminDEF', '2016-05-28 12:31:26', '2016-05-28 12:31:26'),
-(2, 'RF_BUGFIX', 'CRCAT_COMPLEX', 'CASE_ACCEPTED', 15, NULL, '2016-05-29 03:30:22', NULL, 'BigBugFix', 'fix major bugs!', NULL, 'contactOwnerABC', '2016-05-29 03:30:22', '2016-05-29 03:30:22');
+(2, 'RF_BUGFIX', 'CRCAT_COMPLEX', 'CASE_ACCEPTED', 15, NULL, '2016-05-29 03:30:22', NULL, 'BigBugFix', 'fix major bugs!', NULL, 'crmsfaContactTasksABC', '2016-05-29 03:30:22', '2016-05-29 03:30:22');
 
 -- --------------------------------------------------------
 
@@ -200,77 +200,49 @@ CREATE TABLE `contact_mech` (
 
 INSERT INTO `contact_mech` (`contact_mech_id`, `contact_mech_type_id`, `info_string`, `created_date`, `updated_date`) VALUES
 (1, 'EMAIL_ADDRESS', 'party56@nomail.com', '2016-05-28 00:49:02', '2016-05-28 00:49:02'),
-(2, 'EMAIL_ADDRESS', 'sam@bbc.com', '2016-05-30 02:12:37', '2016-05-30 02:12:37'),
-(3, 'EMAIL_ADDRESS', 'dcs.foyle@bbc.com', '2016-05-30 02:16:51', '2016-05-30 02:16:51'),
-(4, 'WEB_ADDRESS', 'www.foyleswar.com', '2016-05-30 02:16:51', '2016-05-30 02:16:51'),
-(5, 'EMAIL_ADDRESS', 'paul.milner@bbc.com', '2016-05-30 02:23:39', '2016-05-30 02:23:39'),
-(6, 'WEB_ADDRESS', 'www.mywifeleftme.com', '2016-05-30 02:23:39', '2016-05-30 02:23:39'),
-(7, 'TELECOM_NUMBER', NULL, '2016-05-30 02:23:39', '2016-05-30 02:23:39'),
-(8, 'EMAIL_ADDRESS', 'walter.h.white@fring.com', '2016-05-30 02:31:28', '2016-05-30 02:31:28'),
-(9, 'WEB_ADDRESS', 'www.savewalterwhite.com', '2016-05-30 02:31:28', '2016-05-30 02:31:28'),
-(10, 'TELECOM_NUMBER', NULL, '2016-05-30 02:31:28', '2016-05-30 02:31:28'),
-(11, 'EMAIL_ADDRESS', 'walter.h.white@fring.com', '2016-05-30 02:47:23', '2016-05-30 02:47:23'),
-(12, 'WEB_ADDRESS', 'www.savewalterwhite.com', '2016-05-30 02:47:23', '2016-05-30 02:47:23'),
-(13, 'POSTAL_ADDRESS', NULL, '2016-05-30 02:47:23', '2016-05-30 02:47:23'),
-(14, 'EMAIL_ADDRESS', 'walter.h.white@fring.com', '2016-05-30 02:56:47', '2016-05-30 02:56:47'),
-(15, 'WEB_ADDRESS', 'www.savewalterwhite.com', '2016-05-30 02:56:47', '2016-05-30 02:56:47'),
-(16, 'TELECOM_NUMBER', NULL, '2016-05-30 02:56:47', '2016-05-30 02:56:47'),
-(17, 'POSTAL_ADDRESS', NULL, '2016-05-30 02:56:47', '2016-05-30 02:56:47'),
-(18, 'TELECOM_NUMBER', NULL, '2016-05-30 03:10:58', '2016-05-30 03:10:58'),
-(19, 'POSTAL_ADDRESS', NULL, '2016-05-30 03:11:19', '2016-05-30 03:11:19'),
-(20, 'TELECOM_NUMBER', NULL, '2016-05-30 03:25:45', '2016-05-30 03:25:45'),
-(21, 'POSTAL_ADDRESS', NULL, '2016-05-30 03:26:37', '2016-05-30 03:26:37'),
-(22, 'EMAIL_ADDRESS', 'drdemento@ask.com', '2016-05-31 16:12:20', '2016-05-31 16:12:20'),
-(23, 'WEB_ADDRESS', 'www.getdemented.com', '2016-05-31 16:12:20', '2016-05-31 16:12:20'),
-(24, 'TELECOM_NUMBER', NULL, '2016-05-31 16:12:20', '2016-05-31 16:12:20'),
-(25, 'POSTAL_ADDRESS', NULL, '2016-05-31 16:12:20', '2016-05-31 16:12:20'),
-(26, 'EMAIL_ADDRESS', 'drdemento@ask.com', '2016-05-31 16:48:30', '2016-05-31 16:48:30'),
-(27, 'WEB_ADDRESS', 'www.getdemented.com', '2016-05-31 16:48:30', '2016-05-31 16:48:30'),
-(28, 'TELECOM_NUMBER', NULL, '2016-05-31 16:48:30', '2016-05-31 16:48:30'),
-(29, 'POSTAL_ADDRESS', NULL, '2016-05-31 16:48:30', '2016-05-31 16:48:30'),
-(30, 'EMAIL_ADDRESS', 'drdemento@ask.com', '2016-05-31 17:53:34', '2016-05-31 17:53:34'),
-(31, 'POSTAL_ADDRESS', NULL, '2016-05-31 17:53:34', '2016-05-31 17:53:34'),
-(32, 'WEB_ADDRESS', 'www.getdemented.com', '2016-05-31 17:53:34', '2016-05-31 17:53:34'),
-(33, 'TELECOM_NUMBER', NULL, '2016-05-31 17:53:34', '2016-05-31 17:53:34'),
-(34, 'EMAIL_ADDRESS', 'drdemento@ask.com', '2016-05-31 17:56:14', '2016-05-31 17:56:14'),
-(35, 'WEB_ADDRESS', 'www.getdemented.com', '2016-05-31 17:56:14', '2016-05-31 17:56:14'),
-(36, 'TELECOM_NUMBER', NULL, '2016-05-31 17:56:14', '2016-05-31 17:56:14'),
-(37, 'EMAIL_ADDRESS', 'drdemento@ask.com', '2016-05-31 18:09:30', '2016-05-31 18:09:30'),
-(38, 'WEB_ADDRESS', 'www.getdemented.com', '2016-05-31 18:09:30', '2016-05-31 18:09:30'),
-(39, 'POSTAL_ADDRESS', NULL, '2016-05-31 18:09:30', '2016-05-31 18:09:30'),
-(40, 'TELECOM_NUMBER', NULL, '2016-05-31 18:09:30', '2016-05-31 18:09:30'),
-(41, 'EMAIL_ADDRESS', 'drdemento@ask.com', '2016-05-31 18:13:01', '2016-05-31 18:13:01'),
-(42, 'WEB_ADDRESS', 'www.getdemented.com', '2016-05-31 18:13:01', '2016-05-31 18:13:01'),
-(43, 'TELECOM_NUMBER', NULL, '2016-05-31 18:13:01', '2016-05-31 18:13:01'),
-(44, 'POSTAL_ADDRESS', NULL, '2016-05-31 18:13:01', '2016-05-31 18:13:01'),
-(45, 'EMAIL_ADDRESS', 'drdemento@ask.com', '2016-05-31 18:13:37', '2016-05-31 18:13:37'),
-(46, 'WEB_ADDRESS', 'www.getdemented.com', '2016-05-31 18:13:37', '2016-05-31 18:13:37'),
-(47, 'POSTAL_ADDRESS', NULL, '2016-05-31 18:13:37', '2016-05-31 18:13:37'),
-(48, 'TELECOM_NUMBER', NULL, '2016-05-31 18:13:37', '2016-05-31 18:13:37'),
-(49, 'EMAIL_ADDRESS', 'winston.churchill@uk.com', '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(50, 'TELECOM_NUMBER', NULL, '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(51, 'WEB_ADDRESS', 'www.ilikecigars.com', '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(52, 'POSTAL_ADDRESS', NULL, '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(53, 'TELECOM_NUMBER', NULL, '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(54, 'POSTAL_ADDRESS', NULL, '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(55, 'EMAIL_ADDRESS', 'pete.davis@gmail.com', '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(56, 'WEB_ADDRESS', 'www.snl.com', '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(57, 'EMAIL_ADDRESS', 'pete.davis@gmail.com', '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(58, 'WEB_ADDRESS', 'www.snl.com', '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(59, 'POSTAL_ADDRESS', NULL, '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(60, 'TELECOM_NUMBER', NULL, '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(61, 'EMAIL_ADDRESS', 'pete.davis@gmail.com', '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(62, 'WEB_ADDRESS', 'www.snl.com', '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(63, 'POSTAL_ADDRESS', NULL, '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(64, 'TELECOM_NUMBER', NULL, '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(65, 'TELECOM_NUMBER', NULL, '2016-06-01 00:15:37', '2016-06-01 00:15:37'),
-(66, 'EMAIL_ADDRESS', 'pete.davis@gmail.com', '2016-06-01 00:15:37', '2016-06-01 00:15:37'),
-(67, 'WEB_ADDRESS', 'www.snl.com', '2016-06-01 00:15:37', '2016-06-01 00:15:37'),
-(68, 'POSTAL_ADDRESS', NULL, '2016-06-01 00:15:37', '2016-06-01 00:15:37'),
-(69, 'EMAIL_ADDRESS', 'pete.davis@gmail.com', '2016-06-01 00:26:46', '2016-06-01 00:26:46'),
-(70, 'WEB_ADDRESS', 'www.snl.com', '2016-06-01 00:26:46', '2016-06-01 00:26:46'),
-(71, 'POSTAL_ADDRESS', NULL, '2016-06-01 00:26:46', '2016-06-01 00:26:46'),
-(72, 'TELECOM_NUMBER', NULL, '2016-06-01 00:26:46', '2016-06-01 00:26:46');
+(2, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 02:58:06', '2016-06-01 02:58:06'),
+(3, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 02:59:00', '2016-06-01 02:59:00'),
+(4, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 03:00:38', '2016-06-01 03:00:38'),
+(5, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 03:01:24', '2016-06-01 03:01:24'),
+(6, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 03:16:28', '2016-06-01 03:16:28'),
+(7, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 03:18:57', '2016-06-01 03:18:57'),
+(8, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 03:19:58', '2016-06-01 03:19:58'),
+(9, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 03:21:06', '2016-06-01 03:21:06'),
+(10, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 03:28:46', '2016-06-01 03:28:46'),
+(11, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 04:08:48', '2016-06-01 04:08:48'),
+(12, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 04:45:03', '2016-06-01 04:45:03'),
+(13, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 04:46:36', '2016-06-01 04:46:36'),
+(14, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 05:00:28', '2016-06-01 05:00:28'),
+(15, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 05:08:06', '2016-06-01 05:08:06'),
+(16, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 05:10:56', '2016-06-01 05:10:56'),
+(17, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 05:20:09', '2016-06-01 05:20:09'),
+(18, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 05:26:54', '2016-06-01 05:26:54'),
+(19, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 05:35:21', '2016-06-01 05:35:21'),
+(20, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 05:36:28', '2016-06-01 05:36:28'),
+(21, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 05:42:42', '2016-06-01 05:42:42'),
+(22, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 05:59:32', '2016-06-01 05:59:32'),
+(23, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 06:02:07', '2016-06-01 06:02:07'),
+(24, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 06:03:24', '2016-06-01 06:03:24'),
+(25, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 06:06:01', '2016-06-01 06:06:01'),
+(26, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 06:09:06', '2016-06-01 06:09:06'),
+(27, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 06:28:56', '2016-06-01 06:28:56'),
+(28, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 06:59:04', '2016-06-01 06:59:04'),
+(29, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 14:52:00', '2016-06-01 14:52:00'),
+(30, 'EMAIL_ADDRESS', 'jiggles@murder.com', '2016-06-01 16:14:57', '2016-06-01 16:14:57'),
+(31, 'EMAIL_ADDRESS', 'jigglywiggly@pokemon.com', '2016-06-03 15:21:06', '2016-06-03 15:21:06'),
+(32, 'WEB_ADDRESS', 'pokemon.com', '2016-06-03 15:21:06', '2016-06-03 15:21:06'),
+(33, 'EMAIL_ADDRESS', 'jigglywiggly@pokemon.com', '2016-06-03 15:22:04', '2016-06-03 15:22:04'),
+(34, 'WEB_ADDRESS', 'pokemon.com', '2016-06-03 15:22:04', '2016-06-03 15:22:04'),
+(35, 'EMAIL_ADDRESS', 'testemail@testaccount.com', '2016-06-13 19:27:01', '2016-06-13 19:27:01'),
+(36, 'TELECOM_NUMBER', NULL, '2016-06-13 19:27:01', '2016-06-13 19:27:01'),
+(37, 'WEB_ADDRESS', 'testaccount.com', '2016-06-13 19:27:01', '2016-06-13 19:27:01'),
+(38, 'WEB_ADDRESS', 'testaccount.com', '2016-06-13 19:27:01', '2016-06-13 19:27:01'),
+(39, 'EMAIL_ADDRESS', 'testemail@testaccount.com', '2016-06-13 19:27:01', '2016-06-13 19:27:01'),
+(40, 'EMAIL_ADDRESS', 'testemail@testaccount.com', '2016-06-13 19:45:58', '2016-06-13 19:45:58'),
+(41, 'WEB_ADDRESS', 'testaccount.com', '2016-06-13 19:45:58', '2016-06-13 19:45:58'),
+(42, 'TELECOM_NUMBER', NULL, '2016-06-13 19:45:58', '2016-06-13 19:45:58'),
+(43, 'WEB_ADDRESS', 'testaccount.com', '2016-06-13 19:45:58', '2016-06-13 19:45:58'),
+(44, 'EMAIL_ADDRESS', 'testemail@testaccount.com', '2016-06-13 19:45:58', '2016-06-13 19:45:58');
 
 -- --------------------------------------------------------
 
@@ -1620,6 +1592,44 @@ CREATE TABLE `organization` (
   `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `organization`
+--
+
+INSERT INTO `organization` (`party_id`, `organization_name`, `office_site_name`, `annual_revenue`, `num_employees`, `ticker_symbol`, `comments`, `logo_image_url`, `created_date`, `updated_date`) VALUES
+(69, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 02:58:06', '2016-06-01 02:58:06'),
+(70, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 02:59:00', '2016-06-01 02:59:00'),
+(71, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 03:00:38', '2016-06-01 03:00:38'),
+(72, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 03:01:23', '2016-06-01 03:01:23'),
+(73, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 03:16:28', '2016-06-01 03:16:28'),
+(74, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 03:18:57', '2016-06-01 03:18:57'),
+(75, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 03:19:58', '2016-06-01 03:19:58'),
+(76, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 03:21:06', '2016-06-01 03:21:06'),
+(77, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 03:28:46', '2016-06-01 03:28:46'),
+(78, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 04:08:48', '2016-06-01 04:08:48'),
+(79, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 04:45:03', '2016-06-01 04:45:03'),
+(80, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 04:46:36', '2016-06-01 04:46:36'),
+(81, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 05:00:28', '2016-06-01 05:00:28'),
+(82, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 05:08:06', '2016-06-01 05:08:06'),
+(83, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 05:10:56', '2016-06-01 05:10:56'),
+(84, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 05:20:09', '2016-06-01 05:20:09'),
+(85, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 05:26:54', '2016-06-01 05:26:54'),
+(86, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 05:35:21', '2016-06-01 05:35:21'),
+(87, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 05:36:28', '2016-06-01 05:36:28'),
+(88, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 05:42:42', '2016-06-01 05:42:42'),
+(89, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 05:59:32', '2016-06-01 05:59:32'),
+(90, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 06:02:07', '2016-06-01 06:02:07'),
+(91, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 06:03:24', '2016-06-01 06:03:24'),
+(92, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 06:06:01', '2016-06-01 06:06:01'),
+(93, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 06:09:06', '2016-06-01 06:09:06'),
+(94, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 06:28:56', '2016-06-01 06:28:56'),
+(95, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 06:59:04', '2016-06-01 06:59:04'),
+(96, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 14:52:00', '2016-06-01 14:52:00'),
+(97, 'HIS GREAT AND POWERFUL NOODLINESS', 'In SPAAAAAAAAAAAAACE', '2500002.00', '9001', 'test', 'They have space dragons! Using space battleclaws! In space! They''re FLYING DINOSAURS.', 'www.testtest.com/test', '2016-06-01 16:14:57', '2016-06-01 16:14:57'),
+(99, 'Derp Herp Inc.', 'The MOON', '290.00', '23', 'test', 'Test comment', 'testlogoimg.com', '2016-06-03 15:22:04', '2016-06-03 15:22:04'),
+(100, 'Test Org Account 123''s Parent Org', 'Underground!', '9001.00', '88', 'test symbo', 'A test comment for a test account''s organization', 'testimage@testaccounturl.com', '2016-06-13 19:27:01', '2016-06-13 19:27:01'),
+(101, 'Test Org Account 123''s Parent Org', 'Underground!', '9007.00', '88', 'test symbo', 'A test comment for a test account''s organization', 'testimage@testaccounturl.com', '2016-06-13 19:45:58', '2016-06-13 19:45:58');
+
 -- --------------------------------------------------------
 
 --
@@ -1701,30 +1711,38 @@ INSERT INTO `party` (`party_id`, `party_type_id`, `preferred_currency_uom_id`, `
 (66, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'fullAdminABC', '2016-05-28 19:28:48', '2016-05-28 19:28:48'),
 (67, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'fullAdminABC', '2016-05-28 19:43:24', '2016-05-28 19:43:24'),
 (68, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'fullAdminABC', '2016-05-28 19:50:57', '2016-05-28 19:50:57'),
-(69, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'contactOwnerABC', '2016-05-30 02:07:04', '2016-05-30 02:07:04'),
-(70, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'contactOwnerABC', '2016-05-30 02:12:37', '2016-05-30 02:12:37'),
-(71, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'contactOwnerABC', '2016-05-30 02:16:51', '2016-05-30 02:16:51'),
-(72, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'contactOwnerABC', '2016-05-30 02:23:39', '2016-05-30 02:23:39'),
-(73, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'contactOwnerABC', '2016-05-30 02:31:28', '2016-05-30 02:31:28'),
-(74, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'contactOwnerABC', '2016-05-30 02:47:23', '2016-05-30 02:47:23'),
-(75, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'contactOwnerABC', '2016-05-30 02:56:47', '2016-05-30 02:56:47'),
-(76, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'contactOwnerABC', '2016-05-30 03:25:45', '2016-05-30 03:25:45'),
-(77, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'contactOwnerABC', '2016-05-30 03:26:37', '2016-05-30 03:26:37'),
-(78, 'PERSON', 'USD', 'user_login_id=testGuy', 'PARTY_ENABLED', NULL, '2016-05-31 01:37:50', '2016-05-31 01:37:50'),
-(79, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-31 16:12:20', '2016-05-31 16:12:20'),
-(80, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-31 16:48:30', '2016-05-31 16:48:30'),
-(81, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-31 17:53:34', '2016-05-31 17:53:34'),
-(82, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-31 17:56:14', '2016-05-31 17:56:14'),
-(83, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-31 18:09:30', '2016-05-31 18:09:30'),
-(84, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-31 18:13:01', '2016-05-31 18:13:01'),
-(85, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-31 18:13:37', '2016-05-31 18:13:37'),
-(86, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(87, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(88, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(89, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(90, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'contactOwnerDEF', '2016-06-01 00:15:37', '2016-06-01 00:15:37'),
-(91, 'PERSON', 'USD', 'addContact test', 'PARTY_ENABLED', 'admin', '2016-06-01 00:26:46', '2016-06-01 00:26:46'),
-(100, 'PERSON', 'USD', 'user_login_id=mrQuoteUnquote', 'PARTY_ENABLED', NULL, '2016-06-01 20:49:01', '2016-06-01 20:49:01');
+(69, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 02:58:06', '2016-06-01 02:58:06'),
+(70, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 02:59:00', '2016-06-01 02:59:00'),
+(71, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 03:00:38', '2016-06-01 03:00:38'),
+(72, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 03:01:23', '2016-06-01 03:01:23'),
+(73, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 03:16:28', '2016-06-01 03:16:28'),
+(74, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 03:18:57', '2016-06-01 03:18:57'),
+(75, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 03:19:58', '2016-06-01 03:19:58'),
+(76, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 03:21:06', '2016-06-01 03:21:06'),
+(77, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 03:28:46', '2016-06-01 03:28:46'),
+(78, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 04:08:48', '2016-06-01 04:08:48'),
+(79, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 04:45:03', '2016-06-01 04:45:03'),
+(80, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 04:46:36', '2016-06-01 04:46:36'),
+(81, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 05:00:28', '2016-06-01 05:00:28'),
+(82, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 05:08:06', '2016-06-01 05:08:06'),
+(83, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 05:10:56', '2016-06-01 05:10:56'),
+(84, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 05:20:09', '2016-06-01 05:20:09'),
+(85, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 05:26:54', '2016-06-01 05:26:54'),
+(86, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 05:35:21', '2016-06-01 05:35:21'),
+(87, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 05:36:28', '2016-06-01 05:36:28'),
+(88, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 05:42:42', '2016-06-01 05:42:42'),
+(89, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 05:59:32', '2016-06-01 05:59:32'),
+(90, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 06:02:07', '2016-06-01 06:02:07'),
+(91, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 06:03:24', '2016-06-01 06:03:24'),
+(92, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 06:06:01', '2016-06-01 06:06:01'),
+(93, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 06:09:06', '2016-06-01 06:09:06'),
+(94, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 06:28:56', '2016-06-01 06:28:56'),
+(95, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 06:59:04', '2016-06-01 06:59:04'),
+(96, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 14:52:00', '2016-06-01 14:52:00'),
+(97, 'ORGANIZATION', NULL, 'A Great Test Org 5ever', 'PARTY_ENABLED', 'admin', '2016-06-01 16:14:57', '2016-06-01 16:14:57'),
+(99, 'ORGANIZATION', 'USD', 'Rawr', 'PARTY_ENABLED', 'admin', '2016-06-03 15:22:04', '2016-06-03 15:22:04'),
+(100, 'ORGANIZATION', 'USD', 'Test Account for Presentation', 'PARTY_ENABLED', 'admin', '2016-06-13 19:27:01', '2016-06-13 19:27:01'),
+(101, 'ORGANIZATION', 'USD', 'Test Account 2222 for Presentation', 'PARTY_ENABLED', 'admin', '2016-06-13 19:45:58', '2016-06-13 19:45:58');
 
 -- --------------------------------------------------------
 
@@ -1749,47 +1767,14 @@ CREATE TABLE `party_contact_mech` (
 --
 
 INSERT INTO `party_contact_mech` (`party_id`, `contact_mech_id`, `contact_mech_purpose_type_id`, `from_date`, `thru_date`, `verified`, `comments`, `created_date`, `updated_date`) VALUES
-(70, 2, 'PRIMARY_EMAIL', '2016-05-30 02:12:37', NULL, NULL, NULL, '2016-05-30 02:12:37', '2016-05-30 02:12:37'),
-(71, 3, 'PRIMARY_EMAIL', '2016-05-30 02:16:51', NULL, NULL, NULL, '2016-05-30 02:16:51', '2016-05-30 02:16:51'),
-(71, 4, 'PRIMARY_WEB_URL', '2016-05-30 02:16:51', NULL, NULL, NULL, '2016-05-30 02:16:51', '2016-05-30 02:16:51'),
-(72, 5, 'PRIMARY_EMAIL', '2016-05-30 02:23:39', NULL, NULL, NULL, '2016-05-30 02:23:39', '2016-05-30 02:23:39'),
-(72, 6, 'PRIMARY_WEB_URL', '2016-05-30 02:23:39', NULL, NULL, NULL, '2016-05-30 02:23:39', '2016-05-30 02:23:39'),
-(72, 7, 'PRIMARY_PHONE', '2016-05-30 02:23:39', NULL, NULL, NULL, '2016-05-30 02:23:39', '2016-05-30 02:23:39'),
-(73, 8, 'PRIMARY_EMAIL', '2016-05-30 02:31:29', NULL, NULL, NULL, '2016-05-30 02:31:29', '2016-05-30 02:31:29'),
-(73, 9, 'PRIMARY_WEB_URL', '2016-05-30 02:31:29', NULL, NULL, NULL, '2016-05-30 02:31:29', '2016-05-30 02:31:29'),
-(73, 10, 'PRIMARY_PHONE', '2016-05-30 02:31:29', NULL, NULL, NULL, '2016-05-30 02:31:29', '2016-05-30 02:31:29'),
-(74, 11, 'PRIMARY_EMAIL', '2016-05-30 02:47:23', NULL, NULL, NULL, '2016-05-30 02:47:23', '2016-05-30 02:47:23'),
-(74, 12, 'PRIMARY_WEB_URL', '2016-05-30 02:47:23', NULL, NULL, NULL, '2016-05-30 02:47:23', '2016-05-30 02:47:23'),
-(74, 13, 'PRIMARY_LOCATION', '2016-05-30 02:47:23', NULL, NULL, NULL, '2016-05-30 02:47:23', '2016-05-30 02:47:23'),
-(75, 14, 'PRIMARY_EMAIL', '2016-05-30 02:56:47', NULL, NULL, NULL, '2016-05-30 02:56:47', '2016-05-30 02:56:47'),
-(75, 15, 'PRIMARY_WEB_URL', '2016-05-30 02:56:47', NULL, NULL, NULL, '2016-05-30 02:56:47', '2016-05-30 02:56:47'),
-(75, 16, 'PRIMARY_PHONE', '2016-05-30 02:56:47', NULL, NULL, NULL, '2016-05-30 02:56:47', '2016-05-30 02:56:47'),
-(75, 17, 'PRIMARY_LOCATION', '2016-05-30 02:56:47', NULL, NULL, NULL, '2016-05-30 02:56:47', '2016-05-30 02:56:47'),
-(76, 20, 'PRIMARY_PHONE', '2016-05-30 03:25:45', NULL, NULL, NULL, '2016-05-30 03:25:45', '2016-05-30 03:25:45'),
-(77, 21, 'PRIMARY_LOCATION', '2016-05-30 03:26:37', NULL, NULL, NULL, '2016-05-30 03:26:37', '2016-05-30 03:26:37'),
-(82, 34, 'PRIMARY_EMAIL', '2016-05-31 17:56:14', NULL, NULL, NULL, '2016-05-31 17:56:14', '2016-05-31 17:56:14'),
-(82, 35, 'PRIMARY_WEB_URL', '2016-05-31 17:56:14', NULL, NULL, NULL, '2016-05-31 17:56:14', '2016-05-31 17:56:14'),
-(82, 36, 'PRIMARY_PHONE', '2016-05-31 17:56:14', NULL, NULL, NULL, '2016-05-31 17:56:14', '2016-05-31 17:56:14'),
-(86, 49, 'PRIMARY_EMAIL', '2016-05-31 18:40:00', NULL, NULL, NULL, '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(86, 50, 'PRIMARY_PHONE', '2016-05-31 18:40:00', NULL, NULL, NULL, '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(86, 51, 'PRIMARY_WEB_URL', '2016-05-31 18:40:00', NULL, NULL, NULL, '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(86, 52, 'PRIMARY_LOCATION', '2016-05-31 18:40:00', NULL, NULL, NULL, '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(87, 53, 'PRIMARY_PHONE', '2016-05-31 23:14:55', NULL, NULL, NULL, '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(87, 54, 'PRIMARY_LOCATION', '2016-05-31 23:14:55', NULL, NULL, NULL, '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(87, 55, 'PRIMARY_EMAIL', '2016-05-31 23:14:55', NULL, NULL, NULL, '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(87, 56, 'PRIMARY_WEB_URL', '2016-05-31 23:14:55', NULL, NULL, NULL, '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(88, 57, 'PRIMARY_EMAIL', '2016-05-31 23:18:08', NULL, NULL, NULL, '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(88, 58, 'PRIMARY_WEB_URL', '2016-05-31 23:18:08', NULL, NULL, NULL, '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(88, 59, 'PRIMARY_LOCATION', '2016-05-31 23:18:08', NULL, NULL, NULL, '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(88, 60, 'PRIMARY_PHONE', '2016-05-31 23:18:08', NULL, NULL, NULL, '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(89, 61, 'PRIMARY_EMAIL', '2016-05-31 23:19:08', NULL, NULL, NULL, '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(89, 62, 'PRIMARY_WEB_URL', '2016-05-31 23:19:08', NULL, NULL, NULL, '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(89, 63, 'PRIMARY_LOCATION', '2016-05-31 23:19:08', NULL, NULL, NULL, '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(89, 64, 'PRIMARY_PHONE', '2016-05-31 23:19:08', NULL, NULL, NULL, '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(90, 65, 'PRIMARY_PHONE', '2016-06-01 00:15:37', NULL, NULL, NULL, '2016-06-01 00:15:37', '2016-06-01 00:15:37'),
-(90, 66, 'PRIMARY_EMAIL', '2016-06-01 00:15:37', NULL, NULL, NULL, '2016-06-01 00:15:37', '2016-06-01 00:15:37'),
-(90, 67, 'PRIMARY_WEB_URL', '2016-06-01 00:15:37', NULL, NULL, NULL, '2016-06-01 00:15:37', '2016-06-01 00:15:37'),
-(90, 68, 'PRIMARY_LOCATION', '2016-06-01 00:15:37', NULL, NULL, NULL, '2016-06-01 00:15:37', '2016-06-01 00:15:37');
+(99, 33, 'PRIMARY_EMAIL', '2016-06-03 15:22:05', NULL, NULL, NULL, '2016-06-03 15:22:05', '2016-06-03 15:22:05'),
+(99, 34, 'PRIMARY_WEB_URL', '2016-06-03 15:22:05', NULL, NULL, NULL, '2016-06-03 15:22:05', '2016-06-03 15:22:05'),
+(100, 36, 'PRIMARY_PHONE', '2016-06-13 19:27:02', NULL, NULL, NULL, '2016-06-13 19:27:02', '2016-06-13 19:27:02'),
+(100, 38, 'PRIMARY_WEB_URL', '2016-06-13 19:27:02', NULL, NULL, NULL, '2016-06-13 19:27:02', '2016-06-13 19:27:02'),
+(100, 39, 'PRIMARY_EMAIL', '2016-06-13 19:27:02', NULL, NULL, NULL, '2016-06-13 19:27:02', '2016-06-13 19:27:02'),
+(101, 42, 'PRIMARY_PHONE', '2016-06-13 19:45:58', NULL, NULL, NULL, '2016-06-13 19:45:58', '2016-06-13 19:45:58'),
+(101, 43, 'PRIMARY_WEB_URL', '2016-06-13 19:45:58', NULL, NULL, NULL, '2016-06-13 19:45:58', '2016-06-13 19:45:58'),
+(101, 44, 'PRIMARY_EMAIL', '2016-06-13 19:45:58', NULL, NULL, NULL, '2016-06-13 19:45:58', '2016-06-13 19:45:58');
 
 -- --------------------------------------------------------
 
@@ -1847,27 +1832,32 @@ INSERT INTO `party_relationship` (`party_id_from`, `party_id_to`, `role_type_id_
 (66, 3, 'CONTACT', 'PERSON_ROLE', '2016-05-28 19:28:48', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 19:28:48', '2016-05-28 19:28:48'),
 (67, 3, 'CONTACT', 'PERSON_ROLE', '2016-05-28 19:43:24', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 19:43:24', '2016-05-28 19:43:24'),
 (68, 3, 'CONTACT', 'PERSON_ROLE', '2016-05-28 19:50:57', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-28 19:50:57', '2016-05-28 19:50:57'),
-(69, 13, 'CONTACT', 'PERSON_ROLE', '2016-05-30 02:07:04', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-30 02:07:04', '2016-05-30 02:07:04'),
-(70, 13, 'CONTACT', 'PERSON_ROLE', '2016-05-30 02:12:37', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-30 02:12:37', '2016-05-30 02:12:37'),
-(71, 13, 'CONTACT', 'PERSON_ROLE', '2016-05-30 02:16:51', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-30 02:16:51', '2016-05-30 02:16:51'),
-(72, 13, 'CONTACT', 'PERSON_ROLE', '2016-05-30 02:23:39', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-30 02:23:39', '2016-05-30 02:23:39'),
-(73, 13, 'CONTACT', 'PERSON_ROLE', '2016-05-30 02:31:28', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-30 02:31:28', '2016-05-30 02:31:28'),
-(74, 13, 'CONTACT', 'PERSON_ROLE', '2016-05-30 02:47:23', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-30 02:47:23', '2016-05-30 02:47:23'),
-(75, 13, 'CONTACT', 'PERSON_ROLE', '2016-05-30 02:56:47', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-30 02:56:47', '2016-05-30 02:56:47'),
-(76, 13, 'CONTACT', 'PERSON_ROLE', '2016-05-30 03:25:45', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-30 03:25:45', '2016-05-30 03:25:45'),
-(77, 13, 'CONTACT', 'PERSON_ROLE', '2016-05-30 03:26:37', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-30 03:26:37', '2016-05-30 03:26:37'),
-(79, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-31 16:12:20', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-31 16:12:20', '2016-05-31 16:12:20'),
-(80, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-31 16:48:30', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-31 16:48:30', '2016-05-31 16:48:30'),
-(81, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-31 17:53:34', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-31 17:53:34', '2016-05-31 17:53:34'),
-(82, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-31 17:56:14', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-31 17:56:14', '2016-05-31 17:56:14'),
-(83, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-31 18:09:30', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-31 18:09:30', '2016-05-31 18:09:30'),
-(84, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-31 18:13:01', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-31 18:13:01', '2016-05-31 18:13:01'),
-(85, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-31 18:13:37', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-31 18:13:37', '2016-05-31 18:13:37'),
-(86, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-31 18:40:00', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(87, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-31 23:14:55', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(88, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-31 23:18:08', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(89, 2, 'CONTACT', 'PERSON_ROLE', '2016-05-31 23:19:08', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(90, 14, 'CONTACT', 'PERSON_ROLE', '2016-06-01 00:15:37', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-06-01 00:15:37', '2016-06-01 00:15:37');
+(73, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 03:16:28', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 03:16:28', '2016-06-01 03:16:28'),
+(76, 2, 'ACCOUNT', 'ACCOUNT', '2016-06-01 03:21:06', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 03:21:06', '2016-06-01 03:21:06'),
+(77, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 03:28:46', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 03:28:46', '2016-06-01 03:28:46'),
+(78, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 04:08:48', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 04:08:48', '2016-06-01 04:08:48'),
+(79, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 04:45:03', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 04:45:03', '2016-06-01 04:45:03'),
+(80, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 04:46:36', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 04:46:36', '2016-06-01 04:46:36'),
+(81, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 05:00:28', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 05:00:28', '2016-06-01 05:00:28'),
+(82, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 05:08:06', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 05:08:06', '2016-06-01 05:08:06'),
+(83, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 05:10:56', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 05:10:56', '2016-06-01 05:10:56'),
+(84, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 05:20:09', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 05:20:09', '2016-06-01 05:20:09'),
+(85, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 05:26:54', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 05:26:54', '2016-06-01 05:26:54'),
+(86, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 05:35:21', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 05:35:21', '2016-06-01 05:35:21'),
+(87, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 05:36:28', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 05:36:28', '2016-06-01 05:36:28'),
+(88, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 05:42:42', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 05:42:42', '2016-06-01 05:42:42'),
+(89, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 05:59:32', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 05:59:32', '2016-06-01 05:59:32'),
+(90, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 06:02:07', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 06:02:07', '2016-06-01 06:02:07'),
+(91, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 06:03:24', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 06:03:24', '2016-06-01 06:03:24'),
+(92, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 06:06:01', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 06:06:01', '2016-06-01 06:06:01'),
+(93, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 06:09:06', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 06:09:06', '2016-06-01 06:09:06'),
+(94, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 06:28:56', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 06:28:56', '2016-06-01 06:28:56'),
+(95, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 06:59:04', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 06:59:04', '2016-06-01 06:59:04'),
+(96, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 14:52:00', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 14:52:00', '2016-06-01 14:52:00'),
+(97, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-01 16:14:57', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-01 16:14:57', '2016-06-01 16:14:57'),
+(99, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-03 15:22:04', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-03 15:22:04', '2016-06-03 15:22:04'),
+(100, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-13 19:27:01', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-13 19:27:01', '2016-06-13 19:27:01'),
+(101, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-06-13 19:45:58', NULL, NULL, 'RESPONSIBLE_FOR', '2016-06-13 19:45:58', '2016-06-13 19:45:58');
 
 -- --------------------------------------------------------
 
@@ -1944,28 +1934,36 @@ INSERT INTO `party_role` (`party_id`, `role_type_id`, `created_date`, `updated_d
 (66, 'CONTACT', '2016-05-28 19:28:48', '2016-05-28 19:28:48'),
 (67, 'CONTACT', '2016-05-28 19:43:24', '2016-05-28 19:43:24'),
 (68, 'CONTACT', '2016-05-28 19:50:57', '2016-05-28 19:50:57'),
-(69, 'CONTACT', '2016-05-30 02:07:04', '2016-05-30 02:07:04'),
-(70, 'CONTACT', '2016-05-30 02:12:37', '2016-05-30 02:12:37'),
-(71, 'CONTACT', '2016-05-30 02:16:51', '2016-05-30 02:16:51'),
-(72, 'CONTACT', '2016-05-30 02:23:39', '2016-05-30 02:23:39'),
-(73, 'CONTACT', '2016-05-30 02:31:28', '2016-05-30 02:31:28'),
-(74, 'CONTACT', '2016-05-30 02:47:23', '2016-05-30 02:47:23'),
-(75, 'CONTACT', '2016-05-30 02:56:47', '2016-05-30 02:56:47'),
-(76, 'CONTACT', '2016-05-30 03:25:45', '2016-05-30 03:25:45'),
-(77, 'CONTACT', '2016-05-30 03:26:37', '2016-05-30 03:26:37'),
-(79, 'CONTACT', '2016-05-31 16:12:20', '2016-05-31 16:12:20'),
-(80, 'CONTACT', '2016-05-31 16:48:30', '2016-05-31 16:48:30'),
-(81, 'CONTACT', '2016-05-31 17:53:34', '2016-05-31 17:53:34'),
-(82, 'CONTACT', '2016-05-31 17:56:14', '2016-05-31 17:56:14'),
-(83, 'CONTACT', '2016-05-31 18:09:30', '2016-05-31 18:09:30'),
-(84, 'CONTACT', '2016-05-31 18:13:01', '2016-05-31 18:13:01'),
-(85, 'CONTACT', '2016-05-31 18:13:37', '2016-05-31 18:13:37'),
-(86, 'CONTACT', '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(87, 'CONTACT', '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(88, 'CONTACT', '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(89, 'CONTACT', '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(90, 'CONTACT', '2016-06-01 00:15:37', '2016-06-01 00:15:37'),
-(91, 'CONTACT', '2016-06-01 00:26:46', '2016-06-01 00:26:46');
+(71, 'ACCOUNT', '2016-06-01 03:00:38', '2016-06-01 03:00:38'),
+(72, 'ACCOUNT', '2016-06-01 03:01:23', '2016-06-01 03:01:23'),
+(73, 'ACCOUNT', '2016-06-01 03:16:28', '2016-06-01 03:16:28'),
+(74, 'ACCOUNT', '2016-06-01 03:18:57', '2016-06-01 03:18:57'),
+(75, 'ACCOUNT', '2016-06-01 03:19:58', '2016-06-01 03:19:58'),
+(76, 'ACCOUNT', '2016-06-01 03:21:06', '2016-06-01 03:21:06'),
+(77, 'ACCOUNT', '2016-06-01 03:28:46', '2016-06-01 03:28:46'),
+(78, 'ACCOUNT', '2016-06-01 04:08:48', '2016-06-01 04:08:48'),
+(79, 'ACCOUNT', '2016-06-01 04:45:03', '2016-06-01 04:45:03'),
+(80, 'ACCOUNT', '2016-06-01 04:46:36', '2016-06-01 04:46:36'),
+(81, 'ACCOUNT', '2016-06-01 05:00:28', '2016-06-01 05:00:28'),
+(82, 'ACCOUNT', '2016-06-01 05:08:06', '2016-06-01 05:08:06'),
+(83, 'ACCOUNT', '2016-06-01 05:10:56', '2016-06-01 05:10:56'),
+(84, 'ACCOUNT', '2016-06-01 05:20:09', '2016-06-01 05:20:09'),
+(85, 'ACCOUNT', '2016-06-01 05:26:54', '2016-06-01 05:26:54'),
+(86, 'ACCOUNT', '2016-06-01 05:35:21', '2016-06-01 05:35:21'),
+(87, 'ACCOUNT', '2016-06-01 05:36:28', '2016-06-01 05:36:28'),
+(88, 'ACCOUNT', '2016-06-01 05:42:42', '2016-06-01 05:42:42'),
+(89, 'ACCOUNT', '2016-06-01 05:59:32', '2016-06-01 05:59:32'),
+(90, 'ACCOUNT', '2016-06-01 06:02:07', '2016-06-01 06:02:07'),
+(91, 'ACCOUNT', '2016-06-01 06:03:24', '2016-06-01 06:03:24'),
+(92, 'ACCOUNT', '2016-06-01 06:06:01', '2016-06-01 06:06:01'),
+(93, 'ACCOUNT', '2016-06-01 06:09:06', '2016-06-01 06:09:06'),
+(94, 'ACCOUNT', '2016-06-01 06:28:56', '2016-06-01 06:28:56'),
+(95, 'ACCOUNT', '2016-06-01 06:59:04', '2016-06-01 06:59:04'),
+(96, 'ACCOUNT', '2016-06-01 14:52:00', '2016-06-01 14:52:00'),
+(97, 'ACCOUNT', '2016-06-01 16:14:57', '2016-06-01 16:14:57'),
+(99, 'ACCOUNT', '2016-06-03 15:22:04', '2016-06-03 15:22:04'),
+(100, 'ACCOUNT', '2016-06-13 19:27:01', '2016-06-13 19:27:01'),
+(101, 'ACCOUNT', '2016-06-13 19:45:58', '2016-06-13 19:45:58');
 
 -- --------------------------------------------------------
 
@@ -1975,7 +1973,7 @@ INSERT INTO `party_role` (`party_id`, `role_type_id`, `created_date`, `updated_d
 
 CREATE TABLE `party_supplemental_data` (
   `party_id` int(11) NOT NULL,
-  `parent_party_id` int(11) NOT NULL,
+  `parent_party_id` int(11) DEFAULT NULL,
   `company_name` varchar(100) DEFAULT NULL,
   `annual_revenue` decimal(18,2) DEFAULT NULL,
   `currency_uom_id` varchar(20) DEFAULT NULL,
@@ -1990,6 +1988,42 @@ CREATE TABLE `party_supplemental_data` (
   `created_date` datetime NOT NULL,
   `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `party_supplemental_data`
+--
+
+INSERT INTO `party_supplemental_data` (`party_id`, `parent_party_id`, `company_name`, `annual_revenue`, `currency_uom_id`, `num_employees`, `industry_enum_id`, `ownership_enum_id`, `ticker_symbol`, `important_note`, `primary_postal_address_id`, `primary_telecom_number_id`, `primary_email_id`, `created_date`, `updated_date`) VALUES
+(71, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 03:00:38', '2016-06-01 03:00:38'),
+(72, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 03:01:23', '2016-06-01 03:01:23'),
+(73, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 03:16:28', '2016-06-01 03:16:28'),
+(74, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 03:18:57', '2016-06-01 03:18:57'),
+(75, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 03:19:58', '2016-06-01 03:19:58'),
+(76, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 03:21:06', '2016-06-01 03:21:06'),
+(77, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 03:28:46', '2016-06-01 03:28:46'),
+(78, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 04:08:48', '2016-06-01 04:08:48'),
+(79, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 04:45:03', '2016-06-01 04:45:03'),
+(80, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 04:46:36', '2016-06-01 04:46:36'),
+(81, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 05:00:28', '2016-06-01 05:00:28'),
+(82, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 05:08:06', '2016-06-01 05:08:06'),
+(83, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 05:10:56', '2016-06-01 05:10:56'),
+(84, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 05:20:09', '2016-06-01 05:20:09'),
+(85, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 05:26:54', '2016-06-01 05:26:54'),
+(86, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 05:35:21', '2016-06-01 05:35:21'),
+(87, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 05:36:28', '2016-06-01 05:36:28'),
+(88, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 05:42:42', '2016-06-01 05:42:42'),
+(89, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 05:59:32', '2016-06-01 05:59:32'),
+(90, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 06:02:07', '2016-06-01 06:02:07'),
+(91, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 06:03:24', '2016-06-01 06:03:24'),
+(92, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 06:06:01', '2016-06-01 06:06:01'),
+(93, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 06:09:06', '2016-06-01 06:09:06'),
+(94, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 06:28:56', '2016-06-01 06:28:56'),
+(95, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 06:59:04', '2016-06-01 06:59:04'),
+(96, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 14:52:00', '2016-06-01 14:52:00'),
+(97, NULL, NULL, '2500002.00', NULL, '9001', NULL, NULL, 'test', 'Its transhumanist cyberpunk fantasy surrealism will bring peace and hugs and rainbows to the world', NULL, NULL, NULL, '2016-06-01 16:14:57', '2016-06-01 16:14:57'),
+(99, NULL, NULL, '290.00', 'USD', '23', NULL, NULL, 'test', 'Test note', NULL, NULL, NULL, '2016-06-03 15:22:04', '2016-06-03 15:22:04'),
+(100, NULL, NULL, '9001.00', 'USD', '88', 'IND_AEROSPACE', 'OWN_SCORP', 'test symbol 1', 'This is a test note', NULL, NULL, NULL, '2016-06-13 19:27:01', '2016-06-13 19:27:01'),
+(101, NULL, NULL, '9007.00', 'USD', '88', 'IND_AEROSPACE', 'OWN_SCORP', 'test symbol 1', 'This is a test note', NULL, NULL, NULL, '2016-06-13 19:45:58', '2016-06-13 19:45:58');
 
 -- --------------------------------------------------------
 
@@ -2071,29 +2105,7 @@ INSERT INTO `person` (`party_id`, `salutation`, `first_name`, `middle_name`, `la
 (65, 'Mr.', 'Pete', NULL, 'Pettigrew', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 14:24:37', '2016-05-28 14:24:37'),
 (66, 'Mr.', 'You-Know-Who', NULL, 'Riddle', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 19:28:48', '2016-05-28 19:28:48'),
 (67, 'Mr.', 'You-Know-Who Part II', NULL, 'Riddle', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 19:43:24', '2016-05-28 19:43:24'),
-(68, 'Mr.', 'You-Know-Who Part III', NULL, 'Riddle', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 19:50:57', '2016-05-28 19:50:57'),
-(69, 'Sir', 'Percival', 'Wemys', 'Madison', NULL, 'testing addContact', '2016-05-30 02:07:04', '2016-05-30 02:07:04'),
-(70, 'Ms.', 'Samantha', NULL, 'Wainwright', NULL, 'testing addContact WITH email address', '2016-05-30 02:12:37', '2016-05-30 02:12:37'),
-(71, 'DCS', 'Christopher', NULL, 'Foyle', NULL, 'testing addContact email address and web address both', '2016-05-30 02:16:51', '2016-05-30 02:16:51'),
-(72, 'Sargeant', 'Paul', NULL, 'Milner', NULL, 'testing addContact email address, web address and contact number', '2016-05-30 02:23:39', '2016-05-30 02:23:39'),
-(73, 'Mr.', 'Walter', 'Hartwell', 'White', NULL, 'testing addContact email address, web address and contact number', '2016-05-30 02:31:28', '2016-05-30 02:31:28'),
-(74, 'ASAC', 'Harrold', NULL, 'Schrader', NULL, 'testing addContact email address, web address and postal address', '2016-05-30 02:47:23', '2016-05-30 02:47:23'),
-(75, 'Mr.', 'Walter', 'Hartwell', 'White', NULL, 'testing addContact with email address, web address, telecom number and postal address', '2016-05-30 02:56:47', '2016-05-30 02:56:47'),
-(76, 'Mr.', 'Walter', 'Hartwell', 'White', NULL, 'testing addContact with email address, web address, telecom number and postal address', '2016-05-30 03:25:45', '2016-05-30 03:25:45'),
-(77, 'Mr.', 'Walter', 'Hartwell', 'White', NULL, 'testing addContact with email address, web address, telecom number and postal address', '2016-05-30 03:26:37', '2016-05-30 03:26:37'),
-(79, 'Dr.', 'Dee', NULL, 'Mento', NULL, 'testing addContact with email address, web address, telecom number and postal address', '2016-05-31 16:12:20', '2016-05-31 16:12:20'),
-(80, 'Dr.', 'Dee', NULL, 'Mento', NULL, 'testing addContact with email address, web address, telecom number and postal address', '2016-05-31 16:48:30', '2016-05-31 16:48:30'),
-(81, 'Dr.', 'Dee', NULL, 'Mento', NULL, 'testing addContact with email address, web address, telecom number and postal address', '2016-05-31 17:53:34', '2016-05-31 17:53:34'),
-(82, 'Dr.', 'Dee', NULL, 'Mento', NULL, 'testing addContact with email address, web address, telecom number and postal address', '2016-05-31 17:56:14', '2016-05-31 17:56:14'),
-(83, 'Dr.', 'Dee', NULL, 'Mento', NULL, 'testing addContact with email address, web address, telecom number and postal address', '2016-05-31 18:09:30', '2016-05-31 18:09:30'),
-(84, 'Dr.', 'Dee', NULL, 'Mento', NULL, 'testing addContact with email address, web address, telecom number and postal address', '2016-05-31 18:13:01', '2016-05-31 18:13:01'),
-(85, 'Dr.', 'Dee', NULL, 'Mento', NULL, 'testing addContact with email address, web address, telecom number and postal address', '2016-05-31 18:13:37', '2016-05-31 18:13:37'),
-(86, 'Sir', 'Winston', NULL, 'Churchill', NULL, 'all four contact mechs coming in....', '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(87, 'Mr.', 'Pete', NULL, 'Davis', NULL, 'all four contact mechs coming in....', '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(88, 'Mr.', 'Pete', NULL, 'Davis', NULL, 'all four contact mechs coming in....', '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(89, 'Mr.', 'Pete', NULL, 'Davis', NULL, 'all four contact mechs coming in....', '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(90, 'Mr.', 'Pete', NULL, 'Davis', NULL, 'all four contact mechs coming in....', '2016-06-01 00:15:37', '2016-06-01 00:15:37'),
-(91, 'Mr.', 'Pete', NULL, 'Davis', NULL, 'all four contact mechs coming in....', '2016-06-01 00:26:46', '2016-06-01 00:26:46');
+(68, 'Mr.', 'You-Know-Who Part III', NULL, 'Riddle', '2016-05-10 14:00:00', 'testing addContact', '2016-05-28 19:50:57', '2016-05-28 19:50:57');
 
 -- --------------------------------------------------------
 
@@ -2115,18 +2127,6 @@ CREATE TABLE `postal_address` (
   `created_date` datetime NOT NULL,
   `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `postal_address`
---
-
-INSERT INTO `postal_address` (`contact_mech_id`, `to_name`, `attn_name`, `address1`, `address2`, `directions`, `city`, `postal_code`, `country_geo_id`, `state_province_geo_id`, `created_date`, `updated_date`) VALUES
-(52, 'Winston Churchill', 'The Boss', '10 Downing Street', 'Basement', 'turn left past Kings Cross station', 'London', NULL, 'USA', 'NM', '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(54, 'Pete Williams', 'Pete Williams', '1045 Maple Ave.', '', 'use Google maps', 'Ventura', NULL, 'USA', 'CA', '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(59, 'Pete Williams', 'Pete Williams', '1045 Maple Ave.', '', 'use Google maps', 'Ventura', NULL, 'USA', 'CA', '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(63, 'Pete Williams', 'Pete Williams', '1045 Maple Ave.', '', 'use Google maps', 'Ventura', NULL, 'USA', 'CA', '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(68, 'Pete Davis', 'Pete Davis', '1045 Maple Ave.', '', 'use Google maps', 'Ventura', NULL, 'USA', 'CA', '2016-06-01 00:15:37', '2016-06-01 00:15:37'),
-(71, 'Pete Davis', 'Pete Davis', '1045 Maple Ave.', '', 'use Google maps', 'Ventura', NULL, 'USA', 'CA', '2016-06-01 00:26:46', '2016-06-01 00:26:46');
 
 -- --------------------------------------------------------
 
@@ -2351,6 +2351,14 @@ CREATE TABLE `quote` (
   `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `quote`
+--
+
+INSERT INTO `quote` (`quote_id`, `quote_type_id`, `party_id`, `issue_date`, `status_id`, `currency_uom_id`, `sales_channel_enum_id`, `valid_from_date`, `valid_thru_date`, `quote_name`, `description`, `contact_party_id`, `created_by_party_id`, `created_date`, `updated_date`) VALUES
+(1, 'PRODUCT_QUOTE', 4, '2016-06-02 05:00:00', NULL, NULL, 'IND_AEROSPACE', NULL, NULL, 'Herp Derp', 'Ra Ra Ah Ah Ah Roma Romama Gah Gah Ooh La La', 3, 2, '2016-06-02 05:00:00', '2016-06-02 05:00:00'),
+(2, 'PRODUCT_QUOTE', 100, '0000-00-00 00:00:00', NULL, 'USD', 'IND_AEROSPACE', NULL, NULL, 'Test Quote', 'Merrrrrrrrrrrrrrrrrrrrrrrrrrrrr', 2, 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+
 -- --------------------------------------------------------
 
 --
@@ -2415,6 +2423,13 @@ CREATE TABLE `quote_role` (
   `created_date` datetime NOT NULL,
   `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `quote_role`
+--
+
+INSERT INTO `quote_role` (`quote_id`, `party_id`, `role_type_id`, `created_date`, `updated_date`) VALUES
+(2, 100, 'CONTACT', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -2494,7 +2509,6 @@ INSERT INTO `security_group` (`group_id`, `description`, `created_date`, `update
 ('CRMSFA_CONTACT_TASKS', 'Use CRMSFA for tasks, activities, and emails only', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
 ('CRMSFA_LEAD_TASKS', 'Use CRMSFA for tasks, activities, and emails only', '2016-05-29 14:55:08', '2016-05-29 14:55:08'),
 ('CRMSFA_LOGIN_ONLY', 'For testing: Permission to login and view basic screens only.  No permission to see or modify data', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
-('CRMSFA_QUOTE_TASKS', 'Use CRMSFA for tasks, activities, and emails only', '2016-06-01 20:45:58', '2016-06-01 20:45:58'),
 ('CRMSFA_SYSTEM', 'System user privileges for automatically performed functions in CRM/SFA', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
 ('CRMSFA_TASKS_ONLY', 'Use CRMSFA for tasks, activities, and emails only', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
 ('FULLADMIN', 'Full Admin group, has all general permissions.', '2016-05-18 18:37:08', '2016-05-18 18:37:08'),
@@ -2585,7 +2599,6 @@ INSERT INTO `security_group_permission` (`group_id`, `permission_id`, `created_d
 ('CRMSFA_CONTACT_TASKS', 'WORKEFFORTMGR_ADMIN', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
 ('CRMSFA_LEAD_TASKS', 'CRMSFA_LEAD_CREATE', '2016-05-29 14:56:24', '2016-05-29 14:56:24'),
 ('CRMSFA_LOGIN_ONLY', 'CRMSFA_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
-('CRMSFA_QUOTE_TASKS', 'CRMSFA_QUOTE_CREATE', '2016-06-01 20:46:28', '2016-06-01 20:46:28'),
 ('CRMSFA_SYSTEM', 'CRMSFA_4C_UPDATE', '2016-04-30 23:56:07', '2016-04-30 23:56:05'),
 ('CRMSFA_TASKS_ONLY', 'CRMSFA_ACTS_VIEW', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
 ('CRMSFA_TASKS_ONLY', 'CRMSFA_ACT_CLOSE', '2016-04-30 23:56:06', '2016-04-30 23:56:05'),
@@ -2607,6 +2620,11 @@ INSERT INTO `security_group_permission` (`group_id`, `permission_id`, `created_d
 ('FULLADMIN', 'CATALOG_VIEW_ALLOW', '2016-04-30 23:54:18', '2016-04-30 23:54:17'),
 ('FULLADMIN', 'COMMON_ADMIN', '2016-04-30 23:53:39', '2016-04-30 23:53:39'),
 ('FULLADMIN', 'CONTENTMGR_ADMIN', '2016-04-30 23:54:08', '2016-04-30 23:54:08'),
+('FULLADMIN', 'CRMSFA_CASE_CREATE', '2016-06-14 23:46:00', '2016-06-14 23:46:00'),
+('FULLADMIN', 'CRMSFA_CASE_UPDATE', '2016-06-14 23:46:00', '2016-06-14 23:46:00'),
+('FULLADMIN', 'CRMSFA_QUOTES_VIEW', '2016-06-14 23:45:00', '2016-06-14 23:45:00'),
+('FULLADMIN', 'CRMSFA_QUOTE_CREATE', '2016-06-14 23:46:00', '2016-06-14 23:46:00'),
+('FULLADMIN', 'CRMSFA_QUOTE_UPDATE', '2016-06-14 23:46:00', '2016-06-14 23:46:00'),
 ('FULLADMIN', 'DATAFILE_MAINT', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
 ('FULLADMIN', 'EBAY_VIEW', '2016-04-30 23:54:44', '2016-04-30 23:54:44'),
 ('FULLADMIN', 'ENTITY_DATA_ADMIN', '2016-04-30 23:53:48', '2016-04-30 23:53:48'),
@@ -2935,14 +2953,7 @@ INSERT INTO `status_item` (`status_id`, `status_type_id`, `status_code`, `descri
 ('CASE_SUBMITTED', 'CASE_STATUS', 'SUBMITTED', 'Submitted', '2016-04-30 23:54:37', '2016-04-30 23:54:37'),
 ('PARTY_DISABLED', 'PARTY_STATUS', 'DISABLED', 'Disabled', '2016-05-22 05:14:55', '2016-05-22 05:14:55'),
 ('PARTY_ENABLED', 'PARTY_STATUS', 'ENABLED', 'Enabled', '2016-05-10 13:08:11', '2016-05-10 13:08:11'),
-('PTYLEAD_CONVERTED', 'PARTY_LEAD_STATUS', 'CONVERTED', 'Party Lead Converted', '2016-05-10 13:08:11', '2016-05-10 13:08:11'),
-('QUOTE_APPROVED', 'QUOTE_STATUS', 'APPROVED', 'Approved', '2016-06-01 20:40:19', '2016-06-01 20:40:19'),
-('QUOTE_CANCELLED', 'QUOTE_STATUS', 'CANCELLED', 'Cancelled', '2016-06-01 20:43:00', '2016-06-01 20:43:00'),
-('QUOTE_CREATED', 'QUOTE_STATUS', 'CREATED', 'Created', '2016-06-01 20:39:06', '2016-06-01 20:39:06'),
-('QUOTE_FINALIZED', 'QUOTE_STATUS', 'FINALIZED', 'Finalized', '2016-06-01 20:41:06', '2016-06-01 20:41:06'),
-('QUOTE_ORDERED', 'QUOTE_STATUS', 'ORDERED', 'Ordered', '2016-06-01 20:43:33', '2016-06-01 20:43:33'),
-('QUOTE_REJECTED', 'QUOTE_STATUS', 'REJECTED', 'Rejected', '2016-06-01 20:42:20', '2016-06-01 20:42:20'),
-('QUOTE_SENT', 'QUOTE_STATUS', 'SENT', 'Sent', '2016-06-01 20:41:44', '2016-06-01 20:41:44');
+('PTYLEAD_CONVERTED', 'PARTY_LEAD_STATUS', 'CONVERTED', 'Party Lead Converted', '2016-05-10 13:08:11', '2016-05-10 13:08:11');
 
 -- --------------------------------------------------------
 
@@ -2966,8 +2977,7 @@ CREATE TABLE `status_type` (
 INSERT INTO `status_type` (`status_type_id`, `parent_type_id`, `has_table`, `description`, `created_date`, `updated_date`) VALUES
 ('CASE_STATUS', NULL, 0, 'Case Status', '2016-05-22 05:13:48', '2016-05-22 05:13:48'),
 ('PARTY_LEAD_STATUS', 'PARTY_STATUS', 0, 'Status codes for parties which are leads (role = PROSPECT)', '2016-05-10 12:59:38', '2016-05-10 12:59:38'),
-('PARTY_STATUS', NULL, 0, 'Party Status', '2016-05-10 12:59:07', '2016-05-10 12:59:07'),
-('QUOTE_STATUS', NULL, 0, 'Quote Status', '2016-06-01 20:30:54', '2016-06-01 20:30:54');
+('PARTY_STATUS', NULL, 0, 'Party Status', '2016-05-10 12:59:07', '2016-05-10 12:59:07');
 
 -- --------------------------------------------------------
 
@@ -2990,19 +3000,8 @@ CREATE TABLE `telecom_number` (
 --
 
 INSERT INTO `telecom_number` (`contact_mech_id`, `country_code`, `area_code`, `contact_number`, `ask_for_name`, `created_date`, `updated_date`) VALUES
-(24, '1', '432', '982-5097', 'The Doctor', '2016-05-31 16:12:20', '2016-05-31 16:12:20'),
-(28, '1', '432', '982-5097', 'The Doctor', '2016-05-31 16:48:30', '2016-05-31 16:48:30'),
-(33, '1', '432', '982-5097', 'The Doctor', '2016-05-31 17:53:34', '2016-05-31 17:53:34'),
-(36, '1', '432', '982-5097', NULL, '2016-05-31 17:56:14', '2016-05-31 17:56:14'),
-(40, '1', '432', '982-5097', 'The Doctor', '2016-05-31 18:09:30', '2016-05-31 18:09:30'),
-(43, '1', '432', '982-5097', 'The Doctor', '2016-05-31 18:13:01', '2016-05-31 18:13:01'),
-(48, '1', '432', '982-5097', 'The Doctor', '2016-05-31 18:13:37', '2016-05-31 18:13:37'),
-(50, '44', '935', '9838-2342', 'Mr. Prime Minister', '2016-05-31 18:40:00', '2016-05-31 18:40:00'),
-(53, '1', '212', '123-4567', 'Petey', '2016-05-31 23:14:55', '2016-05-31 23:14:55'),
-(60, '1', '212', '123-4567', 'Petey', '2016-05-31 23:18:08', '2016-05-31 23:18:08'),
-(64, '1', '212', '123-4567', 'Petey', '2016-05-31 23:19:08', '2016-05-31 23:19:08'),
-(65, '1', '212', '123-4567', 'Petey', '2016-06-01 00:15:37', '2016-06-01 00:15:37'),
-(72, '1', '212', '123-4567', 'Petey', '2016-06-01 00:26:46', '2016-06-01 00:26:46');
+(36, NULL, NULL, '6128889999', NULL, '2016-06-13 19:27:02', '2016-06-13 19:27:02'),
+(42, NULL, NULL, '6128889999', NULL, '2016-06-13 19:45:58', '2016-06-13 19:45:58');
 
 -- --------------------------------------------------------
 
@@ -3370,10 +3369,8 @@ INSERT INTO `user_login` (`user_login_id`, `password`, `password_hint`, `enabled
 ('fullAdminDEF', '$2a$08$ad7XcDpVh0wpnuL9FqTwSechN8QPk/rd2q9imGZ5hmv9gez4/I5IS', NULL, 1, NULL, 4, '2016-05-25 10:52:26', '2016-05-25 10:52:26'),
 ('leadOwnerABC', '$2a$08$5RdFI2AF2Qwl5UHpBqy0Ve67wHhMB4ctOyPpaDMe8Yw/CZA66TutW', NULL, 1, NULL, 17, '2016-05-25 13:14:31', '2016-05-25 13:14:31'),
 ('leadOwnerDEF', '$2a$08$Y/fQPgblCV2ZK6UtopnyveZpn.VoY1ZP4oPK6R3JOuzTi9FU42Hiu', NULL, 1, NULL, 18, '2016-05-27 22:34:11', '2016-05-27 22:34:11'),
-('mrQuoteUnquote', '$2a$08$1/nJhCSD6bkTK0YbJD9T2OTYJ9ocJ9.HlUGIuqtEeie4yi3pfuLbS', NULL, 1, NULL, 100, '2016-06-01 20:50:16', '2016-06-01 20:50:16'),
 ('partyAdminABC', '$2a$08$pUshY95nXvnDW/5/aB3KReIYIUjo7AiVDXoxK4/AYjIKPjRF33ms2', NULL, 1, NULL, 5, '2016-05-25 10:54:19', '2016-05-25 10:54:19'),
-('partyAdminDEF', '$2a$08$vUx4jjmAf74hlcB5WvM6Lu.usTZTtgSLrRhMM.rK90yK9AyPPolV2', NULL, 1, NULL, 7, '2016-05-25 10:57:29', '2016-05-25 10:57:29'),
-('testGuy', '$2a$08$1f1p9BGm/lrtwidq1SVRw.fVbQ2TSqr3vSO9IAShbcn.DHXvZ41N2', NULL, 1, NULL, 78, '2016-05-31 01:39:28', '2016-05-31 01:39:28');
+('partyAdminDEF', '$2a$08$vUx4jjmAf74hlcB5WvM6Lu.usTZTtgSLrRhMM.rK90yK9AyPPolV2', NULL, 1, NULL, 7, '2016-05-25 10:57:29', '2016-05-25 10:57:29');
 
 -- --------------------------------------------------------
 
@@ -3402,23 +3399,18 @@ INSERT INTO `user_login_security_group` (`user_login_id`, `permission_group_id`,
 ('admin', 'FULLADMIN', '2016-05-01 00:00:00', '2016-12-31 00:00:00', '2016-05-19 01:16:54', '2016-05-19 01:16:54'),
 ('contactOwnerABC', 'CONTACT_OWNER', '2016-05-25 11:59:00', NULL, '2016-05-25 11:59:00', '2016-05-25 11:59:00'),
 ('contactOwnerABC', 'CRMSFA_CASE_TASKS', '2016-05-29 13:42:50', NULL, '2016-05-29 13:42:50', '2016-05-29 13:42:50'),
-('contactOwnerABC', 'CRMSFA_CONTACT_TASKS', '2016-05-30 02:02:49', NULL, '2016-05-30 02:02:49', '2016-05-30 02:02:49'),
 ('contactOwnerDEF', 'CONTACT_OWNER', '2016-05-25 11:59:22', NULL, '2016-05-25 11:59:22', '2016-05-25 11:59:22'),
-('crmsfaContactTasksABC', 'CRMSFA_CASE_TASKS', '2016-05-30 01:30:00', NULL, '2016-05-30 01:30:00', '2016-05-30 01:30:00'),
 ('crmsfaContactTasksABC', 'CRMSFA_CONTACT_TASKS', '2016-05-25 12:00:15', NULL, '2016-05-25 12:00:15', '2016-05-25 12:00:15'),
 ('crmsfaContactTasksDEF', 'CRMSFA_CONTACT_TASKS', '2016-05-25 12:01:27', NULL, '2016-05-25 12:01:27', '2016-05-25 12:01:27'),
 ('fullAdminABC', 'CONTACT_OWNER', '2016-05-25 11:49:17', NULL, '2016-05-25 11:49:17', '2016-05-25 11:49:17'),
 ('fullAdminABC', 'FULLADMIN', '2016-05-25 13:07:52', NULL, '2016-05-25 13:07:52', '2016-05-25 13:07:52'),
 ('fullAdminABC', 'PARTYADMIN', '2016-05-25 13:07:28', '2016-05-27 00:00:00', '2016-05-25 13:07:28', '2016-05-25 13:07:28'),
-('fullAdminDEF', 'CRMSFA_CASE_TASKS', '2016-05-29 20:19:27', NULL, '2016-05-29 20:19:27', '2016-05-29 20:19:27'),
 ('fullAdminDEF', 'FULLADMIN', '2016-05-25 12:01:50', NULL, '2016-05-25 12:01:50', '2016-05-25 12:01:50'),
 ('leadOwnerABC', 'CRMSFA_LEAD_TASKS', '2016-05-29 15:05:04', NULL, '2016-05-29 15:05:04', '2016-05-29 15:05:04'),
 ('leadOwnerABC', 'LEAD_OWNER', '2016-05-25 13:17:16', NULL, '2016-05-25 13:17:16', '2016-05-25 13:17:16'),
 ('leadOwnerDEF', 'LEAD_OWNER', '2016-05-27 22:35:06', NULL, '2016-05-27 22:35:06', '2016-05-27 22:35:06'),
-('mrQuoteUnquote', 'CRMSFA_QUOTE_TASKS', '2016-06-01 20:50:44', NULL, '2016-06-01 20:50:44', '2016-06-01 20:50:44'),
 ('partyAdminABC', 'PARTYADMIN', '2016-05-25 12:02:15', NULL, '2016-05-25 12:02:15', '2016-05-25 12:02:15'),
-('partyAdminDEF', 'PARTYADMIN', '2016-05-25 12:02:32', NULL, '2016-05-25 12:02:32', '2016-05-25 12:02:32'),
-('testGuy', 'CRMSFA_CONTACT_TASKS', '2016-05-31 01:46:32', NULL, '2016-05-31 01:46:32', '2016-05-31 01:46:32');
+('partyAdminDEF', 'PARTYADMIN', '2016-05-25 12:02:32', NULL, '2016-05-25 12:02:32', '2016-05-25 12:02:32');
 
 --
 -- Indexes for dumped tables
@@ -3836,7 +3828,7 @@ ALTER TABLE `case_status`
 -- AUTO_INCREMENT for table `contact_mech`
 --
 ALTER TABLE `contact_mech`
-  MODIFY `contact_mech_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `contact_mech_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 --
 -- AUTO_INCREMENT for table `note_data`
 --
@@ -3846,12 +3838,12 @@ ALTER TABLE `note_data`
 -- AUTO_INCREMENT for table `party`
 --
 ALTER TABLE `party`
-  MODIFY `party_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+  MODIFY `party_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 --
 -- AUTO_INCREMENT for table `quote`
 --
 ALTER TABLE `quote`
-  MODIFY `quote_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `quote_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- Constraints for dumped tables
 --
