@@ -12,7 +12,7 @@
 var quoteData = function (knex) {
 
     /**
-     * Add a new quote  
+     * Add a new quote
      * @param {Object} quote - The new quote to be added
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is id of new contact
@@ -40,9 +40,9 @@ var quoteData = function (knex) {
             .then(function (quoteId) {
                 return knex('quote_role')
                     .insert({
-                        quote_id: quoteId, 
+                        quote_id: quoteId,
                         party_id: quote.createdByPartyId,
-                        role_type_id: 'PERSON_ROLE', 
+                        role_type_id: 'PERSON_ROLE',
                         created_date: quote.createdDate,
                         updated_date: quote.updatedDate
                     })
@@ -53,37 +53,37 @@ var quoteData = function (knex) {
     };
 
     /**
-     * Add a new item to a quote 
+     * Add a new item to a quote
      * @param {Object} quoteItem - quoteItem object to add to a quote
      * @return {Object} promise - Fulfillment value is number of rows added
      */
     var addQuoteItem = function (quoteItem) {
         /*  Note:  Per 2016 June 13 follow-up from the demo of the Quotes module, for this functionality
             (as well as updateQuote, updateQuoteItem, addQuoteItemOption, and updateQuoteItemOption below),
-            the API should return the NUMBER of rows inserted.  Until now this function was just 
-            returning a copy of the quoteItem which was inserted-- doing so did not provide any real 
+            the API should return the NUMBER of rows inserted.  Until now this function was just
+            returning a copy of the quoteItem which was inserted-- doing so did not provide any real
             measure of what the quote_item table does/does not contain as a result of attempting the insert.
-            
+
             Therefore after the insert is done by the first knex statement below, in the function inside
-            .then() quoteItem.quoteId and quoteItem.quoteItemSeqId are used to query for the number of 
-            rows in table quote_item that have this combo of quote_id and quote_item_seq_id.  
-            Since those columns are both primary keys, there cannot be MORE THAN ONE row inserted with 
-            the same combo of quote_id and quote_item_seq_id.  The important thing here is to confirm that 
-            the count indeed DOES equal 1.  A count of 1 means the insert really happened.  If the count 
-            is 0, we know we have a problem.  That is why we want the API to return the number of rows 
+            .then() quoteItem.quoteId and quoteItem.quoteItemSeqId are used to query for the number of
+            rows in table quote_item that have this combo of quote_id and quote_item_seq_id.
+            Since those columns are both primary keys, there cannot be MORE THAN ONE row inserted with
+            the same combo of quote_id and quote_item_seq_id.  The important thing here is to confirm that
+            the count indeed DOES equal 1.  A count of 1 means the insert really happened.  If the count
+            is 0, we know we have a problem.  That is why we want the API to return the number of rows
             inserted.
-            
+
             In order for the API to get that info to report to the UI, here the .then() returns a promise.
-            That promise's fulfillment value is an object whose zeroth element is a RowDataPacket.  
+            That promise's fulfillment value is an object whose zeroth element is a RowDataPacket.
             (See e.g., http://stackoverflow.com/questions/31221980/javascript-how-to-acess-rowdatapacket )
-            That RowDataPacket is itself an object; its sole key is called 'count(*)' (that's what the 
-            knex.raw query winds up naming it).  The value of RowDataPacket['count(*)'] is the count of all 
+            That RowDataPacket is itself an object; its sole key is called 'count(*)' (that's what the
+            knex.raw query winds up naming it).  The value of RowDataPacket['count(*)'] is the count of all
             the rows in the quote_item table with this combo of quoteItem.quoteId and  
-            quoteItem.quoteItemSeqId.  That count should be 1.  (The knex.raw query itself does not 
+            quoteItem.quoteItemSeqId.  That count should be 1.  (The knex.raw query itself does not
             know/care what the count is, it will just return the object to the controller, which will apply
             some logic to determine what the count is, and then return that number up to the API for display.
-            Then at the UI level we can determine whether or not we have a problem, depending on whether 
-            the count is 0 or 1.)  
+            Then at the UI level we can determine whether or not we have a problem, depending on whether
+            the count is 0 or 1.)
         */
         return knex('quote_item')
             .insert({
@@ -105,9 +105,9 @@ var quoteData = function (knex) {
     };
 
     /**
-     * Add a new option to an item of a quote 
+     * Add a new option to an item of a quote
      * @param {Object} quoteItemOption - quoteItemOption object to add to an item of a quote
-     * @return {Object} promise - Fulfillment value is number of rows added (see comments above 
+     * @return {Object} promise - Fulfillment value is number of rows added (see comments above
      *                              in addQuoteItem, exact same idea here)
      */
     var addQuoteItemOption = function (quoteItemOption) {
@@ -126,9 +126,9 @@ var quoteData = function (knex) {
     };
 
     /**
-     * Update a quote in database 
+     * Update a quote in database
      * @param {Object} quote - Quote entity with update info for existing quote
-     * @return {Object} promise - Fulfillment value is number of rows updated (see comments above 
+     * @return {Object} promise - Fulfillment value is number of rows updated (see comments above
      *                              in addQuoteItem, exact same idea here)
      */
     var updateQuote = function (quote) {
@@ -158,7 +158,7 @@ var quoteData = function (knex) {
     /**
      * Update a quote item in database
      * @param {Object} quoteItem - QuoteItem entity with update info for existing item of a quote
-     * @return {Object} promise - Fulfillment value is number of rows updated (see comments above 
+     * @return {Object} promise - Fulfillment value is number of rows updated (see comments above
      *                              in addQuoteItem, exact same idea here)
      */
     var updateQuoteItem = function (quoteItem) {
@@ -187,7 +187,7 @@ var quoteData = function (knex) {
     /**
      * Update a quote item option in database
      * @param {Object} quoteItemOption - QuoteItemOption entity with update for option of item of quote
-     * @return {Object} promise - Fulfillment value is number of rows updated (see comments above 
+     * @return {Object} promise - Fulfillment value is number of rows updated (see comments above
      *                              in addQuoteItem, exact same idea here)
      */
     var updateQuoteItemOption = function (quoteItemOption) {
@@ -208,16 +208,6 @@ var quoteData = function (knex) {
             }).then(function () {
                 return knex.raw('select count(*) from quote_item_option where quote_id = ' + quoteItemOption.quoteId + ' and quote_item_seq_id = ' + quoteItemOption.quoteItemSeqId + ' and quote_item_option_seq_id = ' + quoteItemOption.quoteItemOptionSeqId);
             });
-    };
-
-    /**
-     * Add a new quote note
-     * @param {Number} quoteId - Unique quote_id of the quote to add a note to
-     * @param {String} quoteNote - Note to be added
-     * @return {Object} promise - Fulfillment value is note_id of new note
-     */
-    var addQuoteNote = function (quoteId, quoteNote) {
-
     };
 
     /**
@@ -259,10 +249,8 @@ var quoteData = function (knex) {
      */
     var getQuotesByOwner = function (userPartyId) {
         //Note by Eric - until I'm told otherwise, I will assume here that the "owner"
-        //corresponds to the party id listed in the quote table's created_by_party_id field 
-        //(and not the party_id or contact_party_id fields). 
-
-
+        //corresponds to the party id listed in the quote table's created_by_party_id field
+        //(and not the party_id or contact_party_id fields).
         return knex.select('quote.quote_id', 'quote.quote_type_id', 'quote.party_id', 'quote.issue_date', 'quote.status_id',
                 'quote.currency_uom_id', 'quote.sales_channel_enum_id', 'quote.valid_from_date',
                 'quote.valid_thru_date', 'quote.quote_name', 'quote.description', 'quote.contact_party_id',
@@ -276,7 +264,7 @@ var quoteData = function (knex) {
     };
 
     // Lucas wrote this. Finished
-    /** 
+    /**
      * Gets all quotes from database by advanced search
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
@@ -312,7 +300,6 @@ var quoteData = function (knex) {
         addQuoteItemOption: addQuoteItemOption,
         updateQuoteItem: updateQuoteItem,
         updateQuoteItemOption: updateQuoteItemOption,
-        addQuoteNote: addQuoteNote,
         getQuoteById: getQuoteById,
         getQuotesByOwner: getQuotesByOwner,
         getQuotesByAdvanced: getQuotesByAdvanced,

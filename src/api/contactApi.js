@@ -54,8 +54,8 @@ var contactApi = function (knex) {
     };
 
     // GET /api/contacts
-    // 
-    // Methods:  getContactsByOwner, getContactsByIdentity, getContactsByPhoneNumber
+    //
+    // Methods:  getContactsByOwner, getContactsByIdentity
     //
     var getContacts = function (req, res) {
 
@@ -98,17 +98,17 @@ var contactApi = function (knex) {
         // GET /api/contacts?firstName=&lastName=
         //
         // getContactsByIdentity: ELSE IF ensures there is only one response to API layer!
-        //                        See: http://www.ofssam.com/forums/showthread.php?tid=43 
+        //                        See: http://www.ofssam.com/forums/showthread.php?tid=43
         //
         //  If only (portion of) firstName supplied and lastName is ignored, searches equiv to:
-        //  WHERE person.first_name LIKE "%firstName%" 
+        //  WHERE person.first_name LIKE "%firstName%"
         //
         //  If only (portion of) lastName supplied and firstName is ignored, searches equiv to:
-        //  WHERE person.last_name LIKE "%lastName%" 
+        //  WHERE person.last_name LIKE "%lastName%"
         //
         //  If both (portions of) firstName and lastName supplied, searches equiv to:
         //  WHERE person.first_name LIKE "%firstName%" AND person.last_name LIKE "%lastName%"
-        //        
+        //
         else if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
 
             var resultsForUser = contactController.getContactsByIdentity(req.query, req.user);
@@ -123,17 +123,6 @@ var contactApi = function (knex) {
             }
         }
 
-        // GET /api/contacts?phoneNum=
-        else if (req.query.hasOwnProperty('phoneNumber')) {
-
-            var getContactByPhoneNumber = function (req, res) {
-                var contactId = req.params.id;
-                contactController.getContactByPhoneNumber(contactId)
-                    .then(function (contact) {
-                        res.json(contact);
-                    });
-            };
-        }
         // no other GET routes, return error message so the app does not hang
         else {
             res.json({

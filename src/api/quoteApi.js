@@ -17,13 +17,13 @@ var quoteApi = function (knex) {
     // ==========================================
     //
     // POST /api/quotes
-    // 
-    // Methods:  addQuote, addQuoteItem, addQuoteItemOption, addQuoteNote
+    //
+    // Methods:  addQuote, addQuoteItem, addQuoteItemOption
     //
     var addQuote = function (req, res) {
 
         // POST /api/quotes
-        // 
+        //
         // addQuote:  the default if no property for adding an item, itemOption, or note
         if (Object.keys(req.query).length === 0) {
 
@@ -50,7 +50,7 @@ var quoteApi = function (knex) {
         }
 
         // POST /api/quotes?item
-        // 
+        //
         // addQuoteItem
         else if (req.query.hasOwnProperty('item')) {
 
@@ -82,7 +82,7 @@ var quoteApi = function (knex) {
         }
 
         // POST /api/quotes?itemOption
-        // 
+        //
         // addQuoteItemOption
         else if (req.query.hasOwnProperty('itemOption')) {
 
@@ -113,18 +113,6 @@ var quoteApi = function (knex) {
             }
         }
 
-        // POST /api/quotes?note
-        // 
-        // addQuoteNote 
-        else if (req.query.hasOwnProperty('note')) {
-
-            // NEXT FOUR LINES ARE PURELY PLACEHOLDER, REPLACE WITH YOUR CODE
-            res.json({
-                'message': 'addQuoteNote functionality is under construction...',
-                'reachedOn': 'This was reached on POST route /api/quotes?note'
-            });
-        }
-
         // no other POST routes, return error message so the app does not hang
         else {
             res.json({
@@ -134,14 +122,14 @@ var quoteApi = function (knex) {
     };
 
     // PUT /api/quotes
-    // 
+    //
     // Methods:  updateQuoteItem, updateQuoteItemOption
     //
     var updateQuoteItem = function (req, res) {
 
         // PUT /api/quotes?item
-        // 
-        // updateQuoteItem          
+        //
+        // updateQuoteItem
         if (req.query.hasOwnProperty('item')) {
 
             var resultsForThisUser = quoteController.updateQuoteItem(req.body, req.user);
@@ -172,7 +160,7 @@ var quoteApi = function (knex) {
         }
 
         // PUT /api/quotes?itemOption
-        // 
+        //
         // updateQuoteItemOption
         else if (req.query.hasOwnProperty('itemOption')) {
 
@@ -212,13 +200,13 @@ var quoteApi = function (knex) {
     };
 
     // GET /api/quotes
-    // 
+    //
     // Methods:  getQuotesByOwner, findQuotes
     //
     var getQuotes = function (req, res) {
 
         // GET /api/quotes
-        // 
+        //
         // getQuotesByOwner:  The default if req has no property for findQuotes by SOME_PROPERTY
         //
         if (Object.keys(req.query).length === 0) {
@@ -239,7 +227,7 @@ var quoteApi = function (knex) {
         }
         // Lucas is taking this part
         // GET /api/quotes?SOME_PROPERTY
-        // 
+        //
         // findQuotes, aka Advanced Search
         // quoteId here will ONLY be used the route /api/quotes?SOME_PROPERTY is chosen.
         // This is not going to interfere with Bill's work
@@ -273,7 +261,7 @@ var quoteApi = function (knex) {
 
         var quoteId = req.params.id;
         var result = quoteController.getQuoteById(quoteId, req.user);
-        
+
         if (result) {
             result.then(function (contact) {
                 res.json(contact);
@@ -281,8 +269,8 @@ var quoteApi = function (knex) {
         } else {
             res.json({'message': 'You do not have permission.'});
         }
-        
-            
+
+
     };
 
     // PUT /api/quotes/:id
