@@ -69,10 +69,10 @@ var AboutPage = React.createClass({
                 </div>
                 <div className="row well">
                     <div className="col-xs-2 col-lg-2 text-center">
-                        <img src='img/avatar.jpg' alt='' />
+                        <img src='img/Xiaosiqi_avatar_large.JPG' alt='' width='100px' height='100px'/>
                     </div>
                     <div className="col-xs-10 col-lg-10">
-                        <h3>Lucas Yang</h3>
+                        <h3>Xiaosiqi "Lucas" Yang</h3>
                         <p>
                             Crab other but more lamely jauntily inside across against without sniffed giraffe
                             more besides much with amiable permissively the on husky went and exact groundhog
