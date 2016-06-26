@@ -38,8 +38,8 @@ app.use(express.static('public', {
     // Set Expires header on outgoing images, css files and js files
     setHeaders: function(res, path, stat) {
         if(path.indexOf('bundle.js') === -1) {
-            res.setHeader("Cache-Control", "public, max-age=15778476000");
-            res.setHeader("Expires", new Date(Date.now() + 15778476000).toUTCString());
+            res.setHeader('Cache-Control', 'public, max-age=15778476000');
+            res.setHeader('Expires', new Date(Date.now() + 15778476000).toUTCString());
         }
     }
 }));
