@@ -8,7 +8,7 @@
 /* jshint camelcase: false */
 
 var commonData = function(knex) {
-    
+
     /**
      * Gets all currency UOM units from database
      * @return {Object} promise - Fulfillment value is an array of UOM rows for currencies
@@ -32,7 +32,7 @@ var commonData = function(knex) {
             .orderBy('geo_name');
     };
 
-    
+
     /**
      * Gets all country Geo units from database
      * @return {Object} promise - Fulfillment value is an array of Geo rows for countries
@@ -43,7 +43,7 @@ var commonData = function(knex) {
             .where({ geo_type_id: 'COUNTRY' })
             .orderBy('geo_name');
     };
-    
+
     /**
      * Gets all quote_type_id values from database
      * @return {Object} promise - Fulfillment value is an array of quoteTypes
@@ -53,7 +53,7 @@ var commonData = function(knex) {
             .from('quote_type')
             .orderBy('quote_type_id');
     };
-    
+
     /**
      * Gets all party_id values from database where party_role.role_type_id = 'ACCOUNT'
      * @return {Object} promise - Fulfillment value is an array of party_ids for Accounts (only)
@@ -63,7 +63,7 @@ var commonData = function(knex) {
             .from('party_role')
             .where('role_type_id', 'ACCOUNT');
     };
-    
+
     /**
      * Gets all party_id values from database where party_role.role_type_id = 'CONTACT'
      * @return {Object} promise - Fulfillment value is an array of party_ids for Contacts (only), with names
@@ -74,16 +74,17 @@ var commonData = function(knex) {
             .innerJoin('person','party_role.party_id','person.party_id')
             .where('party_role.role_type_id', 'CONTACT');
     };
-    
+
     /**
-     * Gets all sales channel enum values from database 
+     * Gets all sales channel enum values from database
      * @return {Object} promise - Fulfillment value is an array of enumeration.enum_id values
     */
     var getSalesChannels = function() {
-        return knex.select('enumeration.enum_id')
-            .from('enumeration');
+        return knex.select('enumeration.enum_id','enumeration.description')
+            .from('enumeration')
+            .where('enumeration.enum_type_id','PARTY_INDUSTRY');
     };
-    
+
     return {
         getAllCurrencies: getAllCurrencies,
         getAllStatesOrProvinces: getAllStatesOrProvinces,
