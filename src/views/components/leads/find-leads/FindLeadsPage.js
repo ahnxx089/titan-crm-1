@@ -39,7 +39,6 @@ var FindLeadsPage = React.createClass({
     
     
     _resetForm: function(event){
-//        console.log('reset form');
         this.setState({ 
             searchBy: { partyId: '' },
             leadFoundById: [],
@@ -60,18 +59,16 @@ var FindLeadsPage = React.createClass({
 
     _onGetById: function() {
         var result = LeadsStore.getLeadFound();
-        console.log(result);
+        // If it's is an error, eg. permission error, add it to ErrorBox
 //        if (!result.hasOwnProperty('leadId') && result.hasOwnProperty('message')) {
         if (Object.keys(result).length === 0 && result.constructor === Object) {
-            this.props.updateErrorBox('No such lead');
+            this.props.updateErrorBox('Error getting lead');
         } else {
             this.props.updateErrorBox([]); // clear the ErrorBox
             this.setState({
-            leadFoundById: result
-        });
+                leadFoundById: result
+            });
         }
-        
-
     },
     
     
@@ -97,7 +94,6 @@ var FindLeadsPage = React.createClass({
                                 
                                 searchBy={ this.state.searchBy }
                                 onChange={ this.setSearchByState } 
-                      
                                 onFormSubmit={ this._findLeads }
                                 onFormReset={ this._resetForm } 
                                 // should have at least a space between */ and the next /

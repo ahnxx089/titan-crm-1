@@ -10,6 +10,8 @@ var React = require('react');
 var LeadsStore = require('../../../stores/LeadsStore');
 var LeadsActions = require('../../../actions/LeadsActions');
 var ContactMechEntry = require('../../common/ContactMechRow');
+var Link = require('react-router').Link;
+var withRouter = require('react-router').withRouter;
 
 const timezoneOffset = new Date().getTimezoneOffset(); // 300 in CDT
 
@@ -48,7 +50,6 @@ var LeadDetailPage = React.createClass({
     _onGetData: function() {
         var result = LeadsStore.getLeadFound();
         // If it's is an error, eg. permission error, add it to ErrorBox
-//        if (!result.hasOwnProperty('leadId') && result.hasOwnProperty('message')) {
         // this if is actually not needed, because user is not able to access/click on leads that does not exist.
         if (Object.keys(result).length === 0 && result.constructor === Object) {
             this.props.updateErrorBox('No such lead');
@@ -56,7 +57,6 @@ var LeadDetailPage = React.createClass({
         
         // Otherwise we have received our expected result;
         // call setState to force a re-render of <LeadDetailPage>
-        
         else {
             this.props.updateErrorBox([]); // clear the ErrorBox
             this.setState({
@@ -69,9 +69,6 @@ var LeadDetailPage = React.createClass({
     render: function() {
         /* jshint ignore:start */
         
-//        var lead = this.props.lead; // lead is undefined
-//        console.log("lead is " + lead); 
-//        console.log("path is " + path); // path is underfined
 //        console.log("location is " + window.location); // something hard to use
         var allProps = this.props;
         var leadId = this.state.leadId;
@@ -96,168 +93,217 @@ var LeadDetailPage = React.createClass({
         
         
         return (
-            <div className="panel panel-info">
-                <div className="panel-heading">
-                    <h3 className="panel-title">Lead Details</h3>
-                </div>
-                <div className="panel-body">
-                    <div className="row">
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Party Id</span>&nbsp;
-                            { leadDetails.partyId }
-                        </div>
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Party Type (Role) </span>&nbsp;
-                            { leadDetails.partyTypeId } ({ leadDetails.roleTypeId })
-                        </div>
+            <div>
+                <Link to="/cp/leads/my-leads" className="btn btn-primary">
+                    <span className="fa fa-arrow-left"></span> Back
+                </Link>
+                
+                <div className="panel panel-default">
+                    <div className="panel-heading panel-heading-custom">
+                            <h1>View Lead</h1>
                     </div>
-                    <div className="row">
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">First Name</span>&nbsp;
-                            { leadDetails.salutation ? leadDetails.salutation + ' ' : ' ' }
-                            { leadDetails.firstName + ' ' }
-                            { leadDetails.middleName ? leadDetails.middleName + ' ' : ' ' }
 
+                    <div className="panel panel-info">
+                        <div className="panel-heading">
+                            <h3 className="panel-title">Lead</h3>
                         </div>
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Last Name</span>&nbsp;
-                            { leadDetails.lastName }
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Created By</span>&nbsp;
-                            { leadDetails.createdBy }
-                        </div>
+                        <div className="panel-body">
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Party Id</span>&nbsp;
+                                    { leadDetails.partyId }
+                                </div>
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Party Type (Role) </span>&nbsp;
+                                    { leadDetails.partyTypeId } ({ leadDetails.roleTypeId })
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">First Name</span>&nbsp;
+                                    { leadDetails.salutation ? leadDetails.salutation + ' ' : ' ' }
+                                    { leadDetails.firstName + ' ' }
+                                    { leadDetails.middleName ? leadDetails.middleName + ' ' : ' ' }
 
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Status</span>&nbsp;
-                            { leadDetails.statusId }
+                                </div>
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Last Name</span>&nbsp;
+                                    { leadDetails.lastName }
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Created By</span>&nbsp;
+                                    { leadDetails.createdBy }
+                                </div>
+
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Status</span>&nbsp;
+                                    { leadDetails.statusId }
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-12">
+                                    <span className="label label-default">Description of this lead</span>&nbsp;
+                                    { leadDetails.description }
+                                </div>
+                                <br/><hr/>
+                            </div>
+
+
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Created Date</span>&nbsp;
+                                    {/* leadDetails.createdDate */}
+                                    { originalInLocal.toString() }
+                                </div>
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Updated Date (?)</span>&nbsp;
+                                    {/* leadDetails.createdDate */}
+                                    { originalInLocal.toString() }
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Currency</span>&nbsp;
+                                    { leadDetails.preferredCurrencyUomId }
+                                </div>
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Birthday</span>&nbsp;
+                                    { leadDetails.birthDate }
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-12">
+                                    <span className="label label-default">Comments about this person</span>&nbsp;
+                                    { leadDetails.comments }
+                                </div>
+                                <br/><hr/>
+                            </div>
+
+
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Company (ID)</span>&nbsp;
+                                    { leadDetails.companyName } ({ leadDetails.parentPartyId })
+                                </div>
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Annual Revenue</span>&nbsp;
+                                    { leadDetails.annualRevenue }
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Ticker Symbol</span>&nbsp;
+                                    { leadDetails.tickerSymbol }
+                                </div>
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Num of Employees</span>&nbsp;
+                                    { leadDetails.numEmployees }
+                                </div>
+                            </div>
+
+
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Industry</span>&nbsp;
+                                    { leadDetails.industryEnumId }
+                                </div>
+                                <div className="col-xs-12 col-lg-6">
+                                    <span className="label label-default">Ownership</span>&nbsp;
+                                    { leadDetails.ownershipEnumId }
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-xs-12 col-lg-12">
+                                    <span className="label label-default">Important notes about company</span>&nbsp;
+                                    { leadDetails.importantNote }
+                                </div>
+                                <br/>
+                            </div>
+                        </div> {/* End of panel-body */}
+                    </div> {/* End of panel-info */}
+
+
+
+                    <div className="panel panel-info">
+                        <div className="panel-heading">
+                            <h3 className="panel-title">Contact Information</h3>
                         </div>
+                        <table id="contactMechsTable" className='table'>
+                            <thead>
+                                <tr>
+                                    <th>Contact Type</th>
+                                    <th>Contact Information</th>
+                                    <th>Purpose</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { contactMechsJSX }
+                            </tbody>
+                        </table>
                     </div>
+                    <div className="panel panel-info">
+                        <div className="panel-heading">
+                            <h3 className="panel-title">Accounts</h3>
+                        </div>
+                        <table id="AccountsTable" className='table'>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Account Name</th>
+                                    <th>Site Name</th>
+                                    <th>Parent ID</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="panel panel-info">
+                        <div className="panel-heading">
+                            <h3 className="panel-title">Cases</h3>
+                        </div>
+                        <table id="contactsTable" className='table'>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>???</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div> {/* End of panel-info for the last table */}
+
+
+                    {/*
                     <div className="row">
-                        <div className="col-xs-12 col-lg-12">
-                            <span className="label label-default">Description of this lead</span>&nbsp;
-                            { leadDetails.description }
-                        </div>
-                        <br/><hr/>
-                    </div>
-                    
-                    
-                    <div className="row">
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Created Date</span>&nbsp;
-                            {/* leadDetails.createdDate */}
-                            { originalInLocal.toString() }
-                        </div>
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Updated Date (?)</span>&nbsp;
-                            {/* leadDetails.createdDate */}
-                            { originalInLocal.toString() }
-                        </div>
-                    </div>
-                        
-                    <div className="row">
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Currency</span>&nbsp;
-                            { leadDetails.preferredCurrencyUomId }
-                        </div>
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Birthday</span>&nbsp;
-                            { leadDetails.birthDate }
-                        </div>
-                    </div>
-                        
-                    <div className="row">
-                        <div className="col-xs-12 col-lg-12">
-                            <span className="label label-default">Comments about this person</span>&nbsp;
-                            { leadDetails.comments }
-                        </div>
-                        <br/><hr/>
-                    </div>
-                        
-                    
-                    <div className="row">
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Company (ID)</span>&nbsp;
-                            { leadDetails.companyName } ({ leadDetails.parentPartyId })
-                        </div>
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Annual Revenue</span>&nbsp;
-                            { leadDetails.annualRevenue }
-                        </div>
-                    </div>
-                        
-                    <div className="row">
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Ticker Symbol</span>&nbsp;
-                            { leadDetails.tickerSymbol }
-                        </div>
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Num of Employees</span>&nbsp;
-                            { leadDetails.numEmployees }
-                        </div>
-                    </div>
-                        
-                        
-                    <div className="row">
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Industry</span>&nbsp;
-                            { leadDetails.industryEnumId }
-                        </div>
-                        <div className="col-xs-12 col-lg-6">
-                            <span className="label label-default">Ownership</span>&nbsp;
-                            { leadDetails.ownershipEnumId }
-                        </div>
-                    </div>
-                        
-                    <div className="row">
-                        <div className="col-xs-12 col-lg-12">
-                            <span className="label label-default">Important notes about company</span>&nbsp;
-                            { leadDetails.importantNote }
-                        </div>
-                        <br/><hr/>
-                    </div>
-                        
-                        
-                    {/*<div className="row">
                         <div className="col-xs-12">
                             <h2>Contact Information</h2>
                         </div>
                         <div className="panel-body">
                             { contactMechsJSX }
                         </div>
-                    </div>*/}
-                    
-                    <div className="row">
-                        <div className="col-xs-12">
-                            <h4>Contact Information</h4>
-                        </div>
                     </div>
-                    
-                    <div className="row">
-                        <div className="col-xs-6">
-                            { contactMechsJSX[0] }
-                        </div>
-                        <div className="col-xs-6">
-                            { contactMechsJSX[1] }
-                        </div>
-                    </div>
+                    */}
 
-                    <div className="row">
-                        <div className="col-xs-6">
-                            { contactMechsJSX[2] }
-                        </div>
-                        <div className="col-xs-6">
-                            { contactMechsJSX[3] }
-                        </div>
-                    </div>
-
-                </div>
+                </div> {/* End of panel-default */}
             </div>
         );
         /* jshint ignore:end */
     }
 });
 
-module.exports = LeadDetailPage;
+// Added withRoute so that the button could work
+module.exports = withRouter(LeadDetailPage);
