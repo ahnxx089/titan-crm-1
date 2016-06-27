@@ -151,7 +151,9 @@ var leadApi = function (knex) {
             } 
             // Data is NOT in the cache
             else {
-                winston.error(err);
+                //winston.error(err);
+                winston.error('No redis');
+
                 var resultForThisUser = leadController.getLeadsByOwner(user); 
                 if (resultForThisUser === null) {
                     res.json({
