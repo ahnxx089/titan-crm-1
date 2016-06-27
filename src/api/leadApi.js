@@ -170,25 +170,22 @@ var leadApi = function (knex) {
         }
     };
 
-    // Not implemented or used now. 
-    // GET /api/leads/?phoneNumber=
-    var getLeadsByPhoneNumber = function (req, res) {
-        var leadId = req.params.id;
-        leadController.getLeadByPhoneNumber(leadId)
-            .then(function (lead) {
-                res.json(lead);
-            });
-    };
-
-    // Potential TODO: add security permission check here. 
+    // Potential TODO: add security permission check here. Done. 
     // Lucas's taking this
     // GET /api/leads/:id
     var getLeadById = function (req, res) {
         var leadId = req.params.id;
-        leadController.getLeadById(leadId)
-            .then(function (lead) {
+        var resultsForUser = leadController.getLeadById(leadId, req.user);
+
+        if (resultsForUser === null) {
+            res.json({
+                'message': 'You do not have permission to view lead!'
+            });
+        } else {
+            resultsForUser.then(function (lead) {
                 res.json(lead);
             });
+        }
     };
 
 

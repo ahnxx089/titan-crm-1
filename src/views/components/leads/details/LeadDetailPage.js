@@ -41,7 +41,6 @@ var LeadDetailPage = React.createClass({
     
     _getLeadDetails: function() {
         var leadId = this.state.leadId;
-//        console.log('in _ get lead details ' + leadId);
         LeadsActions.getLeadById(leadId);
     },
     
@@ -49,9 +48,10 @@ var LeadDetailPage = React.createClass({
     _onGetData: function() {
         var result = LeadsStore.getLeadFound();
         // If it's is an error, eg. permission error, add it to ErrorBox
-        // Cite from HomePage.js, but why????? 
-        if (!result.hasOwnProperty('leadsssId') && result.hasOwnProperty('message')) {
-            this.props.updateErrorBox(result.message);
+//        if (!result.hasOwnProperty('leadId') && result.hasOwnProperty('message')) {
+        // this if is actually not needed, because user is not able to access/click on leads that does not exist.
+        if (Object.keys(result).length === 0 && result.constructor === Object) {
+            this.props.updateErrorBox('No such lead');
         }
         
         // Otherwise we have received our expected result;
@@ -74,9 +74,7 @@ var LeadDetailPage = React.createClass({
 //        console.log("path is " + path); // path is underfined
 //        console.log("location is " + window.location); // something hard to use
         var allProps = this.props;
-//        console.log(allProps);
         var leadId = this.state.leadId;
-//        console.log('in render ' + leadId);
         var leadDetails = this.state.leadDetails;
         
         // TODO: re-modify this time in LeadsStore when first GET them
@@ -116,7 +114,10 @@ var LeadDetailPage = React.createClass({
                     <div className="row">
                         <div className="col-xs-12 col-lg-6">
                             <span className="label label-default">First Name</span>&nbsp;
-                            { leadDetails.salutation + ' ' + leadDetails.firstName + ' ' + leadDetails.middleName }
+                            { leadDetails.salutation ? leadDetails.salutation + ' ' : ' ' }
+                            { leadDetails.firstName + ' ' }
+                            { leadDetails.middleName ? leadDetails.middleName + ' ' : ' ' }
+
                         </div>
                         <div className="col-xs-12 col-lg-6">
                             <span className="label label-default">Last Name</span>&nbsp;
