@@ -40,6 +40,7 @@ var AccountDetailsPage = React.createClass({
     render: function () {
         
         var account = this.state.account;
+        var contactMechs = account.contactMechs || [];
         
         return (
             /* jshint ignore: start */
@@ -52,7 +53,7 @@ var AccountDetailsPage = React.createClass({
                         <h1 class="page-header">Account Details</h1>
                         <DetailsHeading account={account} />
                         <MainInfoDiv account={account}/>
-                        <ContactInfoDiv />
+                        <ContactInfoDiv contactMechs={contactMechs}/>
                     </div>
                 </div>
             </div>
