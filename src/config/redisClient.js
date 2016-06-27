@@ -49,7 +49,7 @@ var redisClient = (function () {
 
     return {
         getClient: getClient
-    }
+    };
 
 })();
 

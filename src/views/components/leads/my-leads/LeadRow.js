@@ -18,11 +18,8 @@ var LeadRow = React.createClass({
         var originalInLocal = new Date(alreadyChanged); // Date Object
         originalInLocal.setMinutes(originalInLocal.getMinutes() - timezoneOffset);
         
-//        console.log('in lead row, props.lead is ' + this.props.lead);
 //        console.log(this.props.lead);
 //        console.log(this.props);
-
-
 
         /* jshint ignore:start */
         return (

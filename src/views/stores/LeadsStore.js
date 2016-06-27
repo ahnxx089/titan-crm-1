@@ -107,15 +107,14 @@ LeadsStore.findLeadById = function(passedId) {
         data: passedId,
         success: function(lead) {
             foundLead = lead;
-//            console.log(foundLead);
             thisLeadsStore.emitGetData(); 
         },
         error: function(jqXHR, textStatus, errorThrown) {
             thisLeadsStore.emitGetData(); 
-            console.log('an error happened... ');
+            console.log('An error happened... ');
             if(jqXHR.hasOwnProperty('status')) {
                 if(jqXHR.status === 200) {
-                    console.log('error is 200. no such lead');
+                    console.log('Error is 200. No such lead');
                     return;
                 }
             }
