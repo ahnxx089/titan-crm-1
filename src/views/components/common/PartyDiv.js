@@ -72,6 +72,31 @@ var PartyDiv = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
+                            <label htmlFor="currencyUomId">Currency</label>
+                            <div className="input-group">
+                                <div className="input-group-addon"><i className="fa fa-usd" aria-hidden="true"></i></div>
+                                <select id="currencyUomId" className="form-control" onChange={ this.props.onChange } value={this.props.ent.currencyUomId} >
+                                    { currenciesJSX }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="col-lg-6 col-xs-12">
+                        <div className="form-group">
+                            <label htmlFor="description">Description</label>
+                            <div className="input-group">
+                                <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
+                                <textarea className="form-control" id="description" rows="4" placeholder="description of a lead/account " onChange={ this.props.onChange } value={this.props.ent.description}></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/*<div className="row">
+                
+                    <div className="col-lg-6 col-xs-12">
+                        <div className="form-group">
                             <label htmlFor="partyTypeId">Party Type Id *</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
@@ -82,30 +107,7 @@ var PartyDiv = React.createClass({
                             </div>
                         </div>
                     </div>
-
-                    <div className="col-lg-6 col-xs-12">
-                        <div className="form-group">
-                            <label htmlFor="currencyUomId">Currency</label>
-                            <div className="input-group">
-                                <div className="input-group-addon"><i className="fa fa-usd" aria-hidden="true"></i></div>
-                                <select id="currencyUomId" className="form-control" onChange={ this.props.onChange } value={this.props.ent.currencyUomId} >
-                                    { currenciesJSX }
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row">
-                    <div className="col-lg-6 col-xs-12">
-                        <div className="form-group">
-                            <label htmlFor="description">Description</label>
-                            <div className="input-group">
-                                <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <textarea className="form-control" id="description" rows="4" placeholder="description of a lead/account " onChange={ this.props.onChange } value={this.props.ent.description}></textarea>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
                             <label htmlFor="statusId">Status *</label>
@@ -120,7 +122,8 @@ var PartyDiv = React.createClass({
                             </div>
                         </div>
                     </div>
-                </div>
+                    
+                </div>*/} {/* End of row div */}
             </div>
         );
         /* jshint ignore:end */
