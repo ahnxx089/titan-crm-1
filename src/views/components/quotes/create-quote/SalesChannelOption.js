@@ -13,7 +13,8 @@ var SalesChannelOption = React.createClass({
         /* jshint ignore:start */
         return (
             <option value={ this.props.salesChannel.enum_id }>
-                { this.props.salesChannel.enum_id }
+                {/* this.props.salesChannel.enum_id */}
+                { this.props.salesChannel.description }
             </option>
         );
         /* jshint ignore:end */
