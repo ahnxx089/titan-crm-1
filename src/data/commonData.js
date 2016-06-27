@@ -84,6 +84,16 @@ var commonData = function(knex) {
             .from('enumeration')
             .where('enumeration.enum_type_id','PARTY_INDUSTRY');
     };
+    
+    /**
+     * Gets all ownership enum values from database
+     * @return {Object} promise - Fulfillment value is an array of enumeration.enum_id values
+    */
+    var getOwnerships = function() {
+        return knex.select('enumeration.enum_id','enumeration.description')
+            .from('enumeration')
+            .where('enumeration.enum_type_id','PARTY_OWNERSHIP');
+    };
 
     return {
         getAllCurrencies: getAllCurrencies,
@@ -92,7 +102,8 @@ var commonData = function(knex) {
         getQuoteTypes: getQuoteTypes,
         getAccountParties: getAccountParties,
         getContactParties: getContactParties,
-        getSalesChannels: getSalesChannels
+        getSalesChannels: getSalesChannels,
+        getOwnerships: getOwnerships
     };
 };
 

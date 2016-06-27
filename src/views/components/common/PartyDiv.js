@@ -89,11 +89,6 @@ var PartyDiv = React.createClass({
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-usd" aria-hidden="true"></i></div>
                                 <select id="currencyUomId" className="form-control" onChange={ this.props.onChange } value={this.props.ent.currencyUomId} >
-                               {/*
-                                    <option value="USD">USD</option>
-                                    <option value="CAD">CAD</option>
-                                    <option value="EUR">EUR</option>
-                               */}
                                     { currenciesJSX }
                                 </select>
                             </div>

@@ -50,6 +50,12 @@ var CommonActions = {
         TitanDispatcher.dispatch({
             actionType: CommonConstants.GET_SALES_CHANNELS
         });
+    },
+    
+    getOwnerships: function() {
+        TitanDispatcher.dispatch({
+            actionType: CommonConstants.GET_ALL_OWNERSHIPS
+        });
     }
 };
 

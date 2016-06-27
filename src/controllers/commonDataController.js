@@ -53,6 +53,9 @@ var commonDataController = function (knex) {
             case 'salesChannel':
                 promise = commonData.getSalesChannels();
                 break;
+            case 'ownership': 
+                promise = commonData.getOwnerships();
+                break;
             default:
                 // A new promise that returns empty array as its fulfillment value
                 promise = new Promise(function(resolve, reject) {
