@@ -39,7 +39,6 @@ var FindLeadsPage = React.createClass({
     
     
     _resetForm: function(event){
-//        console.log('reset form');
         this.setState({ 
             searchBy: { partyId: '' },
             leadFoundById: [],
@@ -48,9 +47,8 @@ var FindLeadsPage = React.createClass({
 
     // JSX component onFormSubmit version (has [submit] event arg)
     _findLeads: function(event){
-        console.log('find leads');
         event.preventDefault();
-        LeadsActions.getLeadById(this.state.searchBy.partyId);
+        LeadsActions.getLeadById(this.state.searchBy.partyId); // send out an action
     },
     
     // Native HTML Form onSubmit version (has no event arg)
@@ -59,17 +57,22 @@ var FindLeadsPage = React.createClass({
 //        LeadsActions.getLeadById(this.state.searchBy.partyId);
 //    },
 
-    _onGetById: function(){
-        console.log('on get by id');
-        this.setState({
-            leadFoundById: LeadsStore.getLeadFound()
-        });
+    _onGetById: function() {
+        var result = LeadsStore.getLeadFound();
+        // If it's is an error, eg. permission error, add it to ErrorBox
+//        if (!result.hasOwnProperty('leadId') && result.hasOwnProperty('message')) {
+        if (Object.keys(result).length === 0 && result.constructor === Object) {
+            this.props.updateErrorBox('Error getting lead');
+        } else {
+            this.props.updateErrorBox([]); // clear the ErrorBox
+            this.setState({
+                leadFoundById: result
+            });
+        }
     },
     
     
     render: function() {
-//        console.log('in render');
-
         /* jshint ignore:start */
 
         var leadById = this.state.leadFoundById;
@@ -91,7 +94,6 @@ var FindLeadsPage = React.createClass({
                                 
                                 searchBy={ this.state.searchBy }
                                 onChange={ this.setSearchByState } 
-                      
                                 onFormSubmit={ this._findLeads }
                                 onFormReset={ this._resetForm } 
                                 // should have at least a space between */ and the next /

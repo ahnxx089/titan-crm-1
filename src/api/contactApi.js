@@ -75,7 +75,8 @@ var contactApi = function (knex) {
                 // Data is NOT in the cache
                 else {
                     // Log the error
-                    winston.error(err);
+//                    winston.error(err);
+                    winston.error('No redis');
                     // Get contacts from the database
                     var resultsForThisUser = contactController.getContactsByOwner(req.user);
                     // IF ELSE block interprets controller returning an object or null

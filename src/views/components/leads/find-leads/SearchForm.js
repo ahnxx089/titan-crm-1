@@ -22,7 +22,7 @@ var SearchForm = React.createClass({
                 {/*<form method="GET" action="/api/leads/" onReset={ this.props.onFormReset }>*/}
                 <form onSubmit={ this.props.onFormSubmit } onReset={ this.props.onFormReset }>
                     <div id="tabs">
-                      <i>Bear with the style, for some days</i>
+                    {/*<i>Bear with the style, for some days</i>*/}
                       <ul>
                         <li><a href="#tabs-1">Search By ID</a></li>
                         <li><a href="#tabs-2">Search By Identity</a></li>

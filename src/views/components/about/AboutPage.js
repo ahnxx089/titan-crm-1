@@ -31,19 +31,6 @@ var AboutPage = React.createClass({
                         <img src='img/avatar.jpg' alt='' />
                     </div>
                     <div className="col-xs-10 col-lg-10">
-                        <h3>Divine Ndifongwa</h3>
-                        <p>
-                            Owing boomed powerless a excluding carnal a goodness during fitted vacuous
-                            against alas horse more from decorous more frightening crud because giraffe
-                            darn well bat dear irrespective before kiwi that.
-                        </p>
-                    </div>
-                </div>
-                <div className="row well">
-                    <div className="col-xs-2 col-lg-2 text-center">
-                        <img src='img/avatar.jpg' alt='' />
-                    </div>
-                    <div className="col-xs-10 col-lg-10">
                         <h3>DukJin Ahn</h3>
                         <p>
                             Wayward skillful less but less a much dear sobbed a sensitive pious more that
@@ -72,22 +59,9 @@ var AboutPage = React.createClass({
                     <div className="col-xs-10 col-lg-10">
                         <h3>Xiaosiqi "Lucas" Yang</h3>
                         <p>
-                            I recently graduated from University of Minnesota with a Master's Degree in Computer Science. 
+                            I recently graduated from University of Minnesota with a Master's Degree in Computer Science.
                             I was in the spatial Database research group, and did my graduation project on spatial data clustering and prediction in agricultural crop yield. I worked as TA before. <br/>
-                            My previous work experience mostly lies in Web Developing (full statck) and Android Developing (in both academy and industry). I love programming and seeing people use tools I built. 
-                        </p>
-                    </div>
-                </div>
-                <div className="row well">
-                    <div className="col-xs-2 col-lg-2 text-center">
-                        <img src='img/avatar.jpg' alt='' />
-                    </div>
-                    <div className="col-xs-10 col-lg-10">
-                        <h3>Muhammad Abdurrahman</h3>
-                        <p>
-                            Some this pushed because hedgehog upheld the far owing stoutly jeez exuberantly
-                            less cowered despite seal greedily loaded this until some then that with incapable
-                            turbulently seal fabulously dear after wildebeest that much.
+                            My previous work experience mostly lies in Web Developing (full statck) and Android Developing (in both academy and industry). I love programming and seeing people use tools I built.
                         </p>
                     </div>
                 </div>
@@ -107,7 +81,7 @@ var AboutPage = React.createClass({
                 <h3>Also featuring</h3>
                 <div className="row well">
                     <div className="col-xs-2 col-lg-2 text-center">
-                        <img src='img/avatar.jpg' alt='' />
+                        <img src='img/anurag_image.jpg' alt='' />
                     </div>
                     <div className="col-xs-10 col-lg-10">
                         <h3>Anurag Bhandari</h3>

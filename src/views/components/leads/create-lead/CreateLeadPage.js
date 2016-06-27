@@ -108,7 +108,9 @@ var CreateLeadPage = React.createClass({
                         <div className="panel-heading panel-heading-custom">
                             <h2>Create Lead</h2>
                         </div>
-                        <AddLeadForm lead={this.state.emptyLead} onChange={this.setLeadState} onFormSubmitBSV={this._addLead} />
+                        <div className="panel-body">
+                            <AddLeadForm lead={this.state.emptyLead} onChange={this.setLeadState} onFormSubmitBSV={this._addLead} />
+                        </div>
                     </div>
                 </div>
             </div>
