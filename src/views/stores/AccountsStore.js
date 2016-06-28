@@ -16,6 +16,7 @@ var validation = require('../../common/validation')();
 //-----------------------------------------------
 var accountsOwned = [];
 var singleAccount = {};
+var addedAccountId = '';
 var getByIdentity = {};
 
 // STORE as EVENT EMITTER
@@ -29,6 +30,10 @@ AccountsStore.addGetDataListener = function (listener) {
     this.on('getData', listener);
 };
 
+AccountsStore.addAccountFormListener = function (listener) {
+    this.on('change', listener);
+}
+
 AccountsStore.emitGetData = function() {
     // see https://nodejs.org/api/events.html#events_emitter_emit_eventname_arg1_arg2
     // Synchronously calls each of the listeners registered for the event named 'getData'
@@ -37,6 +42,14 @@ AccountsStore.emitGetData = function() {
     this.emit('getData');
 };
 
+AccountsStore.addAddedAccountListener = function (listener) {
+    this.on('addedAccount', listener);
+};
+
+AccountsStore.emitAddedAccount = function () {
+    this.emit('addedAccount');
+}
+
 AccountsStore.addGetByIdentityListener = function (listener) {
     this.on('getByIdentity', listener);
 };
@@ -44,6 +57,10 @@ AccountsStore.addGetByIdentityListener = function (listener) {
 AccountsStore.emitGetByIdentity = function() {
     this.emit('getByIdentity');  
 };
+
+
+
+
 
 
 
@@ -101,6 +118,10 @@ AccountsStore.getSingleAccount = function () {
     return singleAccount;
 };
 
+AccountsStore.getAddedAccountId = function () {
+    return addedAccountId;
+}
+
 // Next function is called by CreateAccountPage
 AccountsStore.addAccounts = function(account) {
     var thisAccountsStore = this;
@@ -111,7 +132,8 @@ AccountsStore.addAccounts = function(account) {
         headers: {  'x-access-token': Cookies.get('titanAuthToken') },
         data: account,
         success: function(partyId) {
-            
+            addedAccountId = partyId;
+            AccountsStore.emitAddedAccount();
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(errorThrown);

@@ -29,12 +29,11 @@ var AccountsActions = {
         });
     },
     
-    addAccount: function (id) {
+    addAccount: function (account) {
         TitanDispatcher.dispatch({
             actionType: AccountsConstants.ADD_ACCOUNT,
-            id: id
-        }); //Not fully assured that an id is the appropriate property to be 
-        //sending along to the dispatcher for an add function - TODO - revisit 
+            data: account
+        });  
     }
 };
 
