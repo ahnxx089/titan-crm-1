@@ -22,6 +22,7 @@ var quoteTypesObjArray = [];
 var accountPartiesObjArray = [];
 var contactPartiesObjArray = [];
 var salesChannelsObjArray = [];
+var ownershipsObjArray = [];
 
 
 // STORE as EVENT EMITTER
@@ -89,6 +90,14 @@ CommonStore.addGetSalesChannelsListener = function (listener) {
 
 CommonStore.emitGetSalesChannels = function() {
     this.emit('getSalesChannels');  
+};
+
+CommonStore.addGetAllOwnershipsListener = function (listener) {
+    this.on('getAllOwnerships', listener);
+};
+
+CommonStore.emitGetAllOwnerships = function() {
+    this.emit('getAllOwnerships');
 };
 
 
@@ -235,6 +244,27 @@ CommonStore.getSalesChannelsObjArray = function() {
 };
 
 
+CommonStore.getAllOwnerships = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=ownership',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(ownerships) {
+            ownershipsObjArray = ownerships;
+            thisCommonStore.emitGetAllOwnerships();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getOwnershipsObjArray = function() {
+    return ownershipsObjArray;
+};
+
+
 // LINK BETWEEN DISPATCHER AND STORE
 //-----------------------------------------------
 TitanDispatcher.register(function(action) {
@@ -266,6 +296,10 @@ TitanDispatcher.register(function(action) {
         }
         case CommonConstants.GET_SALES_CHANNELS: {
             CommonStore.getSalesChannels();
+            break;
+        }
+        case CommonConstants.GET_ALL_OWNERSHIPS: {
+            CommonStore.getAllOwnerships();
             break;
         }
     }

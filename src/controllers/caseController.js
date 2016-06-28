@@ -27,7 +27,7 @@ var caseController = function (knex) {
     //
 
 
-    // Lucas wrote this
+    // Author: Lucas
     /**
      * For each (and the only) promise delivered by addNote,
      * create entry in case_note table
@@ -56,7 +56,7 @@ var caseController = function (knex) {
 
 
 
-    // Lucas wrote this
+    // Author: Lucas
     /**
      * Add a new case  
      * @param {Object} case_ - The new case to be added
@@ -64,7 +64,6 @@ var caseController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new case
      */
     var addCase = function (case_, user) {
-        //        console.log('in case controller A');
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CASE_CREATE');
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
@@ -85,27 +84,21 @@ var caseController = function (knex) {
             }
 
             var caseEntity = new Case(
-                //                case_.caseId,
-                null,
+                null, // case_.caseId,
                 case_.caseTypeId,
                 case_.caseCategoryId,
                 case_.statusId,
                 case_.fromPartyId,
                 case_.priority,
-                //                case_.caseDate,
-                now,
-                //                case_.responseRequiredDate,
-                now,
+                now, // case_.caseDate,
+                now, // case_.responseRequiredDate,
                 case_.caseName,
                 case_.description,
                 case_.resolutionId,
                 case_.createdBy,
-                now,
-                now
-                //                case_.createdDate,
-                //                case_.updatedDate
+                now, // case_.createdDate,
+                now // case_.updatedDate
             );
-            //            console.log('in case controller B');
 
             // Validate the data before going ahead
             var validationErrors = caseEntity.validateForInsert();

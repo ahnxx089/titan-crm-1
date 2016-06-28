@@ -16,14 +16,12 @@ var caseApi = function (knex) {
     // ==========================================
     //
     
-    // Lucas wrote this
+    // Author: Lucas
     // POST /api/cases
     var addCase = function (req, res) {
         var case_ = req.body;
         var user = req.user;
-//        console.log('in case api A');
         var resultsForThisUser = caseController.addCase(case_, user);
-//        console.log('in case api B');
         if (resultsForThisUser === null) {
             res.json({
                 message: 'You do not have permission to add cases!'

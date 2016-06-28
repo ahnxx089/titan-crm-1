@@ -7,6 +7,10 @@
 
 /* jshint camelcase: false */
 
+// Attention!
+// Only addNote and linkNoteToCase are well-written, tested functional. 
+// Other functions are not realised or returned.
+
 var winston = require('winston');
 var Note = require('../entities/note.js');
 
@@ -21,7 +25,6 @@ var noteController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new party
      */
     var addNote = function (note) {
-
         // Convert the received object into an entity
         var noteEntity = new Note(
             note.noteId,
@@ -42,7 +45,6 @@ var noteController = function (knex) {
                 .then(function (noteId) {
                     return noteId;
                 });
-
             promise.catch(function (error) {
                 winston.error(error);
             });
@@ -149,7 +151,6 @@ var noteController = function (knex) {
         }
     };
 
-    // NOT TESTED
     /**
      * Delete a ntoe
      * @param {Number} noteId - Unique id of the note to be deleted
@@ -184,12 +185,13 @@ var noteController = function (knex) {
 
     return {
         addNote: addNote,
+        linkNoteToCase: linkNoteToCase
+//        MIGHT BE USED LATER:
 //        getNotes: getNotes,
 //        getNotesByParty: getNotesByParty,
 //        getNoteById: getNoteById,
 //        updateNote: updateNote,
 //        deleteNote: deleteNote,
-        linkNoteToCase: linkNoteToCase
     };
 };
 

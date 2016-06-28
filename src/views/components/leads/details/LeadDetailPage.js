@@ -75,7 +75,7 @@ var LeadDetailPage = React.createClass({
         var leadDetails = this.state.leadDetails;
         
         // TODO: re-modify this time in LeadsStore when first GET them
-        // DONT forget line 120, 121
+        // DONT forget line updated_at time
         var alreadyChanged = leadDetails.createdDate;
         var originalInLocal = new Date(alreadyChanged); // Date Object
         originalInLocal.setMinutes(originalInLocal.getMinutes() - timezoneOffset);
