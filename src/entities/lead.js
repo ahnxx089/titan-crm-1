@@ -10,7 +10,6 @@
 /* jshint maxparams: false */
 
 // NOT COMPLETED! 
-// Anurag: statusId is a foreign key that is not reflected in the design document. Consider update. Check marked @ June 2
 // Need work on validateForUpdate, and validateAnnualRevenue.
 // Need more fields.
 
