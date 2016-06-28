@@ -62,7 +62,7 @@ var contactController = function (knex) {
     };
 
     /**
-     * Add a new contact  
+     * Add a new contact
      * @param {Object} contact - The new contact to be added
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is id of new contact
@@ -303,7 +303,7 @@ var contactController = function (knex) {
         }
     };
 
-    /** 
+    /**
      * Gets contacts by identity (see opentaps' Find Contact feature)
      * @param {String} query - query string may contain firstName and/or lastName
      * @param {Object} user - The logged in user
@@ -315,52 +315,10 @@ var contactController = function (knex) {
         if (hasPermission !== -1) {
             // user has permission, proceed towards data layer
 
-            /* The two immediately following IF statements deal with two issues and resolves them 
-                consistently in order to give the data layer inputs it does not have to think about
-                in order to act on:
-            
-                1.  Deals with either query.firstName or query.lastName === undefined.  That occurs
-                    if the search is done using only one of those fields.  Such use results in query
-                    (this function's incoming argument) having only one property but not both.  So
-                    we must deal with this situation:   EITHER query.firstName === undefined
-                                                        OR query.lastName === undefined
-                            
-                    (It will never be both, since in that case contactApi.getContacts would not be
-                    call this function in the controller layer in the first place.  It might be calling 
-                    getContactsByOwner or getContactsByPhoneNumber, but this function does not
-                    care about those. I tested this to confirm).
-                    
-                2.  Deals with query having property firstName or lastName but one or both of them
-                    contain empty strings.  This is to protect against the possibility that the UI might
-                    send in an empty string when the user intends simply not to search by one
-                    of the fields firstName or lastName.  That is, this makes consistent the behavior
-                    of all the following possible routes, which I confirmed will deliver in empty
-                    strings:
-                    
-                        /api/contacts?firstName=
-                        /api/contacts?lastName=
-                        /api/contacts?firstName=&lastName=
-                        
-                To deal with these issues consistently, the following two IF blocks set firstName
-                or lastName to an empty string.
-                */
-
-            // Declare variables to hold incoming query properties.  NOTE:  While debugging I see
-            // that this very act of assigning an undefined property to a variable makes that
-            // variable into an empty string.  For example, I sent in a query for which
-            // query.lastName === undefined.  To my surprise, declaring var lastName = query.lastName
-            // made variable lastName === "" instead of undefined.  So the if block might be redundant.
-            // But I'm playing it safe and using the if blocks to enforce that "undefined" is not
-            // passed to the data layer.  The data layer will only ever get strings, for sure.
+            // Declaring variables to hold incoming query string properties ensures that an undefined
+            // value results in an empty string.
             var firstName = query.firstName;
             var lastName = query.lastName;
-
-            if (firstName === undefined) {
-                firstName = '';
-            }
-            if (lastName === undefined) {
-                lastName = '';
-            }
 
             var promise = contactData.getContactsByIdentity(firstName, lastName)
                 .then(function (contacts) {
