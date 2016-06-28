@@ -13,7 +13,7 @@
 
 var caseData = function (knex) {
 
-    // Lucas wrote this
+    // Author: Lucas
     /**
      * Add a new case in the database:  
      * @param {Object} case_ - The new case entity to be added 
@@ -21,6 +21,16 @@ var caseData = function (knex) {
      */
     var addCase = function (case_, user) {
 
+        // After careful inspection, we are sure that knex does not completely follow A+ promise. Or there is an issue with returning after insertion. 
+        // As knex documentation says, .returning('column_name') is not executed in MySQL. 
+        
+        // Without .then(function (cid1) { return cid1; }); , 
+        // a) an error would popup in terminal console: duplicate entry; OR
+        // b) two/three identical records would be created in case_ table, except for auto-increment case_id.
+        // would happen. This is conflicting against the A+ promise paradigm. 
+        // Same thing happened in contactMech module. 
+        // So we decided to have a .then call at the very end, to avoid any potential hazard. 
+        
         /*
         return knex('case_')
             .returning('case_id')
@@ -35,6 +45,7 @@ var caseData = function (knex) {
         });
         */
 
+        // _.pluck, which is used in knex.org, is no longer supported in lodash v4+
 
         return knex('case_')
             .returning('case_id')
@@ -58,12 +69,11 @@ var caseData = function (knex) {
                     .from('party_role')
                     .where('party_id', case_.fromPartyId)
                     /*.then(function (rows) {
-                return _.map(rows, 'role_type_id');
-                // _.pluck, which is used in knex.org, is no longer supported in lodash v4+
-            })*/
+                    return _.map(rows, 'role_type_id');
+                    })*/
                     .then(function (rtids) {
-                        //                console.log(rtids);
-                        //                Object.values() function is not supported Node yet
+                        // console.log(rtids);
+                        // Object.values() function is not supported Node yet
 
                         // for case_role table
                         return knex('case_role')
@@ -82,7 +92,7 @@ var caseData = function (knex) {
                                     .insert({
                                         case_id: cid,
                                         status_id: case_.statusId,
-                                        //                    status_datatime: case_.createdDate,
+                                        // status_datatime: case_.createdDate,
                                         created_date: case_.createdDate,
                                         updated_date: case_.updatedDate
                                     }).then(function () {

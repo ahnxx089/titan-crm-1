@@ -263,7 +263,9 @@ var quoteData = function (knex) {
 
     };
 
-    // Lucas wrote this. Finished
+    // Author: Lucas
+    // In case of large number of quotes, fetching them all is not efficient. 
+    // Consider: build raw query (for MySQL) in data layer. See caseData.getCasesByAdvanced for reference. 
     /**
      * Gets all quotes from database by advanced search
      * @return {Object} promise - Fulfillment value is an array of raw data objects
@@ -282,16 +284,6 @@ var quoteData = function (knex) {
 
         //        return knex.raw('select * from quote where ' + ' sales_channel_enum_id = "' + salesChannel + '"');
         return knex.from('quote');
-
-        /*
-        return knex.select()
-            .from('quote')
-            .whereNot('quote.quote_id',quoteId)
-            .andWhere('quote.quote_name', quoteName)
-            .andWhere('quote.status_id', status)
-            .andWhere('quote.party_id', account)
-            .andWhere('quote.sales_channel_enum_id', salesChannel);
-        */
     };
 
     return {
