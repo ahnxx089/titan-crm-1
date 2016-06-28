@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////
-// Search form component
+// Search form component -- DEACTIVATED, DELETE SOON
 //
 // @file:   SearchForm.js
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>
@@ -23,7 +23,6 @@ var SearchForm = React.createClass({
                     <ul>
                         <li><a href="#tabs-1">Find By ID #</a></li>
                         <li><a href="#tabs-2">Find By Name</a></li>
-                        <li><a href="#tabs-3">Find By Phone Number</a></li>
                     </ul>
 
                     <div id="tabs-1">
@@ -76,55 +75,6 @@ var SearchForm = React.createClass({
                                             placeholder="Doe"
                                             onChange={ this.props.onNameFieldChange }
                                             value={ this.props.nameField.lastName } />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="tabs-3">
-                        <div className="row">
-                            <div className="col-lg-3 col-xs-6">
-                                <div className="form-group">
-                                    <label htmlFor="countryCode">Country Code</label>
-                                    <div className="input-group">
-                                        <div className="input-group-addon">
-                                            <i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                        <input type="text"
-                                            className="form-control"
-                                            id="countryCode"
-                                            placeholder="1"
-                                            onChange={ this.props.onPhoneFieldChange }
-                                            value={ this.props.phoneField.countryCode } />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-3 col-xs-6">
-                                <div className="form-group">
-                                    <label htmlFor="areaCode">Area Code</label>
-                                    <div className="input-group">
-                                        <div className="input-group-addon">
-                                            <i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                        <input type="text"
-                                            className="form-control"
-                                            id="areaCode"
-                                            placeholder="212"
-                                            onChange={ this.props.onPhoneFieldChange }
-                                            value={ this.props.phoneField.areaCode } />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-6 col-xs-12">
-                                <div className="form-group">
-                                    <label htmlFor="contactNumber">Contact Number</label>
-                                    <div className="input-group">
-                                        <div className="input-group-addon">
-                                            <i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                        <input type="text"
-                                            className="form-control"
-                                            id="contactNumber"
-                                            placeholder="555-0123"
-                                            onChange={ this.props.onPhoneFieldChange }
-                                            value={ this.props.phoneField.contactNumber } />
                                     </div>
                                 </div>
                             </div>

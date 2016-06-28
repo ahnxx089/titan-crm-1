@@ -165,8 +165,7 @@ var contactData = function (knex) {
         var searchByCountryCode = !!countryCode;
         var searchByAreaCode = !!areaCode;
 
-        var query = knex.select('party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id','party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date', 'person.salutation', 'person.first_name', 'person.middle_name', 'person.last_name', 'person.birth_date', 'person.comments', 'telecom_number.contact_mech_id', 'telecom_number.country_code', 'telecom_number.area_code', 'telecom_number.contact_number',
-        'telecom_number.ask_for_name')
+        var query = knex.select('party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id','party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date', 'person.salutation', 'person.first_name', 'person.middle_name', 'person.last_name', 'person.birth_date', 'person.comments', 'telecom_number.contact_mech_id', 'telecom_number.country_code', 'telecom_number.area_code', 'telecom_number.contact_number', 'telecom_number.ask_for_name')
             .from('party_relationship')
             .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
             .innerJoin('party', 'party.party_id', 'person.party_id')
