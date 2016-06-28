@@ -7,8 +7,7 @@
 
 /* jshint camelcase: false */
 
-// WARNING!
-// updateLead, deleteLead may not behave as expected! 
+// Attention!
 // addLead, getLeadById, getLeadsByOwner are tested and functional. 
 // getLeads may need revision. It is not used now. Don't remove yet. 
 // deleteLead, updateLead, getLeadsByPhoneNumber and getLeadsByIdentity are wrong and deleted now since June 25. 
@@ -19,14 +18,14 @@ var leadData = function (knex) {
     // DATA METHODS
     /**
      * Methods in XXXdata.js are called from Controller layer,
-     * They accept lead entities from controllers, and insert them into database.
+     * They accept entities which to be into database, from controllers. 
      * They also query the database based on the creteria from controllers, and giving back (queried) columns to controllers. 
      */
     // ==========================================
     //
 
 
-    // Lucas's taking this
+    // Author: Lucas
     /**
      * Add a new lead in database
      * @param {Object} lead - The new lead entity to be added
@@ -44,7 +43,7 @@ var leadData = function (knex) {
             .returning('party_id')
             .insert({
                 // ok to put dummy data here
-                party_type_id: lead.partyTypeId, // should have made sure this is PERSON
+                party_type_id: lead.partyTypeId, 
                 preferred_currency_uom_id: lead.preferredCurrencyUomId,
                 description: lead.description,
                 status_id: lead.statusId,
@@ -66,7 +65,7 @@ var leadData = function (knex) {
                         created_date: lead.createdDate,
                         updated_date: lead.updatedDate
                     })
-            .then(function () { // maybe change the param to res? ABSOLUTELY NO! Requiring numeric param while passing a promiss is not right 
+            .then(function () {
                 return knex('party_supplemental_data')
                     //.returning('party_id')
                     .insert({
@@ -104,6 +103,7 @@ var leadData = function (knex) {
             });
     };
     
+    // Author: Lucas
     /**
      * Update three contact info fields in party_supplemental_data table, upon the creation of a lead 
      * Link this column to party_contact_mech.contact_mech_id
@@ -113,7 +113,6 @@ var leadData = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updatePSD = function (partyId, contactMechId, purposeTypeId) {
-        // double equal == were changed to triple equals ===, at night, June 15 2016
         if(purposeTypeId === 'PRIMARY_EMAIL') {
             return knex('party_supplemental_data')
                 .where({
@@ -144,7 +143,7 @@ var leadData = function (knex) {
     };
     
 
-    // Lucas's taking this
+    // Author: Lucas
     /**
      * Gets all leads from database
      * @return {Object} promise - Fulfillment value is an array of raw data objects
@@ -155,7 +154,7 @@ var leadData = function (knex) {
             .from('person');
     };
 
-    // Lucas's taking this
+    // Author: Lucas
     /**
      * Gets one lead by its id from database. This GET will JOIN more than 3 tables and contain many details. 
      * @param {Number} partyId - Unique id of the party (grandparent of lead) to be fetched
@@ -184,28 +183,18 @@ var leadData = function (knex) {
             .innerJoin('party', 'person.party_id', 'party.party_id')
             .innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id')
             .innerJoin('party_role', 'person.party_id', 'party_role.party_id')
-            // change to left join?
+            // change to left join? 
+            // Left join here would often result to a contactMech array with one empty (except datetime) contactMech
             .leftJoin('party_contact_mech', 'person.party_id', 'party_contact_mech.party_id')
             .leftJoin('contact_mech', 'party_contact_mech.contact_mech_id', '=', 'contact_mech.contact_mech_id')
             .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
             .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')
             .where('person.party_id', id)
-            .andWhere('party_role.role_type_id', 'LEAD');        
-        
-        
-//        return knex.from('person')
-//            .innerJoin('party', 'person.party_id', 'party.party_id')
-//            .innerJoin('party_supplemental_data', 'person.party_id', 'party_supplemental_data.party_id')
-//            .innerJoin('party_role', 'person.party_id', 'party_role.party_id')
-//            .innerJoin('party_contact_mech', 'person.party_id', 'party_contact_mech.party_id')
-//            .leftJoin('contact_mech', 'party_contact_mech.contact_mech_id', '=', 'contact_mech.contact_mech_id')
-//            .leftJoin('telecom_number', 'contact_mech.contact_mech_id', '=', 'telecom_number.contact_mech_id')
-//            .leftJoin('postal_address', 'contact_mech.contact_mech_id', '=', 'postal_address.contact_mech_id')
-//            .where('person.party_id', id);
+            .andWhere('party_role.role_type_id', 'LEAD');
     };
 
 
-    // Lucas's taking this
+    // Author: Lucas
     /**
      * Gets leads by its owner (the one by whom they are created) from database
      * @param {Number} ownerId - Unique id of the owner of leads

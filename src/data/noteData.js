@@ -7,8 +7,11 @@
 
 /* jshint camelcase: false */
 
-var noteData = function (knex) {
+// Attention!
+// Only addNote and linkNoteToCase are well-written, tested functional. 
+// Other functions are not realised.
 
+var noteData = function (knex) {
 
     /**
      * Add a new note in database
@@ -39,8 +42,7 @@ var noteData = function (knex) {
 
     /**
      * Gets all notes from database
-     * @param {Number} partyId - 
-     * @return {Object} promise - Fulfillment value is an array of raw data objects
+     * @param {Number} partyId - Party ID of which the notes belong to 
      */
     var getNotesByParty = function (partyId) {
         return null;
@@ -74,7 +76,6 @@ var noteData = function (knex) {
     /**
      * Update a note in database
      * @param {Object} note - The note entity that contains updated data
-     * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateNote = function (note) {
         return null;
@@ -83,7 +84,6 @@ var noteData = function (knex) {
     /**
      * Delete a note from database
      * @param {Number} noteId - Unique id of the note mechanism to be deleted
-     * @return {Object} promise - Fulfillment value is number of rows deleted
      */
     var deleteNote = function (noteId) {
         return null;
@@ -108,12 +108,13 @@ var noteData = function (knex) {
 
     return {
         addNote: addNote,
+        linkNoteToCase: linkNoteToCase
+//        MIGHT BE USED LATER: 
 //        getNotes: getNotes,
 //        getNotesByParty: getNotesByParty,
 //        getNoteById: getNoteById,
 //        updateNote: updateNote,
 //        deleteNote: deleteNote,
-        linkNoteToCase: linkNoteToCase
     };
 };
 

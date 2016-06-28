@@ -473,6 +473,7 @@ var quoteController = function (knex) {
         }
     };
 
+    // Author: Lucas
     /**
      * Gets quotes by advanced search
      * @param {String} query - query string: SOME ARGUMENT
@@ -514,16 +515,16 @@ var quoteController = function (knex) {
                         // status_id will be shown in a drop-down menu. There is no need to do substring match here.
                         var emptyString = status == null;
                         var emptyColumn = quotes[i].status_id == null;
-                        //                    console.log(emptyString);
-                        //                    console.log(emptyColumn);
+                        // console.log(emptyString);
+                        // console.log(emptyColumn);
                         // If we search for something, in null columns, then we will never find it
                         var test3 = (!emptyString && emptyColumn) ? false : true;
                         // If we search for something, in some columns, we need to compare
                         test3 = (!emptyString && !emptyColumn) ? quotes[i].status_id.toUpperCase() === status.toUpperCase() : test3;
-                        //                    The line above is same as
-                        //                    if(!emptyString && !emptyColumn) {
-                        //                        test3 = quotes[i].status_id.toUpperCase() == status.toUpperCase();
-                        //                    }
+                        // The line above is same as
+                        //if(!emptyString && !emptyColumn) {
+                        //    test3 = quotes[i].status_id.toUpperCase() == status.toUpperCase();
+                        //}
 
                         // quotes[i].party_id is Number, and is NULLABLE
                         var test4 = account == null ? true : quotes[i].party_id === +account;

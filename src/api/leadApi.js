@@ -5,9 +5,8 @@
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
-// Warning! 
+// Attention! 
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
-// We have a separate wroking getLeadsByOwner, different from Dinesh's approach. Need to consult Anurag for more detail. 
 // getLeads is not added in apiRoutes, or called from anywhere. Do not remove it yet. 
 // getLeadsByIdentity, getLeadsByPhoneNumber, updateLead, deleteLead are deleted. 
 
@@ -26,13 +25,12 @@ var leadApi = function (knex) {
      * Methods in XXXapi.js are called from presentation layer, or by ARC
      * They in turns, stripes the passed params from req, pass params to corresponding functions in leadController
      * In the end of this flow, res will give the json object back to ARC. 
-     * @param {Object} req - The request
-     * @param {Object} res - The resource/response
+     * @param {Object} req - The HTTP request
+     * @param {Object} res - The HTTP response
      * @return {Object} promise - Fulfillment value is id of new party
      */
     // ==========================================
 
-    // Lucas's taking this
     // POST /api/leads
     /**
      * To add a new lead in database
@@ -45,8 +43,6 @@ var leadApi = function (knex) {
         var user = req.user;
 
         var resultsForThisUser = leadController.addLead(lead, user);
-
-
         if (resultsForThisUser === null) {
             res.json({
                 message: 'You do not have permission to add leads!'
@@ -69,7 +65,7 @@ var leadApi = function (knex) {
     };
 
 
-    // Lucas's taking PART of this
+    // Lucas's taking this
     // Credit: Dinesh
     // NOT in use now! (WHY?)
     // GET /api/leads/...
@@ -93,7 +89,7 @@ var leadApi = function (knex) {
             plan for now.
         */
 
-        // Lucas's taking this
+        // Author: Lucas
         // GET /api/leads?owner=
         //
         // This if block triggers if a query by owner has been made.
@@ -106,10 +102,10 @@ var leadApi = function (knex) {
                 });
         }
 
-        // This is a good place to add other route handings blocks
+        // This is a good place to add other route handlings blocks
 
-        // If the request did not properly pass any of the various if tests
-        // above, it is not a valid query, make the reponse null.
+        // If the request did not properly pass any of the various if consition-tests above,
+        // it is not a valid query, make the reponse null.
         else {
             res.json(null);
         }
@@ -117,7 +113,6 @@ var leadApi = function (knex) {
 
 
 
-    // Lucas is taking this
     // To retrieve existing leads from database based on their creater
     // In use now.
     // Deprecated: GET /api/leads/?owner=
@@ -128,8 +123,9 @@ var leadApi = function (knex) {
     // Inspired by Eric's way of doing multiple insertions in addAccount in accountData.js,
     // I might stop returning this method at the end of this file and calling this method directly
     // instead I will call this methods from the now obselete getLeads method, (making it invisible to the ARC)
-    // once Divine has his getLeadsByIdentity and getLeadsByPhoneNumber working. Otherwise, it's just not worth. 
-    // The getLeads method then will call getLeadsByOwner or getLeadsByIdentity or getLeadsByPhoneNumber, 
+    // once  Divine Ndifongwa has his getLeadsByIdentity and getLeadsByPhoneNumber working. 
+    // Otherwise, it's just not worth right now. 
+    // The then getLeads method will call getLeadsByOwner or getLeadsByIdentity or getLeadsByPhoneNumber, 
     // depending on the received parameter(s). 
 
     var getLeadsByOwner = function (req, res) {
@@ -174,8 +170,7 @@ var leadApi = function (knex) {
 
     };
 
-    // Potential TODO: add security permission check here. Done. 
-    // Lucas's taking this
+    // Author: Lucas
     // GET /api/leads/:id
     var getLeadById = function (req, res) {
         var leadId = req.params.id;

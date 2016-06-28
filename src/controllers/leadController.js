@@ -10,16 +10,16 @@
 /* jshint maxcomplexity: false */
 /* jshint esversion: 6 */
 
-// WARNING! 
+// Attention! 
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
 // getLeads is not finished, not used. Lucas will look at it later. 
-// deleteLead, updateLead, getLeadsByPhoneNumber and getLeadsByIdentity are wrong and deleted now since June 25. 
-// getLeadsByPhoneNumber is not declared. Canceled by Anurag. 
+// deleteLead, updateLead and getLeadsByIdentity are wrong and deleted now since June 25. 
+// getLeadsByPhoneNumber is canceled by Anurag. 
 
 var winston = require('winston');
 // Require is RequireJS, used by Node. It is always singleton. 
 // In case we don't want to use singleton, we can do it like what we did in entity directory. 
-// This winston is a singleton. Notice app.js requires the same winston, and runs the exported function, in an IFIE style. Every time we 
+// This winston is a singleton. Notice app.js requires the same winston, and runs the exported function, in an IFIE style. Every time we ??
 var Lead = require('../entities/lead');
 var ContactMech = require('../entities/contactMech');
 var _ = require('lodash');
@@ -44,10 +44,9 @@ var leadController = function (knex) {
      * 
      */
     // ==========================================
-    //
 
     
-    // Lucas's taking this
+    // Author: Lucas
     /**
      * Update three contact info fields in party_supplemental_data table, upon the creation of a lead 
      * Link this column to party_contact_mech.contact_mech_id
@@ -131,7 +130,7 @@ var leadController = function (knex) {
     };
     
     
-    // Lucas's taking this
+    // Author: Lucas
     /**
      * Create a new lead entity, validate, pass it to leadData to create a new lead if valid. Otherwise return errors. 
      * When leadData finished adding this lead, it will return a promise. If error, log the error. 
@@ -262,7 +261,7 @@ var leadController = function (knex) {
         }
     };
 
-    // Lucas's taking this
+    // Author: Lucas
     // NOT finished, NOR used. 
     /**
      * Gets all leads
@@ -328,7 +327,7 @@ var leadController = function (knex) {
     };
 
 
-    // Lucas's taking this
+    // Author: Lucas
     /**
      * Gets all leads created by owner 
      * @param {Object} user - Passed user object. DIFFERENT FROM userId, which is a number, of logged-in user (owner)
@@ -391,7 +390,7 @@ var leadController = function (knex) {
         }
     };
 
-    // Lucas's taking this
+    // Author: Lucas
     /**
      * Gets one lead by its id
      * @param {Number} leadId - Unique id (actually partyId) of the lead to be fetched
