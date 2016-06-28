@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////
-// The main React component for rendering the 
+// The main React component for rendering the
 // Create Account page.
-// 
+//
 //
 // @file:   CreateAccountPage.js
 // @author: Eric Brichetto <brichett13@gmail.com>
@@ -16,7 +16,7 @@ var PartyContactDiv = require('../../leads/create-lead/PartyContactDiv');
 var SubmitButton = require('./SubmitButton');
 var AccountForm = require('./AccountForm');
 var CreateAccountPage = React.createClass({
-    
+
     getInitialState: function () {
         return ({
             emptyAccount: {
@@ -42,7 +42,7 @@ var CreateAccountPage = React.createClass({
             dirty: false
         });
     },
-    
+
     setAccountState: function (event) {
         var accField = event.target.id;
         var newValue = event.target.value;
@@ -51,27 +51,27 @@ var CreateAccountPage = React.createClass({
             emptyAccount: this.state.emptyAccount
         });
     },
-    
+
     componentDidMount: function () {
         AccountsStore.addAddedAccountListener(this._onAddedAccount);
     },
-    
+
     componentWillUnmount: function () {
         AccountsStore.removeListener('change', this._onAddedAccount);
     },
-    
+
     _onAddAccount: function (e) {
         e.preventDefault();
         AccountsActions.addAccount(this.state.emptyAccount);
     },
-    
+
     _onAddedAccount: function () {
         var newId = AccountsStore.getAddedAccountId;
         this.setState({
             addedAccountPartyId: newId
         });
     },
-    
+
     render: function () {
         /* jshint ignore: start */
         return (
@@ -84,19 +84,19 @@ var CreateAccountPage = React.createClass({
                 <div className="row">
                     <div className="col-md-8 col-lg-12 col-md-offset-2 col-lg-offset-1">
             {/*<AccountForm /> */}
-                        <AccountForm onChange={this.setAccountState} onFormSubmit={this._onAddAccount}
+                        <AccountForm onChange={this.setAccountState} onFormSubmit={this._onAddAccount}/>
                         <OrganizationDiv onChange={this.setAccountState }/>
                         <PartySupplementalDiv ent={this.state.emptyAccount} />
-                        
+
                     </div>
                 </div>
-    
+
             </div>
         );
         /* jshint ignore:end */
     }
-    
-    
+
+
 });
 
 module.exports = CreateAccountPage;
