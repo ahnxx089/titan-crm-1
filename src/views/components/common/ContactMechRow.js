@@ -10,55 +10,103 @@ var Link = require('react-router').Link;
 
 
 var ContactMechRow = React.createClass({
+    getInitialState: function () {
+        return {
+            typeDesc: '',
+            purposeTypeDesc: ''
+        }
+    },
+    componentDidMount: function () {
+        //TODO: get descriptions to match type/purposeType
+    },
+    componentWillUnmount: function () {
+        
+    },
+    getTypeDesc: function () {
+        
+    },
+    getPurposeTypeDesc: function () {
+        
+    },
+    onGotTypeDesc: function () {
+        
+    },
+    onGotTypeDesc: function () {
+        
+    },
     formatTelecom: function () {
-        var string = '';
-        //TODO
+        var contactMech = this.props.contactMech;
+        var string = contactMech.contactNumber;
+        
+        //Attach country code and are code, if applicable
+        if (contactMech.areaCode) {
+            string = contactMech.areaCode + '-' + string;
+            if (contactMech.countryCode) {
+                string = contactMech.countryCode + '-' + string;
+            }
+        }
+        
+        //Attach ask-for name, if applicable
+        if (contactMech.askForName) {
+            string += '<br />Ask for ' + contactMech.askForName;
+        }
+        
         return string
     },
     formatAddress: function () {
+        var contactMech = this.props.contactMech;
         var string = '';
-        //TODO
+        
+        if (contactMech.toName) {
+            string += 'To: ' + contactMech.toName + '<br />';
+        }
+        
+        if (contactMech.attnName) {
+            string += 'Attn: ' + contactMech.attnName + '<br />';
+        }
+        
+        var delimitter = '';
+        
+        if (contactMech.city) {
+            string += contactMech.city;
+            delimitter = ', ';
+        }
+        
+        if (contactMech.stateProvinceGeoId) {
+            string += delimitter + contactMech.stateProvinceGeoId;
+            delimitter = ', ';
+        }
+        
+        if (contactMech.zipOrPostalCode) {
+            string += delimitter + contactMech.zipOrPostalCode;
+        }
+        
         return string
     },
     render: function () {
         /* jshint ignore:start */
         var contactMech = this.props.contactMech;
-        var type = null;
         var information = null;
 
         switch (contactMech.contactMechTypeId) {
-            case 'EMAIL_ADDRESS':
-                type = <td>Email</td>
-                information = <td>{ contactMech.infoString }</td>;
-                break;
             case 'TELECOM_NUMBER':
-                type = <td>Telephone</td>
-                information = <td>{ formatTelecom() }</td>;
+                information = <td>{ this.formatTelecom() }</td>;
                 break;
             case 'POSTAL_ADDRESS':
-                type = <td>Address</td>
-                information = <td>{ formatAddress() }</td>;
-                break;
-            case 'WEB_ADDRESS':
-                type = <td>Website</td>
-                information = <td>{ contactMech.infoString }</td>;
+                information = <td>{ this.formatAddress() }</td>;
                 break;
             default:
-                type = <td></td>
-                information = <td></td>;
+                information = <td>{ contactMech.infoString }</td>;
         }
         
         return (
             <tr>
-                { type }
+                <td>{ this.state.typeDesc }</td>
                 { information }
-                <td>{ contactMech.contactMechPurposeTypeId }</td>
+                <td>{ this.state.purposeTypeDesc }</td>
                 <td>
                     <Link to={ '#' } className="btn btn-primary btn-xs">
                         <span className="fa fa-pencil-square-o"></span> Edit
-                    </Link>
-                    <Link to={ '#' } className="btn btn-primary btn-xs">
-                        <span className="fa fa-trash "></span> Remove
                     </Link>
                 </td>
             </tr>
