@@ -132,24 +132,20 @@ var contactData = function (knex) {
             .innerJoin('party', 'party.party_id', 'person.party_id')
             .where('role_type_id_from', 'CONTACT');
 
-        // user supplied only firstName
-        if ( searchByFirst && !searchByLast ){
-            return query.andWhere('person.first_name', 'like', '%'+firstName+'%');
+        if (searchByFirst || searchByLast){
+
+            if (searchByFirst){
+                query = query.andWhere('person.first_name', 'like', '%'+firstName+'%');
+            }
+            if (searchByLast){
+                query = query.andWhere('person.last_name', 'like', '%'+lastName+'%');
+            }
+            return query;
         }
-        // user supplied only lastName
-        if ( !searchByFirst && searchByLast ){
-            return query.andWhere('person.last_name', 'like', '%'+lastName+'%');
-        }
-        // user supplied both firstName and lastName
-        if ( searchByFirst && searchByLast ){
-            return query.andWhere('person.first_name', 'like', '%'+firstName+'%')
-                        .andWhere('person.last_name',  'like', '%'+lastName+'%' );
-        }
-        // user supplied neither firstName nor lastName
         else {
-            return query.andWhere('person.first_name', 'like', '')
-                        .andWhere('person.last_name',  'like', '');
+            return query.andWhere('person.first_name', 'like', '').andWhere('person.last_name',  'like', '');
         }
+
     };
 
     /**

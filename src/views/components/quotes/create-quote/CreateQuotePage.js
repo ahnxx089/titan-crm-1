@@ -8,12 +8,12 @@
 var React = require('react');
 var withRouter = require('react-router').withRouter;
 
-var AddQuoteForm = require('./AddQuoteForm'); 
+var AddQuoteForm = require('./AddQuoteForm');
 var QuotesStore = require('../../../stores/QuotesStore');
 var QuotesActions = require('../../../actions/QuotesActions');
 
 var CreateQuotePage = React.createClass({
-    
+
     getInitialState: function() {
         return {
             quote: {
@@ -30,11 +30,11 @@ var CreateQuotePage = React.createClass({
             addedQuoteId: ''
         };
     },
-    
+
     componentDidMount: function() {
         QuotesStore.addedQuoteListener(this._onAddedQuote);
     },
-    
+
     componentWillUnmount: function() {
         QuotesStore.removeListener('addedQuote', this._onAddedQuote);
     },
@@ -45,15 +45,15 @@ var CreateQuotePage = React.createClass({
         this.state.quote[ field ] = value;
         this.setState( {quote: this.state.quote} );
     },
-        
+
     _addQuote: function(event) {
         event.preventDefault();
         QuotesActions.addQuote(this.state.quote); // start the Flux unidirectional flow!
     },
 
     _onAddedQuote: function() {
-        
-        // After a successful ajax call in the store, calling QuotesStore.addedQuote() will return 
+
+        // After a successful ajax call in the store, calling QuotesStore.addedQuote() will return
         // one of the three results from quoteApi.addQuote, handle with if-else-if-else block
         var result = QuotesStore.addedQuote();
 
@@ -63,11 +63,11 @@ var CreateQuotePage = React.createClass({
             this.props.updateErrorBox(result.message);
         }
         // User has permission, but there were one or more validation errors
-        else if (Object.prototype.toString.call(result) === '[object Array]') 
+        else if (Object.prototype.toString.call(result) === '[object Array]')
         {
             this.props.updateErrorBox(result);
         }
-        // User had permission and no validation errors-- api should return the new partyId. 
+        // User had permission and no validation errors-- api should return the new partyId.
         // Note:  the new partyId won't actually get rendered on this page, but I still want
         // it to reach here for diagnostic purposes and to really prove we closed the loop.
         else if (result.hasOwnProperty('quoteId')) {
@@ -78,21 +78,23 @@ var CreateQuotePage = React.createClass({
             this.props.router.replace('/cp/quotes/my-quotes');
         }
     },
-                                          
+
     render: function (){
-        
-        /* jshint ignore:start */    
+
+        /* jshint ignore:start */
         return (
             <div>
-                <div className="panel panel-default">
-                    <div className="panel-heading panel-heading-custom">
-                        <h1>Create Quote</h1>
-                    </div>
-                    <div className="panel-body">
-                        <AddQuoteForm 
-                            quote={ this.state.quote } 
-                            onChange={ this.setQuoteState } 
-                            onFormSubmit={ this._addQuote } />                                            
+                <div className="container">
+                    <div className="panel panel-default">
+                        <div className="panel-heading panel-heading-custom">
+                            <h1>Create Quote</h1>
+                        </div>
+                        <div className="panel-body">
+                            <AddQuoteForm
+                                quote={ this.state.quote }
+                                onChange={ this.setQuoteState }
+                                onFormSubmit={ this._addQuote } />
+                        </div>
                     </div>
                 </div>
             </div>

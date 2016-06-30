@@ -53,7 +53,7 @@ var MyQuotesPage = React.createClass({
 
         return (
             <div>
-                <div className="container" >
+                <div className="container">
                     <div className="panel panel-default">
                         <div className="panel-heading panel-heading-custom">
                             <h1>My Quotes</h1>
@@ -65,11 +65,12 @@ var MyQuotesPage = React.createClass({
                                         <th>Quote ID</th>
                                         <th>Quote Name</th>
                                         <th>For Party ID</th>
-                                        <th>Issue Date</th>
+                                        <th>Issue Date (UT)</th>
                                         <th>Status Id</th>
                                         <th>Currency</th>
                                         <th>Sales Channel</th>
-                                        <th>Valid Thru</th>
+                                        <th>Valid Thru (UT)</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
