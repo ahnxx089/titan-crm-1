@@ -2,22 +2,18 @@
 // Jasmine spec (test suite) for Contact APIs.
 //
 // @file:   contactApiSpec.js
-// @author: Dinesh Shenoy <astroshenoy@gmail.com>
+// @authors: Dinesh Shenoy <astroshenoy@gmail.com>
+//           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint maxlen:1000 */
 var request = require('request');
 var apiBaseUrl = 'http://localhost:5000/api/contacts';
 
-// NOTE:  token and baseRequest declarations have been moved down into specific it() blocks
-// so that the tests can be customized enough to show what they need to, without each of us
-// having to overwrite one token up here outside describe().
-
 describe('Contact API', function () {
 
     it('is inaccessible without a valid token', function (done) {
 
-        // token and baseRequest request declarations moved in here so can pick a specific user
         var token = 'iAmNotAValidToken';
         var baseRequest = request.defaults({
             headers: {

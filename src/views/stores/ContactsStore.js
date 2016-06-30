@@ -210,7 +210,7 @@ ContactsStore.getContactsByPhoneNumber = function(phoneNumber) {
     var countryCode   = (phoneNumber.countryCode   === '' ? '' : validation.sanitizeInput(phoneNumber.countryCode  ));
     var areaCode      = (phoneNumber.areaCode      === '' ? '' : validation.sanitizeInput(phoneNumber.areaCode     ));
 
-    var queryString = '?contactNumber=' + contactNumber + '&countryCode=' + countryCode + '&areaCode' + areaCode;
+    var queryString = '?contactNumber=' + contactNumber + '&countryCode=' + countryCode + '&areaCode=' + areaCode;
 
     $.ajax({
         type: 'GET',
