@@ -173,27 +173,19 @@ var contactData = function (knex) {
             .innerJoin('telecom_number','telecom_number.contact_mech_id','party_contact_mech.contact_mech_id')
             .where('party_relationship.role_type_id_from', 'CONTACT');
 
-        // user supplied contact number + country code + area code
-        if (searchByContactNumber && searchByCountryCode && searchByAreaCode){
-            return query.andWhere('telecom_number.contact_number', 'like', '%'+contactNumber+'%')
-                        .andWhere('telecom_number.country_code', 'like', '%'+countryCode+'%')
-                        .andWhere('telecom_number.area_code', 'like', '%'+areaCode+'%');
+        if (searchByContactNumber || searchByCountryCode || searchByAreaCode) {
+
+            if (searchByContactNumber){
+                query = query.andWhere('telecom_number.contact_number', 'like', '%'+contactNumber+'%');
+            }
+            if (searchByCountryCode){
+                query = query.andWhere('telecom_number.country_code', 'like', '%'+countryCode+'%');
+            }
+            if (searchByAreaCode){
+                query = query.andWhere('telecom_number.area_code', 'like', '%'+areaCode+'%');
+            }
+            return query;
         }
-        // user supplied contact number + area code (but no country code)
-        if (searchByContactNumber && !searchByCountryCode && searchByAreaCode){
-            return query.andWhere('telecom_number.contact_number', 'like', '%'+contactNumber+'%')
-                        .andWhere('telecom_number.area_code', 'like', '%'+areaCode+'%');
-        }
-        // user supplied contact number + country code (but no area code)
-        if (searchByContactNumber && searchByCountryCode && !searchByAreaCode){
-            return query.andWhere('telecom_number.contact_number', 'like', '%'+contactNumber+'%')
-                        .andWhere('telecom_number.country_code', 'like', '%'+countryCode+'%');
-        }
-        // user supplied contact number but neither country code nor area code
-        if (searchByContactNumber && !searchByCountryCode && !searchByAreaCode){
-            return query.andWhere('telecom_number.contact_number', 'like', '%'+contactNumber+'%');
-        }
-        // user supplied none of the three (all 3 are empty strings)
         else {
             return query.andWhere('telecom_number.contact_number', 'like', '');
         }
