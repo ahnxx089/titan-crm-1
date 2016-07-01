@@ -49,7 +49,7 @@ Person.prototype.validateForInsert = function () {
 //    PreferredCurrencyUomId(nullable),
 //    Description(nullable),
 //    StatusId(required),
-//    CreatedBy(required),
+//    CreatedBy(required), // although per DB design, this should be nullable and can be null
 //    CreatedDate(required),
 //    UpdatedDate(required)
     
@@ -72,9 +72,6 @@ Person.prototype.validateForInsert = function () {
         }
     }
     return errors;
-    
-    
-    // Person.prototype.validate
 };
 
 Person.prototype.validateForUpdate = function () {

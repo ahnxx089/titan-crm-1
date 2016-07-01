@@ -18,6 +18,7 @@ var validation = require('../../common/validation')();
 var contactsOwned = [];
 var addedContactPartyId = '';   // for returning party_id of an added Contact
 var contactsByIdentity = [];    // for returning contacts retrieved by identity (first and/or last name)
+var contactsByPhoneNumber = [];    // for returning contacts retrieved by phone number
 var contactRetrieved = {};
 var updateRes = null;
 
@@ -38,9 +39,9 @@ ContactsStore.addGetDataListener = function (listener) {
 ContactsStore.emitGetData = function() {
     // see https://nodejs.org/api/events.html#events_emitter_emit_eventname_arg1_arg2
     // Synchronously calls each of the listeners registered for the event named 'getData'
-    // In previous function addGetDataListener is where listeners such as 
+    // In previous function addGetDataListener is where listeners such as
     // MyContactsPage._onGetData registered to get emits from this Store
-    this.emit('getData');  
+    this.emit('getData');
 };
 
 ContactsStore.addPutDataListener = function (listener) {
@@ -48,7 +49,7 @@ ContactsStore.addPutDataListener = function (listener) {
 };
 
 ContactsStore.emitPutData = function() {
-    this.emit('putData');  
+    this.emit('putData');
 };
 
 /* Next 2 functions:  for Views receiving emits after addContact */
@@ -57,7 +58,7 @@ ContactsStore.addedContactListener = function (listener) {
 };
 
 ContactsStore.emitAddedContact = function() {
-    this.emit('addedContact');  
+    this.emit('addedContact');
 };
 
 /* Next 2 functions:  for Views receiving emits after getContactsByIdentity (first or last name) */
@@ -66,7 +67,16 @@ ContactsStore.addGetByIdentityListener = function (listener) {
 };
 
 ContactsStore.emitGetByIdentity = function() {
-    this.emit('getByIdentity');  
+    this.emit('getByIdentity');
+};
+
+/* Next 2 functions:  for Views receiving emits after getContactsByPhoneNumber */
+ContactsStore.addGetByPhoneNumberListener = function (listener) {
+    this.on('getByPhoneNumber', listener);
+};
+
+ContactsStore.emitGetByPhoneNumber = function() {
+    this.emit('getByPhoneNumber');
 };
 
 
@@ -99,7 +109,7 @@ ContactsStore.updateContact = function(contactId, contact) {
     $.ajax({
         type: 'PUT',
         url: '/api/contacts/' + contactId,
-        headers: { 
+        headers: {
             'x-access-token': Cookies.get('titanAuthToken')
         },
         data: contact,
@@ -162,16 +172,15 @@ ContactsStore.addedContact = function() {
 // Next two functions are called by FindContactPage to getContactsByIdentity
 ContactsStore.getContactsByIdentity = function(identity) {
     var thisContactsStore = this;
-    
+
     // an empty search box for first or last name comes in as empty string, keep as empty string;
     // if not empty then clean off any whitespaces (reminder: cannot not send empty string to validation.sanitizeInput,
     // which returns null in that case, which would make e.g. var lastName = null instead of = '' )
     var firstName = (identity.firstName === '' ? '' : validation.sanitizeInput(identity.firstName));
     var lastName  = (identity.lastName  === '' ? '' : validation.sanitizeInput(identity.lastName ));
 
-    //var queryString = '?firstName=' + firstName + '&lastName=' + lastName;
     var queryString = '?firstName=' + firstName + '&lastName=' + lastName;
-    
+
     $.ajax({
         type: 'GET',
         url: '/api/contacts' + queryString,
@@ -188,6 +197,38 @@ ContactsStore.getContactsByIdentity = function(identity) {
 
 ContactsStore.getByIdentity = function() {
     return contactsByIdentity;
+};
+
+// Next two functions are called by FindContactPage to getContactsByPhoneNumber
+ContactsStore.getContactsByPhoneNumber = function(phoneNumber) {
+    var thisContactsStore = this;
+
+    // an empty search box comes in as empty string, keep as empty string;
+    // if not empty then clean off any whitespaces (reminder: cannot not send empty string to validation.sanitizeInput,
+    // which returns null in that case, which would make e.g. var lastName = null instead of = '' )
+    var contactNumber = (phoneNumber.contactNumber === '' ? '' : validation.sanitizeInput(phoneNumber.contactNumber));
+    var countryCode   = (phoneNumber.countryCode   === '' ? '' : validation.sanitizeInput(phoneNumber.countryCode  ));
+    var areaCode      = (phoneNumber.areaCode      === '' ? '' : validation.sanitizeInput(phoneNumber.areaCode     ));
+
+    var queryString = '?contactNumber=' + contactNumber + '&countryCode=' + countryCode + '&areaCode=' + areaCode;
+
+    $.ajax({
+        type: 'GET',
+        url: '/api/contacts' + queryString,
+        headers: {  'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(contact) {
+            // contactApi.getContactsByPhoneNumber returns an array of objects (Contact + ContactMech Entity)
+            contactsByPhoneNumber = contact;
+            thisContactsStore.emitGetByPhoneNumber();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+ContactsStore.getByPhoneNumber = function() {
+    return contactsByPhoneNumber;
 };
 
 
@@ -212,12 +253,16 @@ TitanDispatcher.register(function(action) {
             ContactsStore.getContactsByIdentity(action.data);
             break;
         }
+        case ContactsConstants.GET_CONTACTS_BY_PHONE_NUMBER: {
+            ContactsStore.getContactsByPhoneNumber(action.data);
+            break;
+        }
         case ContactsConstants.UPDATE_CONTACT: {
             ContactsStore.updateContact(action.data.contactId, action.data.contact);
             break;
         }
     }
-    
+
 });
 
 module.exports = ContactsStore;

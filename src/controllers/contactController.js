@@ -307,13 +307,22 @@ var contactController = function (knex) {
      * Gets contacts by identity (see opentaps' Find Contact feature)
      * @param {String} query - query string may contain firstName and/or lastName
      * @param {Object} user - The logged in user
-     * @return {Object} promise - Fulfillment value is an array of contact entities
+     * @return {Object} promise - Fulfillment value is an array of contact entities + phone info
      */
     var getContactsByIdentity = function (query, user) {
         // Check security permissions of user against accepted permissions for this function
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_VIEW');
         if (hasPermission !== -1) {
             // user has permission, proceed towards data layer
+
+            // function used below to combine the retrieved Contact(s) with phone number;
+            // see:  https://plainjs.com/javascript/utilities/merge-two-javascript-objects-19/
+            var extend = function (obj, src) {
+                for (var key in src) {
+                    if (src.hasOwnProperty(key)) obj[key] = src[key];
+                }
+                return obj;
+            };
 
             // Declaring variables to hold incoming query string properties ensures that an undefined
             // value results in an empty string.
@@ -345,6 +354,90 @@ var contactController = function (knex) {
                         contactEntities.push(contact);
                     }
                     return contactEntities;
+                });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            // user does not have permissions of a contact owner, return null
+            return null;
+        }
+    };
+
+    /**
+     * Gets contacts by phone number
+     * @param {String} query - query string may contain contactNumber, countryCode and/or areaCode
+     * @param {Object} user - The logged in user
+     * @return {Object} promise - Fulfillment value is an array of contact entities + phone info
+     */
+    var getContactsByPhoneNumber = function (query, user){
+        // Check security permissions of user against accepted permissions for this function
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_VIEW');
+        if (hasPermission !== -1){
+
+            // function used below to combine the retrieved Contact(s) with phone number;
+            // see:  https://plainjs.com/javascript/utilities/merge-two-javascript-objects-19/
+            var extend = function (obj, src) {
+                for (var key in src) {
+                    if (src.hasOwnProperty(key)) obj[key] = src[key];
+                }
+                return obj;
+            };
+
+            // Declaring variables to hold incoming query string properties ensures that an undefined
+            // value results in an empty string.
+            var contactNumber = query.contactNumber;
+            var countryCode = query.countryCode;
+            var areaCode = query.areaCode;
+
+            var promise = contactData.getContactsByPhoneNumber(contactNumber, countryCode, areaCode)
+                .then(function (contactsWithPhoneNum) {
+
+                    // Map the retrieved result set to corresponding entities
+                    var contactsRetrieved = [];
+                    for (var i = 0; i < contactsWithPhoneNum.length; i++) {
+                        var contact = new Contact(
+                            contactsWithPhoneNum[i].party_id,
+                            contactsWithPhoneNum[i].party_type_id,
+                            contactsWithPhoneNum[i].currency_uom_id,
+                            contactsWithPhoneNum[i].description,
+                            contactsWithPhoneNum[i].status_id,
+                            contactsWithPhoneNum[i].created_by,
+                            contactsWithPhoneNum[i].created_date,
+                            contactsWithPhoneNum[i].updated_date,
+                            contactsWithPhoneNum[i].salutation,
+                            contactsWithPhoneNum[i].first_name,
+                            contactsWithPhoneNum[i].middle_name,
+                            contactsWithPhoneNum[i].last_name,
+                            contactsWithPhoneNum[i].birth_date,
+                            contactsWithPhoneNum[i].comments
+                        );
+                        var contactMech = new ContactMech(
+                            contactsWithPhoneNum[i].contact_mech_id,
+                            contactsWithPhoneNum[i].contact_mech_type_id,
+                            contactsWithPhoneNum[i].contact_mech_purpose_type_id,
+                            contactsWithPhoneNum[i].info_string,
+                            contactsWithPhoneNum[i].created_date,
+                            contactsWithPhoneNum[i].updated_date,
+                            contactsWithPhoneNum[i].country_code,
+                            contactsWithPhoneNum[i].area_code,
+                            contactsWithPhoneNum[i].contact_number,
+                            contactsWithPhoneNum[i].ask_for_name,
+                            contactsWithPhoneNum[i].to_name,
+                            contactsWithPhoneNum[i].attn_name,
+                            contactsWithPhoneNum[i].address1,
+                            contactsWithPhoneNum[i].address2,
+                            contactsWithPhoneNum[i].directions,
+                            contactsWithPhoneNum[i].city,
+                            contactsWithPhoneNum[i].state_province_geo_id,
+                            contactsWithPhoneNum[i].zip_or_postal_code,
+                            contactsWithPhoneNum[i].country_geo_id
+                        );
+                        contactsRetrieved.push( extend(contact, contactMech) );
+                    }
+                    return contactsRetrieved;
                 });
             promise.catch(function (error) {
                 // Log the error
@@ -429,6 +522,7 @@ var contactController = function (knex) {
         getContactById: getContactById,
         getContactsByOwner: getContactsByOwner,
         getContactsByIdentity: getContactsByIdentity,
+        getContactsByPhoneNumber: getContactsByPhoneNumber,
         addContact: addContact,
         updateContact: updateContact,
         deleteContact: deleteContact

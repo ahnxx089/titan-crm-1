@@ -9,7 +9,7 @@ var TitanDispatcher = require('../dispatcher/TitanDispatcher');
 var ContactsConstants = require('../constants/ContactsConstants');
 
 var ContactsActions = {
-    
+
     getContactsByOwner: function() {
         TitanDispatcher.dispatch({
             actionType: ContactsConstants.GET_MY_CONTACTS
@@ -33,6 +33,12 @@ var ContactsActions = {
             data: identity
         });
     },
+    getContactsByPhoneNumber: function(phoneNumber) {
+        TitanDispatcher.dispatch({
+            actionType: ContactsConstants.GET_CONTACTS_BY_PHONE_NUMBER,
+            data: phoneNumber
+        });
+    },
     updateContact: function(contactId, contact) {
         TitanDispatcher.dispatch({
             actionType: ContactsConstants.UPDATE_CONTACT,
@@ -42,7 +48,7 @@ var ContactsActions = {
             }
         });
     }
-    
+
 };
 
 module.exports = ContactsActions;

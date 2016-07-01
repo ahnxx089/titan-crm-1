@@ -53,7 +53,7 @@ var routes = (
             {/* Accounts module pages */}
             <Route path="accounts">
                 <Route path="my-accounts" component={ require('./components/accounts/my-accounts/MyAccountsPage') } />
-                <Route path="create-account" component={require('./components/accounts/create-account/CreateAccountPage') } /> 
+                <Route path="create-account" component={require('./components/accounts/create-account/CreateAccountPage') } />
                 <Route path="find-account" component={require('./components/accounts/find-account/FindAccountPage') } />
                 <Route path="account-details/:id" component={require('./components/accounts/account-details/AccountDetailsPage') } />
             </Route>
@@ -62,9 +62,10 @@ var routes = (
             <Route path="quotes">
                 <Route path="my-quotes" component={require('./components/quotes/my-quotes/MyQuotesPage') } />
                 <Route path="create-quote" component={require('./components/quotes/create-quote/CreateQuotePage')} />
-
+                <Route path="update/:id" component={require('./components/quotes/update-quote/UpdateQuotePage')} />
+                <Route path="quote-details/:id" component={require('./components/quotes/quote-details/QuoteDetailsPage')} />
             </Route>
-            
+
         </Route>
         <Route path="login" component={require('./components/login/LoginPage') } />
         {/*<NotFoundRoute handler={require('./components/notFoundPage')} />*/}
