@@ -14,7 +14,7 @@ var apiBaseUrl = 'http://localhost:5000/api/quotes';
 // so that the tests can be customized enough to show what they need to, without each of us
 // having to overwrite one token up here outside describe().
 
-describe('Quote API', function () {
+xdescribe('Quote API', function () {
 
     // This test passes because var token and var baseRequest are commented out-- no token, no access! 
     it('is inaccessible without a valid token', function (done) {
@@ -272,7 +272,7 @@ describe('getQuotesByAdvanced, (/api/quotes?SOME_PROPERTY) retrieves found quote
     });
 
     // PLEASE COMMENT THIS TEST OUT when doing other normal tests except this one
-    it('should throw errors when nothing is specified, due to route to getQuotesByOwner which has bugs', function (done) {
+    xit('should throw errors when nothing is specified, due to route to getQuotesByOwner which has bugs', function (done) {
         baseRequest.get(apiBaseUrl + '?', function (err, res, body) {
             expect(err).toBeNull();
             try {

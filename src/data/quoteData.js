@@ -8,6 +8,7 @@
 /* jshint camelcase: false */
 /* jshint maxlen:1000 */
 /* jshint shadow:true */
+/* jshint maxcomplexity: false */
 
 var quoteData = function (knex) {
 
@@ -263,28 +264,66 @@ var quoteData = function (knex) {
 
     };
 
+    // NOTE: getQuotesByAdvanced[Alt] did not have links to quote_role table. 
+    
     // Author: Lucas
     // In case of large number of quotes, fetching them all is not efficient. 
-    // Consider: build raw query (for MySQL) in data layer. See caseData.getCasesByAdvanced for reference. 
+    // Consider: build raw query (for MySQL) in data layer. See Dukjin's caseData.getCasesByAdvanced for reference. 
+    // This function is not used, and deactivated. 
+    /**
+     * Gets all quotes from database by advanced search
+     * @return {Object} promise - Fulfillment value is an array of raw data objects
+     */
+    var getQuotesByAdvancedAlt = function (quoteId, quoteName, status, account, salesChannel) {
+
+        //        return knex.raw('select * from quote where ' + ' sales_channel_enum_id = "' + salesChannel + '"');
+        return knex.from('quote');
+    };
+    
+    // Author: Lucas
+    // Thanks: Dinesh
+    // This is a better approach to fetch matching records, better than the alternative version and raw sql version. 
     /**
      * Gets all quotes from database by advanced search
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getQuotesByAdvanced = function (quoteId, quoteName, status, account, salesChannel) {
+        var searchByQuoteId = !!quoteId;
+        var searchByQuoteName = !!quoteName;
+        var searchByStatus = !!status;
+        var searchByAccount = !!account;
+        var searchBySalesChannel = !!salesChannel;
+        
+        var query = knex.select().from('quote');
+        
+        if (searchByQuoteId || searchByQuoteName || searchByStatus || searchByAccount || searchBySalesChannel) {
 
-        //        var conditionArray = [quoteId, quoteName, status, account, salesChannel];
-        //        var conditionString = '';
-        //        conditionString += quoteId.length > 0 ? 'a' : '';
-        //        conditionString += quoteName.length > 0 ? 'b' : '';
-        //        conditionString += status.length > 0 ? 'c' : '';
-        //        conditionString += account.length > 0 ? 'd' : '';
-        //        conditionString += salesChannel.length > 0 ? 'e' : '';
-        //        console.log(conditionString);
-
-
-        //        return knex.raw('select * from quote where ' + ' sales_channel_enum_id = "' + salesChannel + '"');
-        return knex.from('quote');
+            // not-nullable number
+            if (searchByQuoteId){
+                query = query.andWhere('quote_id', quoteId);
+            }
+            // nullable varchar
+            if (searchByQuoteName){
+                query = query.andWhere('quote_name', 'like', '%'+quoteName+'%');
+            }
+            // nullable varchar
+            if (searchByStatus){
+                query = query.andWhere('status_id', 'like', '%'+status+'%');
+            }
+            // nullable number
+            if (searchByAccount){
+                query = query.andWhere('party_id', account);
+            }
+            // not-nullable varchar
+            if (searchBySalesChannel){
+                query = query.andWhere('sales_channel_enum_id', salesChannel);
+            }
+            console.log(query.toString());
+        }
+        return query;
     };
+
+    
 
     return {
         addQuote: addQuote,

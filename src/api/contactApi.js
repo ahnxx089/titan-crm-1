@@ -7,6 +7,7 @@
 /////////////////////////////////////////////////
 
 /* jshint shadow:true */
+/* jshint maxcomplexity: false */
 
 var redisClient = require('../config/redisClient');
 var winston = require('winston');

@@ -6,6 +6,8 @@
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>
 /////////////////////////////////////////////////
 
+/* jshint maxcomplexity: false */
+
 var EventEmitter = require('events').EventEmitter;
 var TitanDispatcher = require('../dispatcher/TitanDispatcher');
 var CommonConstants = require('../constants/CommonConstants');
