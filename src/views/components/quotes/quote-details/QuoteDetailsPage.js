@@ -6,6 +6,8 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
+var QuotePanelBody = require('./QuotePanelBody');
+
 var QuotesStore = require('../../../stores/QuotesStore');
 var QuotesActions = require('../../../actions/QuotesActions');
 
@@ -36,22 +38,20 @@ var QuotesDetailsPage = React.createClass({
 
         /* jshint ignore:start */
         return (
-
             <div>
+                {/* Note: If this container winds up being the outermost div, get rid of the wrapping div */}
                 <div className="container">
-                    <div className="panel panel-default">
-                        <div className="panel-heading panel-heading-custom">
-                            <h1>Quote Details</h1>
-                        </div>
-                    </div>
-                    {/* TRY:  This panel body could contain one or more panels inside it; well, for now
-                        at least get the info from the retrieved quote dumped into it. */}
-                    <div className="panel-body">
-                        <pre>{JSON.stringify(this.state.quote,null,'\t')}</pre>
-                    </div>
+
+                    {/* Top panel is the Quote itself, displayed in a child component.
+                         TO BE ADDED SOON:  Pass down a prop to respond to a click of the Update Quote button,
+                         handle the redirect and sending out of     */}
+                    <QuotePanelBody quote={ this.state.quote } />
+
+                    {/* Item Panel(s)-- have to be able to have more than one... */}
+
+
                 </div>
             </div>
-
         );
 
         /* jshint ignore:end */

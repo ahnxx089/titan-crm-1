@@ -213,34 +213,12 @@ var quoteData = function (knex) {
     /**
      * Gets one quote by its id
      * @param {Number} quoteId - Unique id of the quote to be fetched
-     * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is a quote entity
      */
     var getQuoteById = function (quoteId) {
-        return knex.select(
-                'quote.quote_id',
-                'quote.quote_type_id',
-                'quote.party_id as "party_id"',
-                'quote.issue_date',
-                'quote.status_id',
-                'quote.currency_uom_id',
-                'quote.sales_channel_enum_id',
-                'quote.valid_from_date',
-                'quote.valid_thru_date',
-                'quote.quote_name',
-                'quote.description',
-                'quote.contact_party_id',
-                'quote.created_by_party_id',
-                'quote.created_date',
-                'quote.updated_date',
-                'quote_role.quote_id',
-                'quote_role.party_id',
-                'quote_role.role_type_id')
+        return knex.select( 'quote_id', 'quote_type_id', 'party_id', 'issue_date', 'status_id', 'currency_uom_id', 'sales_channel_enum_id', 'valid_from_date', 'valid_thru_date', 'quote_name', 'description', 'contact_party_id', 'created_by_party_id', 'created_date', 'updated_date')
             .from('quote')
-            .leftJoin('quote_role', 'quote.quote_id', '=', 'quote_role.quote_id')
-            .where({
-                'quote.quote_id': quoteId
-            });
+            .where('quote_id', quoteId);
     };
 
     /**
@@ -264,8 +242,8 @@ var quoteData = function (knex) {
     };
 
     // Author: Lucas
-    // In case of large number of quotes, fetching them all is not efficient. 
-    // Consider: build raw query (for MySQL) in data layer. See caseData.getCasesByAdvanced for reference. 
+    // In case of large number of quotes, fetching them all is not efficient.
+    // Consider: build raw query (for MySQL) in data layer. See caseData.getCasesByAdvanced for reference.
     /**
      * Gets all quotes from database by advanced search
      * @return {Object} promise - Fulfillment value is an array of raw data objects

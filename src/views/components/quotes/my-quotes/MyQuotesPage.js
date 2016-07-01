@@ -64,11 +64,10 @@ var MyQuotesPage = React.createClass({
                                     <tr>
                                         <th>Quote ID</th>
                                         <th>Quote Name</th>
-                                        <th>For Party ID</th>
+                                        <th>Account Party ID</th>
+                                        <th>Contact Party ID</th>
                                         <th>Issue Date (UT)</th>
                                         <th>Status Id</th>
-                                        <th>Currency</th>
-                                        <th>Sales Channel</th>
                                         <th>Valid Thru (UT)</th>
                                         <th>Actions</th>
                                     </tr>
