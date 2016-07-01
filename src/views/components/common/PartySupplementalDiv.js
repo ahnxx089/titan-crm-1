@@ -198,7 +198,7 @@ var PartySupplementalDiv = React.createClass({
                     </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label htmlFor="importantNote">Important Note</label>
+                            <label htmlFor="importantNote" >Important Note</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
                                 <textarea id="importantNote" className="form-control" rows="4" placeholder="Note" onChange={ this.props.onChange } value={ this.props.ent.importantNote} ></textarea>
