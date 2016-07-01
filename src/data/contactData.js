@@ -13,10 +13,10 @@
 var contactData = function (knex) {
 
     /**
-     * Add a new contact in the database:  insert into tables party, person, 
+     * Add a new contact in the database:  insert into tables party, person,
      *  party_role and party_relationship.
-     * 
-     *  CREDIT:  Much thanks to Lucas for demonstrating how to chain knex inserts into 
+     *
+     *  CREDIT:  Much thanks to Lucas for demonstrating how to chain knex inserts into
      *  more than just two tables as in addPerson.
      *
      * @param {Object} contact - The new contact entity to be added as a Party
@@ -115,58 +115,78 @@ var contactData = function (knex) {
             .andWhere('party_id_to', userPartyId);
     };
 
-    /** 
+    /**
      * Gets all contacts from database by identity (first or last name matching)
      * @param {String} firstName - firstName of Contact to be fetched (can be empty string)
      * @param {String} lastName - lastName of Contact to be fetched (can be empty string)
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
-    var getContactsByIdentity = function (firstName, lastName) {
-        var columnsToSelect = ['party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id', 'party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date', 'person.salutation', 'person.first_name', 'person.middle_name', 'person.last_name', 'person.birth_date', 'person.comments'];
+    var getContactsByIdentity = function (firstName, lastName){
 
-        // search is by lastName only
-        if (firstName.length === 0 && lastName.length > 0) {
-            var lastNameLike = '%' + lastName + '%';
-            return knex.select(columnsToSelect)
-                .from('party_relationship')
-                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
-                .innerJoin('party', 'party.party_id', 'person.party_id')
-                .andWhere('role_type_id_from', 'CONTACT')
-                .andWhere('last_name', 'like', lastNameLike);
+        var searchByFirst = !!firstName;
+        var searchByLast = !!lastName;
+
+        var query = knex.select('party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id','party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date', 'person.salutation', 'person.first_name', 'person.middle_name', 'person.last_name', 'person.birth_date', 'person.comments')
+            .from('party_relationship')
+            .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+            .innerJoin('party', 'party.party_id', 'person.party_id')
+            .where('role_type_id_from', 'CONTACT');
+
+        if (searchByFirst || searchByLast){
+
+            if (searchByFirst){
+                query = query.andWhere('person.first_name', 'like', '%'+firstName+'%');
+            }
+            if (searchByLast){
+                query = query.andWhere('person.last_name', 'like', '%'+lastName+'%');
+            }
+            return query;
         }
-        // search is by firstName only
-        if (firstName.length > 0 && lastName.length === 0) {
-            var firstNameLike = '%' + firstName + '%';
-            return knex.select(columnsToSelect)
-                .from('party_relationship')
-                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
-                .innerJoin('party', 'party.party_id', 'person.party_id')
-                .andWhere('role_type_id_from', 'CONTACT')
-                .andWhere('first_name', 'like', firstNameLike);
-        }
-        // search is by firstName and lastName both (more restrictive than previous two)
-        if (firstName.length > 0 && lastName.length > 0) {
-            var firstNameLike = '%' + firstName + '%';
-            var lastNameLike = '%' + lastName + '%';
-            return knex.select(columnsToSelect)
-                .from('party_relationship')
-                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
-                .innerJoin('party', 'party.party_id', 'person.party_id')
-                .andWhere('role_type_id_from', 'CONTACT')
-                .andWhere('first_name', 'like', firstNameLike)
-                .andWhere('last_name', 'like', lastNameLike);
-        }
-        // search is for empty strings, return an empty result
         else {
-            return knex.select(columnsToSelect)
-                .from('party_relationship')
-                .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
-                .innerJoin('party', 'party.party_id', 'person.party_id')
-                .andWhere('role_type_id_from', 'CONTACT')
-                .andWhere('first_name', 'like', '')
-                .andWhere('last_name', 'like', '');
+            return query.andWhere('person.first_name', 'like', '').andWhere('person.last_name',  'like', '');
+        }
+
+    };
+
+    /**
+     * Gets all contacts from database by phone number
+     * @param {String} telecomNumber - required
+     * @param {String} countryCode - (can be empty string)
+     * @param {String} areaCode - (can be empty string)
+     * @return {Object} promise - Fulfillment value is an array of raw data objects
+     */
+    var getContactsByPhoneNumber = function(contactNumber, countryCode, areaCode){
+
+        var searchByContactNumber = !!contactNumber;
+        var searchByCountryCode = !!countryCode;
+        var searchByAreaCode = !!areaCode;
+
+        var query = knex.select('party.party_id', 'party.party_type_id', 'party.preferred_currency_uom_id','party.description', 'party.status_id', 'party.created_by', 'party.created_date', 'party.updated_date', 'person.salutation', 'person.first_name', 'person.middle_name', 'person.last_name', 'person.birth_date', 'person.comments', 'telecom_number.contact_mech_id', 'telecom_number.country_code', 'telecom_number.area_code', 'telecom_number.contact_number', 'telecom_number.ask_for_name')
+            .from('party_relationship')
+            .innerJoin('person', 'person.party_id', 'party_relationship.party_id_from')
+            .innerJoin('party', 'party.party_id', 'person.party_id')
+            .innerJoin('party_contact_mech', 'party_contact_mech.party_id', 'party.party_id')
+            .innerJoin('telecom_number','telecom_number.contact_mech_id','party_contact_mech.contact_mech_id')
+            .where('party_relationship.role_type_id_from', 'CONTACT');
+
+        if (searchByContactNumber || searchByCountryCode || searchByAreaCode) {
+
+            if (searchByContactNumber){
+                query = query.andWhere('telecom_number.contact_number', 'like', '%'+contactNumber+'%');
+            }
+            if (searchByCountryCode){
+                query = query.andWhere('telecom_number.country_code', 'like', '%'+countryCode+'%');
+            }
+            if (searchByAreaCode){
+                query = query.andWhere('telecom_number.area_code', 'like', '%'+areaCode+'%');
+            }
+            return query;
+        }
+        else {
+            return query.andWhere('telecom_number.contact_number', 'like', '');
         }
     };
+
 
     /**
      * Update a contact in database
@@ -299,6 +319,7 @@ var contactData = function (knex) {
         getContactById: getContactById,
         getContactsByOwner: getContactsByOwner,
         getContactsByIdentity: getContactsByIdentity,
+        getContactsByPhoneNumber: getContactsByPhoneNumber,
         updateContact: updateContact,
         deleteContact: deleteContact
     };

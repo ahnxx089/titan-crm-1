@@ -7,7 +7,7 @@
 
 var React = require('react');
 var SearchForm = require('./SearchForm');
-var ContactRow = require('../my-contacts/ContactRow');
+var ContactRowWithPhone = require('./ContactRowWithPhone');
 var ContactsStore = require('../../../stores/ContactsStore');
 var ContactsActions = require('../../../actions/ContactsActions');
 
@@ -16,11 +16,13 @@ var FindContactsPage = React.createClass({
     /* Each type of search gets a separate state:
         "Find By ID #" --> idField.partyId
         "Find By Name" --> nameField.firstName, nameField.lastName
+        "Find By Phone Number" --> phoneField.contactNumber, phoneField.countryCode, phoneField.AreaCode
     */
     getInitialState: function () {
         return {
-            idField: { partyId: '' }, 
+            idField: { partyId: '' },
             nameField: { firstName: '', lastName: '' },
+            phoneField: { contactNumber: '', countryCode: '', areaCode: '' },
             contactsFound: null
         };
     },
@@ -28,35 +30,50 @@ var FindContactsPage = React.createClass({
     componentDidMount: function () {
         ContactsStore.addGetDataListener(this._onGetById);
         ContactsStore.addGetByIdentityListener(this._onGetByIdentity);
+        ContactsStore.addGetByPhoneNumberListener(this._onGetByPhoneNumber);
     },
 
     componentWillUnmount: function () {
         ContactsStore.removeListener('getData', this._onGetById);
         ContactsStore.removeListener('getByIdentity', this._onGetByIdentity);
+        ContactsStore.removeListener('getByPhoneNumber', this._onGetByPhoneNumber);
     },
 
-    // saves numbers typed in "Find By ID #" and resets other states to empty 
+    // saves numbers typed in "Find By ID #" and resets other states to empty
     setIdFieldState: function (event) {
         var field = event.target.id;
         var value = event.target.value;
         this.state.idField[field] = value;
         this.setState({ idField: this.state.idField });
         this.setState({ nameField: { firstName: '', lastName: '' } });
+        this.setState({ phoneField: { contactNumber: '', countryCode: '', areaCode: '' } });
     },
 
-    // saves strings typed in "Find By Name" and resets other states to empty 
+    // saves strings typed in "Find By Name" and resets other states to empty
     setNameFieldState: function (event) {
         var field = event.target.id;
         var value = event.target.value;
         this.state.nameField[field] = value;
         this.setState({ nameField: this.state.nameField });
         this.setState({ idField: { partyId: '' } });
+        this.setState({ phoneField: { contactNumber: '', countryCode: '', areaCode: '' } });
+    },
+
+    // saves strings typed in "Find By Phone Number" and resets other states to empty
+    setPhoneFieldState: function (event) {
+        var field = event.target.id;
+        var value = event.target.value;
+        this.state.phoneField[field] = value;
+        this.setState({ phoneField: this.state.phoneField });
+        this.setState({ idField: { partyId: '' } });
+        this.setState({ nameField: { firstName: '', lastName: '' } });
     },
 
     _resetForm: function (event) {
         this.setState({
-            idField: { partyId: '' }, 
+            idField: { partyId: '' },
             nameField: { firstName: '', lastName: '' },
+            phoneField: { contactNumber: '', countryCode: '', areaCode: '' },
             contactsFound: null
         });
     },
@@ -67,6 +84,7 @@ var FindContactsPage = React.createClass({
         event.preventDefault();
 
         var partyId = this.state.idField.partyId;
+
         var firstName = this.state.nameField.firstName;
         var lastName = this.state.nameField.lastName;
         var identity = {
@@ -74,11 +92,23 @@ var FindContactsPage = React.createClass({
             lastName: lastName
         };
 
+        var contactNumber = this.state.phoneField.contactNumber;
+        var countryCode = this.state.phoneField.countryCode;
+        var areaCode = this.state.phoneField.areaCode;
+        var phoneNumber = {
+            contactNumber: contactNumber,
+            countryCode: countryCode,
+            areaCode: areaCode
+        };
+
         if (partyId.length > 0){
             ContactsActions.getContactById(partyId);
         }
-        if ( (firstName.length > 0) || (lastName.length > 0) ){
+        if ( (firstName.length > 0) || (lastName.length > 0) ) {
             ContactsActions.getContactsByIdentity(identity);
+        }
+        if ( (contactNumber.length > 0) || (countryCode.length > 0) || (areaCode.length > 0) ) {
+            ContactsActions.getContactsByPhoneNumber(phoneNumber);
         }
     },
 
@@ -94,6 +124,12 @@ var FindContactsPage = React.createClass({
         });
     },
 
+    _onGetByPhoneNumber: function () {
+        this.setState({
+            contactsFound: ContactsStore.getByPhoneNumber()
+        });
+    },
+
     render: function () {
 
         /* jshint ignore:start */
@@ -103,17 +139,18 @@ var FindContactsPage = React.createClass({
 
         // for a result from initiating action ContactsActions.getContactById(partyId)
         if ( Object.prototype.toString.call(contacts) === '[object Object]' ){
-            // when search by Id turns up no result, the returned object lacks a partyId, 
+            // when search by Id turns up no result, the returned object lacks a partyId,
             // so this prevents an empty row from rendering
             if (contacts.hasOwnProperty('partyId')){
-                contactsJSX.push(<ContactRow key={ 'contact_0' } contact={ contacts }/>);
+                contactsJSX.push(<ContactRowWithPhone key={ 'contact_0' } contact={ contacts }/>);
             }
         }
 
         // for a result from initiating action ContactsActions.getContactsByIdentity(identity)
+        //  or a result from initiating action ContactsActions.getContactsByPhoneNumber(phoneNumber)
         if ( Object.prototype.toString.call(contacts) === '[object Array]' ){
             for (var i = 0; i < contacts.length; i++) {
-                contactsJSX.push(<ContactRow key={ 'contact_' + i } contact={ contacts[i]}/>);
+                contactsJSX.push(<ContactRowWithPhone key={ 'contact_' + i } contact={ contacts[i]}/>);
             }
         }
 
@@ -130,8 +167,10 @@ var FindContactsPage = React.createClass({
                             <SearchForm
                                 idField={ this.state.idField }
                                 nameField={ this.state.nameField }
+                                phoneField={ this.state.phoneField }
                                 onIdFieldChange={ this.setIdFieldState }
                                 onNameFieldChange={ this.setNameFieldState }
+                                onPhoneFieldChange={ this.setPhoneFieldState }
                                 onFormSubmit={ this._findContacts }
                                 onFormReset={ this._resetForm } />
                         </div>
@@ -150,6 +189,9 @@ var FindContactsPage = React.createClass({
                                         <th>Salutation</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
+                                        <th>Country Code</th>
+                                        <th>Area Code</th>
+                                        <th>Phone Number</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>

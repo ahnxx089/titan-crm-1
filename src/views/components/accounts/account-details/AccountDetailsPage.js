@@ -40,19 +40,17 @@ var AccountDetailsPage = React.createClass({
     render: function () {
         
         var account = this.state.account;
+        var contactMechs = account.contactMechs || [];
         
         return (
             /* jshint ignore: start */
             <div class="container" id="container">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                        <pre style={ { textAlign: 'left' } }><code>
-                          {JSON.stringify(this.props.params, null, 4)}
-                        </code></pre>
                         <h1 class="page-header">Account Details</h1>
                         <DetailsHeading account={account} />
                         <MainInfoDiv account={account}/>
-                        <ContactInfoDiv />
+                        <ContactInfoDiv contactMechs={contactMechs}/>
                     </div>
                 </div>
             </div>

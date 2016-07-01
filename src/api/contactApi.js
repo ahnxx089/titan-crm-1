@@ -55,7 +55,7 @@ var contactApi = function (knex) {
 
     // GET /api/contacts
     //
-    // Methods:  getContactsByOwner, getContactsByIdentity
+    // Methods:  getContactsByOwner, getContactsByIdentity, getContactsByPhoneNumber
     //
     var getContacts = function (req, res) {
 
@@ -75,7 +75,7 @@ var contactApi = function (knex) {
                 // Data is NOT in the cache
                 else {
                     // Log the error
-                    winston.error(err);
+                    winston.error('No redis');
                     // Get contacts from the database
                     var resultsForThisUser = contactController.getContactsByOwner(req.user);
                     // IF ELSE block interprets controller returning an object or null
@@ -100,15 +100,6 @@ var contactApi = function (knex) {
         // getContactsByIdentity: ELSE IF ensures there is only one response to API layer!
         //                        See: http://www.ofssam.com/forums/showthread.php?tid=43
         //
-        //  If only (portion of) firstName supplied and lastName is ignored, searches equiv to:
-        //  WHERE person.first_name LIKE "%firstName%"
-        //
-        //  If only (portion of) lastName supplied and firstName is ignored, searches equiv to:
-        //  WHERE person.last_name LIKE "%lastName%"
-        //
-        //  If both (portions of) firstName and lastName supplied, searches equiv to:
-        //  WHERE person.first_name LIKE "%firstName%" AND person.last_name LIKE "%lastName%"
-        //
         else if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
 
             var resultsForUser = contactController.getContactsByIdentity(req.query, req.user);
@@ -119,6 +110,24 @@ var contactApi = function (knex) {
             } else {
                 resultsForUser.then(function (contacts) {
                     res.json(contacts);
+                });
+            }
+        }
+
+        // GET /api/contacts?contactNumber=&countryCode=&areaCode=
+        //
+        // getContactsByPhoneNumber
+        else if (req.query.hasOwnProperty('contactNumber') || req.query.hasOwnProperty('countryCode') ||
+                 req.query.hasOwnProperty('areaCode')                                                       ) {
+
+            var resultsForUser = contactController.getContactsByPhoneNumber(req.query, req.user);
+            if (resultsForUser === null) {
+                res.json({
+                    'message': 'You do not have permission to get contacts by the supplied queries!'
+                });
+            } else {
+                resultsForUser.then(function (contactsWithPhoneNum) {
+                    res.json(contactsWithPhoneNum);
                 });
             }
         }

@@ -13,12 +13,15 @@ var ContactMechRow = require('../../common/ContactMechRow');
 
 var ContactsStore = require('../../../stores/ContactsStore');
 var ContactsActions = require('../../../actions/ContactsActions');
+var CommonStore = require('../../../stores/CommonStore');
 
 var ContactDetailPage = React.createClass({
     getInitialState: function () {
         return {
             contactId: this.props.params.id,
             contact: {},
+            types: [],
+            purposeTypes: [],
             accounts: [],
             case: []
         };
@@ -28,6 +31,14 @@ var ContactDetailPage = React.createClass({
         ContactsStore.addGetDataListener(this._onGetContact);
         ContactsActions.getContactById(this.state.contactId);
         
+        //get types crossref table
+        CommonStore.addGetContactMechTypesListener(this._onGetTypes);
+        CommonStore.getContactMechTypes()
+        
+        //get purpose types crossref table
+        CommonStore.addGetContactMechPurposeTypesListener(this._onGetPurposeTypes);
+        CommonStore.getContactMechPurposeTypes()
+        
         //get accounts
         
         //get cases
@@ -35,10 +46,22 @@ var ContactDetailPage = React.createClass({
     },
     componentWillUnmount: function () {
         ContactsStore.removeListener('getData', this._onGetContact);
+        CommonStore.removeListener('getContactMechTypes', this._onGetTypes);
+        CommonStore.removeListener('getContactMechPurposeTypes', this._onGetPurposeTypes);
     },
     _onGetContact: function (event) {
         return this.setState({
             contact: ContactsStore.gotContact()
+        });
+    },
+    _onGetTypes: function (event) {
+        return this.setState({
+            types: CommonStore.getTypeArray()
+        });
+    },
+    _onGetPurposeTypes: function (event) {
+        return this.setState({
+            purposeTypes: CommonStore.getPurposeTypeArray()
         });
     },
     render: function () {
@@ -49,7 +72,7 @@ var ContactDetailPage = React.createClass({
         
         for (var i = 0; i < contactMechs.length; i++) {
             /* jshint ignore:start */
-            contactMechsJSX.push(<ContactMechRow key={ 'contact_mech_' + i } contactMech={ contactMechs[i]}/>);
+            contactMechsJSX.push(<ContactMechRow key={ 'contact_mech_' + i } contactMech={ contactMechs[i]} types={this.state.types} purposeTypes={this.state.purposeTypes} />);
             /* jshint ignore:end */
         }
         

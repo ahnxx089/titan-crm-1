@@ -26,9 +26,10 @@ function Note(noteId, noteName, noteInfo, noteDateTime, noteParty, createdDate, 
 }
 
 // needed?
-Note.prototype.constructor = Note;
+// Commented June 25
+// Note.prototype.constructor = Note;
 
-// Methods - VALIDATIONS YET TO BE COMPLETED
+// Methods
 //
 Note.prototype.validateForInsert = function () {
     
@@ -56,6 +57,7 @@ Note.prototype.validateForInsert = function () {
     return errors;
 };
 
+// This is not in use now. 
 Note.prototype.validateForUpdate = function () {
     
     // Perform general validations
@@ -108,8 +110,8 @@ Note.prototype.validateNoteInfo = function(isRequired) {
 
 // note_date_time is date
 Note.prototype.validateNoteDateTime = function(isRequired) {
-    this.createdDate = validation.sanitizeInput(this.createdDate);
-    var validationResult = validation.validateDate(this.createdDate, isRequired, 'createdDate');
+    this.noteDateTime = validation.sanitizeInput(this.noteDateTime);
+    var validationResult = validation.validateDate(this.noteDateTime, isRequired, 'noteDateTime');
     return validationResult;
 };
 

@@ -214,7 +214,6 @@ var quoteApi = function (knex) {
             var resultsForThisUser = quoteController.getQuotesByOwner(req.user);
             // IF ELSE block interprets controller returning an object or null
             if (resultsForThisUser === null) {
-                //                console.log('first get quotes');
                 res.json({
                     'message': 'You do not have permission to own quotes!'
                 });
@@ -226,16 +225,14 @@ var quoteApi = function (knex) {
             }
         }
         // Lucas is taking this part
-        // GET /api/quotes?SOME_PROPERTY
+        // GET /api/quotes?SOME_PROPERTY=some_value
         //
         // findQuotes, aka Advanced Search
         // quoteId here will ONLY be used the route /api/quotes?SOME_PROPERTY is chosen.
         // This is not going to interfere with Bill's work
         else if (req.query.hasOwnProperty('quoteId') || req.query.hasOwnProperty('quoteName') || req.query.hasOwnProperty('status') || req.query.hasOwnProperty('account') || req.query.hasOwnProperty('salesChannel')) {
-            //            console.log('second get quotes');
 
             var resultsForUser = quoteController.getQuotesByAdvanced(req.query, req.user);
-
             if (resultsForUser === null) {
                 res.json({
                     'message': 'You do not have permission to Get Quotes By Advanced Search using the supplied query!'

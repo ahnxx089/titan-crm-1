@@ -10,11 +10,19 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
+var ContactMechRow = require('../../common/ContactMechRow');
 
 var ContactInfoDiv = React.createClass({
     
     render: function () {
+        
+        var contactMechs = this.props.contactMechs;        
+        var contactMechsJSX = [];
         /* jshint ignore: start */
+        for (var i = 0; i < contactMechs.length; i++) {
+            contactMechsJSX.push(<ContactMechRow key={'contact_mech_' + i} contactMech={ contactMechs[i] } />); 
+        }
+        
         return (
             <div>
             <div className="row">
@@ -40,7 +48,19 @@ var ContactInfoDiv = React.createClass({
 
             </div>
             <div className="row">
-                
+                <table id="contactMechsTable" className='table'>
+                    <thead>
+                        <tr>
+                            <th>Contact Type</th>
+                            <th>Contact Information</th>
+                            <th>Purpose</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        { contactMechsJSX }
+                    </tbody>
+                </table>
             </div>
             </div>
 

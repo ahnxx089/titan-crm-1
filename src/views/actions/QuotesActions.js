@@ -9,7 +9,7 @@ var TitanDispatcher = require('../dispatcher/TitanDispatcher');
 var QuotesConstants = require('../constants/QuotesConstants');
 
 var QuotesActions = {
-    
+
     getQuotesByOwner: function() {
         TitanDispatcher.dispatch({
             actionType: QuotesConstants.GET_MY_QUOTES
@@ -33,10 +33,10 @@ var QuotesActions = {
             data: quoteItemOption
         });
     },
-    getQuoteById: function(partyId) {
+    getQuoteById: function(quoteId) {
         TitanDispatcher.dispatch({
             actionType: QuotesConstants.GET_QUOTE_BY_ID,
-            data: partyId
+            data: quoteId
         });
     },
     getQuotesByIdentity: function(identity) {
@@ -54,7 +54,7 @@ var QuotesActions = {
             }
         });
     }
-    
+
 };
 
 module.exports = QuotesActions;

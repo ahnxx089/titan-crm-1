@@ -76,14 +76,12 @@ LeadsStore.getLeadsOwned = function() {
 // Next two functions are called by CreateLeadPage
 LeadsStore.addLead = function(lead) {
     var thisLeadsStore = this;
-//    console.log('here');
     $.ajax({
         type: 'POST',
         url: '/api/leads/',
         headers: {  'x-access-token': Cookies.get('titanAuthToken') },
         data: lead,
         success: function(partyId) {
-//            console.log(partyId);
             addedLeadId = partyId;
             // emit seems to be async as well
             thisLeadsStore.emitAddedLead();
@@ -94,7 +92,6 @@ LeadsStore.addLead = function(lead) {
     });
 };
 LeadsStore.getAddedLead = function() {
-//    console.log('in addedLead');
     return addedLeadId;
 };
 
@@ -102,7 +99,6 @@ LeadsStore.getAddedLead = function() {
 //
 // Next two functions are called by FindLeadsPage
 LeadsStore.findLeadById = function(passedId) {
-//    console.log('here 2 in find lead by id');
     var thisLeadsStore = this;
     $.ajax({
         type: 'GET',
@@ -110,28 +106,25 @@ LeadsStore.findLeadById = function(passedId) {
         headers: {  'x-access-token': Cookies.get('titanAuthToken') },
         data: passedId,
         success: function(lead) {
-//            console.log('find lead by id success');
             foundLead = lead;
-            console.log(foundLead);
             thisLeadsStore.emitGetData(); 
         },
         error: function(jqXHR, textStatus, errorThrown) {
-            console.log('an error happened... ');
+            thisLeadsStore.emitGetData(); 
+            console.log('An error happened... ');
             if(jqXHR.hasOwnProperty('status')) {
-                if(jqXHR.status == '200') {
-                    console.log('error is 200. no such lead');
+                if(jqXHR.status === 200) {
+                    console.log('Error is 200. No such lead');
                     return;
                 }
             }
-//            console.log(jqXHR);
-//            console.log(textStatus);
             console.log(errorThrown);
         }
     });
 };
 LeadsStore.getLeadFound = function() {
-//    console.log('in retrieving...now used');
-//    console.log(foundLead);
+    // foundLead is the found_lead_id when success, 
+    // or empty object when error
     return foundLead;
 };
 
@@ -150,7 +143,6 @@ TitanDispatcher.register(function(action) {
             break;
         }
         case LeadsConstants.GET_LEAD_BY_ID: {
-//            console.log('in case');
             LeadsStore.findLeadById(action.data);
             break;
         }

@@ -8,80 +8,93 @@
 var React = require('react');
 var Link = require('react-router').Link;
 
-
 var ContactMechRow = React.createClass({
-    getInitialState: function () {
-        return {
-            typeDesc: '',
-            purposeTypeDesc: ''
-        }
-    },
-    componentDidMount: function () {
-        //TODO: get descriptions to match type/purposeType
-    },
-    componentWillUnmount: function () {
-        
-    },
-    getTypeDesc: function () {
-        
-    },
-    getPurposeTypeDesc: function () {
-        
-    },
-    onGotTypeDesc: function () {
-        
-    },
-    onGotTypeDesc: function () {
-        
-    },
     formatTelecom: function () {
         var contactMech = this.props.contactMech;
-        var string = contactMech.contactNumber;
+        var jsxArray = [<span>{ contactMech.contactNumber }</span>];
         
         //Attach country code and are code, if applicable
         if (contactMech.areaCode) {
-            string = contactMech.areaCode + '-' + string;
+            jsxArray.unshift(<span>{ contactMech.areaCode }-</span>);
             if (contactMech.countryCode) {
-                string = contactMech.countryCode + '-' + string;
+                jsxArray.unshift(<span>{ contactMech.countryCode }-</span>);
             }
         }
         
         //Attach ask-for name, if applicable
         if (contactMech.askForName) {
-            string += '<br />Ask for ' + contactMech.askForName;
+            jsxArray.push(<span><br />Ask for { contactMech.askForName }</span>);
         }
         
-        return string
+        return jsxArray
     },
     formatAddress: function () {
         var contactMech = this.props.contactMech;
-        var string = '';
+        var jsxArray = [];
         
         if (contactMech.toName) {
-            string += 'To: ' + contactMech.toName + '<br />';
+            jsxArray.push(<span><strong>To:</strong> { contactMech.toName }<br /></span>);
         }
         
         if (contactMech.attnName) {
-            string += 'Attn: ' + contactMech.attnName + '<br />';
+            jsxArray.push(<span><strong>Attn:</strong> { contactMech.attnName }<br /></span>);
         }
         
-        var delimitter = '';
+        if (contactMech.address1) {
+            jsxArray.push(<span>{ contactMech.address1 }<br /></span>);
+        }
+        
+         if (contactMech.address2) {
+            jsxArray.push(<span>{ contactMech.address2 }<br /></span>);
+        }
+        
+        var delimitter = <span></span>;
         
         if (contactMech.city) {
-            string += contactMech.city;
-            delimitter = ', ';
+            jsxArray.push(<span>{ contactMech.city }</span>);
+            delimitter = <span>, </span>;
         }
         
         if (contactMech.stateProvinceGeoId) {
-            string += delimitter + contactMech.stateProvinceGeoId;
-            delimitter = ', ';
+            jsxArray.push(delimitter);
+            jsxArray.push(<span>{ contactMech.stateProvinceGeoId }</span>);
+            delimitter = <span>, </span>;
         }
         
         if (contactMech.zipOrPostalCode) {
-            string += delimitter + contactMech.zipOrPostalCode;
+            jsxArray.push(delimitter);
+            jsxArray.push(<span>{ contactMech.zipOrPostalCode }</span>);
         }
         
-        return string
+        return jsxArray
+    },
+    typeDescription: function() {
+        var id = this.props.contactMech.contactMechTypeId;
+        var typeArray = this.props.types;
+        var description = id;
+        
+        for (var i = 0; i < typeArray.length; i++) {
+            if (typeArray[i].contact_mech_type_id === id) {
+                description = typeArray[i].description;
+                break;
+            }
+        }
+        
+        return description;
+    },
+    purposeTypeDescription: function() {
+        var id = this.props.contactMech.contactMechPurposeTypeId;
+        var purposeTypeArray = this.props.purposeTypes;
+        var description = id;
+        
+        for (var i = 0; i < purposeTypeArray.length; i++) {
+            if (purposeTypeArray[i].contact_mech_purpose_type_id === id) {
+                description = purposeTypeArray[i].description;
+                break;
+            }
+        }
+        
+        return description;
     },
     render: function () {
         /* jshint ignore:start */
@@ -90,20 +103,23 @@ var ContactMechRow = React.createClass({
 
         switch (contactMech.contactMechTypeId) {
             case 'TELECOM_NUMBER':
-                information = <td>{ this.formatTelecom() }</td>;
+                information = this.formatTelecom();
                 break;
             case 'POSTAL_ADDRESS':
-                information = <td>{ this.formatAddress() }</td>;
+                information = this.formatAddress();
                 break;
             default:
-                information = <td>{ contactMech.infoString }</td>;
+                information = contactMech.infoString;
         }
+        
+        console.log(this.props.types);
+        console.log(this.props.purposeTypes);
         
         return (
             <tr>
-                <td>{ this.state.typeDesc }</td>
-                { information }
-                <td>{ this.state.purposeTypeDesc }</td>
+                <td>{ this.typeDescription() }</td>
+                <td>{ information }</td>
+                <td>{ this.purposeTypeDescription() }</td>
                 <td>
                     <Link to={ '#' } className="btn btn-primary btn-xs">
                         <span className="fa fa-pencil-square-o"></span> Edit

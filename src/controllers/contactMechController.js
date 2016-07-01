@@ -162,7 +162,7 @@ var contactMechController = function (knex) {
                         contactMechs[i].directions,
                         contactMechs[i].city,
                         contactMechs[i].state_province_geo_id,
-                        contactMechs[i].zip_or_postal_code,
+                        contactMechs[i].postal_code,
                         contactMechs[i].country_geo_id
                     );
 

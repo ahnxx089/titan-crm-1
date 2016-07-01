@@ -22,6 +22,9 @@ var quoteTypesObjArray = [];
 var accountPartiesObjArray = [];
 var contactPartiesObjArray = [];
 var salesChannelsObjArray = [];
+var ownershipsObjArray = [];
+var contactMechTypeArray = [];
+var contactMechPurposeTypeArray = [];
 
 
 // STORE as EVENT EMITTER
@@ -91,6 +94,29 @@ CommonStore.emitGetSalesChannels = function() {
     this.emit('getSalesChannels');  
 };
 
+CommonStore.addGetAllOwnershipsListener = function (listener) {
+    this.on('getAllOwnerships', listener);
+};
+
+CommonStore.emitGetAllOwnerships = function() {
+    this.emit('getAllOwnerships');
+};
+
+CommonStore.addGetContactMechTypesListener = function (listener) {
+    this.on('getContactMechTypes', listener);
+};
+
+CommonStore.emitGetContactMechTypes = function() {
+    this.emit('getContactMechTypes');
+};
+
+CommonStore.addGetContactMechPurposeTypesListener = function (listener) {
+    this.on('getContactMechPurposeTypes', listener);
+};
+
+CommonStore.emitGetContactMechPurposeTypes = function() {
+    this.emit('getContactMechPurposeTypes');
+};
 
 // BUSINESS LOGIC
 //-----------------------------------------------
@@ -235,6 +261,68 @@ CommonStore.getSalesChannelsObjArray = function() {
 };
 
 
+CommonStore.getAllOwnerships = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=ownership',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(ownerships) {
+            ownershipsObjArray = ownerships;
+            thisCommonStore.emitGetAllOwnerships();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getOwnershipsObjArray = function() {
+    return ownershipsObjArray;
+};
+
+
+CommonStore.getContactMechTypes = function(typeId) {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=contactMechType',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(result) {
+            contactMechTypeArray = result;
+            thisCommonStore.emitGetContactMechTypes();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+
+CommonStore.getContactMechPurposeTypes = function(purposeTypeId) {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=contactMechPurposeType',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(result) {
+            contactMechPurposeTypeArray = result;
+            thisCommonStore.emitGetContactMechPurposeTypes();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getTypeArray = function() {
+    return contactMechTypeArray;
+};
+
+CommonStore.getPurposeTypeArray = function() {
+    return contactMechPurposeTypeArray;
+};
+
 // LINK BETWEEN DISPATCHER AND STORE
 //-----------------------------------------------
 TitanDispatcher.register(function(action) {
@@ -266,6 +354,18 @@ TitanDispatcher.register(function(action) {
         }
         case CommonConstants.GET_SALES_CHANNELS: {
             CommonStore.getSalesChannels();
+            break;
+        }
+        case CommonConstants.GET_ALL_OWNERSHIPS: {
+            CommonStore.getAllOwnerships();
+            break;
+        }
+        case CommonConstants.GET_CONTACT_MECH_TYPES: {
+            CommonStore.getContactMechTypes();
+            break;
+        }
+        case CommonConstants.GET_CONTACT_MECH_PURPOSE_TYPES: {
+            CommonStore.getContactMechPurposeTypes();
             break;
         }
     }

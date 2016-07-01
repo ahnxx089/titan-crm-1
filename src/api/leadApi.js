@@ -5,11 +5,13 @@
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
-// Warning! 
+// Attention! 
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
-// We have a separate wroking getLeadsByOwner, different from Dinesh's approach. Need to consult Anurag for more detail. 
 // getLeads is not added in apiRoutes, or called from anywhere. Do not remove it yet. 
 // getLeadsByIdentity, getLeadsByPhoneNumber, updateLead, deleteLead are deleted. 
+
+var redisClient = require('../config/redisClient');
+var winston = require('winston');
 
 var leadApi = function (knex) {
 
@@ -23,13 +25,12 @@ var leadApi = function (knex) {
      * Methods in XXXapi.js are called from presentation layer, or by ARC
      * They in turns, stripes the passed params from req, pass params to corresponding functions in leadController
      * In the end of this flow, res will give the json object back to ARC. 
-     * @param {Object} req - The request
-     * @param {Object} res - The resource/response
+     * @param {Object} req - The HTTP request
+     * @param {Object} res - The HTTP response
      * @return {Object} promise - Fulfillment value is id of new party
      */
     // ==========================================
 
-    // Lucas's taking this
     // POST /api/leads
     /**
      * To add a new lead in database
@@ -40,11 +41,8 @@ var leadApi = function (knex) {
         // lead and user here are striped params from request
         var lead = req.body;
         var user = req.user;
-//        console.log('user in add is ' + user);
 
         var resultsForThisUser = leadController.addLead(lead, user);
-
-
         if (resultsForThisUser === null) {
             res.json({
                 message: 'You do not have permission to add leads!'
@@ -67,7 +65,7 @@ var leadApi = function (knex) {
     };
 
 
-    // Lucas's taking PART of this
+    // Lucas's taking this
     // Credit: Dinesh
     // NOT in use now! (WHY?)
     // GET /api/leads/...
@@ -91,7 +89,7 @@ var leadApi = function (knex) {
             plan for now.
         */
 
-        // Lucas's taking this
+        // Author: Lucas
         // GET /api/leads?owner=
         //
         // This if block triggers if a query by owner has been made.
@@ -104,10 +102,10 @@ var leadApi = function (knex) {
                 });
         }
 
-        // This is a good place to add other route handings blocks
+        // This is a good place to add other route handlings blocks
 
-        // If the request did not properly pass any of the various if tests
-        // above, it is not a valid query, make the reponse null.
+        // If the request did not properly pass any of the various if consition-tests above,
+        // it is not a valid query, make the reponse null.
         else {
             res.json(null);
         }
@@ -115,80 +113,78 @@ var leadApi = function (knex) {
 
 
 
-    // Lucas is taking this
     // To retrieve existing leads from database based on their creater
-    // IN use now.
-    // GET /api/leads/?owner=
+    // In use now.
+    // Deprecated: GET /api/leads/?owner=
+    // In practice: GET /api/leads[/nothing follows]
 
     // TODO
     // This getLeadsByOwner works fine! 
     // Inspired by Eric's way of doing multiple insertions in addAccount in accountData.js,
     // I might stop returning this method at the end of this file and calling this method directly
     // instead I will call this methods from the now obselete getLeads method, (making it invisible to the ARC)
-    // once Divine has his getLeadsByIdentity and getLeadsByPhoneNumber working. Otherwise, it's just not worth. 
-    // The getLeads method then will call getLeadsByOwner or getLeadsByIdentity or getLeadsByPhoneNumber, 
+    // once  Divine Ndifongwa has his getLeadsByIdentity and getLeadsByPhoneNumber working. 
+    // Otherwise, it's just not worth right now. 
+    // The then getLeads method will call getLeadsByOwner or getLeadsByIdentity or getLeadsByPhoneNumber, 
     // depending on the received parameter(s). 
 
     var getLeadsByOwner = function (req, res) {
         // if there's /?owner, ownerId is what follows
         //        var ownerId = req.query.owner;
         //        console.log("ownerid in byOwner is " + ownerId);
-
+        // The above approach is now deprecated and not supported
+        
         var user = req.user;
+        
+        var redis = redisClient.getClient();
+        var cacheKeyName = 'leads_for_party_id_' + req.user.partyId; // unique key
+        
+        redis.get(cacheKeyName, function (err, result) {
+            // Data is in the cache
+            if (result) {
+                // Convert the cached data string back into JSON before sending out
+                res.json(JSON.parse(result));
+            } 
+            // Data is NOT in the cache
+            else {
+                //winston.error(err);
+                winston.error('No redis');
+
+                var resultForThisUser = leadController.getLeadsByOwner(user); 
+                if (resultForThisUser === null) {
+                    res.json({
+                        'message': 'You do not have permission to own or view leads!'
+                    });
+                } else {
+                    resultForThisUser.then(function (leads) {
+                        redis.setex(cacheKeyName, 60, JSON.stringify(leads));
+                        res.json(leads);
+                    });
+                }
+            }
+        });
+        
         // this prints "admin" to terminal console, not browser console
 //        console.log('user in byOwner is ' + user);
 //        console.log('userId in byOwner is ' + user.userId);
 
-        var resultForThisUser = leadController.getLeadsByOwner(user); // this param was changed from ownerId to user
-        if (resultForThisUser === null) {
-            res.json({
-                'message': 'You do not have permission to own or view leads!'
-            });
-        } else {
-            resultForThisUser.then(function (lead) {
-                res.json(lead);
-            });
-        }
     };
 
-    // Implemented now. 
-    // NOTE TO DIVINE: you did not check the lead ID. This will return every lead that matches the given name.
-    // And the corresponding method in controller layer is checking the wrong permission
-    // GET /api/leads/?leadId=&firstName=&lastName=&companyName=
-    var getLeadsByIdentity = function (req, res) {
-        if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
-            var resultsForUser = leadController.getLeadsByIdentity(req.query, req.user);
-            if (resultsForUser === null) {
-                res.json({
-                    'message': 'You do not have permission to view leads by the supplied queries!'
-                });
-            } else {
-                resultsForUser.then(function (leads) {
-                    res.json(leads);
-                });
-            }
-        }
-    };
-
-    // Not implemented or used now. 
-    // GET /api/leads/?phoneNumber=
-    var getLeadsByPhoneNumber = function (req, res) {
-        var leadId = req.params.id;
-        leadController.getLeadByPhoneNumber(leadId)
-            .then(function (lead) {
-                res.json(lead);
-            });
-    };
-
-    // Potential TODO: add security permission check here. 
-    // Lucas's taking this
+    // Author: Lucas
     // GET /api/leads/:id
     var getLeadById = function (req, res) {
         var leadId = req.params.id;
-        leadController.getLeadById(leadId)
-            .then(function (lead) {
+        var resultsForUser = leadController.getLeadById(leadId, req.user);
+
+        if (resultsForUser === null) {
+            res.json({
+                'message': 'You do not have permission to view lead!'
+            });
+        } else {
+            resultsForUser.then(function (lead) {
                 res.json(lead);
             });
+        }
     };
 
 
