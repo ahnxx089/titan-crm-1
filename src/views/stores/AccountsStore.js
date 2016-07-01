@@ -125,7 +125,6 @@ AccountsStore.getAddedAccountId = function () {
 // Next function is called by CreateAccountPage
 AccountsStore.addAccounts = function(account) {
     var thisAccountsStore = this;
-    console.log('here');
     $.ajax({
         type: 'POST',
         url: '/api/accounts/',

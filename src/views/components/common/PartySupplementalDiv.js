@@ -192,16 +192,16 @@ var PartySupplementalDiv = React.createClass({
                             <label htmlFor="tickerSymbol">Ticker Symbol</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input id="tickerSymbol" type="text" className="form-control" placeholder="Type a Ticker Symbol" onChange={ this.props.onChange } value={ this.props.ent.ticker}/>
+                                <input id="tickerSymbol" type="text" className="form-control" placeholder="Type a Ticker Symbol" onChange={ this.props.onChange } value={ this.props.ent.tickerSymbol}/>
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label htmlFor="importantNote">Important Note</label>
+                            <label htmlFor="importantNote" >Important Note</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <textarea id="importantNote" className="form-control" rows="4" placeholder="Note" onChange={ this.props.onChange } value={ this.props.ent.note} ></textarea>
+                                <textarea id="importantNote" className="form-control" rows="4" placeholder="Note" onChange={ this.props.onChange } value={ this.props.ent.importantNote} ></textarea>
                             </div>
                         </div>
                     </div>
