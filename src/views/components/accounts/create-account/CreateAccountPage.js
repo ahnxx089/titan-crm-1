@@ -7,13 +7,11 @@
 // @author: Eric Brichetto <brichett13@gmail.com>
 /////////////////////////////////////////////////
 var React = require('react');
-var Link = require('react-router');
+var withRouter = require('react-router').withRouter;
 var AccountsStore = require('../../../stores/AccountsStore');
 var AccountsActions = require('../../../actions/AccountsActions');
-var OrganizationDiv = require('./OrganizationDiv');
-var PartySupplementalDiv = require('../../common/PartySupplementalDiv');
-var PartyContactDiv = require('../../leads/create-lead/PartyContactDiv');
-var SubmitButton = require('./SubmitButton');
+
+
 var AccountForm = require('./AccountForm');
 var CreateAccountPage = React.createClass({
     
@@ -22,7 +20,7 @@ var CreateAccountPage = React.createClass({
             emptyAccount: {
                 partyId: '',
                 orgName: '',
-                parentAccount: '',
+                parentPartyId: '',
                 statusId: 'PARTY_ENABLED',
                 companyName: '',
                 officeSiteName: '',
@@ -66,10 +64,25 @@ var CreateAccountPage = React.createClass({
     },
     
     _onAddedAccount: function () {
-        var newId = AccountsStore.getAddedAccountId;
-        this.setState({
-            addedAccountPartyId: newId
-        });
+        var newId = AccountsStore.getAddedAccountId();
+        /*Here we take care of handling the three possible results from
+        addAccount in the API: a user authentication/authorization error, 
+        a validation error, and the desired partyId of the newly created acccount. */
+        if (newId.hasOwnProperty('message')) {
+            this.props.updateErrorBox(newId.message);
+        }
+        else if (Object.prototype.toString.call(newId) === '[object Array]') {
+            this.props.updateErrorBox(newId);
+        }
+        else if (newId.hasOwnProperty('partyId')) {
+           this.setState({
+               addedAccountPartyId: newId
+            });
+            //When the data has been successfully written to the database and the API
+            //has returned an A-OK message, we end by redirecting the user to their My Accounts page
+            this.props.router.replace('/cp/accounts/my-accounts');
+        }
+        
     },
     
     render: function () {
@@ -84,9 +97,8 @@ var CreateAccountPage = React.createClass({
                 <div className="row">
                     <div className="col-md-8 col-lg-12 col-md-offset-2 col-lg-offset-1">
             {/*<AccountForm /> */}
-                        <AccountForm onChange={this.setAccountState} onFormSubmit={this._onAddAccount}
-                        <OrganizationDiv onChange={this.setAccountState }/>
-                        <PartySupplementalDiv ent={this.state.emptyAccount} />
+                        <AccountForm account={this.state.emptyAccount} onChange={this.setAccountState} onFormSubmit={this._onAddAccount} />
+                        
                         
                     </div>
                 </div>
@@ -99,4 +111,4 @@ var CreateAccountPage = React.createClass({
     
 });
 
-module.exports = CreateAccountPage;
+module.exports = withRouter(CreateAccountPage);
