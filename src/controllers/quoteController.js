@@ -474,13 +474,14 @@ var quoteController = function (knex) {
     };
 
     // Author: Lucas
+    // This function is not used, and deactivated. 
     /**
-     * Gets quotes by advanced search
+     * Gets quotes by advanced search (alternative version)
      * @param {String} query - query string: SOME ARGUMENT
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is an array of quote entities
      */
-    var getQuotesByAdvanced = function (query, user) {
+    var getQuotesByAdvancedAlt = function (query, user) {
         //Check security permission of user
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
@@ -498,7 +499,7 @@ var quoteController = function (knex) {
                     for (var i = 0; i < quotes.length; i++) {
 
                         // quotes[i].quote_id is Number
-                        var test1 = quoteId == null ? true : quotes[i].quote_id === +quoteId;
+                        var test1 = quoteId == null ? true : quotes[i].quote_id === +quoteId; // + is the number conversion
 
 
                         // quotes[i].quote_name is varchar(100), and is NULLABLE
@@ -513,8 +514,8 @@ var quoteController = function (knex) {
 
                         // quotes[i].status_id is varchar(20), and is NULLABLE
                         // status_id will be shown in a drop-down menu. There is no need to do substring match here.
-                        var emptyString = status == null;
-                        var emptyColumn = quotes[i].status_id == null;
+                        emptyString = status == null;
+                        emptyColumn = quotes[i].status_id == null;
                         // console.log(emptyString);
                         // console.log(emptyColumn);
                         // If we search for something, in null columns, then we will never find it
@@ -523,7 +524,7 @@ var quoteController = function (knex) {
                         test3 = (!emptyString && !emptyColumn) ? quotes[i].status_id.toUpperCase() === status.toUpperCase() : test3;
                         // The line above is same as
                         //if(!emptyString && !emptyColumn) {
-                        //    test3 = quotes[i].status_id.toUpperCase() == status.toUpperCase();
+                        //    test3 = quotes[i].status_id.toUpperCase() === status.toUpperCase();
                         //}
 
                         // quotes[i].party_id is Number, and is NULLABLE
@@ -569,7 +570,63 @@ var quoteController = function (knex) {
             return null;
         }
     };
+    
+    
+    // Author: Lucas
+    /**
+     * Gets quotes by advanced search
+     * @param {String} query - query string: SOME ARGUMENT
+     * @param {Object} user - The logged in user
+     * @return {Object} promise - Fulfillment value is an array of quote entities
+     */
+    var getQuotesByAdvanced = function (query, user) {
+        //Check security permission of user
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
+        if (hasPermission !== -1) {
 
+            // these variables are strings if were set, or object if null
+            var quoteId = query.quoteId || null;
+            var quoteName = query.quoteName || null;
+            var status = query.status || null;
+            var account = query.account || null;
+            var salesChannel = query.salesChannel || null;
+
+            var promise = quoteData.getQuotesByAdvanced(quoteId, quoteName, status, account, salesChannel)
+                .then(function (quotes) {
+                    var quoteEntities = [];
+                    for (var i = 0; i < quotes.length; i++) {
+                        var quote = new Quote(
+                            quotes[i].quote_id,
+                            quotes[i].quote_type_id,
+                            quotes[i].party_id,
+                            quotes[i].issue_date,
+                            quotes[i].status_id,
+                            quotes[i].currency_uom_id,
+                            quotes[i].sales_channel_enum_id,
+                            quotes[i].valid_from_date,
+                            quotes[i].valid_thru_date,
+                            quotes[i].quote_name,
+                            quotes[i].description,
+                            quotes[i].contact_party_id,
+                            quotes[i].created_by_party_id,
+                            quotes[i].created_date,
+                            quotes[i].updated_date
+                        );
+                        quoteEntities.push(quote);
+                    }
+                    return quoteEntities;
+                });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            return null;
+        }
+    };
+
+    
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,
