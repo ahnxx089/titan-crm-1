@@ -8,6 +8,7 @@
 /* jshint camelcase: false */
 /* jshint maxlen:1000 */
 /* jshint shadow:true */
+/* jshint maxcomplexity: false */
 
 var quoteData = function (knex) {
 
@@ -78,7 +79,7 @@ var quoteData = function (knex) {
             (See e.g., http://stackoverflow.com/questions/31221980/javascript-how-to-acess-rowdatapacket )
             That RowDataPacket is itself an object; its sole key is called 'count(*)' (that's what the
             knex.raw query winds up naming it).  The value of RowDataPacket['count(*)'] is the count of all
-            the rows in the quote_item table with this combo of quoteItem.quoteId and  
+            the rows in the quote_item table with this combo of quoteItem.quoteId and
             quoteItem.quoteItemSeqId.  That count should be 1.  (The knex.raw query itself does not
             know/care what the count is, it will just return the object to the controller, which will apply
             some logic to determine what the count is, and then return that number up to the API for display.
@@ -213,12 +214,34 @@ var quoteData = function (knex) {
     /**
      * Gets one quote by its id
      * @param {Number} quoteId - Unique id of the quote to be fetched
+     * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is a quote entity
      */
     var getQuoteById = function (quoteId) {
-        return knex.select( 'quote_id', 'quote_type_id', 'party_id', 'issue_date', 'status_id', 'currency_uom_id', 'sales_channel_enum_id', 'valid_from_date', 'valid_thru_date', 'quote_name', 'description', 'contact_party_id', 'created_by_party_id', 'created_date', 'updated_date')
+        return knex.select(
+                'quote.quote_id',
+                'quote.quote_type_id',
+                'quote.party_id as "party_id"',
+                'quote.issue_date',
+                'quote.status_id',
+                'quote.currency_uom_id',
+                'quote.sales_channel_enum_id',
+                'quote.valid_from_date',
+                'quote.valid_thru_date',
+                'quote.quote_name',
+                'quote.description',
+                'quote.contact_party_id',
+                'quote.created_by_party_id',
+                'quote.created_date',
+                'quote.updated_date',
+                'quote_role.quote_id',
+                'quote_role.party_id',
+                'quote_role.role_type_id')
             .from('quote')
-            .where('quote_id', quoteId);
+            .leftJoin('quote_role', 'quote.quote_id', '=', 'quote_role.quote_id')
+            .where({
+                'quote.quote_id': quoteId
+            });
     };
 
     /**
@@ -241,28 +264,66 @@ var quoteData = function (knex) {
 
     };
 
+    // NOTE: getQuotesByAdvanced[Alt] did not have links to quote_role table.
+
     // Author: Lucas
     // In case of large number of quotes, fetching them all is not efficient.
-    // Consider: build raw query (for MySQL) in data layer. See caseData.getCasesByAdvanced for reference.
+    // Consider: build raw query (for MySQL) in data layer. See Dukjin's caseData.getCasesByAdvanced for reference.
+    // This function is not used, and deactivated.
+    /**
+     * Gets all quotes from database by advanced search
+     * @return {Object} promise - Fulfillment value is an array of raw data objects
+     */
+    var getQuotesByAdvancedAlt = function (quoteId, quoteName, status, account, salesChannel) {
+
+        //        return knex.raw('select * from quote where ' + ' sales_channel_enum_id = "' + salesChannel + '"');
+        return knex.from('quote');
+    };
+
+    // Author: Lucas
+    // Thanks: Dinesh
+    // This is a better approach to fetch matching records, better than the alternative version and raw sql version.
     /**
      * Gets all quotes from database by advanced search
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getQuotesByAdvanced = function (quoteId, quoteName, status, account, salesChannel) {
+        var searchByQuoteId = !!quoteId;
+        var searchByQuoteName = !!quoteName;
+        var searchByStatus = !!status;
+        var searchByAccount = !!account;
+        var searchBySalesChannel = !!salesChannel;
 
-        //        var conditionArray = [quoteId, quoteName, status, account, salesChannel];
-        //        var conditionString = '';
-        //        conditionString += quoteId.length > 0 ? 'a' : '';
-        //        conditionString += quoteName.length > 0 ? 'b' : '';
-        //        conditionString += status.length > 0 ? 'c' : '';
-        //        conditionString += account.length > 0 ? 'd' : '';
-        //        conditionString += salesChannel.length > 0 ? 'e' : '';
-        //        console.log(conditionString);
+        var query = knex.select().from('quote');
 
+        if (searchByQuoteId || searchByQuoteName || searchByStatus || searchByAccount || searchBySalesChannel) {
 
-        //        return knex.raw('select * from quote where ' + ' sales_channel_enum_id = "' + salesChannel + '"');
-        return knex.from('quote');
+            // not-nullable number
+            if (searchByQuoteId){
+                query = query.andWhere('quote_id', quoteId);
+            }
+            // nullable varchar
+            if (searchByQuoteName){
+                query = query.andWhere('quote_name', 'like', '%'+quoteName+'%');
+            }
+            // nullable varchar
+            if (searchByStatus){
+                query = query.andWhere('status_id', 'like', '%'+status+'%');
+            }
+            // nullable number
+            if (searchByAccount){
+                query = query.andWhere('party_id', account);
+            }
+            // not-nullable varchar
+            if (searchBySalesChannel){
+                query = query.andWhere('sales_channel_enum_id', salesChannel);
+            }
+            console.log(query.toString());
+        }
+        return query;
     };
+
+
 
     return {
         addQuote: addQuote,

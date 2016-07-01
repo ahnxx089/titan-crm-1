@@ -56,6 +56,12 @@ var commonDataController = function (knex) {
             case 'ownership': 
                 promise = commonData.getOwnerships();
                 break;
+            case 'contactMechType': 
+                promise = commonData.getContactMechType();
+                break;
+            case 'contactMechPurposeType': 
+                promise = commonData.getContactMechPurposeType();
+                break;
             default:
                 // A new promise that returns empty array as its fulfillment value
                 promise = new Promise(function(resolve, reject) {
