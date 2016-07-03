@@ -44,6 +44,9 @@ var commonDataController = function (knex) {
             case 'quoteType':
                 promise = commonData.getQuoteTypes();
                 break;
+            case 'quoteStatusId':
+                promise = commonData.getQuoteStatusIds();
+                break;
             case 'accountParty':
                 promise = commonData.getAccountParties();
                 break;
@@ -53,13 +56,13 @@ var commonDataController = function (knex) {
             case 'salesChannel':
                 promise = commonData.getSalesChannels();
                 break;
-            case 'ownership': 
+            case 'ownership':
                 promise = commonData.getOwnerships();
                 break;
-            case 'contactMechType': 
+            case 'contactMechType':
                 promise = commonData.getContactMechType();
                 break;
-            case 'contactMechPurposeType': 
+            case 'contactMechPurposeType':
                 promise = commonData.getContactMechPurposeType();
                 break;
             default:

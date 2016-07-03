@@ -406,7 +406,7 @@ var quoteController = function (knex) {
                             quote[0].sales_channel_enum_id,
                             quote[0].valid_from_date,
                             quote[0].valid_thru_date,
-                            quote[0].quote_dame,
+                            quote[0].quote_name,
                             quote[0].description,
                             quote[0].contact_party_id,
                             quote[0].created_by_party_id,
@@ -474,7 +474,7 @@ var quoteController = function (knex) {
     };
 
     // Author: Lucas
-    // This function is not used, and deactivated. 
+    // This function is not used, and deactivated.
     /**
      * Gets quotes by advanced search (alternative version)
      * @param {String} query - query string: SOME ARGUMENT
@@ -570,8 +570,8 @@ var quoteController = function (knex) {
             return null;
         }
     };
-    
-    
+
+
     // Author: Lucas
     /**
      * Gets quotes by advanced search
@@ -626,7 +626,6 @@ var quoteController = function (knex) {
         }
     };
 
-    
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,

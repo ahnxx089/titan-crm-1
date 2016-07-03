@@ -21,6 +21,7 @@ var currenciesObjArray = [];
 var stateProvinceObjArray = [];
 var countriesObjArray = [];
 var quoteTypesObjArray = [];
+var quoteStatusIdsObjArray = [];
 var accountPartiesObjArray = [];
 var contactPartiesObjArray = [];
 var salesChannelsObjArray = [];
@@ -45,7 +46,7 @@ CommonStore.emitGetAllCurrencies = function() {
     // see https://nodejs.org/api/events.html#events_emitter_emit_eventname_arg1_arg2
     // Synchronously calls each of the listeners registered for the event named 'getCurrencies'.
     // In previous function addGetAllCurrenciesListener is where listeners registers to get emits.
-    this.emit('getAllCurrencies');  
+    this.emit('getAllCurrencies');
 };
 
 CommonStore.addGetAllStatesOrProvincesListener = function (listener) {
@@ -53,7 +54,7 @@ CommonStore.addGetAllStatesOrProvincesListener = function (listener) {
 };
 
 CommonStore.emitGetAllStatesOrProvinces = function() {
-    this.emit('getAllStatesOrProvinces');  
+    this.emit('getAllStatesOrProvinces');
 };
 
 CommonStore.addGetAllCountriesListener = function (listener) {
@@ -61,7 +62,7 @@ CommonStore.addGetAllCountriesListener = function (listener) {
 };
 
 CommonStore.emitGetAllCountries = function() {
-    this.emit('getAllCountries');  
+    this.emit('getAllCountries');
 };
 
 CommonStore.addGetQuoteTypesListener = function (listener) {
@@ -69,7 +70,15 @@ CommonStore.addGetQuoteTypesListener = function (listener) {
 };
 
 CommonStore.emitGetQuoteTypes = function() {
-    this.emit('getQuoteTypes');  
+    this.emit('getQuoteTypes');
+};
+
+CommonStore.addGetQuoteStatusIdsListener = function (listener) {
+    this.on('getQuoteStatusIds', listener);
+};
+
+CommonStore.emitGetQuoteStatusIds = function() {
+    this.emit('getQuoteStatusIds');
 };
 
 CommonStore.addGetAccountPartiesListener = function (listener) {
@@ -77,7 +86,7 @@ CommonStore.addGetAccountPartiesListener = function (listener) {
 };
 
 CommonStore.emitGetAccountParties = function() {
-    this.emit('getAccountParties');  
+    this.emit('getAccountParties');
 };
 
 CommonStore.addGetContactPartiesListener = function (listener) {
@@ -85,7 +94,7 @@ CommonStore.addGetContactPartiesListener = function (listener) {
 };
 
 CommonStore.emitGetContactParties = function() {
-    this.emit('getContactParties');  
+    this.emit('getContactParties');
 };
 
 CommonStore.addGetSalesChannelsListener = function (listener) {
@@ -93,7 +102,7 @@ CommonStore.addGetSalesChannelsListener = function (listener) {
 };
 
 CommonStore.emitGetSalesChannels = function() {
-    this.emit('getSalesChannels');  
+    this.emit('getSalesChannels');
 };
 
 CommonStore.addGetAllOwnershipsListener = function (listener) {
@@ -202,6 +211,26 @@ CommonStore.getQuoteTypesObjArray = function() {
     return quoteTypesObjArray;
 };
 
+CommonStore.getQuoteStatusIds = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=quoteStatusId',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(quoteStatusIds) {
+            quoteStatusIdsObjArray = quoteStatusIds;
+            thisCommonStore.emitGetQuoteStatusIds();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getQuoteStatusIdsObjArray = function() {
+    return quoteStatusIdsObjArray;
+};
+
 CommonStore.getAccountParties = function() {
     var thisCommonStore = this;
     $.ajax({
@@ -262,7 +291,6 @@ CommonStore.getSalesChannelsObjArray = function() {
     return salesChannelsObjArray;
 };
 
-
 CommonStore.getAllOwnerships = function() {
     var thisCommonStore = this;
     $.ajax({
@@ -283,7 +311,6 @@ CommonStore.getOwnershipsObjArray = function() {
     return ownershipsObjArray;
 };
 
-
 CommonStore.getContactMechTypes = function(typeId) {
     var thisCommonStore = this;
     $.ajax({
@@ -299,7 +326,6 @@ CommonStore.getContactMechTypes = function(typeId) {
         }
     });
 };
-
 
 CommonStore.getContactMechPurposeTypes = function(purposeTypeId) {
     var thisCommonStore = this;
@@ -346,6 +372,10 @@ TitanDispatcher.register(function(action) {
             CommonStore.getQuoteTypes();
             break;
         }
+        case CommonConstants.GET_QUOTE_STATUS_IDS: {
+            CommonStore.getQuoteStatusIds();
+            break;
+        }
         case CommonConstants.GET_ACCOUNT_PARTIES: {
             CommonStore.getAccountParties();
             break;
@@ -371,7 +401,7 @@ TitanDispatcher.register(function(action) {
             break;
         }
     }
-    
+
 });
 
 module.exports = CommonStore;

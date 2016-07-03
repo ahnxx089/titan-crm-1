@@ -18,17 +18,17 @@ var QuotePanelBody = React.createClass({
 
         // for displaying UT validFromDate more readably & deal with null case
         var validFromDate = this.props.quote.validFromDate;
-        validFromDate = (validFromDate === null ? '(none)' : new Date(validFromDate).toDateString() )
+        validFromDate = (validFromDate === null ? '(none)' : new Date(validFromDate).toDateString() );
 
         // for displaying UT validThruDate more readably & deal with null case
         var validThruDate = this.props.quote.validThruDate;
-        validThruDate = (validThruDate === null ? '(none)' : new Date(validThruDate).toDateString() )
+        validThruDate = (validThruDate === null ? '(none)' : new Date(validThruDate).toDateString() );
 
         /* jshint ignore:start */
         return(
             <div className="panel panel-default">
                 <div className="panel-heading panel-heading-custom">
-                    <h1>Quote Details</h1>
+                    <h1>Details: Quote #{ this.props.quote.quoteId }</h1>
                 </div>
                 <div className="panel-body">
                     <div className="row">
@@ -39,10 +39,10 @@ var QuotePanelBody = React.createClass({
                             <p className="text-left">{ this.props.quote.quoteId }</p>
                         </div>
                         <div className="col-lg-3 col-xs-6">
-                            <p className="text-right"><strong>Quote Type Id:</strong></p>
+                            <p className="text-right"><strong>Quote Name:</strong></p>
                         </div>
                         <div className="col-lg-3 col-xs-6">
-                            <p className="text-left">{ this.props.quote.quoteTypeId }</p>
+                            <p className="text-left">{ this.props.quote.quoteName }</p>
                         </div>
                     </div>
                     <div className="row">
@@ -83,10 +83,10 @@ var QuotePanelBody = React.createClass({
                     </div>
                     <div className="row">
                         <div className="col-lg-3 col-xs-6">
-                            <p className="text-right"><strong>Currency:</strong></p>
+                            <p className="text-right"><strong>Quote Type Id:</strong></p>
                         </div>
                         <div className="col-lg-3 col-xs-6">
-                            <p className="text-left">{ this.props.quote.currencyUomId }</p>
+                            <p className="text-left">{ this.props.quote.quoteTypeId }</p>
                         </div>
                         <div className="col-lg-3 col-xs-6">
                             <p className="text-right"><strong>Sales Channel:</strong></p>
@@ -125,9 +125,15 @@ var QuotePanelBody = React.createClass({
                     </div>
                     <div className="row">
                         <div className="col-lg-3 col-xs-6">
+                            <p className="text-right"><strong>Currency:</strong></p>
+                        </div>
+                        <div className="col-lg-3 col-xs-6">
+                            <p className="text-left">{ this.props.quote.currencyUomId }</p>
+                        </div>
+                        <div className="col-lg-3 col-xs-6">
                             <p className="text-right"><strong>Description:</strong></p>
                         </div>
-                        <div className="col-lg-9 col-xs-6">
+                        <div className="col-lg-3 col-xs-6">
                             <p className="text-left">{ this.props.quote.description }</p>
                         </div>
                     </div>
@@ -135,7 +141,9 @@ var QuotePanelBody = React.createClass({
                         <div className="col-lg-5 col-xs-12">
                         </div>
                         <div className="col-lg-2 col-xs-12">
-                                <button className="btn btn-default">Update Quote</button>
+                            <Link to={ '/cp/quotes/update-quote/' + this.props.quote.quoteId } className="btn btn-primary">
+                                <span className="fa fa-pencil-square-o"></span> Update Quote
+                            </Link>
                         </div>
                         <div className="col-lg-5 col-xs-12">
                         </div>

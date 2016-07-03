@@ -57,9 +57,15 @@ var commonData = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of quoteTypes
      */
     var getQuoteTypes = function () {
-        return knex.select('quote_type_id', 'description')
-            .from('quote_type')
-            .orderBy('quote_type_id');
+        return knex.select('quote_type_id', 'description').from('quote_type').orderBy('quote_type_id');
+    };
+
+    /**
+     * Gets all quote_status_id values from database
+     * @return {Object} promise - Fulfillment value is an array of quoteStatusId
+     */
+    var getQuoteStatusIds = function () {
+        return knex.select('status_id').from('status_item').where('status_id','like','QUOTE_%');
     };
 
     /**
@@ -67,9 +73,7 @@ var commonData = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of party_ids for Accounts (only)
      */
     var getAccountParties = function () {
-        return knex.select('party_role.party_id')
-            .from('party_role')
-            .where('role_type_id', 'ACCOUNT');
+        return knex.select('party_role.party_id').from('party_role').where('role_type_id', 'ACCOUNT');
     };
 
     /**
@@ -118,6 +122,7 @@ var commonData = function (knex) {
         getAllStatesOrProvinces: getAllStatesOrProvinces,
         getAllCountries: getAllCountries,
         getQuoteTypes: getQuoteTypes,
+        getQuoteStatusIds: getQuoteStatusIds,
         getAccountParties: getAccountParties,
         getContactParties: getContactParties,
         getSalesChannels: getSalesChannels,

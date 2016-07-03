@@ -16,7 +16,7 @@ var QuotesDetailsPage = React.createClass({
     getInitialState: function(){
         return {
             quote: {}
-        }
+        };
     },
 
     componentDidMount: function () {
@@ -24,34 +24,28 @@ var QuotesDetailsPage = React.createClass({
         QuotesActions.getQuoteById(this.props.params.id);
     },
 
-    componentWillUnmount: function(){
+    componentWillUnmount: function () {
         QuotesStore.removeListener('getData', this._onGetQuote);
     },
 
-    _onGetQuote: function(){
+    _onGetQuote: function () {
         this.setState({
             quote: QuotesStore.gotQuote()
         });
     },
 
-    render: function(){
+    render: function () {
 
         /* jshint ignore:start */
         return (
-            <div>
-                {/* Note: If this container winds up being the outermost div, get rid of the wrapping div */}
-                <div className="container">
+            <div className="container">
 
-                    {/* Top panel is the Quote itself, displayed in a child component.
-                         TO BE ADDED SOON:  Pass down a prop to respond to a click of the Update Quote button,
-                         handle the redirect and sending out of     */}
+                    {/* Top panel is the Quote itself, displayed in a child component. */}
                     <QuotePanelBody quote={ this.state.quote } />
 
                     {/* Item Panel(s)-- have to be able to have more than one... */}
 
-
                 </div>
-            </div>
         );
 
         /* jshint ignore:end */

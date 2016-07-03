@@ -17,10 +17,12 @@ var CreateQuotePage = React.createClass({
     getInitialState: function() {
         return {
             quote: {
-                        quoteTypeId: '',
+                        quoteTypeId: 'OTHER_QUOTE',
                         partyId: '',
                         currencyUomId: '',
-                        salesChannelEnumId: '',
+                        salesChannelEnumId: 'IND_GEN_SERVICES',
+                        issueDate: '',
+                        statusId: 'QUOTE_CREATED',
                         validFromDate: '',
                         validThruDate: '',
                         quoteName: '',
@@ -48,7 +50,7 @@ var CreateQuotePage = React.createClass({
 
     _addQuote: function(event) {
         event.preventDefault();
-        QuotesActions.addQuote(this.state.quote); // start the Flux unidirectional flow!
+        QuotesActions.addQuote(this.state.quote);
     },
 
     _onAddedQuote: function() {
@@ -67,9 +69,9 @@ var CreateQuotePage = React.createClass({
         {
             this.props.updateErrorBox(result);
         }
-        // User had permission and no validation errors-- api should return the new partyId.
-        // Note:  the new partyId won't actually get rendered on this page, but I still want
-        // it to reach here for diagnostic purposes and to really prove we closed the loop.
+        // User had permission and no validation errors-- api should return the new quoteId.
+        // Note:  the new quoteId won't actually get rendered on this page, but this way we
+        // make sure it really posted in order to re-direct.
         else if (result.hasOwnProperty('quoteId')) {
             this.setState({
                 addedQuoteId: result.quoteId
