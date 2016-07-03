@@ -14,7 +14,10 @@ var Cookies = require('js-cookie');
 // DATA
 //-----------------------------------------------
 var leadsOwned = [];
-var addedLeadId = '';  // ajax call does not return anything. Have to put the value in a variable, then retrieve that variable later
+var addedLeadId = ''; 
+// ajax call does not return anything essential. (Actually it returns a jqXHR object, which is a superset of the XMLHTTPRequest object)
+// I have to put the useful value in a variable, then retrieve that variable later. 
+// Another workaround is to use callback, or promises, to force execution sync-ly after obtaining jqXHR object. 
 var foundLead = {};
 
 
@@ -58,6 +61,9 @@ LeadsStore.emitAddedLead = function (listener) {
 // Next two functions are called by MyLeadsPage
 LeadsStore.getLeadsByOwner = function() {
     var thisLeadsStore = this;
+    
+    // jQuery version of ajax
+    
     $.ajax({
         type: 'GET',
         url: '/api/leads/',
@@ -67,6 +73,58 @@ LeadsStore.getLeadsByOwner = function() {
             thisLeadsStore.emitGetData();
         }
     });
+    
+    
+    // Native version 1 of ajax
+    /*
+    var xhr = new XMLHttpRequest(); //readyState is 0
+
+    xhr.open('GET', '/api/leads/');
+    xhr.setRequestHeader('x-access-token', Cookies.get('titanAuthToken'));
+    xhr.responseType = 'json'; // readyState is 1
+
+    xhr.onreadystatechange = function () {
+//        readyState is changed to 2, 3, 4 in order
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            leadsOwned = xhr.response; // It was set 'JSON' before
+            thisLeadsStore.emitGetData();
+        }
+    };
+    xhr.send();
+    */
+    
+    
+    // Native version 2 of ajax
+    /*
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/api/leads/');
+    xhr.setRequestHeader('x-access-token', Cookies.get('titanAuthToken'));
+
+    xhr.onreadystatechange = function () {
+//        if (xhr.readyState !=4 || xhr.status != 200){
+//            console.log("Not in DONE state");
+//        }
+//        console.log(xhr.readyState + ' ' + xhr.status);
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            leadsOwned = JSON.parse(xhr.response); //responseType is '', which is default to DOMString.
+            thisLeadsStore.emitGetData();
+        }
+    };
+    xhr.send();
+    */
+    
+    
+    // Shorthand version of jQuery ajax
+    /*
+    $.ajaxSetup({
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') }
+    });
+    $.get('/api/leads/', function(leads) {
+        leadsOwned = leads;
+        thisLeadsStore.emitGetData();
+    });
+    */
+    
 };
 LeadsStore.getLeadsOwned = function() {
     return leadsOwned;
@@ -80,7 +138,7 @@ LeadsStore.addLead = function(lead) {
         type: 'POST',
         url: '/api/leads/',
         headers: {  'x-access-token': Cookies.get('titanAuthToken') },
-        data: lead,
+        data: lead, // Data to be sent to the server. See http://api.jquery.com/jquery.ajax/
         success: function(partyId) {
             addedLeadId = partyId;
             // emit seems to be async as well
@@ -112,19 +170,16 @@ LeadsStore.findLeadById = function(passedId) {
         error: function(jqXHR, textStatus, errorThrown) {
             thisLeadsStore.emitGetData(); 
             console.log('An error happened... ');
-            if(jqXHR.hasOwnProperty('status')) {
-                if(jqXHR.status === 200) {
-                    console.log('Error is 200. No such lead');
-                    return;
-                }
+            if(jqXHR.hasOwnProperty('status') && jqXHR.status === 200) {
+                console.log('Error is 200. No such lead');
+                return;
             }
             console.log(errorThrown);
         }
     });
 };
 LeadsStore.getLeadFound = function() {
-    // foundLead is the found_lead_id when success, 
-    // or empty object when error
+    // foundLead is the found_lead_id when success, or empty object when error
     return foundLead;
 };
 

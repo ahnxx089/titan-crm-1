@@ -26,7 +26,7 @@ var ContactMechRow = React.createClass({
             jsxArray.push(<span><br />Ask for { contactMech.askForName }</span>);
         }
         
-        return jsxArray
+        return jsxArray;
     },
     formatAddress: function () {
         var contactMech = this.props.contactMech;
@@ -66,7 +66,7 @@ var ContactMechRow = React.createClass({
             jsxArray.push(<span>{ contactMech.zipOrPostalCode }</span>);
         }
         
-        return jsxArray
+        return jsxArray;
     },
     typeDescription: function() {
         var id = this.props.contactMech.contactMechTypeId;

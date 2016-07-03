@@ -16,7 +16,6 @@ var LeadsActions = {
         });
     },
     
-    // should i pass in an argument? Yes
     addLead: function (lead) {
         TitanDispatcher.dispatch({
             actionType: LeadsConstants.ADD_LEAD,
