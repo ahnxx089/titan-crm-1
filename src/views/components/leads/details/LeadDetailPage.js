@@ -1,24 +1,22 @@
 /////////////////////////////////////////////////
 // Lead Details component.
-// Re-used from /home directory: (render function of ContactDetails) + (other functions of HomePage)
 //
 // @file:   LeadDetailPage.js
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
 var React = require('react');
-var LeadsStore = require('../../../stores/LeadsStore');
-var LeadsActions = require('../../../actions/LeadsActions');
-var ContactMechEntry = require('../../common/ContactMechRow');
 var Link = require('react-router').Link;
 var withRouter = require('react-router').withRouter;
 
+var LeadsActions = require('../../../actions/LeadsActions');
+var LeadsStore = require('../../../stores/LeadsStore');
+var ContactMechEntry = require('../../common/ContactMechRow');
 var CommonStore = require('../../../stores/CommonStore');
 
 const timezoneOffset = new Date().getTimezoneOffset(); // 300 in CDT
 
 var LeadDetailPage = React.createClass({
-    
     getInitialState: function () {
         return {
             leadId: this.props.params.id,
@@ -31,21 +29,20 @@ var LeadDetailPage = React.createClass({
     componentDidMount: function () {
         // Event listener to fire when data retrieved-- 
         // when Store emits,informs this View something happened
-        LeadsStore.addGetDataListener(this._onGetLead);
+        LeadsStore.addGetDataListener(this._onGetOneLead);
         // Call the async function to get my leads
         LeadsActions.getLeadById(this.state.leadId);
         
-        //get types crossref table
+        //get types and purpose types crossref table
         CommonStore.addGetContactMechTypesListener(this._onGetTypes);
         CommonStore.getContactMechTypes();
-        //get purpose types crossref table
         CommonStore.addGetContactMechPurposeTypesListener(this._onGetPurposeTypes);
         CommonStore.getContactMechPurposeTypes();
     },
 
     componentWillUnmount: function() {
         // Avoids console error
-        LeadsStore.removeListener('getData', this._onGetLead);
+        LeadsStore.removeListener('getData', this._onGetOneLead);
         CommonStore.removeListener('getContactMechTypes', this._onGetTypes);
         CommonStore.removeListener('getContactMechPurposeTypes', this._onGetPurposeTypes);
     },
@@ -57,7 +54,7 @@ var LeadDetailPage = React.createClass({
     
     // Listener to Store's getDate event. Once received, re-render
     // No need to check validation or update error box
-    _onGetLead: function() {
+    _onGetOneLead: function() {
         var result = LeadsStore.getLeadFound();
         this.setState({
             leadDetails: result
@@ -97,7 +94,8 @@ var LeadDetailPage = React.createClass({
         }
 //        console.log(contactMechsJSX.length);
 
-        
+        // The reason it renders differently from ContactDetailPage's render (load empty types and purposeTypes array), 
+        // is the difference between getXById in contactController and leadController
         return (
             <div>
                 <Link to="/cp/leads/my-leads" className="btn btn-primary">

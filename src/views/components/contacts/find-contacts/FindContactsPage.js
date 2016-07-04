@@ -145,7 +145,8 @@ var FindContactsPage = React.createClass({
                 contactsJSX.push(<ContactRowWithPhone key={ 'contact_0' } contact={ contacts }/>);
             }
         }
-
+// Note from Lucas & Dukjin: possible conflicting key when i=0. (no big deal though)
+// Consider removing i++ in loop def, and writing <... contact={ contacts[i]} key={ 'contact_' + ++i } /> in the push. (not verified)
         // for a result from initiating action ContactsActions.getContactsByIdentity(identity)
         //  or a result from initiating action ContactsActions.getContactsByPhoneNumber(phoneNumber)
         if ( Object.prototype.toString.call(contacts) === '[object Array]' ){
