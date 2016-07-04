@@ -18,22 +18,22 @@ var HomePage = React.createClass({
         return {
             contactDetails: HomeStore.getContactDetails(),
             newLeads: {
-                unit: 'new leads',
+                unit: <span>new leads<br/><br/></span>,
                 amount: 3,
                 icon: 'sunglasses'
             },
             convertedLeads: {
-                unit: 'new lead conversions',
+                unit: <span>new lead conversions<br/></span>,
                 amount: 5,
                 icon: 'piggy-bank'
             },
             newCases: {
-                unit: 'new cases assigned to me',
+                unit: <span>new cases assigned to me<br/></span>,
                 amount: 9,
                 icon: 'exclamation-sign'
             },
             teamCases: {
-                unit: 'open case tickets',
+                unit: <span>open case tickets<br/><br/></span>,
                 amount: 4,
                 icon: 'flash'
             }

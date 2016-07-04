@@ -103,6 +103,7 @@
     font-size: 2.5em;
 }
 
+/* !important is dangerous. Tested working when removed. */
 .panel-cyan > .panel-heading {
     background-color: #0fc0e8 !important;
 }
