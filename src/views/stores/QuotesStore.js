@@ -16,7 +16,8 @@ var validation = require('../../common/validation')();
 // DATA
 //-----------------------------------------------
 var quotesOwned = [];
-var addedQuoteId = '';   // for returning quote_id of an added Quote
+var addedQuoteId = '';      // for returning quote_id of an added Quote
+var updatedQuoteRows = '';  // for returning number of rows of quote table updated
 var quoteRetrieved = {};
 
 
@@ -36,17 +37,9 @@ QuotesStore.addGetDataListener = function (listener) {
 QuotesStore.emitGetData = function() {
     // see https://nodejs.org/api/events.html#events_emitter_emit_eventname_arg1_arg2
     // Synchronously calls each of the listeners registered for the event named 'getData'
-    // In previous function addGetDataListener is where listeners such as 
+    // In previous function addGetDataListener is where listeners such as
     // MyQuotesPage._onGetData registered to get emits from this Store
-    this.emit('getData');  
-};
-
-QuotesStore.addPutDataListener = function (listener) {
-    this.on('putData', listener);
-};
-
-QuotesStore.emitPutData = function() {
-    this.emit('putData');  
+    this.emit('getData');
 };
 
 /* Next 2 functions:  for Views receiving emits after addQuote */
@@ -55,7 +48,16 @@ QuotesStore.addedQuoteListener = function (listener) {
 };
 
 QuotesStore.emitAddedQuote = function() {
-    this.emit('addedQuote');  
+    this.emit('addedQuote');
+};
+
+/* Next 2 functions:  for Views receiving emits after updateQuote */
+QuotesStore.addPutDataListener = function (listener) {
+    this.on('putData', listener);
+};
+
+QuotesStore.emitPutData = function() {
+    this.emit('putData');
 };
 
 
@@ -81,24 +83,6 @@ QuotesStore.getQuotesByOwner = function() {
 
 QuotesStore.getQuotesOwned = function() {
     return quotesOwned;
-};
-
-QuotesStore.updateQuote = function(quoteId, quote) {
-    var thisQuotesStore = this;
-    $.ajax({
-        type: 'PUT',
-        url: '/api/quotes/' + quoteId,
-        headers: { 
-            'x-access-token': Cookies.get('titanAuthToken')
-        },
-        data: quote,
-        success: function(rows) {
-            thisQuotesStore.emitPutData();
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.log(errorThrown);
-        }
-    });
 };
 
 QuotesStore.getQuoteById = function(id) {
@@ -143,6 +127,28 @@ QuotesStore.addedQuote = function() {
     return addedQuoteId;
 };
 
+// Next two functions are called by UpdateQuotePage
+QuotesStore.updateQuote = function(quote) {
+    var thisQuotesStore = this;
+    $.ajax({
+        type: 'PUT',
+        url: '/api/quotes/' + quote.quoteId,
+        headers: {  'x-access-token': Cookies.get('titanAuthToken') },
+        data: quote,
+        success: function(numRowsUpdated) {
+            updatedQuoteRows = numRowsUpdated; // quoteApi.updateQuote returns # of rows successfully updated
+            thisQuotesStore.emitPutData();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+QuotesStore.updatedQuote = function() {
+    return updatedQuoteRows;
+};
+
 
 // LINK BETWEEN DISPATCHER AND STORE
 //-----------------------------------------------
@@ -162,11 +168,11 @@ TitanDispatcher.register(function(action) {
             break;
         }
         case QuotesConstants.UPDATE_QUOTE: {
-            QuotesStore.updateQuote(action.data.quoteId, action.data.quote);
+            QuotesStore.updateQuote(action.data.quote);
             break;
         }
     }
-    
+
 });
 
 module.exports = QuotesStore;

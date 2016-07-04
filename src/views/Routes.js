@@ -62,7 +62,7 @@ var routes = (
             <Route path="quotes">
                 <Route path="my-quotes" component={require('./components/quotes/my-quotes/MyQuotesPage') } />
                 <Route path="create-quote" component={require('./components/quotes/create-quote/CreateQuotePage')} />
-                <Route path="update/:id" component={require('./components/quotes/update-quote/UpdateQuotePage')} />
+                <Route path="update-quote/:id" component={require('./components/quotes/update-quote/UpdateQuotePage')} />
                 <Route path="quote-details/:id" component={require('./components/quotes/quote-details/QuoteDetailsPage')} />
             </Route>
 

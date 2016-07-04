@@ -39,22 +39,14 @@ var QuotesActions = {
             data: quoteId
         });
     },
-    getQuotesByIdentity: function(identity) {
-        TitanDispatcher.dispatch({
-            actionType: QuotesConstants.GET_QUOTES_BY_IDENTITY,
-            data: identity
-        });
-    },
-    updateQuote: function(quoteId, quote) {
+    updateQuote: function(quote) {
         TitanDispatcher.dispatch({
             actionType: QuotesConstants.UPDATE_QUOTE,
             data: {
-                quoteId: quoteId,
                 quote: quote
             }
         });
     }
-
 };
 
 module.exports = QuotesActions;

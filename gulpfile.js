@@ -62,7 +62,7 @@ var jsx2js = function () {
         .bundle()
         .pipe(source('bundle.js'))
         .pipe(buffer())
-        .pipe(uglify())
+        //.pipe(uglify())
         .pipe(gulp.dest('./public/js/'));
 };
 gulp.task('jsx2js', jsx2js);

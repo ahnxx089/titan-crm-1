@@ -79,7 +79,7 @@ var quoteData = function (knex) {
             (See e.g., http://stackoverflow.com/questions/31221980/javascript-how-to-acess-rowdatapacket )
             That RowDataPacket is itself an object; its sole key is called 'count(*)' (that's what the
             knex.raw query winds up naming it).  The value of RowDataPacket['count(*)'] is the count of all
-            the rows in the quote_item table with this combo of quoteItem.quoteId and  
+            the rows in the quote_item table with this combo of quoteItem.quoteId and
             quoteItem.quoteItemSeqId.  That count should be 1.  (The knex.raw query itself does not
             know/care what the count is, it will just return the object to the controller, which will apply
             some logic to determine what the count is, and then return that number up to the API for display.
@@ -218,30 +218,9 @@ var quoteData = function (knex) {
      * @return {Object} promise - Fulfillment value is a quote entity
      */
     var getQuoteById = function (quoteId) {
-        return knex.select(
-                'quote.quote_id',
-                'quote.quote_type_id',
-                'quote.party_id as "party_id"',
-                'quote.issue_date',
-                'quote.status_id',
-                'quote.currency_uom_id',
-                'quote.sales_channel_enum_id',
-                'quote.valid_from_date',
-                'quote.valid_thru_date',
-                'quote.quote_name',
-                'quote.description',
-                'quote.contact_party_id',
-                'quote.created_by_party_id',
-                'quote.created_date',
-                'quote.updated_date',
-                'quote_role.quote_id',
-                'quote_role.party_id',
-                'quote_role.role_type_id')
+        return knex.select( 'quote_id', 'quote_type_id', 'party_id', 'issue_date', 'status_id', 'currency_uom_id', 'sales_channel_enum_id', 'valid_from_date', 'valid_thru_date', 'quote_name', 'description', 'contact_party_id', 'created_by_party_id', 'created_date', 'updated_date')
             .from('quote')
-            .leftJoin('quote_role', 'quote.quote_id', '=', 'quote_role.quote_id')
-            .where({
-                'quote.quote_id': quoteId
-            });
+            .where('quote_id', quoteId);
     };
 
     /**
@@ -264,12 +243,12 @@ var quoteData = function (knex) {
 
     };
 
-    // NOTE: getQuotesByAdvanced[Alt] did not have links to quote_role table. 
-    
+    // NOTE: getQuotesByAdvanced[Alt] did not have links to quote_role table.
+
     // Author: Lucas
-    // In case of large number of quotes, fetching them all is not efficient. 
-    // Consider: build raw query (for MySQL) in data layer. See Dukjin's caseData.getCasesByAdvanced for reference. 
-    // This function is not used, and deactivated. 
+    // In case of large number of quotes, fetching them all is not efficient.
+    // Consider: build raw query (for MySQL) in data layer. See Dukjin's caseData.getCasesByAdvanced for reference.
+    // This function is not used, and deactivated.
     /**
      * Gets all quotes from database by advanced search
      * @return {Object} promise - Fulfillment value is an array of raw data objects
@@ -279,10 +258,10 @@ var quoteData = function (knex) {
         //        return knex.raw('select * from quote where ' + ' sales_channel_enum_id = "' + salesChannel + '"');
         return knex.from('quote');
     };
-    
+
     // Author: Lucas
     // Thanks: Dinesh
-    // This is a better approach to fetch matching records, better than the alternative version and raw sql version. 
+    // This is a better approach to fetch matching records, better than the alternative version and raw sql version.
     /**
      * Gets all quotes from database by advanced search
      * @return {Object} promise - Fulfillment value is an array of raw data objects
@@ -293,9 +272,9 @@ var quoteData = function (knex) {
         var searchByStatus = !!status;
         var searchByAccount = !!account;
         var searchBySalesChannel = !!salesChannel;
-        
+
         var query = knex.select().from('quote');
-        
+
         if (searchByQuoteId || searchByQuoteName || searchByStatus || searchByAccount || searchBySalesChannel) {
 
             // not-nullable number
@@ -323,7 +302,7 @@ var quoteData = function (knex) {
         return query;
     };
 
-    
+
 
     return {
         addQuote: addQuote,
