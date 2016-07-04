@@ -33,11 +33,11 @@ var ContactDetailPage = React.createClass({
         
         //get types crossref table
         CommonStore.addGetContactMechTypesListener(this._onGetTypes);
-        CommonStore.getContactMechTypes()
+        CommonStore.getContactMechTypes();
         
         //get purpose types crossref table
         CommonStore.addGetContactMechPurposeTypesListener(this._onGetPurposeTypes);
-        CommonStore.getContactMechPurposeTypes()
+        CommonStore.getContactMechPurposeTypes();
         
         //get accounts
         
@@ -75,7 +75,6 @@ var ContactDetailPage = React.createClass({
             contactMechsJSX.push(<ContactMechRow key={ 'contact_mech_' + i } contactMech={ contactMechs[i]} types={this.state.types} purposeTypes={this.state.purposeTypes} />);
             /* jshint ignore:end */
         }
-        
         
         /* jshint ignore:start */
         return (
