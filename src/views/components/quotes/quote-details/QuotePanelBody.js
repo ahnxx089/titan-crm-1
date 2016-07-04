@@ -7,6 +7,7 @@
 
 var React = require('react');
 var Link = require('react-router').Link;
+var ItemRow = require('./ItemRow');
 
 var QuotePanelBody = React.createClass({
 
@@ -24,13 +25,22 @@ var QuotePanelBody = React.createClass({
         var validThruDate = this.props.quote.validThruDate;
         validThruDate = (validThruDate === null ? '(none)' : new Date(validThruDate).toDateString() );
 
+        /* A LITTLE LOOP TO MAKE ZERO, ONE, OR MORE ITEMROW ELEMENTS, EACH OF WHICH IS A <div className="row"></div>
+            WHICH WILL NEED TO HAVE PASSED DOWN TO IT ALL THE QUOTE ITEMS, BUT FIRST WIRE UP THE FLUX FLOW,
+            JUST GET THEM HERE AND DUMP THEM, THEN FIX THEM UP NICE AND PRETTY.
+         */
+
         /* jshint ignore:start */
         return(
             <div className="panel panel-default">
+
+                {/* Panel Heading & Body:  the Quote Details */}
                 <div className="panel-heading panel-heading-custom">
                     <h1>Details: Quote #{ this.props.quote.quoteId }</h1>
                 </div>
                 <div className="panel-body">
+
+                    {/* 7 Rows of Quote Details information */}
                     <div className="row">
                         <div className="col-lg-3 col-xs-6">
                             <p className="text-right"><strong>Quote Id:</strong></p>
@@ -137,17 +147,42 @@ var QuotePanelBody = React.createClass({
                             <p className="text-left">{ this.props.quote.description }</p>
                         </div>
                     </div>
+
+                    {/* Row for the Update Quote button */}
                     <div className="row">
-                        <div className="col-lg-5 col-xs-12">
-                        </div>
+                        <div className="col-lg-5 "></div>
                         <div className="col-lg-2 col-xs-12">
-                            <Link to={ '/cp/quotes/update-quote/' + this.props.quote.quoteId } className="btn btn-primary">
-                                <span className="fa fa-pencil-square-o"></span> Update Quote
-                            </Link>
+                            <Link to={ '/cp/quotes/update-quote/' + this.props.quote.quoteId } className="btn btn-primary"><span className="fa fa-pencil-square-o"></span>Update Quote</Link>
                         </div>
-                        <div className="col-lg-5 col-xs-12">
+                        <div className="col-lg-5 "></div>
+                    </div>
+
+                    <div className="row">
+                        <hr/>
+                    </div>
+
+                    {/* Row for the Add Item button */}
+                    <div className="row">
+                        <div className="col-lg-12 col-xs-12">
+                            {/* REVISE:  Add Item --> an AddItem page, submission there redirects here  */}
+                            <Link to={ '/cp/quotes/update-quote/' + this.props.quote.quoteId } className="btn btn-default"><span className="fa fa-pencil-square-o"></span>Add Item</Link>
                         </div>
                     </div>
+
+                     <pre>{ JSON.stringify( this.props.quoteItems, null, '\t' ) }</pre>
+
+                    {/* Okay, the Items are here!  Time to make:
+
+                        { ItemRowsJSX }
+
+                        into a reality using a child component called ItemRow, the whole render will have as its
+                        wrapping element <div className="row"></div>.  Within that, the item should be a
+                        panel as in the example at http://jsfiddle.net/niner911/MgcDU/8905/ and the heading
+                        should be e.g. <h3>Item #{ this.props.SOMETHIN }</h3>.  And that panel will need
+                        to have an Add Option button, which I've not had great luck putting in the header of
+                        the panel, so ideas include each ItemRow having the panel in a div with className="col-lg-10 col-xs-10" and the Add Option button in the rest of the grid on that row.
+                        Then within each ItemRow's panel the details for that Item.  And options . . . proceed! */}
+
                 </div>
             </div>
         );

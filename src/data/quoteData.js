@@ -214,13 +214,23 @@ var quoteData = function (knex) {
     /**
      * Gets one quote by its id
      * @param {Number} quoteId - Unique id of the quote to be fetched
-     * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is a quote entity
      */
     var getQuoteById = function (quoteId) {
         return knex.select( 'quote_id', 'quote_type_id', 'party_id', 'issue_date', 'status_id', 'currency_uom_id', 'sales_channel_enum_id', 'valid_from_date', 'valid_thru_date', 'quote_name', 'description', 'contact_party_id', 'created_by_party_id', 'created_date', 'updated_date')
             .from('quote')
             .where('quote_id', quoteId);
+    };
+
+    /**
+     * Gets all Items of a Quote by the quoteId
+     * @param {Number} quoteId - Unique id of the quote whose Items (if any) are to be fetched
+     * @return {Object} promise - Fulfillment value is an array of quoteItem entities
+     */
+    var getQuoteItems = function (quoteIdForItems) {
+        return knex.select( 'quote_id', 'quote_item_seq_id', 'product_id', 'quantity', 'selected_amount', 'quote_unit_price', 'estimated_delivery_date', 'comments', 'is_promo', 'description', 'created_date', 'updated_date')
+            .from('quote_item')
+            .where('quote_id', quoteIdForItems)
     };
 
     /**
@@ -240,7 +250,6 @@ var quoteData = function (knex) {
             .where('quote.created_by_party_id', userPartyId)
             .andWhere('quote_role.party_id', userPartyId)
             .andWhere('quote_role.role_type_id', 'PERSON_ROLE');
-
     };
 
     // NOTE: getQuotesByAdvanced[Alt] did not have links to quote_role table.
@@ -312,6 +321,7 @@ var quoteData = function (knex) {
         updateQuoteItemOption: updateQuoteItemOption,
         getQuoteById: getQuoteById,
         getQuotesByOwner: getQuotesByOwner,
+        getQuoteItems: getQuoteItems,
         getQuotesByAdvanced: getQuotesByAdvanced,
         updateQuote: updateQuote
     };

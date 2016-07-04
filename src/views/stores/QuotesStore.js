@@ -19,6 +19,7 @@ var quotesOwned = [];
 var addedQuoteId = '';      // for returning quote_id of an added Quote
 var updatedQuoteRows = '';  // for returning number of rows of quote table updated
 var quoteRetrieved = {};
+var quoteItemsRetrieved = {};
 
 
 // STORE as EVENT EMITTER
@@ -58,6 +59,15 @@ QuotesStore.addPutDataListener = function (listener) {
 
 QuotesStore.emitPutData = function() {
     this.emit('putData');
+};
+
+/* Next 2 functions:  for Views receiving emits after getQuoteItems */
+QuotesStore.addGetQuoteItemsListener = function (listener) {
+    this.on('getQuoteItems', listener);
+};
+
+QuotesStore.emitGetQuoteItems = function() {
+    this.emit('getQuoteItems');
 };
 
 
@@ -149,6 +159,27 @@ QuotesStore.updatedQuote = function() {
     return updatedQuoteRows;
 };
 
+// Next two functions are called by QuotePanelBody to get a Quote's Items
+QuotesStore.getQuoteItems = function(quoteId) {
+    var thisQuotesStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/quotes?quoteIdForItems=' + quoteId,
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(quoteItems) {
+            quoteItemsRetrieved = quoteItems;
+            thisQuotesStore.emitGetQuoteItems();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+QuotesStore.gotQuoteItems = function () {
+    return quoteItemsRetrieved;
+};
+
 
 // LINK BETWEEN DISPATCHER AND STORE
 //-----------------------------------------------
@@ -169,6 +200,10 @@ TitanDispatcher.register(function(action) {
         }
         case QuotesConstants.UPDATE_QUOTE: {
             QuotesStore.updateQuote(action.data.quote);
+            break;
+        }
+        case QuotesConstants.GET_QUOTE_ITEMS: {
+            QuotesStore.getQuoteItems(action.data);
             break;
         }
     }

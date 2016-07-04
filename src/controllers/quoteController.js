@@ -473,6 +473,52 @@ var quoteController = function (knex) {
         }
     };
 
+    /**
+     * Gets all Items of a Quote
+     * @param {Number} quoteId - Unique quote_id of the Quote whose Items are to be fetched
+     * @param {Object} user - The logged in user
+     * @return {Object} promise - Fulfillment value is a quote entity
+     */
+    var getQuoteItems = function (query, user) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
+        if (hasPermission !== -1){
+
+            var quoteIdForItems = query.quoteIdForItems;
+
+            var promise = quoteData.getQuoteItems(quoteIdForItems)
+                .then(function (quoteItems) {
+                    // Map the retrieved result set to corresponding entity
+                    var quoteItemEntities = [];
+                    for (var i = 0; i < quoteItems.length; i++)  {
+                        var quoteItemEntity = new QuoteItem(
+                            quoteItems[i].quote_id,
+                            quoteItems[i].quote_item_seq_id,
+                            quoteItems[i].product_id,
+                            quoteItems[i].quantity,
+                            quoteItems[i].selected_amount,
+                            quoteItems[i].quote_unit_price,
+                            quoteItems[i].estimated_delivery_date,
+                            quoteItems[i].comments,
+                            quoteItems[i].is_promo,
+                            quoteItems[i].description,
+                            quoteItems[i].created_date,
+                            quoteItems[i].updated_date
+                        );
+                        quoteItemEntities.push(quoteItemEntity);
+                    }
+                    return quoteItemEntities;
+                });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            // user does not have permissions to add a quote, return null
+            return null;
+        }
+    };
+
     // Author: Lucas
     // This function is not used, and deactivated.
     /**
@@ -635,6 +681,7 @@ var quoteController = function (knex) {
         updateQuoteItemOption: updateQuoteItemOption,
         getQuoteById: getQuoteById,
         getQuotesByOwner: getQuotesByOwner,
+        getQuoteItems: getQuoteItems,
         getQuotesByAdvanced: getQuotesByAdvanced
     };
 };

@@ -46,7 +46,13 @@ var QuotesActions = {
                 quote: quote
             }
         });
-    }
+    },
+    getQuoteItems: function(quoteId) {
+        TitanDispatcher.dispatch({
+            actionType: QuotesConstants.GET_QUOTE_ITEMS,
+            data: quoteId
+        });
+    },
 };
 
 module.exports = QuotesActions;

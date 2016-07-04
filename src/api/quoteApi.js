@@ -201,7 +201,7 @@ var quoteApi = function (knex) {
 
     // GET /api/quotes
     //
-    // Methods:  getQuotesByOwner, findQuotes
+    // Methods:  getQuotesByOwner, getQuoteItems findQuotes
     //
     var getQuotes = function (req, res) {
 
@@ -224,6 +224,25 @@ var quoteApi = function (knex) {
                 });
             }
         }
+
+        // GET /api/quotes?quoteIdForItems
+        //
+        // getQuoteItems:  for a supplied quoteId, returns all Items of this Quote
+        //
+        else if (req.query.hasOwnProperty('quoteIdForItems')){
+
+            var resultsForUser = quoteController.getQuoteItems(req.query, req.user);
+            if (resultsForUser === null) {
+                res.json({
+                    'message': 'You do not have permission to get by the supplied query!'
+                });
+            } else {
+                resultsForUser.then(function (quoteItems) {
+                    res.json(quoteItems);
+                });
+            }
+        }
+
         // Lucas is taking this part
         // GET /api/quotes?SOME_PROPERTY=some_value
         //
