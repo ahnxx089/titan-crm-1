@@ -27,6 +27,8 @@ var StatWidget = React.createClass({
 
                                 <StatIcon icon={this.props.icon} />
                                 <StatQuantity amount={this.props.amount} unit={this.props.unit} />
+                                {/* Alternatively: append  &#10;&nbsp;  after StatQuantity element. 
+                                Use a condition check to make sure this only happen with shorter unit */}
 
                             </div>
 

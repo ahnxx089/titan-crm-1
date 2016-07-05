@@ -16,7 +16,7 @@ var Cookies = require('js-cookie');
 var leadsOwned = [];
 var addedLeadId = ''; 
 // ajax call does not return anything essential. (Actually it returns a jqXHR object, which is a superset of the XMLHTTPRequest object)
-// I have to put the useful value in a variable, then retrieve that variable later. 
+// I must put the useful value in a variable, then retrieve that variable later. 
 // Another workaround is to use callback, or promises, to force execution sync-ly after obtaining jqXHR object. 
 var foundLead = {};
 
@@ -31,14 +31,16 @@ LeadsStore.addGetDataListener = function (listener) {
     // see https://nodejs.org/api/events.html#events_emitter_on_eventname_listener
     this.on('getData', listener);
 };
-
 LeadsStore.emitGetData = function() {
     // see https://nodejs.org/api/events.html#events_emitter_emit_eventname_arg1_arg2
-    // Synchronously calls each of the listeners registered for the event named 'getData'
+    // Synchronously calls each of the listeners registered for the Event Named 'getData'
     // In previous function addGetDataListener is where listeners such as 
-    // MyLeadsPage._onGetData registered to get emits from this Store
+    // MyLeadsPage._onGetByOwner registered to get emits from this Store
     this.emit('getData');
 };
+// Currently three methods are listening to this one event: get by owner, find by id, display lead detail. 
+// All can use one addGetDataListener without worrying about more than one view(page) receive the 'getData' event message, 
+// because at any time there is only one page listening to the event (others are either not listening at all or having their listeners removed)
 
 
 LeadsStore.addedLeadListener = function (listener) {
@@ -49,7 +51,7 @@ LeadsStore.addedLeadListener = function (listener) {
 LeadsStore.emitAddedLead = function (listener) {
     // .emit method, firstArg: eventName [req], 
     // consequent args: listeners [opt]
-    // Synchronously calls each of the listeners registered for the event named 'addedLead'.
+    // Synchronously calls each of the listeners registered for the Event Named 'addedLead'.
     // Returns true if the event had listeners, false otherwise.
     this.emit('addedLead');
 };
@@ -165,10 +167,11 @@ LeadsStore.findLeadById = function(passedId) {
         data: passedId,
         success: function(lead) {
             foundLead = lead;
-            thisLeadsStore.emitGetData(); 
+            thisLeadsStore.emitGetData();
         },
         error: function(jqXHR, textStatus, errorThrown) {
-            thisLeadsStore.emitGetData(); 
+            foundLead = '';
+            thisLeadsStore.emitGetData();
             console.log('An error happened... ');
             if(jqXHR.hasOwnProperty('status') && jqXHR.status === 200) {
                 console.log('Error is 200. No such lead');
@@ -202,7 +205,6 @@ TitanDispatcher.register(function(action) {
             break;
         }
     }
-    
 });
 
 module.exports = LeadsStore;

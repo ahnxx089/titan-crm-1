@@ -16,10 +16,9 @@ var FindLeadsPage = React.createClass({
     getInitialState: function() {
         return {
             searchBy: { partyId: '' },
-            leadFoundById: [],
+            leadFoundById: []
         };
     },
-    
     
     componentDidMount: function() {
         LeadsStore.addGetDataListener(this._onGetById);
@@ -38,10 +37,10 @@ var FindLeadsPage = React.createClass({
     },
     
     
-    _resetForm: function(event){
+    _resetForm: function(){
         this.setState({ 
             searchBy: { partyId: '' },
-            leadFoundById: [],
+            leadFoundById: []
         });
     },
 
@@ -59,10 +58,14 @@ var FindLeadsPage = React.createClass({
 
     _onGetById: function() {
         var result = LeadsStore.getLeadFound();
-        // If it's is an error, eg. permission error, add it to ErrorBox
-//        if (!result.hasOwnProperty('leadId') && result.hasOwnProperty('message')) {
-        if (Object.keys(result).length === 0 && result.constructor === Object) {
+        
+        // If it's is an error, eg. permission error, non-existing lead, add it to ErrorBox
+//        if (Object.keys(result).length === 0 && result.constructor === Object) {
+        if(result.constructor === String) {
             this.props.updateErrorBox('Error getting lead');
+            // to clear the old state
+            // var e3 = new Event('clickss');
+            this._resetForm();
         } else {
             this.props.updateErrorBox([]); // clear the ErrorBox
             this.setState({
@@ -77,7 +80,7 @@ var FindLeadsPage = React.createClass({
 
         var leadById = this.state.leadFoundById;
         var leadsJSX = [];
-        leadsJSX.push(<LeadRow key={ 'lead_' } lead={ leadById }/>)
+        leadsJSX.push(<LeadRow key={ 'lead_0' } lead={ leadById }/>)
 
         return(
             <div>
