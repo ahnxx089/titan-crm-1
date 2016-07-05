@@ -16,8 +16,9 @@ var validation = require('../../common/validation')();
 // DATA
 //-----------------------------------------------
 var quotesOwned = [];
-var addedQuoteId = '';      // for returning quote_id of an added Quote
-var updatedQuoteRows = '';  // for returning number of rows of quote table updated
+var addedQuoteId = '';          // for returning quote_id of an added Quote
+var addedQuoteItemRows = '';    // for returning number of rows inserted into table quote_item
+var updatedQuoteRows = '';      // for returning number of rows of quote table updated
 var quoteRetrieved = {};
 var quoteItemsRetrieved = {};
 
@@ -59,6 +60,15 @@ QuotesStore.addPutDataListener = function (listener) {
 
 QuotesStore.emitPutData = function() {
     this.emit('putData');
+};
+
+/* Next 2 functions:  for Views receiving emits after addQuoteItem */
+QuotesStore.addedQuoteItemListener = function (listener) {
+    this.on('addedQuoteItem', listener);
+}
+
+QuotesStore.emitAddedQuoteItem = function() {
+    this.emit('addedQuoteItem');
 };
 
 /* Next 2 functions:  for Views receiving emits after getQuoteItems */
@@ -159,6 +169,28 @@ QuotesStore.updatedQuote = function() {
     return updatedQuoteRows;
 };
 
+// Next two functions are called by AddItemPage
+QuotesStore.addQuoteItem = function(quoteItem) {
+    var thisQuotesStore = this;
+    $.ajax({
+        type: 'POST',
+        url: '/api/quotes?item',
+        headers: {  'x-access-token': Cookies.get('titanAuthToken') },
+        data: quoteItem,
+        success: function(numRowsInserted) {
+            addedQuoteItemRows = numRowsInserted; // quoteApi.addQuoteItem returns # of rows successfully inserted
+            thisQuotesStore.emitAddedQuoteItem();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+QuotesStore.addedQuoteItem = function() {
+    return addedQuoteItemRows;
+};
+
 // Next two functions are called by QuotePanelBody to get a Quote's Items
 QuotesStore.getQuoteItems = function(quoteId) {
     var thisQuotesStore = this;
@@ -192,6 +224,10 @@ TitanDispatcher.register(function(action) {
         }
         case QuotesConstants.ADD_QUOTE: {
             QuotesStore.addQuote(action.data);
+            break;
+        }
+        case QuotesConstants.ADD_QUOTE_ITEM: {
+            QuotesStore.addQuoteItem(action.data);
             break;
         }
         case QuotesConstants.GET_QUOTE_BY_ID: {

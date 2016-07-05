@@ -56,6 +56,9 @@ var commonDataController = function (knex) {
             case 'salesChannel':
                 promise = commonData.getSalesChannels();
                 break;
+            case 'product':
+                promise = commonData.getProducts();
+                break;
             case 'ownership':
                 promise = commonData.getOwnerships();
                 break;

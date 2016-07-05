@@ -25,6 +25,7 @@ var quoteStatusIdsObjArray = [];
 var accountPartiesObjArray = [];
 var contactPartiesObjArray = [];
 var salesChannelsObjArray = [];
+var productsObjArray = [];
 var ownershipsObjArray = [];
 var contactMechTypeArray = [];
 var contactMechPurposeTypeArray = [];
@@ -103,6 +104,14 @@ CommonStore.addGetSalesChannelsListener = function (listener) {
 
 CommonStore.emitGetSalesChannels = function() {
     this.emit('getSalesChannels');
+};
+
+CommonStore.addGetProductsListener = function (listener) {
+    this.on('getProducts', listener);
+};
+
+CommonStore.emitGetProducts = function() {
+    this.emit('getProducts');
 };
 
 CommonStore.addGetAllOwnershipsListener = function (listener) {
@@ -291,6 +300,26 @@ CommonStore.getSalesChannelsObjArray = function() {
     return salesChannelsObjArray;
 };
 
+CommonStore.getProducts = function() {
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=product',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(products) {
+            productsObjArray = products;
+            thisCommonStore.emitGetProducts();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getProductsObjArray = function() {
+    return productsObjArray;
+};
+
 CommonStore.getAllOwnerships = function() {
     var thisCommonStore = this;
     $.ajax({
@@ -386,6 +415,10 @@ TitanDispatcher.register(function(action) {
         }
         case CommonConstants.GET_SALES_CHANNELS: {
             CommonStore.getSalesChannels();
+            break;
+        }
+        case CommonConstants.GET_PRODUCTS: {
+            CommonStore.getProducts();
             break;
         }
         case CommonConstants.GET_ALL_OWNERSHIPS: {

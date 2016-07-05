@@ -58,6 +58,12 @@ var CommonActions = {
         });
     },
 
+    getProducts: function() {
+        TitanDispatcher.dispatch({
+            actionType: CommonConstants.GET_PRODUCTS
+        });
+    },
+
     getOwnerships: function() {
         TitanDispatcher.dispatch({
             actionType: CommonConstants.GET_ALL_OWNERSHIPS

@@ -85,10 +85,6 @@
     border: 3px solid grey;
 }
 
-#accordion h2 {
-    padding: 10px;
-}
-
 #tabs {
     border: 10px;
 }
@@ -110,7 +106,7 @@
 .panel-purple > .panel-heading {
     background-color: #db06f5 !important;
 }
-    
+
 .panel-pink > .panel-heading {
     background-color: #f506a0 !important;
 }

@@ -98,6 +98,14 @@ var commonData = function (knex) {
     };
 
     /**
+     * Gets all products from database
+     * @return {Object} promise - Fulfillment value is an array of product.product_id values
+     */
+    var getProducts = function () {
+        return knex.select('product_id')
+            .from('product');
+    };
+    /**
      * Gets all ownership enum values from database
      * @return {Object} promise - Fulfillment value is an array of enumeration.enum_id values
      */
@@ -126,6 +134,7 @@ var commonData = function (knex) {
         getAccountParties: getAccountParties,
         getContactParties: getContactParties,
         getSalesChannels: getSalesChannels,
+        getProducts: getProducts,
         getOwnerships: getOwnerships,
         getContactMechType: getContactMechType,
         getContactMechPurposeType: getContactMechPurposeType
