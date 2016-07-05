@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////
-// Add Item Form component.
+// Update Item Form component.
 //
-// @file:   AddItemForm.js
+// @file:   UpdateItemForm.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
 /////////////////////////////////////////////////
 
@@ -14,69 +14,36 @@ var CommonStore = require('../../../stores/CommonStore');
 var CommonActions = require('../../../actions/CommonActions');
 var ProductOption = require('./ProductOption');
 
-var AddItemForm = React.createClass({
+var UpdateItemForm = React.createClass({
 
     getInitialState: function() {
         return {
-            quoteItem: {
-                        quoteId: this.props.quote.quoteId,
-                        quoteItemSeqId: '',
-                        productId: 'testProd1',
-                        quantity: null,
-                        selectedAmount: null,
-                        quoteUnitPrice: '',
-                        estimatedDeliveryDate: '',
-                        comments: '',
-                        isPromo: null,
-                        description: ''
-                    },
-            existingQuoteItems: {},
-            highestQuoteItemSeqId: '',
+            quoteItem: this.props.quoteItem,
+            updateItemFormNum: 'updateItemForm_'+this.props.quoteItem.quoteItemSeqId,
             productsObjArray: []
         };
     },
 
     componentDidMount: function() {
-        QuotesStore.addedQuoteItemListener(this._onAddedQuoteItem);
-        QuotesStore.addGetQuoteItemsListener(this._onGetQuoteItems);
+        QuotesStore.updatedQuoteItemListener(this._onUpdatedQuoteItem);
         CommonStore.addGetProductsListener(this._onGetProducts);
-        QuotesActions.getQuoteItems(this.props.quote.quoteId);
         CommonActions.getProducts();
 
-        var thisAddItemForm = this;
-        $('#addItemForm').validator().on('submit', function (e) {
+        var thisUpdateItemForm = this;
+        $('#'+this.state.updateItemFormNum).validator().on('submit', function (e) {
             if (e.isDefaultPrevented()) {
                 // Handle the invalid form
             } else {
                 // Proceed with form submission if all input data is valid
-                thisAddItemForm._addQuoteItem();
+                thisUpdateItemForm._updateQuoteItem();
             }
         });
 
     },
 
     componentWillUnmount: function() {
-        QuotesStore.removeListener('addedQuoteItem', this._onAddedQuoteItem);
-        QuotesStore.removeListener('getQuoteItems', this._onGetQuoteItems);
+        QuotesStore.removeListener('updatedQuoteItem', this._onUpdatedQuoteItem);
         CommonStore.removeListener('getProducts', this._onGetProducts);
-    },
-
-    _onGetQuoteItems: function () {
-        /* Determine highest quoteItemSeqId of all the existingQuoteItems,
-            and set this.state.quoteItem.quoteItemSeqId one digit higher.  */
-        this.setState({
-            existingQuoteItems: QuotesStore.gotQuoteItems()
-        });
-        var highest = 0;
-        var existing = this.state.existingQuoteItems;
-        for (var i = 0 ; i < existing.length ; i++ ){
-            if (existing[i].quoteItemSeqId > highest){
-                highest = existing[i].quoteItemSeqId
-            }
-        }
-        this.state.quoteItem.quoteId = this.props.quote.quoteId;
-        this.state.quoteItem.quoteItemSeqId = Math.floor(highest) + 1;
-        this.setState( {quoteItem: this.state.quoteItem} );
     },
 
     _onGetProducts: function () { this.setState({ productsObjArray: CommonStore.getProductsObjArray() }); },
@@ -88,15 +55,15 @@ var AddItemForm = React.createClass({
         this.setState( {quoteItem: this.state.quoteItem} );
     },
 
-    _addQuoteItem: function(event) {
-        QuotesActions.addQuoteItem(this.state.quoteItem);
+    _updateQuoteItem: function(event) {
+        QuotesActions.updateQuoteItem(this.state.quoteItem);
     },
 
-    _onAddedQuoteItem: function() {
+    _onUpdatedQuoteItem: function() {
 
         // After a successful ajax call in the store, calling QuotesStore.addedQuoteItem() will return
         // one of the three results from quoteApi.addQuote, handle with if-else-if-else block
-        var result = QuotesStore.addedQuoteItem();
+        var result = QuotesStore.updatedQuoteItem();
 
         // User lacks security permission to addQuote
         if (result.hasOwnProperty('message'))
@@ -110,8 +77,8 @@ var AddItemForm = React.createClass({
         }
         // User had permission and no validation errors-- api should return the number of rows inserted.
         // If that equals 1, then the update was successful, redirect to Quote Details page
-        else if (result.numRowsInserted === 1) {
-            this.props.router.replace('/cp/quotes/quote-details/' + this.props.quote.quoteId );
+        else if (result.numRowsUpdated === 1) {
+            this.props.router.replace('/cp/quotes/quote-details/' + this.props.quoteItem.quoteId );
         }
     },
 
@@ -130,7 +97,7 @@ var AddItemForm = React.createClass({
             <div>
                 <div className="panel panel-default">
                     <div className="panel-body">
-                        <form id="addItemForm">
+                        <form id={ this.state.updateItemFormNum }>
 
                             <div className="row">
                                 <div className="col-lg-6 col-xs-12">
@@ -223,6 +190,6 @@ var AddItemForm = React.createClass({
     }
 });
 
-// when doing the usual module.exports, wrap AddItemForm in withRouter in order to have
+// when doing the usual module.exports, wrap UpdateItemForm in withRouter in order to have
 // property this.props.router.replace to do the redirect to QuoteDetailsPage upon submitting form data
-module.exports = withRouter(AddItemForm);
+module.exports = withRouter(UpdateItemForm);

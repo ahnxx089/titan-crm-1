@@ -47,6 +47,14 @@ var QuotesActions = {
             }
         });
     },
+    updateQuoteItem: function(quoteItem) {
+        TitanDispatcher.dispatch({
+            actionType: QuotesConstants.UPDATE_QUOTE_ITEM,
+            data: {
+                quoteItem: quoteItem
+            }
+        });
+    },
     getQuoteItems: function(quoteId) {
         TitanDispatcher.dispatch({
             actionType: QuotesConstants.GET_QUOTE_ITEMS,

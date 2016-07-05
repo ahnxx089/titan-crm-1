@@ -13,11 +13,8 @@ var QuotesActions = require('../../../actions/QuotesActions');
 
 var QuotesDetailsPage = React.createClass({
 
-    /* GONNA BE TRICKY TO GET THE OPTIONS OF ALL ITEMS OF THIS QUOTE-- GETTING THE QUOTE ITEMS THEMSELVES
-        IS EASY, BUT THEN FOR EACH ITEM, HOW GET THEM TOO?  I LEARNED THAT I CANNOT RETRIEVE STUFF DOWN
-        IN THE CHILDREN BEFORE GETTING THE QUOTE HERE IN THE PARENT, BECAUSE THE CHILDREN GET RENDERED FIRST,
-        AND DON'T GET RE-RENDERED UNTIL SOME CHANGE OF STATE HERE IN THE PARENT.  SO, FOR SURE I MUST
-        GET THE OPTIONS HERE AS WELL-- ANYWAY, THAT'S BETTER NOT TO BE STORING STATES DOWN IN THE CHILDREN. */
+    /*  NOTE FOR ADDING/UPDATING OPTIONS OF ITEMS OF QUOTES: As with Items, quoteItemOptions will need to be
+        defined here . . . but since they are specific to Items, no, maybe down in each Item?  */
 
     getInitialState: function(){
         return {

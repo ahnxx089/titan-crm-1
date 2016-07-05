@@ -21,6 +21,7 @@ var QuotePanelBody = React.createClass({
     },
 
     render: function () {
+        /* jshint ignore:start */
 
         // for displaying UT issueDate and updatedDate more readably
         var issueDate = new Date(this.props.quote.issueDate).toDateString();
@@ -40,7 +41,6 @@ var QuotePanelBody = React.createClass({
             quoteItemsJSX.push(<ItemRow key={ 'quoteItem_' + i } quoteItem={ quoteItems[i] }/>);
         }
 
-        /* jshint ignore:start */
         return(
             <div className="panel panel-default">
 
@@ -171,13 +171,13 @@ var QuotePanelBody = React.createClass({
                         <hr/>
                     </div>
 
+                    {/* Next row contains an Accordion, which contains the child AddItemForm */}
                     <div className="row">
                         <div className="col-lg-12 col-xs-12">
-                            {/* Accordion to hold the AddItemForm */}
                             <div id="accordion">
                                 <h3>
-                                    <a className="btn btn-secondary">
-                                        <span className="fa fa-pencil-square-o"></span>Click Here to Add Item
+                                    <a className="btn btn-default">
+                                        <span className="fa fa-pencil-square-o"></span>Add Item
                                     </a>
                                 </h3>
                                 <div>

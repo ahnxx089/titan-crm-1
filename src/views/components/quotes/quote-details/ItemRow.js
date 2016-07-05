@@ -6,9 +6,25 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
-var Link = require('react-router').Link;
+var UpdateItemForm = require('./UpdateItemForm');
 
 var ItemRow = React.createClass({
+
+    getInitialState: function () {
+        return {
+            acNum: 'accordion_'+this.props.quoteItem.quoteItemSeqId
+        };
+    },
+
+    componentDidMount: function(){
+
+        // jQuery-UI accordion for UpdateItem panel
+        //$('#accordionForUpdate').accordion({
+        $('#'+this.state.acNum).accordion({
+            active: false,
+            collapsible: true
+        });
+    },
 
     render: function () {
 
@@ -20,10 +36,9 @@ var ItemRow = React.createClass({
         return (
 
             <div className="row">
-
-                <div className="col-lg-10">
+                <div className="col-lg-12">
                     <div className="panel panel-info">
-                        <div className="panel-heading">Item #{ this.props.quoteItem.quoteItemSeqId }</div>
+                        <div className="panel-heading"><h3>Item #{ this.props.quoteItem.quoteItemSeqId }</h3></div>
 
                         <div className="panel-body">
                             {/* 2 rows of Item information */}
@@ -55,16 +70,27 @@ var ItemRow = React.createClass({
                                         <p className="text-left">{ this.props.quoteItem.description }</p>
                                     </div>
                                 </div>
+                            {/* Row for Update Item accordion */}
+                                <div className="row">
+                                    <div className="col-lg-12 col-xs-12">
+                                        <div id={ this.state.acNum }>
+                                            <h3>
+                                                <a className="btn btn-default">
+                                                    <span className="fa fa-pencil-square-o"></span>Update Item
+                                                </a>
+                                            </h3>
+                                            <div>
+                                                <UpdateItemForm key={ this.state.acNum } quoteItem={ this.props.quoteItem } />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>
-                <div className="col-lg-2">
-                        {/*  GOING TO HAVE TO HANDLE UPDATE ITEM DIFFFERENTLY-- TENTATIVELY AS AN ACCORDION HERE
-                            INSIDE THIS ITEM ROW, STILL THINKING ABOUT IT...
-                        <Link to={ '/cp/quotes/update-item/'+this.props.quoteItem.quoteId+'?quoteItemSeqId='+this.props.quoteItem.quoteItemSeqId } className="btn btn-primary btn-xs"><span className="fa fa-pencil-square-o"></span>Update Item #{ this.props.quoteItem.quoteItemSeqId }</Link>
-                        */}
-                </div>
             </div>
+
+
         );
         /* jshint ignore:end */
     }

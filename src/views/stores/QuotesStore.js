@@ -16,9 +16,10 @@ var validation = require('../../common/validation')();
 // DATA
 //-----------------------------------------------
 var quotesOwned = [];
-var addedQuoteId = '';          // for returning quote_id of an added Quote
-var addedQuoteItemRows = '';    // for returning number of rows inserted into table quote_item
-var updatedQuoteRows = '';      // for returning number of rows of quote table updated
+var addedQuoteId = '';              // for returning quote_id of an added Quote
+var addedQuoteItemRows = '';        // for returning number of rows inserted into table quote_item
+var updatedQuoteRows = '';          // for returning number of rows of quote table updated
+var updatedQuoteItemRows = '';      // for returning number of rows of quote table updated
 var quoteRetrieved = {};
 var quoteItemsRetrieved = {};
 
@@ -69,6 +70,15 @@ QuotesStore.addedQuoteItemListener = function (listener) {
 
 QuotesStore.emitAddedQuoteItem = function() {
     this.emit('addedQuoteItem');
+};
+
+/* Next 2 functions:  for Views receiving emits after updateQuoteItem */
+QuotesStore.updatedQuoteItemListener = function (listener) {
+    this.on('updatedQuoteItem', listener);
+}
+
+QuotesStore.emitUpdatedQuoteItem = function() {
+    this.emit('updatedQuoteItem');
 };
 
 /* Next 2 functions:  for Views receiving emits after getQuoteItems */
@@ -169,7 +179,7 @@ QuotesStore.updatedQuote = function() {
     return updatedQuoteRows;
 };
 
-// Next two functions are called by AddItemPage
+// Next two functions are called by AddItem component
 QuotesStore.addQuoteItem = function(quoteItem) {
     var thisQuotesStore = this;
     $.ajax({
@@ -189,6 +199,28 @@ QuotesStore.addQuoteItem = function(quoteItem) {
 
 QuotesStore.addedQuoteItem = function() {
     return addedQuoteItemRows;
+};
+
+// Next two functions are called by UpdateQuoteItem component
+QuotesStore.updateQuoteItem = function(quoteItem) {
+    var thisQuotesStore = this;
+    $.ajax({
+        type: 'PUT',
+        url: '/api/quotes?item',
+        headers: {  'x-access-token': Cookies.get('titanAuthToken') },
+        data: quoteItem,
+        success: function(numRowsUpdated) {
+            updatedQuoteItemRows = numRowsUpdated; // quoteApi.updateQuoteItem returns # of rows successfully updated
+            thisQuotesStore.emitUpdatedQuoteItem();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+QuotesStore.updatedQuoteItem = function() {
+    return updatedQuoteItemRows;
 };
 
 // Next two functions are called by QuotePanelBody to get a Quote's Items
@@ -236,6 +268,10 @@ TitanDispatcher.register(function(action) {
         }
         case QuotesConstants.UPDATE_QUOTE: {
             QuotesStore.updateQuote(action.data.quote);
+            break;
+        }
+        case QuotesConstants.UPDATE_QUOTE_ITEM: {
+            QuotesStore.updateQuoteItem(action.data.quoteItem);
             break;
         }
         case QuotesConstants.GET_QUOTE_ITEMS: {
