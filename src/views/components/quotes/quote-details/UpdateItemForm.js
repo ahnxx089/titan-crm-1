@@ -64,6 +64,7 @@ var UpdateItemForm = React.createClass({
         // After a successful ajax call in the store, calling QuotesStore.addedQuoteItem() will return
         // one of the three results from quoteApi.addQuote, handle with if-else-if-else block
         var result = QuotesStore.updatedQuoteItem();
+        console.log('result = ', result);
 
         // User lacks security permission to addQuote
         if (result.hasOwnProperty('message'))

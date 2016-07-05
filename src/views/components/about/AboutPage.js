@@ -67,7 +67,7 @@ var AboutPage = React.createClass({
                 </div>
                 <div className="row well">
                     <div className="col-xs-2 col-lg-2 text-center">
-                        <img src='img/avatar.jpg' alt='' />
+                        <img src='img/Bill_avatar_200x200.JPG' alt='' />
                     </div>
                     <div className="col-xs-10 col-lg-10">
                         <h3>Willam "Bill" Berg</h3>
