@@ -18,7 +18,6 @@ var contactApi = function (knex) {
     //
     var contactController = require('../controllers/contactController')(knex);
 
-
     // API methods
     // ==========================================
     //
