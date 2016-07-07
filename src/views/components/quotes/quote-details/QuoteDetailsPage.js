@@ -13,8 +13,8 @@ var QuotesActions = require('../../../actions/QuotesActions');
 
 var QuotesDetailsPage = React.createClass({
 
-    /*  NOTE FOR ADDING/UPDATING OPTIONS OF ITEMS OF QUOTES: As with Items, quoteItemOptions will need to be
-        defined here . . . but since they are specific to Items, no, maybe down in each Item?  */
+    /* Note for future:  As with Items, quoteItemOptions will need to be defined.  However, since Options are
+        specific to individual items, it might be best to store their state down in ItemRow... */
 
     getInitialState: function(){
         return {
