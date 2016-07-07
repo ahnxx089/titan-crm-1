@@ -219,28 +219,24 @@ var quoteData = function (knex) {
      */
     var getQuoteById = function (quoteId) {
         return knex.select(
-                'quote.quote_id',
-                'quote.quote_type_id',
-                'quote.party_id as "party_id"',
-                'quote.issue_date',
-                'quote.status_id',
-                'quote.currency_uom_id',
-                'quote.sales_channel_enum_id',
-                'quote.valid_from_date',
-                'quote.valid_thru_date',
-                'quote.quote_name',
-                'quote.description',
-                'quote.contact_party_id',
-                'quote.created_by_party_id',
-                'quote.created_date',
-                'quote.updated_date',
-                'quote_role.quote_id',
-                'quote_role.party_id',
-                'quote_role.role_type_id')
+                'quote_id',
+                'quote_type_id',
+                'party_id',
+                'issue_date',
+                'status_id',
+                'currency_uom_id',
+                'sales_channel_enum_id',
+                'valid_from_date',
+                'valid_thru_date',
+                'quote_name',
+                'description',
+                'contact_party_id',
+                'created_by_party_id',
+                'created_date',
+                'updated_date')
             .from('quote')
-            .leftJoin('quote_role', 'quote.quote_id', '=', 'quote_role.quote_id')
             .where({
-                'quote.quote_id': quoteId
+                'quote_id': quoteId
             });
     };
 
