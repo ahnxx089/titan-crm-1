@@ -39,22 +39,28 @@ var QuotesActions = {
             data: quoteId
         });
     },
-    getQuotesByIdentity: function(identity) {
-        TitanDispatcher.dispatch({
-            actionType: QuotesConstants.GET_QUOTES_BY_IDENTITY,
-            data: identity
-        });
-    },
-    updateQuote: function(quoteId, quote) {
+    updateQuote: function(quote) {
         TitanDispatcher.dispatch({
             actionType: QuotesConstants.UPDATE_QUOTE,
             data: {
-                quoteId: quoteId,
                 quote: quote
             }
         });
-    }
-
+    },
+    updateQuoteItem: function(quoteItem) {
+        TitanDispatcher.dispatch({
+            actionType: QuotesConstants.UPDATE_QUOTE_ITEM,
+            data: {
+                quoteItem: quoteItem
+            }
+        });
+    },
+    getQuoteItems: function(quoteId) {
+        TitanDispatcher.dispatch({
+            actionType: QuotesConstants.GET_QUOTE_ITEMS,
+            data: quoteId
+        });
+    },
 };
 
 module.exports = QuotesActions;

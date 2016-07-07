@@ -315,15 +315,6 @@ var contactController = function (knex) {
         if (hasPermission !== -1) {
             // user has permission, proceed towards data layer
 
-            // function used below to combine the retrieved Contact(s) with phone number;
-            // see:  https://plainjs.com/javascript/utilities/merge-two-javascript-objects-19/
-            var extend = function (obj, src) {
-                for (var key in src) {
-                    if (src.hasOwnProperty(key)) obj[key] = src[key];
-                }
-                return obj;
-            };
-
             // Declaring variables to hold incoming query string properties ensures that an undefined
             // value results in an empty string.
             var firstName = query.firstName;
@@ -381,7 +372,9 @@ var contactController = function (knex) {
             // see:  https://plainjs.com/javascript/utilities/merge-two-javascript-objects-19/
             var extend = function (obj, src) {
                 for (var key in src) {
-                    if (src.hasOwnProperty(key)) obj[key] = src[key];
+                    if (src.hasOwnProperty(key)) {
+                        obj[key] = src[key]
+                    };
                 }
                 return obj;
             };

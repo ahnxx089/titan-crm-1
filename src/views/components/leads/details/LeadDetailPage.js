@@ -1,77 +1,82 @@
 /////////////////////////////////////////////////
 // Lead Details component.
-// Re-used from /home directory: (render function of ContactDetails) + (other functions of HomePage)
 //
 // @file:   LeadDetailPage.js
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
 var React = require('react');
-var LeadsStore = require('../../../stores/LeadsStore');
-var LeadsActions = require('../../../actions/LeadsActions');
-var ContactMechEntry = require('../../common/ContactMechRow');
 var Link = require('react-router').Link;
 var withRouter = require('react-router').withRouter;
+
+var LeadsActions = require('../../../actions/LeadsActions');
+var LeadsStore = require('../../../stores/LeadsStore');
+var ContactMechEntry = require('../../common/ContactMechRow');
+var CommonStore = require('../../../stores/CommonStore');
 
 const timezoneOffset = new Date().getTimezoneOffset(); // 300 in CDT
 
 var LeadDetailPage = React.createClass({
-    
     getInitialState: function () {
         return {
             leadId: this.props.params.id,
-            leadDetails: {}
+            leadDetails: {},
+            types: [],
+            purposeTypes: []
         };
     },
     
     componentDidMount: function () {
         // Event listener to fire when data retrieved-- 
         // when Store emits,informs this View something happened
-        LeadsStore.addGetDataListener(this._onGetData);
-        
-        var leadId = this.state.leadId;
-//        console.log('in did mount ' + leadId);
+        LeadsStore.addGetDataListener(this._onGetOneLead);
         // Call the async function to get my leads
-        LeadsActions.getLeadById(leadId);
+        LeadsActions.getLeadById(this.state.leadId);
+        
+        //get types and purpose types crossref table
+        CommonStore.addGetContactMechTypesListener(this._onGetTypes);
+        CommonStore.getContactMechTypes();
+        CommonStore.addGetContactMechPurposeTypesListener(this._onGetPurposeTypes);
+        CommonStore.getContactMechPurposeTypes();
     },
 
     componentWillUnmount: function() {
         // Avoids console error
-        LeadsStore.removeListener('getData', this._onGetData);
+        LeadsStore.removeListener('getData', this._onGetOneLead);
+        CommonStore.removeListener('getContactMechTypes', this._onGetTypes);
+        CommonStore.removeListener('getContactMechPurposeTypes', this._onGetPurposeTypes);
     },
     
-    
-    _getLeadDetails: function() {
-        var leadId = this.state.leadId;
-        LeadsActions.getLeadById(leadId);
-    },
+//    _getLeadDetails: function() {
+//        var leadId = this.state.leadId;
+//        LeadsActions.getLeadById(leadId);
+//    },
     
     // Listener to Store's getDate event. Once received, re-render
-    _onGetData: function() {
+    // No need to check validation or update error box
+    _onGetOneLead: function() {
         var result = LeadsStore.getLeadFound();
-        // If it's is an error, eg. permission error, add it to ErrorBox
-        // this if is actually not needed, because user is not able to access/click on leads that does not exist.
-        if (Object.keys(result).length === 0 && result.constructor === Object) {
-            this.props.updateErrorBox('No such lead');
-        }
-        
-        // Otherwise we have received our expected result;
-        // call setState to force a re-render of <LeadDetailPage>
-        else {
-            this.props.updateErrorBox([]); // clear the ErrorBox
-            this.setState({
-                leadDetails: result
-            });
-        }
+        this.setState({
+            leadDetails: result
+        });
     },
     
+    _onGetTypes: function (event) {
+        this.setState({
+            types: CommonStore.getTypeArray()
+        });
+    },
+    _onGetPurposeTypes: function (event) {
+        this.setState({
+            purposeTypes: CommonStore.getPurposeTypeArray()
+        });
+    },
     
     render: function() {
         /* jshint ignore:start */
         
 //        console.log("location is " + window.location); // something hard to use
-        var allProps = this.props;
-        var leadId = this.state.leadId;
+//        var allProps = this.props;
         var leadDetails = this.state.leadDetails;
         
         // TODO: re-modify this time in LeadsStore when first GET them
@@ -80,18 +85,17 @@ var LeadDetailPage = React.createClass({
         var originalInLocal = new Date(alreadyChanged); // Date Object
         originalInLocal.setMinutes(originalInLocal.getMinutes() - timezoneOffset);
         
-        
         var contactMechs = leadDetails.partyContactMechs || [];
-//        console.log(typeof leadDetails.partyContactMechs);
+//        console.log(leadDetails.partyContactMechs);
 //        console.log(contactMechs.length + "contactMechs.length");
         var contactMechsJSX = [];
         for (var i = 0; i < contactMechs.length; i++) {
-            contactMechsJSX.push(<ContactMechEntry key={ 'contact_mech_' + i } contactMech={ contactMechs[i]}/>);
+            contactMechsJSX.push(<ContactMechEntry key={ 'contact_mech_' + i } contactMech={ contactMechs[i]} types={this.state.types} purposeTypes={this.state.purposeTypes} />);
         }
 //        console.log(contactMechsJSX.length);
 
-        
-        
+        // The reason it renders differently from ContactDetailPage's render (load empty types and purposeTypes array), 
+        // is the difference between getXById in contactController and leadController
         return (
             <div>
                 <Link to="/cp/leads/my-leads" className="btn btn-primary">
@@ -154,13 +158,14 @@ var LeadDetailPage = React.createClass({
                             <div className="row">
                                 <div className="col-xs-12 col-lg-6">
                                     <span className="label label-default">Created Date</span>&nbsp;
-                                    {/* leadDetails.createdDate */}
-                                    { originalInLocal.toString() }
+                                    {/* originalInLocal.toString() */}
+                                    { leadDetails.createdDate }
+                                    {/* new Date(new Date(leadDetails.createdDate).setMinutes(new Date(leadDetails.createdDate).getMinutes() - 300)).toString() */}
                                 </div>
                                 <div className="col-xs-12 col-lg-6">
                                     <span className="label label-default">Updated Date (?)</span>&nbsp;
-                                    {/* leadDetails.createdDate */}
-                                    { originalInLocal.toString() }
+                                    { leadDetails.createdDate }
+                                    {/* originalInLocal.toString() */}
                                 </div>
                             </div>
 
@@ -228,8 +233,6 @@ var LeadDetailPage = React.createClass({
                         </div> {/* End of panel-body */}
                     </div> {/* End of panel-info */}
 
-
-
                     <div className="panel panel-info">
                         <div className="panel-heading">
                             <h3 className="panel-title">Contact Information</h3>
@@ -248,6 +251,7 @@ var LeadDetailPage = React.createClass({
                             </tbody>
                         </table>
                     </div>
+
                     <div className="panel panel-info">
                         <div className="panel-heading">
                             <h3 className="panel-title">Accounts</h3>
@@ -286,18 +290,6 @@ var LeadDetailPage = React.createClass({
                         </table>
                     </div> {/* End of panel-info for the last table */}
 
-
-                    {/*
-                    <div className="row">
-                        <div className="col-xs-12">
-                            <h2>Contact Information</h2>
-                        </div>
-                        <div className="panel-body">
-                            { contactMechsJSX }
-                        </div>
-                    </div>
-                    */}
-
                 </div> {/* End of panel-default */}
             </div>
         );
@@ -305,5 +297,5 @@ var LeadDetailPage = React.createClass({
     }
 });
 
-// Added withRoute so that the button could work
+// Added withRouter so that the button could work
 module.exports = withRouter(LeadDetailPage);

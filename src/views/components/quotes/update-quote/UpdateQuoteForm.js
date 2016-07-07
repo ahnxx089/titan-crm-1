@@ -1,23 +1,23 @@
 /////////////////////////////////////////////////
-// Add Quote form component.
+// Update Quote form component.
 //
-// @file:   AddQuoteForm.js
+// @file:   UpdateQuoteForm.js
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>
 /////////////////////////////////////////////////
 
 var React = require('react');
-var QuoteTypeOption = require('./QuoteTypeOption');
-var QuoteStatusIdOption = require('./QuoteStatusIdOption');
-var AccountPartyOption = require('./AccountPartyOption');
+var QuoteTypeOption = require('../create-quote/QuoteTypeOption');
+var QuoteStatusIdOption = require('../create-quote/QuoteStatusIdOption');
+var AccountPartyOption = require('../create-quote/AccountPartyOption');
 var CurrencyOption = require('../../common/CurrencyOption');
-var NoCurrencyOption = require('./NoCurrencyOption');
-var ContactPartyOption = require('./ContactPartyOption');
-var NoContactPartyOption = require('./NoContactPartyOption');
-var SalesChannelOption = require('./SalesChannelOption');
+var NoCurrencyOption = require('../create-quote/NoCurrencyOption');
+var ContactPartyOption = require('../create-quote/ContactPartyOption');
+var NoContactPartyOption = require('../create-quote/NoContactPartyOption');
+var SalesChannelOption = require('../create-quote/SalesChannelOption');
 var CommonStore = require('../../../stores/CommonStore');
 var CommonActions = require('../../../actions/CommonActions');
 
-var AddQuoteForm = React.createClass({
+var UpdateQuoteForm = React.createClass({
 
     getInitialState: function () {
         return {
@@ -44,14 +44,14 @@ var AddQuoteForm = React.createClass({
         CommonActions.getContactParties();
         CommonActions.getSalesChannels();
 
-        var thisAddQuoteForm = this;
+        var thisUpdateQuoteForm = this;
 
-        $('#addQuoteForm').validator().on('submit', function (e) {
+        $('#UpdateQuoteForm').validator().on('submit', function (e) {
             if (e.isDefaultPrevented()) {
                 // Handle the invalid form
             } else {
                 // Proceed with form submission if all input data is valid
-                thisAddQuoteForm.props.onFormSubmit(e);
+                thisUpdateQuoteForm.props.onFormSubmit(e);
             }
         });
     },
@@ -119,16 +119,28 @@ var AddQuoteForm = React.createClass({
             contactPartiesJSX.push(<ContactPartyOption key={ 'contactParty_' + i } contactParty={ contactParties[i] }/>);
         }
 
-        // make SalesChannelEnumId drop-down menu (field is not nullable)
+        // make SalesChannelEnumId drop-down menu
         var salesChannels = this.state.salesChannelsObjArray;
         var salesChannelsJSX = [];
         for (var i = 0; i < salesChannels.length; i++) {
             salesChannelsJSX.push(<SalesChannelOption key={ 'salesChannel_' + i } salesChannel={ salesChannels[i] }/>);
         }
 
+        // for displaying UT initialValidFromDate more readably & deal with null case
+        var initialValidFromDate = this.props.initialValidFromDate;
+        initialValidFromDate = (initialValidFromDate === null ? 'none' : new Date(initialValidFromDate).toDateString() );
+
+        // for displaying UT initialValidThruDate more readably & deal with null case
+        var initialValidThruDate = this.props.initialValidThruDate;
+        initialValidThruDate = (initialValidThruDate === null ? 'none' : new Date(initialValidThruDate).toDateString() );
+
+        // for displaying UT initialIssueDate more readably & deal with null case
+        var initialIssueDate = this.props.initialIssueDate;
+        initialIssueDate = (initialIssueDate === null ? 'none' : new Date(initialIssueDate).toDateString() );
+
         return (
             <div>
-                <form id="addQuoteForm">
+                <form id="UpdateQuoteForm">
 
                     <div className="row">
                         <div className="col-lg-6 col-xs-12">
@@ -150,7 +162,7 @@ var AddQuoteForm = React.createClass({
                         </div>
                         <div className="col-lg-6 col-xs-12">
                             <div className="form-group">
-                                <label htmlFor="AccountPartyId">Account Party ID</label>
+                                <label htmlFor="AccountPartyId">Account Party Id</label>
                                 <div className="input-group">
                                     <div className="input-group-addon">
                                         <i className="fa fa-bars" aria-hidden="true"></i>
@@ -187,7 +199,7 @@ var AddQuoteForm = React.createClass({
                         </div>
                         <div className="col-lg-6 col-xs-12">
                             <div className="form-group">
-                                <label htmlFor="contactPartyId">Contact Party ID</label>
+                                <label htmlFor="ContactPartyId">Contact Party Id</label>
                                 <div className="input-group">
                                     <div className="input-group-addon">
                                         <i className="fa fa-bars" aria-hidden="true"></i>
@@ -229,24 +241,24 @@ var AddQuoteForm = React.createClass({
                                     <div className="input-group-addon">
                                         <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                     </div>
-                                <input type="text"
-                                    className="form-control"
-                                    id="quoteName"
-                                    placeholder="Factory Parts"
-                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
-                                    data-error="(max length 100 characters)"
-                                    onChange={ this.props.onChange }
-                                    value={ this.props.quote.quoteName } />
-                                </div>
+                                    <input type="text"
+                                        className="form-control"
+                                        id="quoteName"
+                                        placeholder="Factory Parts"
+                                        pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
+                                        data-error="(max length 100 characters)"
+                                        onChange={ this.props.onChange }
+                                        value={ this.props.quote.quoteName } />
+                                    </div>
                             </div>
                             <div className="help-block with-errors"></div>
-                       </div>
+                        </div>
                     </div>
 
                     <div className="row">
                         <div className="col-lg-6 col-xs-12">
                             <div className="form-group">
-                                <label htmlFor="validFromDate">Valid From Date</label>
+                                <label htmlFor="validFromDate">Valid From Date (currently {initialValidFromDate})</label>
                                 <div className="input-group">
                                     <div className="input-group-addon">
                                         <i className="fa fa-calendar" aria-hidden="true"></i>
@@ -261,7 +273,7 @@ var AddQuoteForm = React.createClass({
                         </div>
                         <div className="col-lg-6 col-xs-12">
                             <div className="form-group">
-                                <label htmlFor="validThruDate">Valid Thru Date</label>
+                                <label htmlFor="validThruDate">Valid Thru Date (currently {initialValidThruDate})</label>
                                 <div className="input-group">
                                     <div className="input-group-addon">
                                         <i className="fa fa-calendar" aria-hidden="true"></i>
@@ -279,7 +291,7 @@ var AddQuoteForm = React.createClass({
                     <div className="row">
                         <div className="col-lg-6 col-xs-12">
                             <div className="form-group">
-                                <label htmlFor="issueDate">Issue Date</label>
+                                <label htmlFor="issueDate">Issue Date (currently {initialIssueDate})</label>
                                 <div className="input-group">
                                     <div className="input-group-addon">
                                         <i className="fa fa-calendar" aria-hidden="true"></i>
@@ -319,15 +331,15 @@ var AddQuoteForm = React.createClass({
                                     <div className="input-group-addon">
                                         <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                     </div>
-                                <input type="text"
-                                    className="form-control"
-                                    id="description"
-                                    placeholder="(255 characters or less)"
-                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,255}$"
-                                    data-error="(max length 255 characters)"
-                                    onChange={ this.props.onChange }
-                                    value={ this.props.quote.description } />
-                                </div>
+                                    <input type="text"
+                                        className="form-control"
+                                        id="description"
+                                        placeholder="(255 characters or less)"
+                                        pattern="^[\x20-\x7E\u00C0-\u00FC]{1,255}$"
+                                        data-error="(max length 255 characters)"
+                                        onChange={ this.props.onChange }
+                                        value={ this.props.quote.description } />
+                                    </div>
                             <div className="help-block with-errors"></div>
                             </div>
                         </div>
@@ -338,6 +350,7 @@ var AddQuoteForm = React.createClass({
                             <button className="btn btn-primary" type="submit" data-disable="true">Submit</button>
                         </div>
                     </div>
+
                 </form>
             </div>
         );
@@ -345,4 +358,4 @@ var AddQuoteForm = React.createClass({
     }
 });
 
-module.exports = AddQuoteForm;
+module.exports = UpdateQuoteForm;

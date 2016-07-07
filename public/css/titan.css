@@ -85,10 +85,6 @@
     border: 3px solid grey;
 }
 
-#accordion h2 {
-    padding: 10px;
-}
-
 #tabs {
     border: 10px;
 }
@@ -97,4 +93,33 @@
     .team img {
         width: 50px;
     }
+}
+
+.big {
+    font-size: 2.5em;
+}
+
+/* !important is dangerous. Tested working when removed. */
+.panel-cyan > .panel-heading {
+    background-color: #0fc0e8 !important;
+}
+
+.panel-purple > .panel-heading {
+    background-color: #db06f5 !important;
+}
+
+.panel-pink > .panel-heading {
+    background-color: #f506a0 !important;
+}
+
+.panel-red > .panel-heading {
+    background-color: #fd1b1b !important;
+}
+
+.panel-orange > .panel-heading {
+    background-color: #fb981e !important;
+}
+
+.panel-green > .panel-heading {
+    background-color: #88f95a !important;
 }

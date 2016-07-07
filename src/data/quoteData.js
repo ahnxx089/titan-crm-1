@@ -3,6 +3,7 @@
 //
 // @file:    quoteData.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
+//           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
@@ -79,7 +80,7 @@ var quoteData = function (knex) {
             (See e.g., http://stackoverflow.com/questions/31221980/javascript-how-to-acess-rowdatapacket )
             That RowDataPacket is itself an object; its sole key is called 'count(*)' (that's what the
             knex.raw query winds up naming it).  The value of RowDataPacket['count(*)'] is the count of all
-            the rows in the quote_item table with this combo of quoteItem.quoteId and  
+            the rows in the quote_item table with this combo of quoteItem.quoteId and
             quoteItem.quoteItemSeqId.  That count should be 1.  (The knex.raw query itself does not
             know/care what the count is, it will just return the object to the controller, which will apply
             some logic to determine what the count is, and then return that number up to the API for display.
@@ -214,7 +215,6 @@ var quoteData = function (knex) {
     /**
      * Gets one quote by its id
      * @param {Number} quoteId - Unique id of the quote to be fetched
-     * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is a quote entity
      */
     var getQuoteById = function (quoteId) {
@@ -257,15 +257,14 @@ var quoteData = function (knex) {
             .where('quote.created_by_party_id', userPartyId)
             .andWhere('quote_role.party_id', userPartyId)
             .andWhere('quote_role.role_type_id', 'PERSON_ROLE');
-
     };
 
-    // NOTE: getQuotesByAdvanced[Alt] did not have links to quote_role table. 
-    
+    // NOTE: getQuotesByAdvanced[Alt] did not have links to quote_role table.
+
     // Author: Lucas
-    // In case of large number of quotes, fetching them all is not efficient. 
-    // Consider: build raw query (for MySQL) in data layer. See Dukjin's caseData.getCasesByAdvanced for reference. 
-    // This function is not used, and deactivated. 
+    // In case of large number of quotes, fetching them all is not efficient.
+    // Consider: build raw query (for MySQL) in data layer. See Dukjin's caseData.getCasesByAdvanced for reference.
+    // This function is not used, and deactivated.
     /**
      * Gets all quotes from database by advanced search
      * @return {Object} promise - Fulfillment value is an array of raw data objects
@@ -275,10 +274,10 @@ var quoteData = function (knex) {
         //        return knex.raw('select * from quote where ' + ' sales_channel_enum_id = "' + salesChannel + '"');
         return knex.from('quote');
     };
-    
+
     // Author: Lucas
     // Thanks: Dinesh
-    // This is a better approach to fetch matching records, better than the alternative version and raw sql version. 
+    // This is a better approach to fetch matching records, better than the alternative version and raw sql version.
     /**
      * Gets all quotes from database by advanced search
      * @return {Object} promise - Fulfillment value is an array of raw data objects
@@ -289,9 +288,9 @@ var quoteData = function (knex) {
         var searchByStatus = !!status;
         var searchByAccount = !!account;
         var searchBySalesChannel = !!salesChannel;
-        
+
         var query = knex.select().from('quote');
-        
+
         if (searchByQuoteId || searchByQuoteName || searchByStatus || searchByAccount || searchBySalesChannel) {
 
             // not-nullable number
@@ -319,7 +318,7 @@ var quoteData = function (knex) {
         return query;
     };
 
-    
+
 
     return {
         addQuote: addQuote,
@@ -329,6 +328,7 @@ var quoteData = function (knex) {
         updateQuoteItemOption: updateQuoteItemOption,
         getQuoteById: getQuoteById,
         getQuotesByOwner: getQuotesByOwner,
+        //getQuoteItems: getQuoteItems,
         getQuotesByAdvanced: getQuotesByAdvanced,
         updateQuote: updateQuote
     };

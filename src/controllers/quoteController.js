@@ -3,6 +3,7 @@
 //
 // @file:    contactController.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
+//           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
@@ -406,7 +407,7 @@ var quoteController = function (knex) {
                             quote[0].sales_channel_enum_id,
                             quote[0].valid_from_date,
                             quote[0].valid_thru_date,
-                            quote[0].quote_dame,
+                            quote[0].quote_name,
                             quote[0].description,
                             quote[0].contact_party_id,
                             quote[0].created_by_party_id,
@@ -473,8 +474,54 @@ var quoteController = function (knex) {
         }
     };
 
+    /**
+     * Gets all Items of a Quote
+     * @param {Number} quoteId - Unique quote_id of the Quote whose Items are to be fetched
+     * @param {Object} user - The logged in user
+     * @return {Object} promise - Fulfillment value is a quote entity
+     */
+    var getQuoteItems = function (query, user) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
+        if (hasPermission !== -1){
+
+            var quoteIdForItems = query.quoteIdForItems;
+
+            var promise = quoteData.getQuoteItems(quoteIdForItems)
+                .then(function (quoteItems) {
+                    // Map the retrieved result set to corresponding entity
+                    var quoteItemEntities = [];
+                    for (var i = 0; i < quoteItems.length; i++)  {
+                        var quoteItemEntity = new QuoteItem(
+                            quoteItems[i].quote_id,
+                            quoteItems[i].quote_item_seq_id,
+                            quoteItems[i].product_id,
+                            quoteItems[i].quantity,
+                            quoteItems[i].selected_amount,
+                            quoteItems[i].quote_unit_price,
+                            quoteItems[i].estimated_delivery_date,
+                            quoteItems[i].comments,
+                            quoteItems[i].is_promo,
+                            quoteItems[i].description,
+                            quoteItems[i].created_date,
+                            quoteItems[i].updated_date
+                        );
+                        quoteItemEntities.push(quoteItemEntity);
+                    }
+                    return quoteItemEntities;
+                });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
+            });
+            return promise;
+        } else {
+            // user does not have permissions to add a quote, return null
+            return null;
+        }
+    };
+
     // Author: Lucas
-    // This function is not used, and deactivated. 
+    // This function is not used, and deactivated.
     /**
      * Gets quotes by advanced search (alternative version)
      * @param {String} query - query string: SOME ARGUMENT
@@ -570,8 +617,8 @@ var quoteController = function (knex) {
             return null;
         }
     };
-    
-    
+
+
     // Author: Lucas
     /**
      * Gets quotes by advanced search
@@ -626,7 +673,6 @@ var quoteController = function (knex) {
         }
     };
 
-    
     return {
         addQuote: addQuote,
         addQuoteItem: addQuoteItem,
@@ -636,6 +682,7 @@ var quoteController = function (knex) {
         updateQuoteItemOption: updateQuoteItemOption,
         getQuoteById: getQuoteById,
         getQuotesByOwner: getQuotesByOwner,
+        getQuoteItems: getQuoteItems,
         getQuotesByAdvanced: getQuotesByAdvanced
     };
 };

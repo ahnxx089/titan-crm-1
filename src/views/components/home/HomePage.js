@@ -9,29 +9,52 @@ var React = require('react');
 var Link = require('react-router').Link;
 var GetContactForm = require('./GetContactForm');
 var ContactDetails = require('./ContactDetails');
+var StatWidget = require('./widgets/StatWidget');
 var HomeStore = require('../../stores/HomeStore');
 var HomeActions = require('../../actions/HomeActions');
 
 var HomePage = React.createClass({
-    getInitialState: function() {
+    getInitialState: function () {
         return {
-            contactDetails: HomeStore.getContactDetails()
+            /* jshint ignore:start */
+            contactDetails: HomeStore.getContactDetails(),
+            newLeads: {
+                unit: <span>new leads<br/><br/></span>,
+                amount: 3,
+                icon: 'sunglasses'
+            },
+            convertedLeads: {
+                unit: <span>new lead conversions<br/></span>,
+                amount: 5,
+                icon: 'piggy-bank'
+            },
+            newCases: {
+                unit: <span>new cases assigned to me<br/></span>,
+                amount: 9,
+                icon: 'exclamation-sign'
+            },
+            teamCases: {
+                unit: <span>open case tickets<br/><br/></span>,
+                amount: 4,
+                icon: 'flash'
+            }
+            /* jshint ignore:end */
         };
     },
     
-    componentDidMount: function() {
+    componentDidMount: function () {
         HomeStore.addChangeListener(this._onChange);
     },
     
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         HomeStore.removeListener('change', this._onChange);
     },
     
-    _getContactDetails: function(contactId) {
+    _getContactDetails: function (contactId) {
         HomeActions.getContactById(contactId);
     },
     
-    _onChange: function() {
+    _onChange: function () {
         var result = HomeStore.getContactDetails();
         // If it's is an error, eg. permission error, add it to ErrorBox
         if (!result.hasOwnProperty('contactId') && result.hasOwnProperty('message')) {
@@ -56,6 +79,12 @@ var HomePage = React.createClass({
                     <p>Clicking the button calls the getContactById API.</p>
                     <GetContactForm onButtonClick={ this._getContactDetails }/>
                     <Link to="/cp/home/home-sub">A sub page</Link>
+                </div>
+                <div className="row">
+                    <StatWidget amount={this.state.newLeads.amount} unit={this.state.newLeads.unit} icon={this.state.newLeads.icon} color="cyan"/>
+                    <StatWidget amount={this.state.convertedLeads.amount} unit={this.state.convertedLeads.unit} icon={this.state.convertedLeads.icon} color="green" />
+                    <StatWidget amount={this.state.newCases.amount} unit={this.state.newCases.unit} icon={this.state.newCases.icon} color="red" />
+                    <StatWidget amount={this.state.teamCases.amount} unit={this.state.teamCases.unit} icon={this.state.teamCases.icon} color="purple" />
                 </div>
                 <ContactDetails contact={ this.state.contactDetails }/>
             </div>

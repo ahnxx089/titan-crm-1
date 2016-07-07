@@ -9,28 +9,34 @@ var TitanDispatcher = require('../dispatcher/TitanDispatcher');
 var CommonConstants = require('../constants/CommonConstants');
 
 var CommonActions = {
-    
+
     getAllCurrencies: function() {
         TitanDispatcher.dispatch({
             actionType: CommonConstants.GET_ALL_CURRENCIES
         });
     },
-    
+
     getAllStatesOrProvinces: function() {
         TitanDispatcher.dispatch({
             actionType: CommonConstants.GET_ALL_STATES_OR_PROVINCES
         });
     },
-    
+
     getAllCountries: function() {
         TitanDispatcher.dispatch({
             actionType: CommonConstants.GET_ALL_COUNTRIES
         });
     },
-    
+
     getQuoteTypes: function() {
         TitanDispatcher.dispatch({
             actionType: CommonConstants.GET_QUOTE_TYPES
+        });
+    },
+
+    getQuoteStatusIds: function() {
+        TitanDispatcher.dispatch({
+            actionType: CommonConstants.GET_QUOTE_STATUS_IDS
         });
     },
 
@@ -51,7 +57,13 @@ var CommonActions = {
             actionType: CommonConstants.GET_SALES_CHANNELS
         });
     },
-    
+
+    getProducts: function() {
+        TitanDispatcher.dispatch({
+            actionType: CommonConstants.GET_PRODUCTS
+        });
+    },
+
     getOwnerships: function() {
         TitanDispatcher.dispatch({
             actionType: CommonConstants.GET_ALL_OWNERSHIPS

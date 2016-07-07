@@ -21,7 +21,7 @@ var MyLeadsPage = React.createClass({
     componentDidMount: function () {
         // Event listener to fire when data retrieved-- 
         // when Store emits,informs this View something happened
-        LeadsStore.addGetDataListener(this._onGetData);
+        LeadsStore.addGetDataListener(this._onGetByOwner);
         
         // Call the async function to get my leads
         LeadsActions.getLeadsByOwner();
@@ -29,12 +29,12 @@ var MyLeadsPage = React.createClass({
 
     componentWillUnmount: function() {
         // Avoids console error
-        LeadsStore.removeListener('getData', this._onGetData);
+        LeadsStore.removeListener('getData', this._onGetByOwner);
     },
 
     // An event registered with the store-- fires when emitGet()
     // is called inside getLeadsByOwner's success callback
-    _onGetData: function () {
+    _onGetByOwner: function () {
         this.setState({
             leadsOwned: LeadsStore.getLeadsOwned()
         });
