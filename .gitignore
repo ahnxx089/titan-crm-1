@@ -40,4 +40,4 @@ jspm_packages
 .DS_Store
 
 # Custom files
-#public/js/bundle.js
+public/js/bundle.js
