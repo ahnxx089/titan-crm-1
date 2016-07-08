@@ -86,7 +86,8 @@ var HomePage = React.createClass({
                     <StatWidget amount={this.state.teamCases.amount} unit={this.state.teamCases.unit} icon={this.state.teamCases.icon} color="purple" />
                 </div> */}
 
-                {/*  A Row of "buttons", made of Bootstrap wells with custom CSS background-color and wrapped in a Link */}
+                {/*  A Row of "buttons", with each button consisting of a Bootstrap well with custom CSS background-color
+                        and wrapped in a Link */}
 
                 <div className="row">
 
