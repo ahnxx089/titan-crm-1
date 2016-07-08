@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////
 // Contact entity.
-// Inherits from Person.  
+// Inherits from Person.
 // Properties and validation methods.
 //
 // @file:    contact.js
@@ -26,9 +26,8 @@ function Contact(partyId, partyTypeId, currencyUomId, description,
         statusId, createdBy, createdDate, updatedDate,
         salutation, firstName, middleName, lastName, birthDate, comments);
 
-    // 
+    //
     this.contactMechs = [];
-   
 }
 
 // Inherit from Person
@@ -38,7 +37,7 @@ Contact.prototype = Object.create(Person.prototype);
 // Set the "constructor" property to refer to Contact
 Contact.prototype.constructor = Contact;
 
-// Methods 
+// Methods
 //
 Contact.prototype.validateForInsert = function () {
     //Run parent validation method
@@ -73,7 +72,6 @@ Contact.prototype.validateForUpdate = function () {
     }
 
     return errors;
-
 };
 
 // Export the class as a module
