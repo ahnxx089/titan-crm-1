@@ -66,7 +66,7 @@ var AboutPage = React.createClass({
                         <img src='img/Bill_avatar_200x200.JPG' alt='' />
                     </div>
                     <div className="col-xs-10 col-lg-10">
-                        <h3>Willam "Bill" Berg</h3>
+                        <h3>William "Bill" Berg</h3>
                         <p>
                             Bill earned his Bachelor degree in Computer Science from the University of Minnesota.
                         </p>
