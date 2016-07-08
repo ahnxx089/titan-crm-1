@@ -2,7 +2,7 @@
 // Jasmine spec (test suite) for Contact module.
 //
 // @file:   contactMechSpec.js
-// @author: 
+// @author: William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint shadow:true */

@@ -4,6 +4,7 @@
 //
 // @file:   CommonStore.js
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>
+//          William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint maxcomplexity: false */

@@ -3,6 +3,7 @@
 //
 // @file:    contactController.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
+//           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */

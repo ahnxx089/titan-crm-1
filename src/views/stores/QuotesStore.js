@@ -66,7 +66,7 @@ QuotesStore.emitPutData = function() {
 /* Next 2 functions:  for Views receiving emits after addQuoteItem */
 QuotesStore.addedQuoteItemListener = function (listener) {
     this.on('addedQuoteItem', listener);
-}
+};
 
 QuotesStore.emitAddedQuoteItem = function() {
     this.emit('addedQuoteItem');
@@ -75,7 +75,7 @@ QuotesStore.emitAddedQuoteItem = function() {
 /* Next 2 functions:  for Views receiving emits after updateQuoteItem */
 QuotesStore.updatedQuoteItemListener = function (listener) {
     this.on('updatedQuoteItem', listener);
-}
+};
 
 QuotesStore.emitUpdatedQuoteItem = function() {
     this.emit('updatedQuoteItem');

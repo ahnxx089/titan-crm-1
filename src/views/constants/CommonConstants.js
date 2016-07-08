@@ -3,6 +3,7 @@
 //
 // @file:   CommonConstants.js
 // @author: Dinesh Shenoy <astroshenoy@gmail.com>
+//          William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 var CommonConstants = {

@@ -3,6 +3,7 @@
 //
 // @file:    quoteApi.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
+//           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint shadow:true */
@@ -271,7 +272,6 @@ var quoteApi = function (knex) {
         }
     };
 
-    // Bill is taking this
     // GET /api/quotes/:id
     var getQuoteById = function (req, res) {
 

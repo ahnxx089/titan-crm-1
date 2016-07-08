@@ -2,7 +2,7 @@
 // A contact row on My Contacts page.
 //
 // @file:   ContactMechRow.js
-// @author: 
+// @author: William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 var React = require('react');
@@ -10,10 +10,11 @@ var Link = require('react-router').Link;
 
 var ContactMechRow = React.createClass({
     formatTelecom: function () {
+        /* jshint ignore:start */
         var contactMech = this.props.contactMech;
         var jsxArray = [<span>{ contactMech.contactNumber }</span>];
         
-        //Attach country code and are code, if applicable
+        //Attach country code and area code, if applicable
         if (contactMech.areaCode) {
             jsxArray.unshift(<span>{ contactMech.areaCode }-</span>);
             if (contactMech.countryCode) {
@@ -25,6 +26,7 @@ var ContactMechRow = React.createClass({
         if (contactMech.askForName) {
             jsxArray.push(<span><br />Ask for { contactMech.askForName }</span>);
         }
+        /* jshint ignore:end */
         
         return jsxArray;
     },
@@ -32,6 +34,7 @@ var ContactMechRow = React.createClass({
         var contactMech = this.props.contactMech;
         var jsxArray = [];
         
+        /* jshint ignore:start */
         if (contactMech.toName) {
             jsxArray.push(<span><strong>To:</strong> { contactMech.toName }<br /></span>);
         }
@@ -65,6 +68,7 @@ var ContactMechRow = React.createClass({
             jsxArray.push(delimitter);
             jsxArray.push(<span>{ contactMech.zipOrPostalCode }</span>);
         }
+        /* jshint ignore:end */
         
         return jsxArray;
     },
@@ -111,9 +115,6 @@ var ContactMechRow = React.createClass({
             default:
                 information = contactMech.infoString;
         }
-        
-        console.log(this.props.types);
-        console.log(this.props.purposeTypes);
         
         return (
             <tr>

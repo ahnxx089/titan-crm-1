@@ -16,6 +16,7 @@ var HomeActions = require('../../actions/HomeActions');
 var HomePage = React.createClass({
     getInitialState: function () {
         return {
+            /* jshint ignore:start */
             contactDetails: HomeStore.getContactDetails(),
             newLeads: {
                 unit: <span>new leads<br/><br/></span>,
@@ -37,6 +38,7 @@ var HomePage = React.createClass({
                 amount: 4,
                 icon: 'flash'
             }
+            /* jshint ignore:end */
         };
     },
     

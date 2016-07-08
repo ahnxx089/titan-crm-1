@@ -2,18 +2,16 @@
 // Create Contact page component.
 //
 // @file:   ContactDetailsPage.js
-// @author: 
+// @author: William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 var React = require('react');
 var ReactRouter = require('react-router');
 var Link = require('react-router').Link;
 var withRouter = require('react-router').withRouter;
-var ContactMechRow = require('../../common/ContactMechRow');
-
+var ContactMechTable = require('../../common/ContactMechTable');
 var ContactsStore = require('../../../stores/ContactsStore');
 var ContactsActions = require('../../../actions/ContactsActions');
-var CommonStore = require('../../../stores/CommonStore');
 
 var ContactDetailPage = React.createClass({
     getInitialState: function () {
@@ -31,14 +29,6 @@ var ContactDetailPage = React.createClass({
         ContactsStore.addGetDataListener(this._onGetContact);
         ContactsActions.getContactById(this.state.contactId);
         
-        //get types crossref table
-        CommonStore.addGetContactMechTypesListener(this._onGetTypes);
-        CommonStore.getContactMechTypes();
-        
-        //get purpose types crossref table
-        CommonStore.addGetContactMechPurposeTypesListener(this._onGetPurposeTypes);
-        CommonStore.getContactMechPurposeTypes();
-        
         //get accounts
         
         //get cases
@@ -54,27 +44,9 @@ var ContactDetailPage = React.createClass({
             contact: ContactsStore.gotContact()
         });
     },
-    _onGetTypes: function (event) {
-        return this.setState({
-            types: CommonStore.getTypeArray()
-        });
-    },
-    _onGetPurposeTypes: function (event) {
-        return this.setState({
-            purposeTypes: CommonStore.getPurposeTypeArray()
-        });
-    },
     render: function () {
         var contact = this.state.contact;
         var contactMechs = contact.contactMechs || [];
-        var contactMechsJSX = [];
-        
-        
-        for (var i = 0; i < contactMechs.length; i++) {
-            /* jshint ignore:start */
-            contactMechsJSX.push(<ContactMechRow key={ 'contact_mech_' + i } contactMech={ contactMechs[i]} types={this.state.types} purposeTypes={this.state.purposeTypes} />);
-            /* jshint ignore:end */
-        }
         
         /* jshint ignore:start */
         return (
@@ -161,19 +133,7 @@ var ContactDetailPage = React.createClass({
                         <div className="panel-heading">
                             <h3 className="panel-title">Contact Information</h3>
                         </div>
-                        <table id="contactMechsTable" className='table'>
-                            <thead>
-                                <tr>
-                                    <th>Contact Type</th>
-                                    <th>Contact Information</th>
-                                    <th>Purpose</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                { contactMechsJSX }
-                            </tbody>
-                        </table>
+                        <ContactMechTable contactMechs={ contactMechs } />
                     </div>
                     <div className="panel panel-info">
                         <div className="panel-heading">

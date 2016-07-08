@@ -2,7 +2,7 @@
 // Create Contact page component.
 //
 // @file:   UpdateContactPage.js
-// @author: 
+// @author: William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////
 
 var React = require('react');

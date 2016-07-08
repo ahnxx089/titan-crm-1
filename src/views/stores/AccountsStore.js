@@ -18,6 +18,7 @@ var accountsOwned = [];
 var singleAccount = {};
 var addedAccountId = '';
 var getByIdentity = {};
+var accountsByIdentity = [];
 
 // STORE as EVENT EMITTER
 //-----------------------------------------------
@@ -32,7 +33,7 @@ AccountsStore.addGetDataListener = function (listener) {
 
 AccountsStore.addAccountFormListener = function (listener) {
     this.on('change', listener);
-}
+};
 
 AccountsStore.emitGetData = function() {
     // see https://nodejs.org/api/events.html#events_emitter_emit_eventname_arg1_arg2
@@ -48,7 +49,7 @@ AccountsStore.addAddedAccountListener = function (listener) {
 
 AccountsStore.emitAddedAccount = function () {
     this.emit('addedAccount');
-}
+};
 
 AccountsStore.addGetByIdentityListener = function (listener) {
     this.on('getByIdentity', listener);
@@ -120,7 +121,7 @@ AccountsStore.getSingleAccount = function () {
 
 AccountsStore.getAddedAccountId = function () {
     return addedAccountId;
-}
+};
 
 // Next function is called by CreateAccountPage
 AccountsStore.addAccounts = function(account) {

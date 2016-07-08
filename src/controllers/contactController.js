@@ -372,7 +372,9 @@ var contactController = function (knex) {
             // see:  https://plainjs.com/javascript/utilities/merge-two-javascript-objects-19/
             var extend = function (obj, src) {
                 for (var key in src) {
-                    if (src.hasOwnProperty(key)) obj[key] = src[key];
+                    if (src.hasOwnProperty(key)) {
+                        obj[key] = src[key]
+                    };
                 }
                 return obj;
             };
