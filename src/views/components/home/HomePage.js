@@ -41,19 +41,19 @@ var HomePage = React.createClass({
             /* jshint ignore:end */
         };
     },
-    
+
     componentDidMount: function () {
         HomeStore.addChangeListener(this._onChange);
     },
-    
+
     componentWillUnmount: function () {
         HomeStore.removeListener('change', this._onChange);
     },
-    
+
     _getContactDetails: function (contactId) {
         HomeActions.getContactById(contactId);
     },
-    
+
     _onChange: function () {
         var result = HomeStore.getContactDetails();
         // If it's is an error, eg. permission error, add it to ErrorBox
@@ -69,24 +69,90 @@ var HomePage = React.createClass({
             });
         }
     },
-    
+
     render: function () {
         /* jshint ignore:start */
         return (
             <div>
                 <div className="jumbotron">
-                    <h1>API Demo</h1>
-                    <p>Clicking the button calls the getContactById API.</p>
-                    <GetContactForm onButtonClick={ this._getContactDetails }/>
-                    <Link to="/cp/home/home-sub">A sub page</Link>
+                    <h1>Titan-CRM</h1>
+                    <h2>A lightweight CRM application developed by the <Link to="/cp/about">Titan Team</Link></h2>
                 </div>
+                {/* A row of widgets could be used here; for now they are commented out.
                 <div className="row">
                     <StatWidget amount={this.state.newLeads.amount} unit={this.state.newLeads.unit} icon={this.state.newLeads.icon} color="cyan"/>
                     <StatWidget amount={this.state.convertedLeads.amount} unit={this.state.convertedLeads.unit} icon={this.state.convertedLeads.icon} color="green" />
                     <StatWidget amount={this.state.newCases.amount} unit={this.state.newCases.unit} icon={this.state.newCases.icon} color="red" />
                     <StatWidget amount={this.state.teamCases.amount} unit={this.state.teamCases.unit} icon={this.state.teamCases.icon} color="purple" />
+                </div> */}
+
+                {/*  A Row of "buttons", made of Bootstrap wells with custom CSS background-color and wrapped in Links */}
+
+                <div className="row">
+
+                    <div className="col-lg-3 col-xs-12">
+                        <Link to={ '/cp/leads/my-leads/'} id="homePageLinks">
+                            <div className="well" id="homePageLeads">
+                                <div className="row">
+                                    <div className="col-xs-3">
+                                        <i className="fa fa-coffee fa-4x"></i>
+                                    </div>
+                                    <div className="col-xs-9">
+                                        <h3>My Leads</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </Link>
+                    </div>
+
+                    <div className="col-lg-3 col-xs-12">
+                        <Link to={ '/cp/contacts/my-contacts/'} id="homePageLinks">
+                            <div className="well" id="homePageContacts">
+                                <div className="row">
+                                    <div className="col-xs-3">
+                                        <i className="fa fa-phone fa-4x"></i>
+                                    </div>
+                                    <div className="col-xs-9">
+                                        <h3>My Contacts</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </Link>
+                    </div>
+
+                    <div className="col-lg-3 col-xs-12">
+                        <Link to={ '/cp/accounts/my-accounts/'} id="homePageLinks">
+                            <div className="well" id="homePageAccts">
+                                <div className="row">
+                                    <div className="col-xs-3">
+                                        <i className="fa fa-industry fa-4x"></i>
+                                    </div>
+                                    <div className="col-xs-9">
+                                        <h3>My Accounts</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </Link>
+                    </div>
+
+                    <div className="col-lg-3 col-xs-12">
+                        <Link to={ '/cp/quotes/my-quotes/'} id="homePageLinks">
+                            <div className="well" id="homePageQuotes">
+                                <div className="row">
+                                    <div className="col-xs-3">
+                                        <i className="fa fa-pencil-square fa-4x"></i>
+                                    </div>
+                                    <div className="col-xs-9">
+                                        <h3>My Quotes</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </Link>
+                    </div>
+
                 </div>
-                <ContactDetails contact={ this.state.contactDetails }/>
+
+
             </div>
         );
         /* jshint ignore:end */

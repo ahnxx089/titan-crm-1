@@ -123,3 +123,23 @@
 .panel-green > .panel-heading {
     background-color: #88f95a !important;
 }
+
+#homePageLeads {
+    background-color: #0fc0e8;
+}
+
+#homePageContacts {
+    background-color: #88f95a;
+}
+
+#homePageAccts {
+    background-color: #fb981e;
+}
+
+#homePageQuotes {
+    background-color: #db06f5;
+}
+
+#homePageLinks {
+    color: #080808;
+}

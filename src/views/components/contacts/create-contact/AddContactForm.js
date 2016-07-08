@@ -26,7 +26,7 @@ var AddContactForm = React.createClass({
                 thisAddContactForm.props.onFormSubmit(e);
             }
         });
-        // FOR FURTHER EXPLANATION, SEE:  http://www.ofssam.com/forums/showthread.php?tid=64
+        // for further explanation see:  http://www.ofssam.com/forums/showthread.php?tid=64
     },
 
     render: function () {

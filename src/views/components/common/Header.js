@@ -32,12 +32,12 @@ var Header = React.createClass({
                             <span className="icon-bar"></span>
                             <span className="icon-bar"></span>
                         </button>
-                        <a className="navbar-brand" href="#">Titan CRM</a>
+                        <a className="navbar-brand" href="#">Titan-CRM</a>
                     </div>
                     <div id="navbar" className="navbar-collapse collapse">
                         <ul className="nav navbar-nav">
                             <li><Link to="/cp/home" activeClassName="active">Home</Link></li>
-            
+
                             <li className="dropdown">
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Leads <span className="caret"></span></a>
                                 <ul className="dropdown-menu">
@@ -81,7 +81,7 @@ var Header = React.createClass({
                             </li>
                             <li><Link to="/cp/about" activeClassName="active">About</Link></li>
                         </ul>
-                        
+
                         <ul className="nav navbar-nav navbar-right">
                             <li className="dropdown">
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
