@@ -23,7 +23,6 @@ function Party(partyId, partyTypeId, currencyUomId, description,
     this.updatedDate = updatedDate;
 }
 
-
 // Methods
 //
 Party.prototype.validateForInsert = function() {
@@ -123,7 +122,6 @@ Party.prototype.validateUpdatedDate = function(isRequired) {
     var validationResult = validation.validateDate(this.updatedDate, isRequired, 'updatedDate');
     return validationResult;
 };
-
 
 // Export the class as a module
 module.exports = Party;
