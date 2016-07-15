@@ -485,7 +485,6 @@ var quoteController = function (knex) {
         if (hasPermission !== -1){
 
             var quoteIdForItems = query.quoteIdForItems;
-
             var promise = quoteData.getQuoteItems(quoteIdForItems)
                 .then(function (quoteItems) {
                     // Map the retrieved result set to corresponding entity
