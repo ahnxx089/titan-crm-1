@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////
-// Business logic module for contacts.
+// Business logic module for quotes.
 //
-// @file:    contactController.js
+// @file:    quoteController.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
 //           William T. Berg <william.thomas.berg@gmail.com>
 /////////////////////////////////////////////////

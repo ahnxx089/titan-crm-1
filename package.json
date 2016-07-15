@@ -1,6 +1,10 @@
 {
   "name": "titan-crm",
   "version": "1.0.0",
+  "engines": {
+    "node": "6.3.0",
+    "npm": "3.10.3"
+  },
   "description": "Enterprise-grade customer relationship management application",
   "main": "app.js",
   "scripts": {
