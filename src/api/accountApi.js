@@ -6,16 +6,16 @@
 /////////////////////////////////////////////////
 
 /* jshint shadow:true */
-
+var redisClient = require('../config/redisClient');
+var winston = require('winston');
 var accountApi = function (knex) {
-    //Not yet functional
+
     var accountController = require('../controllers/accountController')(knex);
-    //Not yet functional
     var middleware = function (req, res, next) {
         next();
     };
-    
-    
+
+
     // API methods
     // ==========================================
     //
@@ -25,120 +25,95 @@ var accountApi = function (knex) {
         var user = req.user;
         var result = accountController.addAccount(account, user);
         // An array in result means it's array of validation errors
-        if( Object.prototype.toString.call(result) === '[object Array]' ) {
+        if (Object.prototype.toString.call(result) === '[object Array]') {
             res.json(result);
         }
         // An object in result means it's a promise
         // (which is returned only if validation succeeds)
         else {
-            result.then(function(partyId) {
-               res.json({partyId: partyId}); 
+            result.then(function (partyId) {
+                res.json({
+                    partyId: partyId
+                });
             });
         }
-        
+
         //if( result === null) {
         //    res.json({message: "No permission to access this"});
         //    }
-    
+
     };
 
-    /* getAccountsByIdentity use the value of req.user for passing API methoads by authentication.
-       IdentityId didn't read from the API. So, I take user function and response the security loop.
-       This forum are really helpful to me. http://www.ofssam.com/forums/showthread.php?tid=37*/
-    // GET /api/accounts/?identity=
-//    var getAccountsByIdentity = function (req, res) {
-//        var resultForThisAccount =
-//        accountController.getAccountsByIdentity(req.query, req.user);
-//        if( resultForThisAccount == null){
-//            res.json({
-//                'message': 'You do not have permission to own identiy by accounts!'
-//            });
-//        } else {
-//            resultForThisAccount.then(function (accounts){
-//            res.json(accounts);
-//            });
-//        } 
-//    };
-    
-    // GET /api/accounts/?owner=
-//    var getAccountsByOwner = function (req, res) {
-//        var ownerId = req.query.owner;
-//        console.log(ownerId);
-//        accountController.getAccountsByOwner(ownerId)
-//            .then(function (accounts) {
-//                res.json(accounts);
-//            });
-//    };
-    
+
     // GET /api/accounts
     var getAccounts = function (req, res) {
         //If nothing is specified in the query string, use getAccountsByOwner as the default
         if (Object.keys(req.query).length === 0) {
-
-            var resultsForThisUser = accountController.getAccountsByOwner(req.user);
-            // IF ELSE block interprets controller returning an object or null
-            if (resultsForThisUser === null) {
-                res.json({
-                    'message': 'You do not have permission to own accounts!'
-                });
-            } else {
-                resultsForThisUser.then(function (accounts) {
-                    res.json(accounts);
-                });
-            }
+            //Since we are retrieving a data list that would be both accessed frequently and changed rarely, implementing caching here is preferred for performance optimization. 
+            //First we check whether the data being requested is already in the cache. If it is, we send it along.
+            //If it isn't in the cache, then we proceed to calling the controller layer for the normal process, and then we end by copying that data into the cache. 
+            //We only implement redis caching for the getByOwner method here, because search requests for specific accounts would not be made nearly as frequently as requests for My Accounts. 
+            var redis = redisClient.getClient();
+            //create a unique key for this cache
+            var cacheKeyName = 'accounts_for_partyId_' + req.user.partyId;
+            redis.get(cacheKeyName, function (err, result) {
+                if (result) {
+                    //We found the desired data in the cache. Parse it into valid JSON and send it along.
+                    res.json(JSON.parse(result));
+                }
+                else {
+                    winston.error('No redis');
+                    //Proceed with calling the controller layer as normal.
+                    var resultsForThisUser = accountController.getAccountsByOwner(req.user);
+                    // IF ELSE block interprets controller returning an object or null
+                    if (resultsForThisUser === null) {
+                        res.json({
+                            'message': 'You do not have permission to own accounts!'
+                        });
+                    }
+                    else {
+                        resultsForThisUser.then(function (accounts) {
+                            redis.setex(cacheKeyName, 60, JSON.stringify(accounts));
+                            res.json(accounts);
+                        });
+                        
+                    }
+                }
+            });
+            
         }
         //If query strings are non-empty, use getAccountsByIdentity
-//        else if (req.query.hasOwnProperty('firstName') || req.query.hasOwnProperty('lastName')) {
-//
-//            var resultsForUser = accountController.getAccountByIdentity(req.query, req.user);
-//            if (resultsForUser === null) {
-//                res.json({
-//                    'message': 'You do not have permission to get accounts by the supplied queries!'
-//                });
-//            } else {
-//                resultsForUser.then(function (accounts) {
-//                    res.json(accounts);
-//                });
-//            }
-//        }
-        
+
         /*This function also same like the Identity. Identity need to first_name and last_name and Company_Name.
       PhoneNumber also exist from user part. So, firstly, check out the primary key(user.partyID), and call the phoneNumber data.
     */
-    // GET /api/accounts/?phoneNumber=
+        // GET /api/accounts/?phoneNumber=
         else if (req.query.hasOwnProperty('phoneNumber')) {
             var resultForThisAccount = accountController.getAccountByPhoneNumber(req.query, req.user);
-            if(resultForThisAccount == null){
+            if (resultForThisAccount === null) {
                 res.json({
-                    'message': 'You do not have permission to own phonenumber by accounts!'
+                    'message': 'You do not have permission to view that account!'
                 });
-            }
-            else {
-                resultForThisAccount.then(function (accounts){
+            } else {
+                resultForThisAccount.then(function (accounts) {
                     res.json(accounts);
                 });
             }
         }
-        // Get Account By Identity - there is a continuing issue here where the method does effectively the same thing as GetAccountsByOwner
+        // Get Account By Identity 
         else if (req.query.hasOwnProperty('accountId') || req.query.hasOwnProperty('accountName')) {
             var resultForThisAccount =
-        accountController.getAccountsByIdentity(req.query, req.user);
-            if( resultForThisAccount == null){
+                accountController.getAccountsByIdentity(req.query, req.user);
+            if (resultForThisAccount === null) {
                 res.json({
-                    'message': 'You do not have permission to own identiy by accounts!'
+                    'message': 'You do not have permission to view that account!'
                 });
-            } 
-            else {
-                resultForThisAccount.then(function (accounts){
+            } else {
+                resultForThisAccount.then(function (accounts) {
                     res.json(accounts);
                 });
             }
-//        accountController.getAccounts()
-//            .then(function (accounts) {
-//                res.json(accounts);
-//            });
-        }
-        else {
+        } else {
             res.json({
                 'message': 'ERR: Nothing found from that GET route request.'
             });
@@ -147,46 +122,58 @@ var accountApi = function (knex) {
 
     // GET /api/accounts/:id
     var getAccountById = function (req, res) {
-         var accountId = req.params.id;
+        var accountId = req.params.id;
         accountController.getAccountById(accountId, req.user)
-            .then(function(party) {
-                res.json(party);
+            .then(function (result) {
+                res.json(result);
             });
     };
-    
+
     // PUT /api/accounts/:id
     var updateAccount = function (req, res) {
         var accountId = req.params.id;
         var accounts = req.body;
-        accountController.updateAccount(accountId, accounts)
-            .then(function(result) {
-               res.json({updated: result}); 
+        var user = req.user;
+        var resultsForThisUser = accountController.updateAccount(accountId, accounts, user);
+        if (resultsForThisUser === null) {
+            res.json({
+                message: 'You do not have permission to update accounts!'
             });
+        } else {
+            resultsForThisUser.then(function (result) {
+                res.json({
+                    updated: result
+                });
+            });
+        }
     };
-    
+
     // DELETE /api/accounts/:id
     var deleteAccount = function (req, res) {
-        var accountId = req.params.id;
-        accountController.deleteAccount(accountId)
-            .then(function(result) {
-               res.json({deleted: result}); 
+        var accountId = req.params.id,
+        user = req.user,
+        resultsForThisUser = accountController.deleteAccount(accountId, user);
+        if (resultsForThisUser === null) {
+            res.json({
+                message: 'You do not have permission to delete accounts!'
             });
+        } else {
+            resultsForThisUser.then(function (result) {
+                res.json({
+                    deleted: result
+                });
+            });
+        }
     };
 
     return {
         addAccount: addAccount,
-        //getAccountsByIdentity: getAccountsByIdentity,
-        //getAccountsByOwner: getAccountsByOwner,
         getAccounts: getAccounts,
-        //getAccountByPhoneNumber: getAccountByPhoneNumber,
         getAccountById: getAccountById,
         updateAccount: updateAccount,
         deleteAccount: deleteAccount
     };
 };
 
-//Discussion with Dinesh indicates that we may want to heavily consider placing conditions into our
-//getAccounts method so that we centralize all requests to get accounts by different attributes 
-//under the one getAccounts method. This would help avoid the proliferation of different API method URLs. 
-    
+
 module.exports = accountApi;

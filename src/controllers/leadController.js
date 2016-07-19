@@ -13,13 +13,17 @@
 // Attention! 
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
 // getLeads is not finished, not used. Lucas will look at it later. 
-// deleteLead, updateLead and getLeadsByIdentity are wrong and deleted now since June 25. 
-// getLeadsByPhoneNumber is canceled by Anurag. 
 
 var winston = require('winston');
 // Require is RequireJS, used by Node. It is always singleton. 
 // In case we don't want to use singleton, we can do it like what we did in entity directory. 
-// This winston is a singleton. Notice app.js requires the same winston, and runs the exported function, in an IFIE style. Every time we ??
+// require is the inverse operation of module.exports. AND module.exports guarantees the singleton.
+
+// This winston is a singleton. 
+// Notice app.js requires the same winston, [app.js, line 14: require('./src/common/logging')(); ]
+// That requires and RUNS the exported function [logging.js, line 13: module.export], in an IIFE style, which saves the execution parentheses.
+// Every time we require the a winston elsewhere (for example here), it turns out to be that already-ran winston. 
+
 var Lead = require('../entities/lead');
 var ContactMech = require('../entities/contactMech');
 var _ = require('lodash');
@@ -396,7 +400,6 @@ var leadController = function (knex) {
      * @param {Number} leadId - Unique id (actually partyId) of the lead to be fetched
      * @return {Object} promise - Fulfillment value is a lead entity
      */
-    // TODO: check user permission? 
     var getLeadById = function (leadId, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_VIEW');
         if (hasPermission !== -1) {
@@ -483,13 +486,11 @@ var leadController = function (knex) {
     
 
     return {
+        // left is returnName, right is defedName
         getLeads: getLeads,
         getLeadById: getLeadById,
         getLeadsByOwner: getLeadsByOwner,
-//        getLeadsByIdenity: getLeadsByIdenity,
         addLead: addLead
-//        updateLead: updateLead,
-//        deleteLead: deleteLead
     };
 };
 

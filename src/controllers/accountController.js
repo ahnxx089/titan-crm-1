@@ -89,13 +89,15 @@ var accountController = function (knex) {
             );
             // Validate the data before going ahead
             var validationErrors = accountEntity.validateForInsert();
-            //MUST I ALSO VALIDATE THE USER CREDENTIALS AS WELL? I'M PASSING IT TO THE DB...
-            //var userEntity = userController.getUserById(user.userId);
+            
+            
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
-                var typeofNumField = Object.prototype.toString.call(accountEntity.annualRevenue);
-                console.log(typeofNumField);
-                var promise2 = accountData.addAccount(accountEntity, user).then(function (results) {return results;});
+                
+                var promise2 = accountData.addAccount(accountEntity, user)
+                    .then(function (results) {
+                        return results;
+                    });
 
                 var addContactMechPromises = [];
                 var mechPromise;
@@ -113,22 +115,19 @@ var accountController = function (knex) {
 
                 if (addContactMechPromises.length > 0) {
                     return promise2.then(function (partyId) {
-                        console.log(partyId);
                         return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
                     });
-                } else {
+                } 
+                else {
                     return promise2;
                 }
-                promise2.catch(function (error) {
-                    winston.error(error);
-                });
-                return promise2;
-            } else {
+            } 
+            else {
                 return validationErrors;
             }
         }
         else {
-            return;
+            return null;
         }
     };
     /**
@@ -290,7 +289,7 @@ var accountController = function (knex) {
      */
 
     var getAccountByPhoneNumber = function (query, user) {
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_CREATE');
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_VIEW');
         if (hasPermission !== -1) {
             var phoneNumber = query.phoneNumber;
             var promise = accountData.getAccountByPhoneNumber(phoneNumber)
@@ -339,13 +338,14 @@ var accountController = function (knex) {
         }
     };
     /**
-     * Gets one account by <SOME ACCOUNT ATTRIBUTE OR COMBINATION OF ATTRIBUTES> from database
-     * @param {String????? Multi-property JSON Object???} identity - The identity/identities of the account to be retrieved
+     * Gets one account by its party ID or name from database
+     * @param {Number} accountId - The partyId (or part thereof) for the account(s) to be retrieved
+     * @param {String} accountName - the organizationName associated with the account(s) to be retrieved
      * @return {Object} promise - Fulfillment value is a raw data object
      */
     
     var getAccountsByIdentity = function (query, user) {
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_CREATE');
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_VIEW');
         if (hasPermission !== -1) {
             var accountId = query.accountId;
             var accountName = query.accountName; 
@@ -394,92 +394,59 @@ var accountController = function (knex) {
         }
     };
 
-    /**
-     * Gets one account by its owner
-     * @param {Number} ownerId - Unique id of the account to be fetched
-     * @return {Object} promise - Fulfillment value is a account entity
-     */
-    var getAccountByOwner = function (ownerId) {
-        var promise = accountData.getAccountByOwner(ownerId)
-            .then(function (accounts) {
-                // Map the retrieved result set to corresponding entity
-                var accountEntity = new Account(
-                        accounts[0].party_id,
-                        accounts[0].party_type_id,
-                        accounts[0].preferred_currency_uom_id,
-                        accounts[0].description,
-                        accounts[0].status_id,
-                        accounts[0].created_by,
-                        accounts[0].created_date,
-                        accounts[0].updated_date,
-                        accounts[0].organization_name,
-                        accounts[0].office_site_name,
-                        accounts[0].annual_revenue,
-                        accounts[0].num_employees,
-                        accounts[0].ticker_symbol,
-                        accounts[0].comments,
-                        accounts[0].logo_image_url,
-                        accounts[0].party_parent_id,
-                        accounts[0].industry_enum_id,
-                        accounts[0].ownership_enum_id,
-                        accounts[0].important_note,
-                        accounts[0].primary_postal_address_id,
-                        accounts[0].primary_telecom_number_id,
-                        accounts[0].primary_email_id
-                );
-                return accountEntity;
-            });
-        promise.catch(function (error) {
-            // Log the error
-            winston.error(error);
-        });
-        return promise;
-    };
+    
     /**
      * Update a account in database
      * @param {Number} partyId - Unique id of the account to be updated
      * @param {Object} account - The object that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
-    var updateAccount = function (accountId, account) {
-        // Convert the received object into an entity
-        var accountEntity = new Account(
-            accountId,
-            account.partyTypeId,
-            account.currencyUomId,
-            account.description,
-            account.statusId,
-            account.createdBy,
-            account.createdDate,
-            (new Date()).toISOString(), //account.updateDate
-            account.orgName,
-            account.officeSiteName,
-            account.annualRevenue,
-            account.numEmployees,
-            account.tickerSymbol,
-            account.comments,
-            account.logoImgURL,
-            account.partyParentId,
-            account.industryEnumId,
-            account.ownershipEnumId,
-            account.importantNote,
-            account.primaryPostalAddress,
-            account.primaryTelecomNumber,
-            account.primaryEmail
-        );
-        // Validate the data before going ahead
-        var validationErrors = accountEntity.validateForUpdate();
-        if (validationErrors.length === 0) {
-            // Pass on the entity to be added to the data layer
-            var promise = accountData.updateAccount(accountEntity)
-                .then(function (accountId) {
-                    return accountId;
+    var updateAccount = function (accountId, account, user) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_UPDATE');
+        if (hasPermission !== -1) {
+            // Convert the received object into an entity
+            var accountEntity = new Account(
+                accountId,
+                account.partyTypeId,
+                account.currencyUomId,
+                account.description,
+                account.statusId,
+                account.createdBy,
+                account.createdDate,
+                (new Date()).toISOString(), //account.updateDate
+                account.orgName,
+                account.officeSiteName,
+                account.annualRevenue,
+                account.numEmployees,
+                account.tickerSymbol,
+                account.comments,
+                account.logoImgURL,
+                account.partyParentId,
+                account.industryEnumId,
+                account.ownershipEnumId,
+                account.importantNote,
+                account.primaryPostalAddress,
+                account.primaryTelecomNumber,
+                account.primaryEmail
+            );
+            // Validate the data before going ahead
+            var validationErrors = accountEntity.validateForUpdate();
+            if (validationErrors.length === 0) {
+                // Pass on the entity to be added to the data layer
+                var promise = accountData.updateAccount(accountEntity)
+                    .then(function (accountId) {
+                        return accountId;
+                    });
+                promise.catch(function (error) {
+                    winston.error(error);
                 });
-            promise.catch(function (error) {
-                winston.error(error);
-            });
-            return promise;
-        } else {
+                return promise;
+            } 
+            else {
+                return validationErrors;
+            }
+        }
+        else {
             return null;
         }
     };
@@ -489,16 +456,23 @@ var accountController = function (knex) {
      * @param {Number} accountId - Unique id of the account to be deleted
      * @return {Object} promise - Fulfillment value is number of rows deleted
      */
-    var deleteAccount = function (accountId) {
-        var promise = accountData.deleteAccount(accountId)
-            .then(function (result) {
-                return result;
+    var deleteAccount = function (accountId, user) {
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_DELETE');
+        if (hasPermission !== -1) {
+            var promise = accountData.deleteAccount(accountId)
+                .then(function (result) {
+                    return result;
+                });
+            promise.catch(function (error) {
+                // Log the error
+                winston.error(error);
             });
-        promise.catch(function (error) {
-            // Log the error
-            winston.error(error);
-        });
-        return promise;
+            return promise;
+        }
+        else {
+            //The user doesn't have permission for a delete operation - return null
+            return null; 
+        }
     };
 
     return {

@@ -60,7 +60,6 @@ var Header = React.createClass({
                                     <li><Link to="/cp/accounts/my-accounts" acticeClassName="active">My Accounts</Link></li>
                                     <li><Link to="/cp/accounts/create-account" activeClassName="active">Create Account</Link></li>
                                     <li><Link to="/cp/accounts/find-account" activeClassName="active">Find Account</Link></li>
-                                    <li><Link to="/cp/accounts/account-details" activeClassName="active">Account Details Tmp</Link></li>
                                 </ul>
                             </li>
                             <li className="dropdown">
