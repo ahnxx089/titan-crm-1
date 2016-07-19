@@ -4,7 +4,7 @@
 // Initialization and configuration for our app-
 // wide logger.
 //
-// @file:   logger.js
+// @file:   logging.js
 // @author: Anurag Bhandari <anurag@ofssam.com>
 /////////////////////////////////////////////////
 
