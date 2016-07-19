@@ -15,7 +15,7 @@ var QuotesDetailsPage = React.createClass({
 
     /* Note for future:  As with Items, quoteItemOptions will need to be defined.  However, since Options are
         specific to individual items, it might be best to store their state down in ItemRow...
-        It may be possible to duplicate the accordion structure as well. */
+        It should be possible to duplicate the accordion structure as well. */
 
     getInitialState: function(){
         return {

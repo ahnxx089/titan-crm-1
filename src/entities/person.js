@@ -43,29 +43,17 @@ Person.prototype.constructor = Person;
 Person.prototype.validateForInsert = function () {
     // Call Party's validation function
     var errors = Party.prototype.validateForInsert.call(this);
-    
-    // the line above validates
-//    PartyTypeId(required),
-//    PreferredCurrencyUomId(nullable),
-//    Description(nullable),
-//    StatusId(required),
-//    CreatedBy(required), // although per DB design, this should be nullable and can be null
-//    CreatedDate(required),
-//    UpdatedDate(required)
-    
+
     // Person-specific validation code
     var specificValidations = [
-        // true means required, false means nullable
-        // First name, last name are required
-        // Others are not
         this.validateSalutation(false),
         this.validateFirstName(true),
         this.validateMiddleName(false),
         this.validateLastName(true),
         this.validateBirthDate(false),
         this.validateComments(false)
-    ]; 
-    
+    ];
+
     for(var i=0; i < specificValidations.length; i++) {
         if(specificValidations[i]) {
             errors.push(specificValidations[i]);
@@ -86,7 +74,7 @@ Person.prototype.validateForUpdate = function () {
         this.validateBirthDate(false),
         this.validateComments(false)
     ];
-    
+
     for(var i=0; i < specificValidations.length; i++) {
         if(specificValidations[i]) {
             errors.push(specificValidations[i]);

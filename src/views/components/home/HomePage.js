@@ -98,7 +98,7 @@ var HomePage = React.createClass({
                                         <i className="fa fa-coffee fa-4x"></i>
                                     </div>
                                     <div className="col-xs-9">
-                                        <h3>My Leads</h3>
+                                        <h3>&nbsp;&nbsp;&nbsp;&nbsp;My Leads</h3>
                                     </div>
                                 </div>
                             </div>
@@ -128,7 +128,7 @@ var HomePage = React.createClass({
                                         <i className="fa fa-industry fa-4x"></i>
                                     </div>
                                     <div className="col-xs-9">
-                                        <h3>My Accounts</h3>
+                                        <h3>&nbsp;My Accounts</h3>
                                     </div>
                                 </div>
                             </div>
@@ -143,7 +143,7 @@ var HomePage = React.createClass({
                                         <i className="fa fa-pencil-square fa-4x"></i>
                                     </div>
                                     <div className="col-xs-9">
-                                        <h3>My Quotes</h3>
+                                        <h3>&nbsp;&nbsp;My Quotes</h3>
                                     </div>
                                 </div>
                             </div>

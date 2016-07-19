@@ -62,7 +62,7 @@ var jsx2js = function () {
         .bundle()
         .pipe(source('bundle.js'))
         .pipe(buffer())
-        //.pipe(uglify())
+        .pipe(uglify())
         .pipe(gulp.dest('./public/js/'));
 };
 gulp.task('jsx2js', jsx2js);
@@ -94,7 +94,7 @@ gulp.task('serve', ['style', 'jsx2js'], function () {
             var tasks = [];
             // TODO: condition to check whether client- or server-side code has changed;
             // add jsx2js only if client-side code has changed
-            tasks.push('jsx2js'); 
+            tasks.push('jsx2js');
             return tasks;
         }*/
     };

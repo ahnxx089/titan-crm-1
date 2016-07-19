@@ -241,6 +241,17 @@ var quoteData = function (knex) {
     };
 
     /**
+     * Gets all Items of a Quote by the quoteId
+     * @param {Number} quoteId - Unique id of the quote whose Items (if any) are to be fetched
+     * @return {Object} promise - Fulfillment value is an array of quoteItem Entities
+     */
+    var getQuoteItems = function (quoteIdForItems) {
+        return knex.select( 'quote_id', 'quote_item_seq_id', 'product_id', 'quantity', 'selected_amount', 'quote_unit_price', 'estimated_delivery_date', 'comments', 'is_promo', 'description', 'created_date', 'updated_date')
+            .from('quote_item')
+            .where('quote_id', quoteIdForItems)
+    };
+
+    /**
      * Gets quotes owned by the user/owner
      * @return {Object} promise - Fulfillment value is an array of quote entities
      */
@@ -328,7 +339,7 @@ var quoteData = function (knex) {
         updateQuoteItemOption: updateQuoteItemOption,
         getQuoteById: getQuoteById,
         getQuotesByOwner: getQuotesByOwner,
-        //getQuoteItems: getQuoteItems,
+        getQuoteItems: getQuoteItems,
         getQuotesByAdvanced: getQuotesByAdvanced,
         updateQuote: updateQuote
     };

@@ -71,7 +71,7 @@ var AddItemForm = React.createClass({
         var existing = this.state.existingQuoteItems;
         for (var i = 0 ; i < existing.length ; i++ ){
             if (existing[i].quoteItemSeqId > highest){
-                highest = existing[i].quoteItemSeqId
+                highest = existing[i].quoteItemSeqId;
             }
         }
         this.state.quoteItem.quoteId = this.props.quote.quoteId;
