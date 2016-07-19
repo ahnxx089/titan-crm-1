@@ -8,7 +8,6 @@
 // Attention! 
 // addLead, getLeadsByOwner, getLeadById are tested and functional. 
 // getLeads is not added in apiRoutes, or called from anywhere. Do not remove it yet. 
-// getLeadsByIdentity, getLeadsByPhoneNumber, updateLead, deleteLead are deleted. 
 
 var redisClient = require('../config/redisClient');
 var winston = require('winston');
@@ -140,12 +139,12 @@ var leadApi = function (knex) {
         var cacheKeyName = 'leads_for_party_id_' + req.user.partyId; // unique key
         
         redis.get(cacheKeyName, function (err, result) {
-            // Data is in the cache
+            // IF Data is in the cache
             if (result) {
                 // Convert the cached data string back into JSON before sending out
                 res.json(JSON.parse(result));
             } 
-            // Data is NOT in the cache
+            // IF Data is NOT in the cache
             else {
                 //winston.error(err);
                 winston.error('No redis');
@@ -192,12 +191,7 @@ var leadApi = function (knex) {
         addLead: addLead,
         getLeads: getLeads,
         getLeadsByOwner: getLeadsByOwner,
-//        getLeadsByIdentity: getLeadsByIdentity,
-//        getLeadsByPhoneNumber: getLeadsByPhoneNumber,
         getLeadById: getLeadById
-//        updateLead: updateLead
-//        deleteLead: deleteLead
-
     };
 };
 

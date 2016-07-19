@@ -10,7 +10,6 @@
 // Attention!
 // addLead, getLeadById, getLeadsByOwner are tested and functional. 
 // getLeads may need revision. It is not used now. Don't remove yet. 
-// deleteLead, updateLead, getLeadsByPhoneNumber and getLeadsByIdentity are wrong and deleted now since June 25. 
 
 var leadData = function (knex) {
 
@@ -216,8 +215,6 @@ var leadData = function (knex) {
         getLeads: getLeads,
         getLeadById: getLeadById,
         updatePSD: updatePSD
-//        updateLead: updateLead,
-//        deleteLead: deleteLead
     };
 };
 
