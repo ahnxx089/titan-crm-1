@@ -165,7 +165,7 @@ var contactApi = function (knex) {
 
         if (results === null) {
             res.json({
-                message: 'You do not have permission to add contacts!'
+                message: 'You do not have permission to update contacts!'
             });
         } else if ('then' in results) {
             results.then(function (rows) {
