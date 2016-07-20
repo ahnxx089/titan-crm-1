@@ -121,7 +121,7 @@ var leadApi = function (knex) {
     // This getLeadsByOwner works fine! 
     // Inspired by Eric's way of doing multiple insertions in addAccount in accountData.js,
     // I might stop returning this method at the end of this file and calling this method directly
-    // instead I will call this methods from the now obselete getLeads method, (making it invisible to the ARC)
+    // instead I will call this methods from the now obselete getLeads method, (making this method invisible to the ARC)
     // once  Divine Ndifongwa has his getLeadsByIdentity and getLeadsByPhoneNumber working. 
     // Otherwise, it's just not worth right now. 
     // The then getLeads method will call getLeadsByOwner or getLeadsByIdentity or getLeadsByPhoneNumber, 
