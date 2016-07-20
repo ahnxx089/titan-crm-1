@@ -464,7 +464,7 @@ var contactController = function (knex) {
                 contact.statusId,
                 contact.createdBy,
                 contact.createdDate,
-                now,
+                now, //contact.updatedDate,
                 contact.salutation,
                 contact.firstName,
                 contact.middleName,
