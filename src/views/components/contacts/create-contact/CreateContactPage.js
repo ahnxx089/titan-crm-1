@@ -109,8 +109,7 @@ var CreateContactPage = React.createClass({
                         <h1>Create Contact</h1>
                     </div>
                     <div className="panel-body">
-                        <AddContactForm
-                            contact={ this.state.contact }
+                        <AddContactForm contact={ this.state.contact }
                             onChange={ this.setContactState }
                             onFormSubmit={ this._addContact } />
                     </div>
