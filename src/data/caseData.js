@@ -4,12 +4,12 @@
 // @file:    caseData.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
 //           William T. Berg <william.thomas.berg@gmail.com>
+//           Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
 /* jshint maxlen: false */
 
-//var _ = require('lodash'); // not used anymore
 
 var caseData = function (knex) {
 
@@ -24,13 +24,14 @@ var caseData = function (knex) {
         // After careful inspection, we are sure that knex does not completely follow A+ promise. Or there is an issue with returning after insertion. 
         // As knex documentation says, .returning('column_name') is not executed in MySQL. 
         
-        // Without .then(function (cid1) { return cid1; }); , 
-        // a) an error would popup in terminal console: duplicate entry; OR
-        // b) two/three identical records would be created in case_ table, except for auto-increment case_id.
+        // Without .then(function (cid1) { return cid1; }); , either
+        //  a) an error would popup in terminal console: duplicate entry; OR
+        //  b) two/three identical records would be created in case_ table, except for auto-increment case_id.
         // would happen. This is conflicting against the A+ promise paradigm. 
         // Same thing happened in contactMech module. 
-        // So we decided to have a .then call at the very end, to avoid any potential hazard. 
+        // So I decided to have a .then call at the very end, to avoid any potential hazard. 
         
+        // Reference only!
         /*
         return knex('case_')
             .returning('case_id')
@@ -45,8 +46,8 @@ var caseData = function (knex) {
         });
         */
 
-        // _.pluck, which is used in knex.org, is no longer supported in lodash v4+
 
+        
         return knex('case_')
             .returning('case_id')
             .insert({
@@ -68,35 +69,25 @@ var caseData = function (knex) {
                 return knex.select('role_type_id')
                     .from('party_role')
                     .where('party_id', case_.fromPartyId)
-                    /*.then(function (rows) {
-                    return _.map(rows, 'role_type_id');
-                    })*/
                     .then(function (rtids) {
-                        // console.log(rtids);
-                        // Object.values() function is not supported Node yet
-
                         // for case_role table
                         return knex('case_role')
                             .insert({
                                 case_id: cid,
                                 party_id: case_.fromPartyId,
-                                role_type_id: /*rtids[0].role_type_id*/ 'CONTACT',
-                                // HARD CODED. can be account as well
-                                // Anurag explained this design. Stick with it. 
-                                // This design is letting anyone in party_role table, regardless of his type, add a case.
-                                // However, Opentaps only allows a CONTACT or ACCOUNT to do so.
+                                role_type_id: 'CONTACT',
                                 created_date: case_.createdDate,
                                 updated_date: case_.updatedDate
                             }).then(function () {
+                                // for case_status table
                                 return knex('case_status')
                                     .insert({
                                         case_id: cid,
                                         status_id: case_.statusId,
-                                        // status_datatime: case_.createdDate,
                                         created_date: case_.createdDate,
                                         updated_date: case_.updatedDate
                                     }).then(function () {
-                                        // this is CRUCIAL, as this will become the 3rd param of addNoteCallback()
+                                        // this is CRUCIAL, as this will become the 2nd param of caseController:addNoteLinking(). See explanation in the beginning for more detail. 
                                         return cid;
                                     });
                             });

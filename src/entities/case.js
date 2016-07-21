@@ -38,7 +38,6 @@ function Case(caseId, caseTypeId, caseCategoryId, statusId, fromPartyId, priorit
 Case.prototype.validateForInsert = function () {
     // Perform validations
     var validations = [
-//        this.validateCaseId(true),
         this.validateCaseTypeId(true),
         this.validateCaseCategoryId(true),
         this.validateStatusId(true),

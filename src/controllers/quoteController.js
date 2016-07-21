@@ -4,6 +4,7 @@
 // @file:    contactController.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
 //           William T. Berg <william.thomas.berg@gmail.com>
+//           Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */

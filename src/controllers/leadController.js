@@ -10,29 +10,17 @@
 /* jshint maxcomplexity: false */
 /* jshint esversion: 6 */
 
-// Attention! 
-// addLead, getLeadsByOwner, getLeadById are tested and functional. 
-// getLeads is not finished, not used. Lucas will look at it later. 
 
 var winston = require('winston');
-// Require is RequireJS, used by Node. It is always singleton. 
-// In case we don't want to use singleton, we can do it like what we did in entity directory. 
-// require is the inverse operation of module.exports. AND module.exports guarantees the singleton.
-
-// This winston is a singleton. 
-// Notice app.js requires the same winston, [app.js, line 14: require('./src/common/logging')(); ]
-// That requires and RUNS the exported function [logging.js, line 13: module.export], in an IIFE style, which saves the execution parentheses.
-// Every time we require the a winston elsewhere (for example here), it turns out to be that already-ran winston. 
-
+var _ = require('lodash');
 var Lead = require('../entities/lead');
 var ContactMech = require('../entities/contactMech');
-var _ = require('lodash');
 var contactInfoHelper = require('../controllers/helpers/contactInfoHelper');
 
 
 var leadController = function (knex) {
     // Get a reference to data layer module, and contactMechController
-    //
+    // 
     var leadData = require('../data/leadData')(knex);
     var contactMechData = require('../data/contactMechData')(knex);
     var contactMechController = require('../controllers/contactMechController')(knex);
@@ -54,27 +42,23 @@ var leadController = function (knex) {
     /**
      * Update three contact info fields in party_supplemental_data table, upon the creation of a lead 
      * Link this column to party_contact_mech.contact_mech_id
-     * @param {Number} partyid - Unique id of the party (grandparent of lead)
-     * @param {Object} partyid - Unique id of the contact mechanism of the lead
-     * @param {String} partyid - Purpose type id of a contact mechanism
+     * @param {Number} partyId - Unique id of the party (grandparent of lead)
+     * @param {Object} contactMechId - Unique id of the contact mechanism of the lead
+     * @param {String} purposeTypeId - Purpose type id of a contact mechanism
      * @return {Object} promise - Fulfillment value is a message that PSD was successfully updated
      */
-    var updatePSD = function(partyId, contactMechId, purposeTypeId) {
+    var updatePSD = function (partyId, contactMechId, purposeTypeId) {
         var promise = leadData.updatePSD(partyId, contactMechId, purposeTypeId)
             .then(function (result) {
-                return result; // 1 here: 1 row was updated. This could be changed to partyId which makes more sense.
+                return result; // 1 here means 1 row was updated. 
             });
-        
+
         // Trying new arrow function in ES6
-//        promise.catch(function (error) {
-//            winston.error(error);
-//        });
         promise.catch(error => {
             winston.error(error);
         });
         return promise;
     };
-    
     
     
     /**
@@ -98,11 +82,8 @@ var leadController = function (knex) {
             return promise.then(function (contactMechId) {
                 return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
                     .then(function () {
-//                         console.log('partyId is ' + partyId);
-//                         console.log('contactMechId is ' + contactMechId);
-//                         console.log('purposeTypeId is ' + purposeTypeId);
                         if (purposeTypeId !== 'PRIMARY_WEB_URL') {
-                            updatePSD(partyId, contactMechId, purposeTypeId); // why also runs without return keyword?
+                            updatePSD(partyId, contactMechId, purposeTypeId);
                             return partyId;
                         }
                     })
@@ -119,11 +100,8 @@ var leadController = function (knex) {
             return promise.then(function (contactMechId) {
                 return contactMechController.linkContactMechToParty(partyId, contactMechId, purposeTypeId)
                     .then(function () {
-//                        console.log('partyId is ' + partyId);
-//                        console.log('contactMechId is ' + contactMechId);
-//                        console.log('purposeTypeId is ' + purposeTypeId);
                         if (purposeTypeId !== 'PRIMARY_WEB_URL') {
-                            updatePSD(partyId, contactMechId, purposeTypeId); // why not return keyword?
+                            updatePSD(partyId, contactMechId, purposeTypeId);
                         }
                     })
                     .then(function () {
@@ -151,7 +129,6 @@ var leadController = function (knex) {
         if (hasPermission !== -1) {
             // Contact mechanisms
             var contactMechEntities = contactInfoHelper(lead); 
-            // This big chunk of code has been replaced with contactInfoHelper. Thanks to Eric
             
             var dob;
             if (lead.birthDate) {
@@ -165,15 +142,15 @@ var leadController = function (knex) {
             }
             
             var leadEntity = new Lead(
-                // ok to put dummy data here, eg, null and birthDate
+                // put dummy data here when testing, eg, null and birthDate
                 // Single quotes are must.
                 
                 null, // lead.partyId, auto_incremented in DB
-                'PERSON', // lead.partyTypeId, will set be PERSON no matter
+                'PERSON', // lead.partyTypeId, 
                 lead.currencyUomId,
                 lead.description,
-                'PARTY_ENABLED', // lead.statusId, set ENABLED here
-                user.userId, // use 'admin' for testing 
+                'PARTY_ENABLED', // lead.statusId,
+                user.userId, 
                 now,
                 now,
                 // for party
@@ -181,7 +158,7 @@ var leadController = function (knex) {
                 lead.firstName,
                 lead.middleName,
                 lead.lastName,
-                dob, // lead.birthDate,
+                dob, 
                 lead.comments,
                 // for person
                 lead.parentPartyId,
@@ -193,21 +170,9 @@ var leadController = function (knex) {
                 lead.ownershipEnumId,
                 lead.tickerSymbol,
                 lead.importantNote,
-                // for party_supplemental_data (partially). The rest of party_supplemental_data will be done at updatePSD
+                // for party_supplemental_data (partially). The rest three attributes will be done at updatePSD
 
-//                lead.primaryPostalAddressId,
-//                lead.primaryTelecomNumberId,
-//                lead.primaryEmailId,
-                
-                'LEAD' //lead.roleTypeId. Will be LEAD anyway
-
-
-                /*
-                lead.contactMechId,
-                lead.contactMechPurposeTypeId,
-                lead.fromDate,
-                lead.thruDate,
-                */
+                'LEAD' //lead.roleTypeId. 
 
             );
 
@@ -250,10 +215,7 @@ var leadController = function (knex) {
                     return promise.then(function (partyId) {
                         return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
                     });
-                    // but for safety, add a .catch block here anyway (this is never reachable)
-                    /*promise.catch(function (error) {
-                        winston.error(error);
-                    });*/
+                    // never reachable here is
                 } else {
                     return promise;
                 }
@@ -263,71 +225,6 @@ var leadController = function (knex) {
         } else {
             return null;
         }
-    };
-
-    // Author: Lucas
-    // NOT finished, NOR used. 
-    /**
-     * Gets all leads
-     * @return {Object} promise - Fulfillment value is an array of lead entities
-     */
-    var getLeads = function () {
-        var promise = leadData.getLeads()
-            .then(function (leads) {
-                // Map the retrieved result set to corresponding entities
-                var leadEntities = [];
-                for (var i = 0; i < leads.length; i++) {
-                    var lead = new Lead(); // this is the Lead constructor
-                    // open injection here vs closed constructor in GETs below
-                    lead.partyId = leads[i].party_id;
-
-                    lead.partyTypeId = leads[i].party_type_id;
-                    lead.currencyUomId = leads[i].preferred_currency_uom_id;
-                    lead.description = leads[i].description;
-                    lead.statusId = leads[i].status_id;
-                    lead.createdBy = leads[i].created_by;
-                    lead.createdDate = leads[i].created_date;
-                    lead.updatedDate = leads[i].updated_date;
-
-
-                    lead.salutation = leads[i].salutation;
-                    lead.firstName = leads[i].first_name;
-                    lead.middleName = leads[i].middle_name;
-                    lead.lastName = leads[i].last_name;
-                    lead.birthDate = leads[i].birth_date;
-                    lead.comments = leads[i].comments;
-
-                    lead.parentPartyId = leads[i].parent_party_id;
-                    lead.companyName = leads[i].company_name;
-                    lead.annualRevenue = leads[i].annual_revenue;
-                    lead.numEmployees = leads[i].num_employees;
-
-                    lead.industryEnumId = leads[i].industry_enum_id;
-                    lead.ownershipEnumId = leads[i].ownership_enum_id;
-                    lead.tickerSymbol = leads[i].ticker_symbol;
-                    lead.importantNote = leads[i].important_note;
-//                    lead.primaryPostalAddressId = leads[i].primary_postal_address_id;
-//                    lead.primaryTelecomNumberId = leads[i].primary_telecom_number_id;
-//                    lead.primaryEmailId = leads[i].primary_email_id;
-
-                    lead.roleTypeId = leads[i].role_type_id;
-
-//                    lead.contactMechId = leads[i].contact_mech_id;
-//                    lead.contactMechPurposeTypeId = leads[i].contact_mech_purpose_type_id;
-//                    lead.fromDate = leads[i].from_date;
-//                    lead.thruDate = leads[i].thru_date;
-//                    lead.verified = leads[i].verified;
-//                    lead.comments = leads[i].pc_comments;
-
-                    leadEntities.push(lead);
-                }
-                return leadEntities;
-            });
-        promise.catch(function (error) {
-            // Log the error
-            winston.error(error);
-        });
-        return promise;
     };
 
 
@@ -375,9 +272,9 @@ var leadController = function (knex) {
                             leads[i].ticker_symbol,
                             leads[i].important_note,
 
-                            leads[i].role_type_id//,
+                            leads[i].role_type_id
                             
-//                            because this does not JOIN with contactMech related relations, some fields are not present 
+                            // because this does not JOIN with contactMech related relations, some fields are not present 
                             
                         );
                         leadEntities.push(lead);
@@ -434,11 +331,9 @@ var leadController = function (knex) {
                             );
                             partyContactMechs.push(newPartyContactMech);
                         }
-    //                    console.log('type of party id is '+  typeof leads[0].party_id); // number
 
                         leadEntity = new Lead(
                             // this is the order in which values show
-                            // the order in which keys show, is determined by knex
                             leads[0].party_id,
                             //
                             leads[0].party_type_id,
@@ -487,7 +382,6 @@ var leadController = function (knex) {
 
     return {
         // left is returnName, right is defedName
-        getLeads: getLeads,
         getLeadById: getLeadById,
         getLeadsByOwner: getLeadsByOwner,
         addLead: addLead
