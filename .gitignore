@@ -39,5 +39,9 @@ jspm_packages
 # Mac-specific
 .DS_Store
 
+# Editor-specific
+.brackets.json
+.vscode
+
 # Custom files
 #public/js/bundle.js

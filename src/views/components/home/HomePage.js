@@ -1,8 +1,10 @@
 /////////////////////////////////////////////////
 // Home page component.
 //
-// @file:   HomePage.js
-// @author: Anurag Bhandari <anurag@ofssam.com>
+// @file:    HomePage.js
+// @authors: Anurag Bhandari <anurag@ofssam.com>
+//           Eric Brichetto <brichett13@gmail.com>
+//           Dinesh Shenoy <astroshenoy@gmail.com>
 /////////////////////////////////////////////////
 
 var React = require('react');
@@ -17,7 +19,11 @@ var HomePage = React.createClass({
     getInitialState: function () {
         return {
             /* jshint ignore:start */
+            
+            /* 
             contactDetails: HomeStore.getContactDetails(),
+            
+            
             newLeads: {
                 unit: <span>new leads<br/><br/></span>,
                 amount: 3,
@@ -38,6 +44,7 @@ var HomePage = React.createClass({
                 amount: 4,
                 icon: 'flash'
             }
+            */
             /* jshint ignore:end */
         };
     },

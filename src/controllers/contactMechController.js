@@ -57,7 +57,7 @@ var contactMechController = function (knex) {
                         contactMechEntity.contactMechId = contactMechId;
                         return contactMechData.addContactMechToTelecomTable(contactMechEntity)
                             //function above should be returning contactMechId already
-                            //why is it returning 0 instead?
+                            //why is it returning 0 instead? This seems a knex issue. Same thing in noteData.js
                             .then(function () {
                                 return contactMechId;
                             });
@@ -68,7 +68,7 @@ var contactMechController = function (knex) {
                         contactMechEntity.contactMechId = contactMechId;
                         return contactMechData.addContactMechToPostalTable(contactMechEntity)
                             //function above should be returning contactMechId already
-                            //why is it returning 0 instead?
+                            //why is it returning 0 instead? 
                             .then(function () {
                                 return contactMechId;
                             });

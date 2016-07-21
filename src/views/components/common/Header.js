@@ -62,6 +62,7 @@ var Header = React.createClass({
                                     <li><Link to="/cp/accounts/find-account" activeClassName="active">Find Account</Link></li>
                                 </ul>
                             </li>
+            {/*
                             <li className="dropdown">
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Cases <span className="caret"></span></a>
                                 <ul className="dropdown-menu">
@@ -70,6 +71,7 @@ var Header = React.createClass({
                                     <li><a href="#">Find Cases</a></li>
                                 </ul>
                             </li>
+            */}
                             <li className="dropdown">
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Quotes <span className="caret"></span></a>
                                 <ul className="dropdown-menu">

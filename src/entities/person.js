@@ -20,7 +20,7 @@ function Person(partyId, partyTypeId, currencyUomId, description,
     // Call the parent constructor (Party), making sure
     // that "this" is set correctly during the call
     Party.call(this, partyId, partyTypeId, currencyUomId, description,
-    statusId, createdBy, createdDate, updatedDate);
+        statusId, createdBy, createdDate, updatedDate);
 
     // Person-specific Properties
     this.salutation = salutation;
@@ -32,7 +32,6 @@ function Person(partyId, partyTypeId, currencyUomId, description,
 }
 
 // Inherit from Party
-//
 Person.prototype = Object.create(Party.prototype);
 // Set the "constructor" property to refer to Person
 Person.prototype.constructor = Person;
@@ -54,8 +53,8 @@ Person.prototype.validateForInsert = function () {
         this.validateComments(false)
     ];
 
-    for(var i=0; i < specificValidations.length; i++) {
-        if(specificValidations[i]) {
+    for (var i = 0; i < specificValidations.length; i++) {
+        if (specificValidations[i]) {
             errors.push(specificValidations[i]);
         }
     }
@@ -75,8 +74,8 @@ Person.prototype.validateForUpdate = function () {
         this.validateComments(false)
     ];
 
-    for(var i=0; i < specificValidations.length; i++) {
-        if(specificValidations[i]) {
+    for (var i = 0; i < specificValidations.length; i++) {
+        if (specificValidations[i]) {
             errors.push(specificValidations[i]);
         }
     }
@@ -84,42 +83,42 @@ Person.prototype.validateForUpdate = function () {
 };
 
 // salutation is varchar(100)
-Person.prototype.validateSalutation = function(isRequired) {
+Person.prototype.validateSalutation = function (isRequired) {
     this.salutation = validation.sanitizeInput(this.salutation);
     var validationResult = validation.validateString(this.salutation, isRequired, 100, 'salutation');
     return validationResult;
 };
 
 // firstName is varchar(100)
-Person.prototype.validateFirstName = function(isRequired) {
+Person.prototype.validateFirstName = function (isRequired) {
     this.firstName = validation.sanitizeInput(this.firstName);
     var validationResult = validation.validateString(this.firstName, isRequired, 100, 'firstName');
     return validationResult;
 };
 
 // middleName is varchar(100)
-Person.prototype.validateMiddleName = function(isRequired) {
+Person.prototype.validateMiddleName = function (isRequired) {
     this.middleName = validation.sanitizeInput(this.middleName);
     var validationResult = validation.validateString(this.middleName, isRequired, 100, 'middleName');
     return validationResult;
 };
 
 // lastName is varchar(100)
-Person.prototype.validateLastName = function(isRequired) {
+Person.prototype.validateLastName = function (isRequired) {
     this.lastName = validation.sanitizeInput(this.lastName);
     var validationResult = validation.validateString(this.lastName, isRequired, 100, 'lastName');
     return validationResult;
 };
 
 // birthDate is datetime
-Person.prototype.validateBirthDate = function(isRequired) {
+Person.prototype.validateBirthDate = function (isRequired) {
     this.birthDate = validation.sanitizeInput(this.birthDate);
     var validationResult = validation.validateDate(this.birthDate, isRequired, 'birthDate');
     return validationResult;
 };
 
 // comments is varchar(255)
-Person.prototype.validateComments = function(isRequired) {
+Person.prototype.validateComments = function (isRequired) {
     this.comments = validation.sanitizeInput(this.comments);
     var validationResult = validation.validateString(this.comments, isRequired, 255, 'comments');
     return validationResult;

@@ -4,6 +4,7 @@
 // @file:    quoteData.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
 //           William T. Berg <william.thomas.berg@gmail.com>
+//           Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
@@ -255,6 +256,7 @@ var quoteData = function (knex) {
             .andWhere('quote_role.role_type_id', 'PERSON_ROLE');
     };
 
+
     // NOTE: getQuotesByAdvanced[Alt] did not have links to quote_role table.
 
     // Author: Lucas
@@ -266,13 +268,10 @@ var quoteData = function (knex) {
      * @return {Object} promise - Fulfillment value is an array of raw data objects
      */
     var getQuotesByAdvancedAlt = function (quoteId, quoteName, status, account, salesChannel) {
-
-        //        return knex.raw('select * from quote where ' + ' sales_channel_enum_id = "' + salesChannel + '"');
         return knex.from('quote');
     };
 
     // Author: Lucas
-    // Thanks: Dinesh
     // This is a better approach to fetch matching records, better than the alternative version and raw sql version.
     /**
      * Gets all quotes from database by advanced search
@@ -290,23 +289,23 @@ var quoteData = function (knex) {
         if (searchByQuoteId || searchByQuoteName || searchByStatus || searchByAccount || searchBySalesChannel) {
 
             // not-nullable number
-            if (searchByQuoteId){
+            if (searchByQuoteId) {
                 query = query.andWhere('quote_id', quoteId);
             }
             // nullable varchar
-            if (searchByQuoteName){
-                query = query.andWhere('quote_name', 'like', '%'+quoteName+'%');
+            if (searchByQuoteName) {
+                query = query.andWhere('quote_name', 'like', '%' + quoteName + '%');
             }
             // nullable varchar
-            if (searchByStatus){
-                query = query.andWhere('status_id', 'like', '%'+status+'%');
+            if (searchByStatus) {
+                query = query.andWhere('status_id', 'like', '%' + status + '%');
             }
             // nullable number
-            if (searchByAccount){
+            if (searchByAccount) {
                 query = query.andWhere('party_id', account);
             }
             // not-nullable varchar
-            if (searchBySalesChannel){
+            if (searchBySalesChannel) {
                 query = query.andWhere('sales_channel_enum_id', salesChannel);
             }
             console.log(query.toString());
