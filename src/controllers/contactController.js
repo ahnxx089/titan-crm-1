@@ -470,7 +470,7 @@ var contactController = function (knex) {
                 contact.statusId,
                 contact.createdBy,
                 contact.createdDate,
-                now, //contact.updatedDate,
+                now,
                 contact.salutation,
                 contact.firstName,
                 contact.middleName,
@@ -483,9 +483,6 @@ var contactController = function (knex) {
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
                 var promise = contactData.updateContact(contactEntity, user);
-                //.then(function (numRows) {
-                //    return numRows;
-                //});
 
                 promise.catch(function (error) {
                     winston.error(error);

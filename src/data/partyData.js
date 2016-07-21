@@ -8,7 +8,7 @@
 /* jshint camelcase: false */
 
 var partyData = function(knex) {
-    
+
     /**
      * Add a new party in database
      * @param {Object} party - The new party entity to be added
@@ -26,7 +26,7 @@ var partyData = function(knex) {
         })
         .into('party');
     };
-    
+
     /**
      * Gets all parties from database
      * @return {Object} promise - Fulfillment value is an array of raw data objects
@@ -35,7 +35,7 @@ var partyData = function(knex) {
         return knex.select('party_id', 'party_type_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'created_date', 'updated_date')
             .from('party');
     };
-    
+
     /**
      * Gets one party by its id from database
      * @param {Number} partyId - Unique id of the party to be fetched
@@ -46,13 +46,17 @@ var partyData = function(knex) {
             .from('party')
             .where({party_id: id});
     };
-    
+
     /**
      * Update a party in database
      * @param {Object} party - The party entity that contains updated data
      * @return {Object} promise - Fulfillment value is number of rows updated
     */
     var updateParty = function(party) {
+        var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
+
         return knex('party')
             .where({party_id: party.partyId})
             .update({
@@ -60,10 +64,10 @@ var partyData = function(knex) {
                 preferred_currency_uom_id: party.preferredCurrencyUomId,
                 description: party.description,
                 status_id: party.statusId,
-                updated_date: (new Date()).toISOString()
+                updated_date: now
             });
     };
-    
+
     /**
      * Delete a party from database
      * @param {Number} partyId - Unique id of the party to be deleted
@@ -74,7 +78,7 @@ var partyData = function(knex) {
             .where({party_id: partyId})
             .del();
     };
-    
+
     return {
         addParty: addParty,
         getParties: getParties,

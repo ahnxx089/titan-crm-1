@@ -25,6 +25,10 @@ var personController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new person
      */
     var addPerson = function (person, user) {
+        var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
+
         // Convert the received object into an entity
         var personEntity = new Person(
             null,
@@ -32,7 +36,9 @@ var personController = function (knex) {
             person.preferredCurrencyUomId,
             person.description,
             person.statusId,
-            user.userId, (new Date()).toISOString(), (new Date()).toISOString(),
+            user.userId,
+            now,
+            now,
             person.salutation,
             person.firstName,
             person.middleName,
