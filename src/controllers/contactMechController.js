@@ -21,13 +21,18 @@ var contactMechController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new party
      */
     var addContactMech = function (contactMech) {
+        var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
+
         // Convert the received object into an entity
         var contactMechEntity = new ContactMech(
             contactMech.contactMechId,
             contactMech.contactMechTypeId,
             contactMech.contactMechPurposeTypeId,
-            contactMech.infoString, (new Date()).toISOString(), //created date
-            (new Date()).toISOString(), //updated date
+            contactMech.infoString,
+            now,
+            now,
             contactMech.countryCode,
             contactMech.areaCode,
             contactMech.contactNumber,
@@ -49,7 +54,7 @@ var contactMechController = function (knex) {
             // Pass on the entity to be added to the data layer
             var promise;
 
-            // logically it makes more sense if here we use the validated attribute, 
+            // logically it makes more sense if here we use the validated attribute,
             // contactMechEntity.contactMechTypeId, instead of contactMech.contactMechTypeId
             if (contactMech.contactMechTypeId === 'TELECOM_NUMBER') {
                 promise = contactMechData.addContactMechToGeneralTable(contactMechEntity)
@@ -68,7 +73,7 @@ var contactMechController = function (knex) {
                         contactMechEntity.contactMechId = contactMechId;
                         return contactMechData.addContactMechToPostalTable(contactMechEntity)
                             //function above should be returning contactMechId already
-                            //why is it returning 0 instead? 
+                            //why is it returning 0 instead?
                             .then(function () {
                                 return contactMechId;
                             });
@@ -223,6 +228,8 @@ var contactMechController = function (knex) {
      */
     var updateContactMech = function (contactMechId, contactMech) {
         var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
 
         var contactMechEntity = new ContactMech(
             contactMechId,
@@ -230,7 +237,7 @@ var contactMechController = function (knex) {
             contactMech.contactMechPurposeTypeId,
             contactMech.infoString,
             contactMech.createdDate,
-            now, //updated date
+            now,
             contactMech.countryCode,
             contactMech.areaCode,
             contactMech.contactNumber,

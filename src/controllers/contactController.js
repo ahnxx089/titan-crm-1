@@ -73,6 +73,9 @@ var contactController = function (knex) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
+            // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+            now = now.substring(0,10) + ' ' + now.substring(11,19);
+
             // Convert the received objects into entities (protect the data layer)
             //
             // Contact mechanisms
@@ -454,6 +457,8 @@ var contactController = function (knex) {
     var updateContact = function (contactId, contact, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_UPDATE');
         var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
 
         if (hasPermission !== -1) {
             //Convert contact to entity
