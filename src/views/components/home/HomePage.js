@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////
 // Home page component.
 //
-// @file:   HomePage.js
+// @file:    HomePage.js
 // @authors: Anurag Bhandari <anurag@ofssam.com>
 //           Eric Brichetto <brichett13@gmail.com>
 //           Dinesh Shenoy <astroshenoy@gmail.com>
