@@ -37,6 +37,8 @@ var quoteController = function (knex) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
+            now = now.substring(0,10) + ' ' + now.substring(11,19);
+
             var quoteEntity = new Quote(
                 null,
                 quote.quoteTypeId,
@@ -65,6 +67,7 @@ var quoteController = function (knex) {
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
+                console.log('\nAttempting to POST quoteEntity = ', quoteEntity);
                 var promise = quoteData.addQuote(quoteEntity)
                     .then(function (quoteId) {
                         return quoteId; //quoteData.addQuoteRole(quoteId);
