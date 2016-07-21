@@ -437,6 +437,9 @@ var quoteController = function (knex) {
         // Check user's security permission to own quotes
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
+
+            console.log('\nYou asked to retrieve Quotes by owner.\n');
+
             // user has permission, proceed to the data layer
             var promise = quoteData.getQuotesByOwner(user.partyId)
                 .then(function (quotes) {
