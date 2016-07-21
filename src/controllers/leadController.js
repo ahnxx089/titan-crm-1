@@ -198,7 +198,6 @@ var leadController = function (knex) {
                     // Make sure we have promise, and not array of errors
                     if ('then' in mechPromise) {
                         addContactMechPromises.push(mechPromise);
-                        // this catch necessary? Maybe move it inside the for loop?
                         mechPromise.catch(function (error) {
                             winston.error(error);
                         });

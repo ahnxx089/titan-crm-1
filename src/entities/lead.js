@@ -51,7 +51,6 @@ function Lead
     this.companyName = companyName;
     this.annualRevenue = annualRevenue;
     this.numEmployees = numEmployees;
-
     this.industryEnumId = industryEnumId;
     this.ownershipEnumId = ownershipEnumId;
     this.tickerSymbol = tickerSymbol;
@@ -61,7 +60,7 @@ function Lead
 }
 
 
-// Inherit from Person (and automatically implictly from Party, maybe? YES!)
+// Inherit from Person (and automatically implictly from Party)
 Lead.prototype = Object.create(Person.prototype);
 // Set the "constructor" property to refer to Lead
 Lead.prototype.constructor = Lead;
