@@ -170,6 +170,7 @@ var contactController = function (knex) {
 
             if (validationErrors.length === 0) {
                 // Pass on the entities with info to be added to the data layer
+                console.log('\nAttempting to POST contactEntity = ', contactEntity);
                 var promise = contactData.addContact(contactEntity, user);
 
                 var addContactMechPromises = [];
@@ -266,9 +267,6 @@ var contactController = function (knex) {
         // Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_VIEW');
         if (hasPermission !== -1) {
-
-            console.log('\nYou asked to retrieve Contacts by owner.\n');
-
             // user has permission, proceed to the data layer
             var promise = contactData.getContactsByOwner(user.partyId)
                 .then(function (contacts) {

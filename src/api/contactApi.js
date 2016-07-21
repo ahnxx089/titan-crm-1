@@ -77,9 +77,6 @@ var contactApi = function (knex) {
                     // Log the error
                     winston.error('No redis');
                     // Get contacts from the database
-
-                    console.log('\nGoing to get Contacts by owner, calling Controller level...');
-
                     var resultsForThisUser = contactController.getContactsByOwner(req.user);
                     // IF ELSE block interprets controller returning an object or null
                     if (resultsForThisUser === null) {
