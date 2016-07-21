@@ -266,6 +266,9 @@ var contactController = function (knex) {
         // Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_VIEW');
         if (hasPermission !== -1) {
+
+            console.log('\nYou asked to retrieve Contacts by owner.\n');
+
             // user has permission, proceed to the data layer
             var promise = contactData.getContactsByOwner(user.partyId)
                 .then(function (contacts) {
