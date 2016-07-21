@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////
-// Business logic module for contacts.
+// Business logic module for quotes.
 //
-// @file:    contactController.js
+// @file:    quoteController.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
 //           William T. Berg <william.thomas.berg@gmail.com>
 //           Xiaosiqi Yang <yang4131@umn.edu>
@@ -486,7 +486,6 @@ var quoteController = function (knex) {
         if (hasPermission !== -1){
 
             var quoteIdForItems = query.quoteIdForItems;
-
             var promise = quoteData.getQuoteItems(quoteIdForItems)
                 .then(function (quoteItems) {
                     // Map the retrieved result set to corresponding entity
