@@ -22,7 +22,7 @@ var AboutPage = React.createClass({
                     <div className="col-xs-10 col-lg-10">
                         <h3>Dinesh Shenoy</h3>
                         <p>
-                            I earned my PhD in Astrophysics at the University of Minnesota by developing custom Python scripts and modules to analyze mass-loss from hypergiant stars.  Now I use my analytical skills to create enterprise-level applications with a focus on just-in-time development.
+                            I earned my PhD in Astrophysics at the University of Minnesota by developing custom Python scripts and modules to analyze mass-loss from hypergiant stars.  Now I use my analytical skills to create enterprise-grade applications with a focus on just-in-time development.
                         </p>
                     </div>
                 </div>
