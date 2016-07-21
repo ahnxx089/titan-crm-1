@@ -19,8 +19,11 @@ var HomePage = React.createClass({
     getInitialState: function () {
         return {
             /* jshint ignore:start */
+            
+            /* 
             contactDetails: HomeStore.getContactDetails(),
-            /*
+            
+            
             newLeads: {
                 unit: <span>new leads<br/><br/></span>,
                 amount: 3,
