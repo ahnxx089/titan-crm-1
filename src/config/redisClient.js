@@ -43,7 +43,7 @@ var redisClient = (function () {
     var redisOptions = {
         port: 6379,
         host: 'titan-crm.redis.cache.windows.net',
-        password: '8H6lQayUcWTnzqxDgwmi9XDmIw44zD/kyrjN1yOd32U=',
+        password: '4SfdSYO7bDezomAs4M8iMShGRUaJX4mG+2+pox7iwB8=',
         tls: {
             servername: 'titan-crm.redis.cache.windows.net'
         },
