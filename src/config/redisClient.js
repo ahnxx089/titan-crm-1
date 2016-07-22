@@ -40,13 +40,12 @@ var redisClient = (function () {
     // including the optional retry_strategy.
     // Redis docs:  https://github.com/NodeRedis/node_redis
     // Azure docs:  https://azure.microsoft.com/en-us/documentation/articles/cache-nodejs-get-started/
-    var redisHost = 'titan-crm.redis.cache.windows.net';
-    var redisPort = 6379;
-    var redisPrimaryKey = '8H6lQayUcWTnzqxDgwmi9XDmIw44zD/kyrjN1yOd32U=';
     var redisOptions = {
-        auth_pass: redisPrimaryKey,
+        port: 6379,
+        host: 'titan-crm.redis.cache.windows.net',
+        password: '8H6lQayUcWTnzqxDgwmi9XDmIw44zD/kyrjN1yOd32U=',
         tls: {
-            servername: redisHost
+            servername: 'titan-crm.redis.cache.windows.net'
         },
         retry_strategy: function (options) {
             if (options.error.code === 'ECONNREFUSED') {
@@ -57,7 +56,7 @@ var redisClient = (function () {
         }
     };
 
-    var c = redis.createClient( redisPort, redisHost, redisOptions );
+    var c = redis.createClient( redisOptions );
 
     // Set the "client" variable to the actual redis client instance
     // once a connection is established with the Redis server
