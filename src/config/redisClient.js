@@ -41,7 +41,7 @@ var redisClient = (function () {
     // Redis docs:  https://github.com/NodeRedis/node_redis
     // Azure docs:  https://azure.microsoft.com/en-us/documentation/articles/cache-nodejs-get-started/
     var redisOptions = {
-        port: 6379,
+        port: 6380,
         host: 'titan-crm.redis.cache.windows.net',
         password: '4SfdSYO7bDezomAs4M8iMShGRUaJX4mG+2+pox7iwB8=',
         tls: {
@@ -57,6 +57,7 @@ var redisClient = (function () {
         }
     };
 
+    // NOTE:  EVEN IF THIS WORKS, STILL HAVE TO ACCOUNT FOR LOCAL REDIS!
     var c = redis.createClient( redisOptions );
 
     // Set the "client" variable to the actual redis client instance
