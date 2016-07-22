@@ -51,6 +51,7 @@ var redisClient = (function () {
             if (options.error.code === 'ECONNREFUSED') {
                 // This will suppress the ECONNREFUSED unhandled exception
                 // that results in app crash
+                console.log('options.error.code = ', options.error.code);
                 return;
             }
         }
