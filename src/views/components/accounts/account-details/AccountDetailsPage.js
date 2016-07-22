@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////
 // The main component for the Account Details page.
-// 
+//
 //
 // @file:   AccountDetailsPage.js
 // @author: Eric Brichetto <brichett13@gmail.com>
@@ -19,35 +19,35 @@ var AccountDetailsPage = React.createClass({
             account: {}
         };
     },
-    
+
     componentDidMount: function () {
-        var id = this.props.params.id;    
+        var id = this.props.params.id;
         AccountsStore.addGetDataListener(this._onGetData);
-        
+
         AccountsActions.getAccountById(id);
     },
-    
+
     componentWillUnmount: function () {
         AccountsStore.removeListener('getData', this._onGetData);
     },
-    
+
     _onGetData: function () {
         this.setState({
             account: AccountsStore.getSingleAccount()
         });
     },
-    
+
     render: function () {
-        
+
         var account = this.state.account;
         var contactMechs = account.contactMechs || [];
-        
+
         return (
             /* jshint ignore: start */
-            <div class="container" id="container">
-                <div class="row">
-                    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                        <h1 class="page-header">Account Details</h1>
+            <div className="container" id="container">
+                <div className="row">
+                    <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                        <h1 className="page-header">Account Details</h1>
                         <DetailsHeading account={account} />
                         <MainInfoDiv account={account}/>
                         <ContactInfoDiv contactMechs={contactMechs}/>
@@ -56,7 +56,7 @@ var AccountDetailsPage = React.createClass({
             </div>
             /* jshint ignore: end */
         );
-        
+
     }
 });
 

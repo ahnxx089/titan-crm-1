@@ -28,16 +28,16 @@ var ContactDetailPage = React.createClass({
         //get contact
         ContactsStore.addGetDataListener(this._onGetContact);
         ContactsActions.getContactById(this.state.contactId);
-        
+
         //get accounts
-        
+
         //get cases
-        
+
     },
     componentWillUnmount: function () {
         ContactsStore.removeListener('getData', this._onGetContact);
-        CommonStore.removeListener('getContactMechTypes', this._onGetTypes);
-        CommonStore.removeListener('getContactMechPurposeTypes', this._onGetPurposeTypes);
+        //CommonStore.removeListener('getContactMechTypes', this._onGetTypes);
+        //CommonStore.removeListener('getContactMechPurposeTypes', this._onGetPurposeTypes);
     },
     _onGetContact: function (event) {
         return this.setState({
@@ -47,7 +47,7 @@ var ContactDetailPage = React.createClass({
     render: function () {
         var contact = this.state.contact;
         var contactMechs = contact.contactMechs || [];
-        
+
         /* jshint ignore:start */
         return (
             <div>
@@ -58,8 +58,8 @@ var ContactDetailPage = React.createClass({
                     <div className="panel-heading panel-heading-custom">
                         <h1>View Contact</h1>
                     </div>
-                                 
-                                 
+
+
                     <div className="panel panel-info">
                         <div className="panel-heading">
                             <h3 className="panel-title">Contact</h3>
@@ -151,7 +151,7 @@ var ContactDetailPage = React.createClass({
                                 </tr>
                             </thead>
                             <tbody>
-                                
+
                             </tbody>
                         </table>
                     </div>
@@ -168,7 +168,7 @@ var ContactDetailPage = React.createClass({
                                 </tr>
                             </thead>
                             <tbody>
-                                
+
                             </tbody>
                         </table>
                     </div>
