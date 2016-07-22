@@ -6,9 +6,10 @@
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
-
+var dateTime = require('../common/dateTime');
 
 var noteData = function (knex) {
+
 
     /**
      * Add a new note in database
@@ -22,8 +23,8 @@ var noteData = function (knex) {
                 note_info: note.noteInfo,
                 note_date_time: note.noteDateTime,
                 note_party: note.noteParty,
-                created_date: (new Date()).toISOString(),
-                updated_date: (new Date()).toISOString()
+                created_date: dateTime(),
+                updated_date: dateTime()
             })
             .into('note_data');
     };
@@ -39,8 +40,8 @@ var noteData = function (knex) {
         return knex.insert({
                 case_id: caseId,
                 note_id: noteId,
-                created_date: (new Date()).toISOString(),
-                updated_date: (new Date()).toISOString()
+                created_date: dateTime(),
+                updated_date: dateTime()
             })
             .into('case_note');
     };

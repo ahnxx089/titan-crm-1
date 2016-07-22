@@ -13,13 +13,14 @@ var Account = require('../entities/account');
 var userController = require('../controllers/userController');
 var contactInfoHelper = require('../controllers/helpers/contactInfoHelper');
 var _ = require('lodash');
+var dateTime = require('../common/dateTime');
 
 var accountController = function (knex) {
     // Get a reference to data layer module
     //
     var accountData = require('../data/accountData')(knex);
     var contactMechController = require('../controllers/contactMechController')(knex);
-    
+
     // CONTROLLER METHODS
     // ==========================================
     //
@@ -54,10 +55,10 @@ var accountController = function (knex) {
     */
     var addAccount = function (account, user, contact) {
         //Check user's security permissions to add account
-        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_CREATE'); 
+        var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_CREATE');
         //So only someone with permission CRMSFA_ACCOUNT_CREATE to add a new Account, in this example.
-        if (hasPermission !== -1) { 
-            var now = (new Date()).toISOString();
+        if (hasPermission !== -1) {
+            var now = dateTime();
             var contactMechEntities = contactInfoHelper(account);
             // Convert the received object into an entity
             var accountEntity = new Account(
@@ -89,11 +90,11 @@ var accountController = function (knex) {
             );
             // Validate the data before going ahead
             var validationErrors = accountEntity.validateForInsert();
-            
-            
+
+
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
-                
+
                 var promise2 = accountData.addAccount(accountEntity, user)
                     .then(function (results) {
                         return results;
@@ -117,11 +118,11 @@ var accountController = function (knex) {
                     return promise2.then(function (partyId) {
                         return addContactMechCallback(addContactMechPromises, contactMechEntities, partyId);
                     });
-                } 
+                }
                 else {
                     return promise2;
                 }
-            } 
+            }
             else {
                 return validationErrors;
             }
@@ -164,7 +165,7 @@ var accountController = function (knex) {
 //                    account.primaryPostalAddressId = accounts[i].primary_postal_address_id;
 //                    account.primaryTelecomNumberId = accounts[i].primary_telecom_number_id;
 //                    account.primaryEmailId = accounts[i].primary_email_id;
-//                    
+//
 //                    accountEntities.push(account);
 //                }
 //                return accountEntities;
@@ -210,7 +211,7 @@ var accountController = function (knex) {
                             accounts[0].ownership_enum_id,
                             accounts[0].important_note
                         );
-                        
+
                         return contactMechController.getContactMechsByParty(partyId)
                             .then(function (mechEntities) {
                             accountEntity.contactMechs = mechEntities;
@@ -322,10 +323,10 @@ var accountController = function (knex) {
                             accounts[i].primary_email_id
 
                         );
-                        phoneAccounts.push(accountEntity);  
+                        phoneAccounts.push(accountEntity);
                     }
-                    
-                    return phoneAccounts;    
+
+                    return phoneAccounts;
                 });
             promise.catch(function (error) {
                 // Log the error
@@ -343,12 +344,12 @@ var accountController = function (knex) {
      * @param {String} accountName - the organizationName associated with the account(s) to be retrieved
      * @return {Object} promise - Fulfillment value is a raw data object
      */
-    
+
     var getAccountsByIdentity = function (query, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_VIEW');
         if (hasPermission !== -1) {
             var accountId = query.accountId;
-            var accountName = query.accountName; 
+            var accountName = query.accountName;
             var promise = accountData.getAccountsByIdentity(accountId, accountName)
 
                 .then(function (accounts) {
@@ -379,9 +380,9 @@ var accountController = function (knex) {
                             accounts[i].primary_email_id
 
                         );
-                        identityAccounts.push(accountEntity);  
+                        identityAccounts.push(accountEntity);
                     }
-                return identityAccounts;    
+                return identityAccounts;
             });
             promise.catch(function (error) {
                 // Log the error
@@ -394,7 +395,7 @@ var accountController = function (knex) {
         }
     };
 
-    
+
     /**
      * Update a account in database
      * @param {Number} partyId - Unique id of the account to be updated
@@ -413,7 +414,7 @@ var accountController = function (knex) {
                 account.statusId,
                 account.createdBy,
                 account.createdDate,
-                (new Date()).toISOString(), //account.updateDate
+                dateTime(), //account.updateDate
                 account.orgName,
                 account.officeSiteName,
                 account.annualRevenue,
@@ -441,7 +442,7 @@ var accountController = function (knex) {
                     winston.error(error);
                 });
                 return promise;
-            } 
+            }
             else {
                 return validationErrors;
             }
@@ -471,7 +472,7 @@ var accountController = function (knex) {
         }
         else {
             //The user doesn't have permission for a delete operation - return null
-            return null; 
+            return null;
         }
     };
 

@@ -9,12 +9,12 @@
 
 var winston = require('winston');
 var Party = require('../entities/party');
+var dateTime = require('../common/dateTime');
 
 var partyController = function (knex) {
     // Get a reference to data layer module
     //
     var partyData = require('../data/partyData')(knex);
-
 
     // CONTROLLER METHODS
     // ==========================================
@@ -26,7 +26,7 @@ var partyController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new party
      */
     var addParty = function (party, user) {
-        var now = (new Date()).toISOString();
+        var now = dateTime();
         // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
         now = now.substring(0,10) + ' ' + now.substring(11,19);
 
@@ -126,9 +126,7 @@ var partyController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateParty = function (partyId, party) {
-        var now = (new Date()).toISOString();
-        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
-        now = now.substring(0,10) + ' ' + now.substring(11,19);
+        var now = dateTime();
 
         // Convert the received object into an entity
         var partyEntity = new Party(

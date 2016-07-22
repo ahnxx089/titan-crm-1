@@ -14,6 +14,7 @@ var winston = require('winston');
 var _ = require('lodash');
 var Case = require('../entities/case');
 var Note = require('../entities/note');
+var dateTime = require('../common/dateTime');
 
 var caseController = function (knex) {
     // Get a reference to data layer module
@@ -62,7 +63,7 @@ var caseController = function (knex) {
     var addCase = function (case_, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CASE_CREATE');
         if (hasPermission !== -1) {
-            var now = (new Date()).toISOString();
+            var now = dateTime();
             // Convert the received objects into entities (protect the data layer)
             //
             // Notes
@@ -78,7 +79,7 @@ var caseController = function (knex) {
                     now // note.updatedDate
                 );
             }
-            
+
             var caseEntity = new Case(
                 null, // case_.caseId,
                 case_.caseTypeId,
@@ -123,7 +124,7 @@ var caseController = function (knex) {
                     }
                     if (addNotePromises.length > 0) {
                         return promise.then(function (caseId) {
-                            return addNoteLinking(addNotePromises, caseId); // this is displayed. 
+                            return addNoteLinking(addNotePromises, caseId); // this is displayed.
                         });
                     }
                     // if there isn't such internalNote. This should not be triggered in usual scenarios. Added for robustness.
@@ -133,7 +134,7 @@ var caseController = function (knex) {
                         });
                     }
                 }
-                // This is where the execution should go when there is no internalNote. 
+                // This is where the execution should go when there is no internalNote.
                 return promise;
             } else {
                 return validationErrors;
@@ -229,7 +230,7 @@ var caseController = function (knex) {
         }
     };
 
-    /** 
+    /**
      * Gets cases by advanced search
      * @param {String} SOME ARGUMENT - DESCRIPTION OF THAT ARGUMENT
      * @param {Object} user - The logged in user
@@ -294,7 +295,7 @@ var caseController = function (knex) {
     var updateCase = function (caseId, case_, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_UPDATE');
         if (hasPermission !== -1) {
-            var now = (new Date()).toISOString();
+            var now = dateTime();
 
             //Convert case to entity
             var caseEntity = new Case(

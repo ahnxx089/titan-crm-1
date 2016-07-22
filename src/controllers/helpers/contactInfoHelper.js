@@ -8,9 +8,10 @@
 /////////////////////////////////////////////////
 var contactMechController = require('../contactMechController');
 var ContactMech = require('../../entities/contactMech');
+var dateTime = require('../../common/dateTime');
 
 var contactInfoHelper = function(target) {
-    var now = (new Date()).toISOString();
+    var now = dateTime();
     // Convert the received objects into entities (protect the data layer)
     //
     // Contact mechanisms
@@ -77,9 +78,9 @@ var contactInfoHelper = function(target) {
         );
         contactMechEntities.push(addressContactMech);
     }
- 
+
     return contactMechEntities;
-   
+
 };
 
 module.exports = contactInfoHelper;

@@ -72,7 +72,7 @@ var AddPersonalInfo = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label htmlFor="firstName">First Name</label>
+                            <label htmlFor="firstName">First Name *</label>
                             <div className="input-group">
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
@@ -82,7 +82,7 @@ var AddPersonalInfo = React.createClass({
                                     id="firstName"
                                     placeholder="Jane"
                                     pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
-                                    data-error="(max length 100 characters)"
+                                    data-error="Required; max length 100 characters"
                                     required
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.firstName } />
@@ -101,7 +101,7 @@ var AddPersonalInfo = React.createClass({
                                     id="middleName"
                                     placeholder="Anne"
                                     pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
-                                    data-error="(max length 100 characters)"
+                                    data-error="Max length 100 characters"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.middleName } />
                             </div>
@@ -113,7 +113,7 @@ var AddPersonalInfo = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label htmlFor="lastName">Last Name</label>
+                            <label htmlFor="lastName">Last Name *</label>
                             <div className="input-group">
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
@@ -123,7 +123,7 @@ var AddPersonalInfo = React.createClass({
                                     id="lastName"
                                     placeholder="Doe"
                                     pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
-                                    data-error="(max length 100 characters)"
+                                    data-error="Required; max length 100 characters"
                                     required
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.lastName } />
@@ -143,7 +143,7 @@ var AddPersonalInfo = React.createClass({
                                     id="salutation"
                                     placeholder="Mr., Ms., etc."
                                     pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
-                                    data-error="(max length 100 characters)"
+                                    data-error="Max length 100 characters"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.salutation } />
                             </div>
@@ -202,7 +202,7 @@ var AddPersonalInfo = React.createClass({
                                     rows="4"
                                     placeholder="(1000 characters or less)"
                                     pattern="^[\x20-\x7E\u00C0-\u00FC]{1,1000}$"
-                                    data-error="(max length 1000 characters)"
+                                    data-error="Max length 1000 characters)"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.description } ></textarea>
                             </div>
@@ -221,7 +221,7 @@ var AddPersonalInfo = React.createClass({
                                     rows="4"
                                     placeholder="(255 characters or less)"
                                     pattern="^[\x20-\x7E\u00C0-\u00FC]{1,255}$"
-                                    data-error="(max length 255 characters)"
+                                    data-error="Max length 255 characters"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.comments } ></textarea>
                             </div>

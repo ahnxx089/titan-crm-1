@@ -9,6 +9,7 @@
 
 var winston = require('winston');
 var ContactMech = require('../entities/contactMech.js');
+var dateTime = require('../common/dateTime');
 
 var contactMechController = function (knex) {
     // Get a reference to data layer module
@@ -21,9 +22,7 @@ var contactMechController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new party
      */
     var addContactMech = function (contactMech) {
-        var now = (new Date()).toISOString();
-        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
-        now = now.substring(0,10) + ' ' + now.substring(11,19);
+        var now = dateTime();
 
         // Convert the received object into an entity
         var contactMechEntity = new ContactMech(
@@ -227,9 +226,7 @@ var contactMechController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContactMech = function (contactMechId, contactMech) {
-        var now = (new Date()).toISOString();
-        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
-        now = now.substring(0,10) + ' ' + now.substring(11,19);
+        var now = dateTime();
 
         var contactMechEntity = new ContactMech(
             contactMechId,

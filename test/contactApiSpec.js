@@ -157,6 +157,7 @@ describe('updateContact', function () {
         //token should be good through May 2017
 
         var id = 20;
+
         var now = (new Date()).toISOString();
         // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
         now = now.substring(0,10) + ' ' + now.substring(11,19);
