@@ -3,7 +3,8 @@
 // Based on "validator" package.
 //
 // @file:   validation.js
-// @author: Anurag Bhandari <anurag@ofssam.com>
+// @authors: Anurag Bhandari <anurag@ofssam.com>
+//           Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */

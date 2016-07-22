@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////
 // Create Quote page component.
 //
-// @file:   CreateQuotePage.js
+// @file:    CreateQuotePage.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
 /////////////////////////////////////////////////
 

@@ -26,6 +26,10 @@ var partyController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new party
      */
     var addParty = function (party, user) {
+        var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
+
         // Convert the received object into an entity
         var partyEntity = new Party(
             null,
@@ -34,7 +38,8 @@ var partyController = function (knex) {
             party.description,
             party.statusId,
             user.userId,
-            (new Date()).toISOString(), (new Date()).toISOString()
+            now,
+            now
         );
         // Validate the data before going ahead
         var validationErrors = partyEntity.validateForInsert();
@@ -121,6 +126,10 @@ var partyController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateParty = function (partyId, party) {
+        var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
+
         // Convert the received object into an entity
         var partyEntity = new Party(
             partyId,
@@ -129,7 +138,8 @@ var partyController = function (knex) {
             party.description,
             party.statusId,
             null,
-            null, (new Date()).toISOString()
+            null,
+            now
         );
         // Validate the data before going ahead
         var validationErrors = partyEntity.validateForUpdate();

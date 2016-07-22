@@ -5,9 +5,6 @@
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
-// Attention! 
-// addLead, getLeadsByOwner, getLeadById are tested and functional. 
-// getLeads is not added in apiRoutes, or called from anywhere. Do not remove it yet. 
 
 var redisClient = require('../config/redisClient');
 var winston = require('winston');
@@ -29,12 +26,13 @@ var leadApi = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new party
      */
     // ==========================================
+    
 
     // POST /api/leads
     /**
      * To add a new lead in database
-     * @param {Object} req - The request from presentation layer (ARC)
-     * @param {Object} res - The response to presentation layer (ARC)
+     * @param {Object} req - The request from presentation layer 
+     * @param {Object} res - The response to presentation layer 
      */
     var addLead = function (req, res) {
         // lead and user here are striped params from request
@@ -64,74 +62,11 @@ var leadApi = function (knex) {
     };
 
 
-    // Lucas's taking this
-    // Credit: Dinesh
-    // NOT in use now! (WHY?)
-    // GET /api/leads/...
-    /**
-     * To retrieve a new lead from database, based on various criteria(query strings)
-     * @param {Object} req - The request from presentation layer (ARC)
-     * @param {Object} res - The response to presentation layer (ARC)
-     */
-    var getLeads = function (req, res) {
-
-        /* The if blocks test for whether the user entered a query string
-            seeking to get Leads by Owner, by Identity or other ways
-            (besides getLeadById, which is on a separate route).
-           
-            Note:  there no longer is a general getLeads()
-            function to get all leads, that was just for initial testing.
-            Once user authorization is implemented, the only user who should
-            be able to get ALL Leads regardless of Owner will be user:admin, 
-            and admin will use getLeadsByOwner() for that... that might require
-            re-writing leadData.getLeadsByOwner, but that is the
-            plan for now.
-        */
-
-        // Author: Lucas
-        // GET /api/leads?owner=
-        //
-        // This if block triggers if a query by owner has been made.
-        if (req.query.owner) {
-            console.info('hello from getLeads in leadAPI');
-            var ownerId = req.query.owner;
-            leadController.getLeadsByOwner(ownerId)
-                .then(function (leads) {
-                    res.json(leads);
-                });
-        }
-
-        // This is a good place to add other route handlings blocks
-
-        // If the request did not properly pass any of the various if consition-tests above,
-        // it is not a valid query, make the reponse null.
-        else {
-            res.json(null);
-        }
-    };
-
-
-
     // To retrieve existing leads from database based on their creater
     // In use now.
-    // Deprecated: GET /api/leads/?owner=
-    // In practice: GET /api/leads[/nothing follows]
-
-    // TODO
-    // This getLeadsByOwner works fine! 
-    // Inspired by Eric's way of doing multiple insertions in addAccount in accountData.js,
-    // I might stop returning this method at the end of this file and calling this method directly
-    // instead I will call this methods from the now obselete getLeads method, (making it invisible to the ARC)
-    // once  Divine Ndifongwa has his getLeadsByIdentity and getLeadsByPhoneNumber working. 
-    // Otherwise, it's just not worth right now. 
-    // The then getLeads method will call getLeadsByOwner or getLeadsByIdentity or getLeadsByPhoneNumber, 
-    // depending on the received parameter(s). 
+    // GET /api/leads[/nothing follows]
 
     var getLeadsByOwner = function (req, res) {
-        // if there's /?owner, ownerId is what follows
-        //        var ownerId = req.query.owner;
-        //        console.log("ownerid in byOwner is " + ownerId);
-        // The above approach is now deprecated and not supported
         
         var user = req.user;
         
@@ -163,10 +98,6 @@ var leadApi = function (knex) {
             }
         });
         
-        // this prints "admin" to terminal console, not browser console
-//        console.log('user in byOwner is ' + user);
-//        console.log('userId in byOwner is ' + user.userId);
-
     };
 
     // Author: Lucas
@@ -189,7 +120,6 @@ var leadApi = function (knex) {
 
     return {
         addLead: addLead,
-        getLeads: getLeads,
         getLeadsByOwner: getLeadsByOwner,
         getLeadById: getLeadById
     };

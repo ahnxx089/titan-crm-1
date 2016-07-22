@@ -1,9 +1,10 @@
 /////////////////////////////////////////////////
-// Business logic module for contacts.
+// Business logic module for quotes.
 //
-// @file:    contactController.js
+// @file:    quoteController.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
 //           William T. Berg <william.thomas.berg@gmail.com>
+//           Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
@@ -36,6 +37,9 @@ var quoteController = function (knex) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_QUOTE_CREATE');
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
+            // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+            now = now.substring(0,10) + ' ' + now.substring(11,19);
+
             var quoteEntity = new Quote(
                 null,
                 quote.quoteTypeId,
@@ -64,6 +68,7 @@ var quoteController = function (knex) {
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
+                console.log('\nAttempting to POST quoteEntity = ', quoteEntity);
                 var promise = quoteData.addQuote(quoteEntity)
                     .then(function (quoteId) {
                         return quoteId; //quoteData.addQuoteRole(quoteId);
@@ -95,6 +100,8 @@ var quoteController = function (knex) {
         if (hasPermission !== -1) {
             // proceed towards data layer
             var now = (new Date()).toISOString();
+            // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+            now = now.substring(0,10) + ' ' + now.substring(11,19);
 
             // QuoteItem entity
             var quoteItemEntity = new QuoteItem(
@@ -156,6 +163,8 @@ var quoteController = function (knex) {
         if (hasPermission !== -1) {
             // proceed towards data layer
             var now = (new Date()).toISOString();
+            // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+            now = now.substring(0,10) + ' ' + now.substring(11,19);
 
             // QuoteItem entity
             var quoteItemOptionEntity = new QuoteItemOption(
@@ -214,6 +223,8 @@ var quoteController = function (knex) {
         if (hasPermission !== -1) {
             // proceed towards data layer
             var now = (new Date()).toISOString();
+            // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+            now = now.substring(0,10) + ' ' + now.substring(11,19);
 
             // build Quote Entity.  (Reminder to self on how issue_date and created_by column will not
             // be affected:  UI will be filling quote.issueDate and quote.createdDate with the value that this
@@ -281,6 +292,8 @@ var quoteController = function (knex) {
         if (hasPermission !== -1) {
             // proceed towards data layer
             var now = (new Date()).toISOString();
+            // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+            now = now.substring(0,10) + ' ' + now.substring(11,19);
 
             // QuoteItem entity
             var quoteItemEntity = new QuoteItem(
@@ -342,6 +355,8 @@ var quoteController = function (knex) {
         if (hasPermission !== -1) {
             // proceed towards data layer
             var now = (new Date()).toISOString();
+            // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+            now = now.substring(0,10) + ' ' + now.substring(11,19);
 
             // QuoteItem entity
             var quoteItemOptionEntity = new QuoteItemOption(
@@ -485,7 +500,6 @@ var quoteController = function (knex) {
         if (hasPermission !== -1){
 
             var quoteIdForItems = query.quoteIdForItems;
-
             var promise = quoteData.getQuoteItems(quoteIdForItems)
                 .then(function (quoteItems) {
                     // Map the retrieved result set to corresponding entity

@@ -73,6 +73,9 @@ var contactController = function (knex) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
         if (hasPermission !== -1) {
             var now = (new Date()).toISOString();
+            // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+            now = now.substring(0,10) + ' ' + now.substring(11,19);
+
             // Convert the received objects into entities (protect the data layer)
             //
             // Contact mechanisms
@@ -170,6 +173,7 @@ var contactController = function (knex) {
 
             if (validationErrors.length === 0) {
                 // Pass on the entities with info to be added to the data layer
+                console.log('\nAttempting to POST contactEntity = ', contactEntity);
                 var promise = contactData.addContact(contactEntity, user);
 
                 var addContactMechPromises = [];
@@ -453,6 +457,8 @@ var contactController = function (knex) {
     var updateContact = function (contactId, contact, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_UPDATE');
         var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
 
         if (hasPermission !== -1) {
             //Convert contact to entity
@@ -464,7 +470,7 @@ var contactController = function (knex) {
                 contact.statusId,
                 contact.createdBy,
                 contact.createdDate,
-                now, //contact.updatedDate,
+                now,
                 contact.salutation,
                 contact.firstName,
                 contact.middleName,
@@ -477,9 +483,6 @@ var contactController = function (knex) {
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
                 var promise = contactData.updateContact(contactEntity, user);
-                //.then(function (numRows) {
-                //    return numRows;
-                //});
 
                 promise.catch(function (error) {
                     winston.error(error);

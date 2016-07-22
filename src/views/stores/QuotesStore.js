@@ -207,7 +207,7 @@ QuotesStore.updateQuoteItem = function(quoteItem) {
     $.ajax({
         type: 'PUT',
         url: '/api/quotes?item',
-        headers: {  'x-access-token': Cookies.get('titanAuthToken') },
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
         data: quoteItem,
         success: function(numRowsUpdated) {
             updatedQuoteItemRows = numRowsUpdated; // quoteApi.updateQuoteItem returns # of rows successfully updated

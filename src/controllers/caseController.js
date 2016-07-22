@@ -4,16 +4,16 @@
 // @file:    caseController.js
 // @authors: Dinesh Shenoy <astroshenoy@gmail.com>
 //           William T. Berg <william.thomas.berg@gmail.com>
+//           Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
 /* jshint maxcomplexity: false */
 
 var winston = require('winston');
-var Case = require('../entities/case');
-//var User = require('../entities/user');// is this ever used?
-var Note = require('../entities/note');
 var _ = require('lodash');
+var Case = require('../entities/case');
+var Note = require('../entities/note');
 
 var caseController = function (knex) {
     // Get a reference to data layer module
@@ -32,18 +32,15 @@ var caseController = function (knex) {
      * For each (and the only) promise delivered by addNote,
      * create entry in case_note table
      * and chain all promises together with .then()
-     * @param {object} addNotePromises - An array of promises each of which is returned by noteController.addNote
-     * @param {object} internalNoteEntity - The single internal note entity to be linked
+     * @param {object} addNotePromises - An array of (one) promises each of which is returned by noteController.addNote
      * @param {object} caseId - The Id of the case to be linked to these notes
      * @return {object} caseId - Fulfillment value is the id of the case that is linked
      */
-    var addNoteCallback = function (addNotePromises, internalNoteEntity, caseId) {
+    var addNoteLinking = function (addNotePromises, caseId) {
         var promise;
 
         /*param 1*/
         promise = addNotePromises.pop();
-
-        /*param 2*/
 
         return promise.then(function (noteId) {
             return noteController.linkNoteToCase(caseId, noteId)
@@ -51,14 +48,13 @@ var caseController = function (knex) {
                     return caseId;
                 });
         });
-        //}
     };
 
 
 
     // Author: Lucas
     /**
-     * Add a new case  
+     * Add a new case
      * @param {Object} case_ - The new case to be added
      * @param {Object} user - The logged in user
      * @return {Object} promise - Fulfillment value is id of new case
@@ -76,13 +72,13 @@ var caseController = function (knex) {
                     null,
                     case_.intenalNote,
                     case_.intenalNote,
-                    now,
+                    now, // note.noteDateTime,
                     case_.fromPartyId,
-                    now,
-                    now
+                    now, // note.createdDate,
+                    now // note.updatedDate
                 );
             }
-
+            
             var caseEntity = new Case(
                 null, // case_.caseId,
                 case_.caseTypeId,
@@ -95,7 +91,7 @@ var caseController = function (knex) {
                 case_.caseName,
                 case_.description,
                 case_.resolutionId,
-                case_.createdBy,
+                user.userId, // case_.createdBy,
                 now, // case_.createdDate,
                 now // case_.updatedDate
             );
@@ -120,23 +116,24 @@ var caseController = function (knex) {
                     if (notePromise instanceof Array) {
                         return notePromise;
                     }
-                    // Make sure we have promise,
-                    // and not array of errors
+                    // Make sure it's promise we have, not array of errors
                     if ('then' in notePromise) {
+                        // addNotePromises is a container
                         addNotePromises.push(notePromise);
                     }
                     if (addNotePromises.length > 0) {
                         return promise.then(function (caseId) {
-                            return addNoteCallback(addNotePromises, internalNoteEntity, caseId);
+                            return addNoteLinking(addNotePromises, caseId); // this is displayed. 
                         });
                     }
-                    // if there isn't such internalNote
+                    // if there isn't such internalNote. This should not be triggered in usual scenarios. Added for robustness.
                     else {
                         return promise.then(function (caseId) {
                             return caseId;
                         });
                     }
                 }
+                // This is where the execution should go when there is no internalNote. 
                 return promise;
             } else {
                 return validationErrors;
@@ -337,11 +334,6 @@ var caseController = function (knex) {
     };
 
 
-    /**
-     * Delete a lead
-     * @param {Number} leadId - Unique id of the lead (actually lead id in DB) to be deleted
-     * @return {Object} promise - Fulfillment value is number of rows deleted
-     */
     var deleteCase = function (caseId) {
         var promise = caseData.deleteCase(caseId)
             .then(function (result) {

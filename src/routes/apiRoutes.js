@@ -69,9 +69,7 @@ var router = function (knex) {
         .get(leadApi.getLeadsByOwner);
     apiRouter.route('/leads/:id')
         .get(leadApi.getLeadById);
-    
-// updateLead, deleteLead, getLeadsByIdentity and getLeadsByPhoneNumber are not implemented yet, and deleted now. 
-    
+        
     
 
     // CONTACTS
@@ -145,6 +143,7 @@ var router = function (knex) {
     
     apiRouter.route('/common-data')
         .get(commonDataApi.getCommonData);
+    
     
     return apiRouter;
 };

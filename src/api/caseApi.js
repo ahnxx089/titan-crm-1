@@ -26,16 +26,15 @@ var caseApi = function (knex) {
             res.json({
                 message: 'You do not have permission to add cases!'
             });
-        }
-        else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
+        } else if (Object.prototype.toString.call(resultsForThisUser) === '[object Array]') {
             res.json(resultsForThisUser);
         }
         // An object in result means it's a promise (which is returned only if validation succeeds)
         else {
             resultsForThisUser.then(function (caseId) {
-                res.json(
-                    {caseId:caseId}
-                );
+                res.json({
+                    caseId: caseId
+                });
             });
         }
     };

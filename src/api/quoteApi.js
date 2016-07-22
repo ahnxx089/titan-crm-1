@@ -244,7 +244,7 @@ var quoteApi = function (knex) {
             }
         }
 
-        // Lucas is taking this part
+        // Author of this part: Lucas 
         // GET /api/quotes?SOME_PROPERTY=some_value
         //
         // findQuotes, aka Advanced Search

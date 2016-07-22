@@ -95,7 +95,7 @@ describe('Contact module ', function () {
         };
 
         // when a user has Contact owner rights, the controller returns an object.  The object will
-        // be empty if the user does not actually own any contacts, but the facts that user had 
+        // be empty if the user does not actually own any contacts, but the facts that user had
         // permission to create (and therefore own) contacts is what is being tested here.
         var resultsForThisUser = contactController.getContactsByOwner(user);
 
@@ -134,7 +134,7 @@ describe('Contact module ', function () {
         // when a user has Contact owner rights, the controller returns an object.
         var resultsForThisUser = contactController.getContactsByOwner(user);
 
-        // The controller returns a promise, therefore the expect() and done() must be put in a 
+        // The controller returns a promise, therefore the expect() and done() must be put in a
         // .then() clause so that the promise can be fulfilled. Otherwise the adding of the Contact
         // does not actually happen before the expect() is reached and the done() executes.
         resultsForThisUser
@@ -266,6 +266,9 @@ describe('updateContact', function () {
 
     it('does not return null for valid input', function (done) {
         var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
+
         var contactId = 20;
         var user = {
             securityPermissions: ['CRMSFA_CONTACT_UPDATE']
@@ -297,6 +300,9 @@ describe('updateContact', function () {
 
     it('returns promise for valid input', function (done) {
         var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
+
         var contactId = 20;
         var user = {
             securityPermissions: ['CRMSFA_CONTACT_UPDATE']

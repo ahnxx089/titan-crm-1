@@ -16,11 +16,15 @@ var contactMechData = function (knex) {
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
     var addContactMechToGeneralTable = function (contactMech) {
+        var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
+
         return knex.insert({
                 contact_mech_type_id: contactMech.contactMechTypeId,
                 info_string: contactMech.infoString,
-                created_date: (new Date()).toISOString(),
-                updated_date: (new Date()).toISOString()
+                created_date: now,
+                updated_date: now
             })
             .into('contact_mech')
             .then(function (idArray) {
@@ -34,6 +38,10 @@ var contactMechData = function (knex) {
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
     var addContactMechToPostalTable = function (contactMech) {
+        var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
+
         return knex.insert({
                 contact_mech_id: contactMech.contactMechId,
                 to_name: contactMech.toName,
@@ -45,8 +53,8 @@ var contactMechData = function (knex) {
                 postal_code: contactMech.zipOrPostalCode,
                 country_geo_id: contactMech.countryGeoId,
                 state_province_geo_id: contactMech.stateProvinceGeoId,
-                created_date: (new Date()).toISOString(),
-                updated_date: (new Date()).toISOString()
+                created_date: now,
+                updated_date: now
             })
             .into('postal_address')
             .then(function (idArray) {
@@ -61,14 +69,18 @@ var contactMechData = function (knex) {
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
     var addContactMechToTelecomTable = function (contactMech) {
+        var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
+
         return knex.insert({
                 contact_mech_id: contactMech.contactMechId,
                 country_code: contactMech.countryCode,
                 area_code: contactMech.areaCode,
                 contact_number: contactMech.contactNumber,
                 ask_for_name: contactMech.askForName,
-                created_date: (new Date()).toISOString(),
-                updated_date: (new Date()).toISOString()
+                created_date: now,
+                updated_date: now
             })
             .into('telecom_number')
             .then(function (idArray) {
@@ -143,12 +155,16 @@ var contactMechData = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContactMech = function (contactMech) {
+        var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
+
         var telecomNumberFields = {
             country_code: contactMech.countryCode,
             area_code: contactMech.areaCode,
             contact_number: contactMech.contactNumber,
             ask_for_name: contactMech.askForName,
-            updated_date: (new Date()).toISOString()
+            updated_date: now
         };
         var postalAddressFields = {
             to_name: contactMech.toName,
@@ -160,12 +176,12 @@ var contactMechData = function (knex) {
             postal_code: contactMech.zipOrPostalCode,
             country_geo_id: contactMech.countryGeoId,
             state_province_geo_id: contactMech.stateProvinceGeoId,
-            updated_date: (new Date()).toISOString()
+            updated_date: now
         };
         var generalContactMechFields = {
             contact_mech_type_id: contactMech.contctMechTypeId,
             info_string: contactMech.infoString,
-            updated_date: (new Date()).toISOString()
+            updated_date: now
         };
 
         return knex('telecom_number')
@@ -231,16 +247,20 @@ var contactMechData = function (knex) {
     };
 
     var linkContactMechToParty = function (partyId, contactMechId, purposeTypeId) {
+        var now = (new Date()).toISOString();
+        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
+        now = now.substring(0,10) + ' ' + now.substring(11,19);
+
         return knex.insert({
                 party_id: partyId,
                 contact_mech_id: contactMechId,
                 contact_mech_purpose_type_id: purposeTypeId,
-                from_date: (new Date()).toISOString(),
+                from_date: now,
                 thru_date: null,
                 verified: null,
                 comments: null,
-                created_date: (new Date()).toISOString(),
-                updated_date: (new Date()).toISOString()
+                created_date: now,
+                updated_date: now
             })
             .into('party_contact_mech');
     };

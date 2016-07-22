@@ -8,7 +8,6 @@
 var React = require('react');
 
 var SubmitButton = React.createClass({
-    // what is the difference between className and activeClassName? Answered in commit comments
     render: function () {
         /* jshint ignore:start */
         return (

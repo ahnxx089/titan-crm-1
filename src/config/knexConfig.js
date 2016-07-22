@@ -11,12 +11,14 @@ var knexConfig = function() {
     var getConfig = function() {
         return knex({
             client: 'mysql',
-            connection: process.env.JAWSDB_URL || 'mysql://root:@localhost/titan_crm'
-            // Use env variable from Heroku in priority whenever possible
+            connection: process.env.TITANCRM_DB_URL || 'mysql://root:@localhost/titan_crm'
+            // env var TITANCRM_DB_URL is for Azure deployment, prioritize over local db.
+            // Previously for Heroku deploy:
+            //connection: process.env.JAWSDB_URL || 'mysql://root:@localhost/titan_crm'
             // connection string (one liner way to how to connect): type of connect://userName:password@host/databaseName
         });
     };
-    
+
     return {
         getConfig: getConfig
     };
