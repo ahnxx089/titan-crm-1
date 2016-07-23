@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////
-// Common module for returning current date/time
+// Common module that supplies current date/time
 // in MySQL datetime format
 //
 // @file:    dateTime.js

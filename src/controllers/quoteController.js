@@ -28,6 +28,10 @@ var quoteController = function (knex) {
     // ==========================================
     //
 
+    var reformatDateTime = function(isoFormattedDateTime){
+        return isoFormattedDateTime.substring(0,10) + ' ' + isoFormattedDateTime.substring(11,19);
+    };
+
     /**
      * Add a new quote
      * @param {Object} quote - The new quote to be added
@@ -226,17 +230,17 @@ var quoteController = function (knex) {
                 quoteId,
                 quote.quoteTypeId,
                 quote.partyId,
-                quote.issueDate,
+                reformatDateTime(quote.issueDate),
                 quote.statusId,
                 quote.currencyUomId,
                 quote.salesChannelEnumId,
-                quote.validFromDate,
-                quote.validThruDate,
+                reformatDateTime(quote.validFromDate),
+                reformatDateTime(quote.validThruDate),
                 quote.quoteName,
                 quote.description,
                 quote.contactPartyId,
                 quote.createdByPartyId,
-                quote.createdDate,
+                reformatDateTime(quote.createdDate),
                 now
             );
 
@@ -294,11 +298,11 @@ var quoteController = function (knex) {
                 quoteItem.quantity,
                 quoteItem.selectedAmount,
                 quoteItem.quoteUnitPrice,
-                quoteItem.estimatedDeliveryDate,
+                reformatDateTime(quoteItem.estimatedDeliveryDate),
                 quoteItem.comments,
                 quoteItem.isPromo,
                 quoteItem.description,
-                quoteItem.createdDate,
+                reformatDateTime(quoteItem.createdDate),
                 now
             );
 
@@ -354,7 +358,7 @@ var quoteController = function (knex) {
                 quoteItemOption.quoteItemOptionSeqId,
                 quoteItemOption.quantity,
                 quoteItemOption.quoteUnitPrice,
-                quoteItemOption.createdDate,
+                reformatDateTime(quoteItemOption.createdDate),
                 now
             );
 
