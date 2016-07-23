@@ -9,6 +9,9 @@
 /* jshint shadow:true */
 /* jshint maxcomplexity:false */
 
+var redisClient = require('../config/redisClient');
+var winston = require('winston');
+
 var quoteApi = function (knex) {
     // Get a reference to data layer module
     //
@@ -212,18 +215,38 @@ var quoteApi = function (knex) {
         //
         if (Object.keys(req.query).length === 0) {
 
-            var resultsForThisUser = quoteController.getQuotesByOwner(req.user);
-            // IF ELSE block interprets controller returning an object or null
-            if (resultsForThisUser === null) {
-                res.json({
-                    'message': 'You do not have permission to own quotes!'
-                });
-            }
-            else {
-                resultsForThisUser.then(function (quotes) {
-                    res.json(quotes);
-                });
-            }
+            // If the requested data is in cache, get it from there and return it;
+            // otherwise call the controller and cache data before sending out
+            var redis = redisClient.getClient();
+            var cacheKeyName = 'quotes_for_party_id_' + req.user.partyId; // unique key
+            redis.get(cacheKeyName, function (err, result) {
+                // Data is in the cache
+                if (result) {
+                    // Convert the cached data string back into JSON before sending out
+                    res.json(JSON.parse(result));
+                }
+                // Data is NOT in the cache
+                else {
+                    // Log the error
+                    winston.error('No redis');
+                    // Get quotes from the database
+                    var resultsForThisUser = quoteController.getQuotesByOwner(req.user);
+                    // IF ELSE block interprets controller returning an object or null
+                    if (resultsForThisUser === null) {
+                        res.json({
+                            'message': 'You do not have permission to own quotes!'
+                        });
+                    }
+                    else {
+                        resultsForThisUser.then(function (quotes) {
+                            // Cache the data as a JSON string;
+                            // set it to expire after 60 secs
+                            redis.setex(cacheKeyName, 60, JSON.stringify(quotes));
+                            res.json(quotes);
+                        });
+                    }
+                }
+            });
         }
 
         // GET /api/quotes?quoteIdForItems
@@ -244,7 +267,7 @@ var quoteApi = function (knex) {
             }
         }
 
-        // Author of this part: Lucas 
+        // Author of this part: Lucas
         // GET /api/quotes?SOME_PROPERTY=some_value
         //
         // findQuotes, aka Advanced Search

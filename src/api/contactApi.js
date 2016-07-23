@@ -71,8 +71,6 @@ var contactApi = function (knex) {
                 if (result) {
                     // Convert the cached data string back into JSON before sending out
                     res.json(JSON.parse(result));
-                    var now = new Date();
-                    console.log('returning cached data at ', now.toTimeString() );
                 }
                 // Data is NOT in the cache
                 else {

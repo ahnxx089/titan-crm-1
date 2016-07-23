@@ -23,8 +23,7 @@ var redisClient = (function () {
 
     // Attempt to create a new instance of an actual redis client
     //
-    /* (This is from the Heroku deployment, commented out in favor of Azure)
-    //var connectionString = process.env.REDIS_URL || 'redis://localhost:6379';
+    var connectionString = process.env.REDIS_URL || 'redis://localhost:6379';
     var c = redis.createClient(connectionString, {
         retry_strategy: function (options) {
             if (options.error.code === 'ECONNREFUSED') {
@@ -34,30 +33,7 @@ var redisClient = (function () {
             }
         }
     });
-    */
 
-    // This is the Azure-deployed Redis cache, attempt to make a new instance,
-    // including the optional retry_strategy.
-    // Redis docs:  https://github.com/NodeRedis/node_redis
-    // Azure docs:  https://azure.microsoft.com/en-us/documentation/articles/cache-nodejs-get-started/
-    var redisOptions = {
-        port: 6380,
-        host: 'titan-crm.redis.cache.windows.net',
-        password: '4SfdSYO7bDezomAs4M8iMShGRUaJX4mG+2+pox7iwB8=',
-        tls: {
-            servername: 'titan-crm.redis.cache.windows.net'
-        },
-        retry_strategy: function (options) {
-            if (options.error.code === 'ECONNREFUSED') {
-                // This will suppress the ECONNREFUSED unhandled exception
-                // that results in app crash
-                return;
-            }
-        }
-    };
-
-    // NOTE:  EVEN IF THIS WORKS, STILL HAVE TO ACCOUNT FOR LOCAL REDIS!
-    var c = redis.createClient( redisOptions );
 
     // Set the "client" variable to the actual redis client instance
     // once a connection is established with the Redis server
