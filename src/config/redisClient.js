@@ -24,7 +24,7 @@ var redisClient = (function () {
     // Attempt to create a new instance of an actual redis client
     //
     var connectionString = process.env.REDIS_URL || 'redis://localhost:6379';
-    console.log('connectionString = ', connectionString);
+    console.log('\connectionString = ', connectionString);
     var c = redis.createClient(connectionString, {
         retry_strategy: function (options) {
             if (options.error.code === 'ECONNREFUSED') {
