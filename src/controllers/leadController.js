@@ -135,7 +135,6 @@ var leadController = function (knex) {
                 try {
                     birthDate = new Date(lead.birthDate).toISOString()
                     birthDate = birthDate.substring(0,10) + ' ' + birthDate.substring(11,19);
-                    console.log('birthDate = ', birthDate);
                     dob = birthDate;
                 } catch (e) {
                     dob = null;
