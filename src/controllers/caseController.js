@@ -26,7 +26,10 @@ var caseController = function (knex) {
     // CONTROLLER METHODS
     // ==========================================
     //
-
+    // function to strip "T", decimals, and "Z" from dates
+    var fixDTFormat = function(dateTimeString) {
+        return dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
+    };
 
     // Author: Lucas
     /**
@@ -50,8 +53,6 @@ var caseController = function (knex) {
                 });
         });
     };
-
-
 
     // Author: Lucas
     /**
@@ -305,13 +306,13 @@ var caseController = function (knex) {
                 case_.statusId,
                 case_.fromPartyId,
                 case_.priority,
-                case_.caseDate,
-                case_.responseRequiredDate,
+                fixDTFormat(case_.caseDate),
+                fixDTFormat(case_.responseRequiredDate),
                 case_.caseName,
                 case_.description,
                 case_.resolutionId,
                 case_.createdBy,
-                case_.createdDate,
+                fixDTFormat(case_.createdDate),
                 now
             );
 
@@ -333,7 +334,6 @@ var caseController = function (knex) {
             return null;
         }
     };
-
 
     var deleteCase = function (caseId) {
         var promise = caseData.deleteCase(caseId)

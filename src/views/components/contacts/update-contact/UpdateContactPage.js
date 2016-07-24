@@ -29,9 +29,9 @@ var UpdateContactPage = React.createClass({
     componentDidMount: function () {
         ContactsStore.addGetDataListener(this._onGetContact);
         ContactsActions.getContactById(this.state.contactId);
-        
+
         ContactsStore.addPutDataListener(this._onUpdateContact);
-        
+
         CommonStore.addGetAllCurrenciesListener(this._onGetCurrencies);
         CommonActions.getAllCurrencies();
     },
@@ -99,7 +99,7 @@ var UpdateContactPage = React.createClass({
                     <div className="panel-body">
                         <UpdateContactForm
                             contact={ this.state.contact }
-                            currencies={ this.state.currencies}
+                            currencies={ this.state.currencies }
                             onChange={ this.setContactState }
                             onFormSubmit={ this._updateContact }/>
                     </div>

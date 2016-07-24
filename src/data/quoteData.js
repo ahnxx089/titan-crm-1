@@ -234,7 +234,7 @@ var quoteData = function (knex) {
     var getQuoteItems = function (quoteIdForItems) {
         return knex.select( 'quote_id', 'quote_item_seq_id', 'product_id', 'quantity', 'selected_amount', 'quote_unit_price', 'estimated_delivery_date', 'comments', 'is_promo', 'description', 'created_date', 'updated_date')
             .from('quote_item')
-            .where('quote_id', quoteIdForItems)
+            .where('quote_id', quoteIdForItems);
     };
 
     /**

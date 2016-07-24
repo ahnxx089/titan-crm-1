@@ -28,8 +28,9 @@ var quoteController = function (knex) {
     // ==========================================
     //
 
-    var reformatDateTime = function(isoFormattedDateTime){
-        return isoFormattedDateTime.substring(0,10) + ' ' + isoFormattedDateTime.substring(11,19);
+    // function to strip "T", decimals, and "Z" from dates
+    var fixDTFormat = function(dateTimeString) {
+        return dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
     };
 
     /**
@@ -230,17 +231,17 @@ var quoteController = function (knex) {
                 quoteId,
                 quote.quoteTypeId,
                 quote.partyId,
-                reformatDateTime(quote.issueDate),
+                fixDTFormat(quote.issueDate),
                 quote.statusId,
                 quote.currencyUomId,
                 quote.salesChannelEnumId,
-                reformatDateTime(quote.validFromDate),
-                reformatDateTime(quote.validThruDate),
+                fixDTFormat(quote.validFromDate),
+                fixDTFormat(quote.validThruDate),
                 quote.quoteName,
                 quote.description,
                 quote.contactPartyId,
                 quote.createdByPartyId,
-                reformatDateTime(quote.createdDate),
+                fixDTFormat(quote.createdDate),
                 now
             );
 
@@ -298,11 +299,11 @@ var quoteController = function (knex) {
                 quoteItem.quantity,
                 quoteItem.selectedAmount,
                 quoteItem.quoteUnitPrice,
-                reformatDateTime(quoteItem.estimatedDeliveryDate),
+                fixDTFormat(quoteItem.estimatedDeliveryDate),
                 quoteItem.comments,
                 quoteItem.isPromo,
                 quoteItem.description,
-                reformatDateTime(quoteItem.createdDate),
+                fixDTFormat(quoteItem.createdDate),
                 now
             );
 
@@ -358,7 +359,7 @@ var quoteController = function (knex) {
                 quoteItemOption.quoteItemOptionSeqId,
                 quoteItemOption.quantity,
                 quoteItemOption.quoteUnitPrice,
-                reformatDateTime(quoteItemOption.createdDate),
+                fixDTFormat(quoteItemOption.createdDate),
                 now
             );
 

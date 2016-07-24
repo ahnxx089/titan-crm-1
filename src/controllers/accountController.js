@@ -25,6 +25,11 @@ var accountController = function (knex) {
     // ==========================================
     //
 
+    // function to strip "T", decimals, and "Z" from dates
+    var fixDTFormat = function(dateTimeString) {
+        return dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
+    };
+
     var addContactMechCallback = function (addContactMechPromises, contactMechEntities, partyId) {
         if (addContactMechPromises.length > 1) {
             var promise = addContactMechPromises.pop();
@@ -405,6 +410,8 @@ var accountController = function (knex) {
     var updateAccount = function (accountId, account, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_UPDATE');
         if (hasPermission !== -1) {
+            var now = dateTime();
+
             // Convert the received object into an entity
             var accountEntity = new Account(
                 accountId,
@@ -413,8 +420,8 @@ var accountController = function (knex) {
                 account.description,
                 account.statusId,
                 account.createdBy,
-                account.createdDate,
-                dateTime(), //account.updateDate
+                fixDTFormat(account.createdDate),
+                now,
                 account.orgName,
                 account.officeSiteName,
                 account.annualRevenue,

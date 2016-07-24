@@ -10,6 +10,7 @@
 
 var winston = require('winston');
 var Note = require('../entities/note.js');
+var dateTime = require('../common/dateTime');
 
 var noteController = function (knex) {
     // Get a reference to data layer module
@@ -22,6 +23,8 @@ var noteController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new note
      */
     var addNote = function (note) {
+        var now = dateTime();
+
         // Convert the received object into an entity
         var noteEntity = new Note(
             note.noteId,
@@ -29,8 +32,8 @@ var noteController = function (knex) {
             note.noteInfo,
             note.noteDateTime,
             note.noteParty,
-            note.createdDate,
-            note.updatedDate
+            now,
+            now
         );
 
         // Validate the data before going ahead
@@ -54,12 +57,12 @@ var noteController = function (knex) {
     /**
      * Link a note to a case
      * @param {Number} caseId - Unique id of the case
-     * @param {Number} noteId - Unique id of the note 
-     * @return {Object} promise - Fulfillment value is the id of new record in mapping table (case_note) 
+     * @param {Number} noteId - Unique id of the note
+     * @return {Object} promise - Fulfillment value is the id of new record in mapping table (case_note)
      */
     var linkNoteToCase = function (caseId, noteId) {
         var promise = noteData.linkNoteToCase(caseId, noteId)
-            // this .then is actually used. See addCase() in caseData for explanation. 
+            // this .then is actually used. See addCase() in caseData for explanation.
             .then(function (result) {
                 return result;
             });

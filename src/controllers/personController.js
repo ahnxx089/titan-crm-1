@@ -19,6 +19,12 @@ var personController = function (knex) {
     // CONTROLLER METHODS
     // ==========================================
     //
+
+    // function to strip "T", decimals, and "Z" from dates
+    var fixDTFormat = function(dateTimeString) {
+        return dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
+    };
+
     /**
      * Add a new person
      * @param {Object} person - The new person to be added
@@ -42,7 +48,7 @@ var personController = function (knex) {
             person.firstName,
             person.middleName,
             person.lastName,
-            person.birthDate,
+            fixDTFormat(person.birthDate),
             person.comments
         );
         // Validate the data before going ahead

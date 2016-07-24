@@ -16,6 +16,11 @@ var contactMechController = function (knex) {
     //
     var contactMechData = require('../data/contactMechData')(knex);
 
+    // function to strip "T", decimals, and "Z" from dates
+    var fixDTFormat = function(dateTimeString) {
+        return dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
+    };
+
     /**
      * Add a new contact mechanism
      * @param {Object} contactMech - The new contact mechanism to be added
@@ -181,7 +186,6 @@ var contactMechController = function (knex) {
         return promise;
     };
 
-
     var getContactMechById = function (contactMechId) {
         var promise = contactMechData.getContactMechById(contactMechId)
             .then(function (contactMech) {
@@ -233,7 +237,7 @@ var contactMechController = function (knex) {
             contactMech.contactMechTypeId,
             contactMech.contactMechPurposeTypeId,
             contactMech.infoString,
-            contactMech.createdDate,
+            fixDTFormat(contactMech.createdDate),
             now,
             contactMech.countryCode,
             contactMech.areaCode,
