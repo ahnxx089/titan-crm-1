@@ -27,6 +27,11 @@ var leadController = function (knex) {
 
     // CONTROLLER METHODS
     //
+    // function to strip "T", decimals, and "Z" from dates
+    var fixDTFormat = function(dateTimeString) {
+        return dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
+    };
+
     /**
      * Methods in XXXcontroller.js are called from API layer.
      * They take care of assembling lead entities using params given from API layer.
@@ -124,17 +129,17 @@ var leadController = function (knex) {
      */
     var addLead = function (lead, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
-        var now = dateTime();
 
         if (hasPermission !== -1) {
+            var now = dateTime();
+
             // Contact mechanisms
             var contactMechEntities = contactInfoHelper(lead);
 
             var dob;
             if (lead.birthDate) {
                 try {
-                    birthDate = new Date(lead.birthDate).toISOString()
-                    birthDate = birthDate.substring(0,10) + ' ' + birthDate.substring(11,19);
+                    var birthDate = fixDTFormat(lead.birthDate);
                     dob = birthDate;
                 } catch (e) {
                     dob = null;
