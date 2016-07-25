@@ -60,7 +60,7 @@ var quoteApi = function (knex) {
 
             var resultsForThisUser = quoteController.addQuoteItem(req.body, req.user);
 
-            /* Intepret the possible outcomes from the controller layer:
+            /* Interpret the possible outcomes from the controller layer:
                 1.  User does not have permission to add a Quote (thus nor an Item)
                 2.  User does have permission, but supplied data is not validated
                 3.  User does have permission, and a promise is returned
@@ -92,7 +92,7 @@ var quoteApi = function (knex) {
 
             var resultsForThisUser = quoteController.addQuoteItemOption(req.body, req.user);
 
-            /* Intepret the possible outcomes from the controller layer:
+            /* Interpret the possible outcomes from the controller layer:
                 1.  User does not have permission to add a Quote (thus nor an Item Option)
                 2.  User does have permission, but supplied data is not validated
                 3.  User does have permission, and a promise is returned
@@ -138,7 +138,7 @@ var quoteApi = function (knex) {
 
             var resultsForThisUser = quoteController.updateQuoteItem(req.body, req.user);
 
-            /* Intepret the possible outcomes from the controller layer:
+            /* Interpret the possible outcomes from the controller layer:
                 1.  User does not have permission to add a Quote
                 2.  User does have permission, but supplied data is not validated
                 3.  User does have permission, and a promise is returned
@@ -170,7 +170,7 @@ var quoteApi = function (knex) {
 
             var resultsForThisUser = quoteController.updateQuoteItemOption(req.body, req.user);
 
-            /* Intepret the possible outcomes from the controller layer:
+            /* Interpret the possible outcomes from the controller layer:
                 1.  User does not have permission to add a Quote
                 2.  User does have permission, but supplied data is not validated
                 3.  User does have permission, and a promise is returned
@@ -319,7 +319,7 @@ var quoteApi = function (knex) {
         var quote = req.body;
         var resultsForThisUser = quoteController.updateQuote(quoteId, quote, req.user);
 
-        /* Intepret the possible outcomes from the controller layer:
+        /* Interpret the possible outcomes from the controller layer:
             1.  User does not have permission to add a Quote
             2.  User does have permission, but supplied data is not validated
             3.  User does have permission, and a promise is returned
