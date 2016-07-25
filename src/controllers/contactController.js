@@ -28,7 +28,9 @@ var contactController = function (knex) {
 
     // function to strip "T", decimals, and "Z" from dates
     var fixDTFormat = function(dateTimeString) {
-        return dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
+
+        var fixed = dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
+        return ( fixed === ' ' ) ? '' : fixed ;
     };
 
     /**
@@ -481,6 +483,7 @@ var contactController = function (knex) {
                 fixDTFormat(contact.birthDate),
                 contact.comments
             );
+            console.log('contactEntity = ', contactEntity);
 
             var validationErrors = contactEntity.validateForUpdate();
             if (validationErrors.length === 0) {
