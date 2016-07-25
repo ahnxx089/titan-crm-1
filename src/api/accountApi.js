@@ -58,7 +58,7 @@ var accountApi = function (knex) {
                     res.json(JSON.parse(result));
                 }
                 else {
-                    winston.error('No redis');
+                    winston.error('No accounts in redis cache');
                     //Proceed with calling the controller layer as normal.
                     var resultsForThisUser = accountController.getAccountsByOwner(req.user);
                     // IF ELSE block interprets controller returning an object or null

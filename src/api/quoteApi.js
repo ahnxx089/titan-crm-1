@@ -228,7 +228,7 @@ var quoteApi = function (knex) {
                 // Data is NOT in the cache
                 else {
                     // Log the error
-                    winston.error('No redis');
+                    winston.error('No quotes in redis cache');
                     // Get quotes from the database
                     var resultsForThisUser = quoteController.getQuotesByOwner(req.user);
                     // IF ELSE block interprets controller returning an object or null
