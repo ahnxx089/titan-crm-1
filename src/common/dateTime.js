@@ -1,6 +1,7 @@
 /////////////////////////////////////////////////
 // Common module that supplies current date/time
-// in MySQL datetime format
+// in MySQL datetime format and fixes up existing
+// ones in our db prior to Azure deployment
 //
 // @file:    dateTime.js
 // @author:  Dinesh Shenoy <astroshenoy@gmail.com>
@@ -8,12 +9,21 @@
 
 var dateTime = function(){
 
-    var now = (new Date()).toISOString();
+    var now = function(){
+        var rightNow = (new Date()).toISOString();
+        // remove "T", seconds decimals, "Z", and add whitespace in between.
+        return rightNow.substring(0,10) + ' ' + rightNow.substring(11,19);
+    };
 
-    // remove "T", seconds decimals, "Z", and add whitespace in between.
-    now = now.substring(0,10) + ' ' + now.substring(11,19);
+    var fixDTFormat = function(dateTimeString) {
+        var fixed = dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
+        return ( fixed === ' ' ) ? '' : fixed ;
+    };
 
-    return now;
+    return {
+        now: now,
+        fixDTFormat: fixDTFormat
+    };
 
 };
 

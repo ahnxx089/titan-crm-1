@@ -54,7 +54,7 @@ var partyData = function(knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
     */
     var updateParty = function(party) {
-        var now = dateTime();
+        var now = dateTime().now();
 
         return knex('party')
             .where({party_id: party.partyId})

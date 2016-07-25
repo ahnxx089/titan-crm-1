@@ -11,7 +11,7 @@ var ContactMech = require('../../entities/contactMech');
 var dateTime = require('../../common/dateTime');
 
 var contactInfoHelper = function(target) {
-    var now = dateTime();
+    var now = dateTime().now();
     // Convert the received objects into entities (protect the data layer)
     //
     // Contact mechanisms

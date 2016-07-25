@@ -20,12 +20,6 @@ var personController = function (knex) {
     // ==========================================
     //
 
-    // function to strip "T", decimals, and "Z" from dates
-    var fixDTFormat = function(dateTimeString) {
-        var fixed = dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
-        return ( fixed === ' ' ) ? '' : fixed ;
-    };
-
     /**
      * Add a new person
      * @param {Object} person - The new person to be added
@@ -33,7 +27,7 @@ var personController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new person
      */
     var addPerson = function (person, user) {
-        var now = dateTime();
+        var now = dateTime().now();
 
         // Convert the received object into an entity
         var personEntity = new Person(
@@ -49,7 +43,7 @@ var personController = function (knex) {
             person.firstName,
             person.middleName,
             person.lastName,
-            fixDTFormat(person.birthDate),
+            dateTime().fixDTFormat(person.birthDate),
             person.comments
         );
         // Validate the data before going ahead

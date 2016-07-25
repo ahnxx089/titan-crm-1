@@ -26,12 +26,6 @@ var contactController = function (knex) {
     // ==========================================
     //
 
-    // function to strip "T", decimals, and "Z" from dates
-    var fixDTFormat = function(dateTimeString) {
-        var fixed = dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
-        return ( fixed === ' ' ) ? '' : fixed ;
-    };
-
     /**
      * For each promise delivered by addContactMech,
      * create entry in party_contact_mech table
@@ -79,7 +73,7 @@ var contactController = function (knex) {
         // Check user's security permission to add contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
         if (hasPermission !== -1) {
-            var now = dateTime();
+            var now = dateTime().now();
 
             // Convert the received objects into entities (protect the data layer)
             //
@@ -464,7 +458,7 @@ var contactController = function (knex) {
 
         if (hasPermission !== -1) {
 
-            var now = dateTime();
+            var now = dateTime().now();
             //Convert contact to entity
             var contactEntity = new Contact(
                 contactId,
@@ -473,13 +467,13 @@ var contactController = function (knex) {
                 contact.description,
                 contact.statusId,
                 contact.createdBy,
-                fixDTFormat(contact.createdDate),
+                dateTime().fixDTFormat(contact.createdDate),
                 now,
                 contact.salutation,
                 contact.firstName,
                 contact.middleName,
                 contact.lastName,
-                fixDTFormat(contact.birthDate),
+                dateTime().fixDTFormat(contact.birthDate),
                 contact.comments
             );
 

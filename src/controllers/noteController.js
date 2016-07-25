@@ -23,7 +23,7 @@ var noteController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new note
      */
     var addNote = function (note) {
-        var now = dateTime();
+        var now = dateTime().now();
 
         // Convert the received object into an entity
         var noteEntity = new Note(

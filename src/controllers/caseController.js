@@ -26,11 +26,6 @@ var caseController = function (knex) {
     // CONTROLLER METHODS
     // ==========================================
     //
-    // function to strip "T", decimals, and "Z" from dates
-    var fixDTFormat = function(dateTimeString) {
-        var fixed = dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
-        return ( fixed === ' ' ) ? '' : fixed ;
-    };
 
     // Author: Lucas
     /**
@@ -65,7 +60,7 @@ var caseController = function (knex) {
     var addCase = function (case_, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CASE_CREATE');
         if (hasPermission !== -1) {
-            var now = dateTime();
+            var now = dateTime().now();
             // Convert the received objects into entities (protect the data layer)
             //
             // Notes
@@ -297,7 +292,7 @@ var caseController = function (knex) {
     var updateCase = function (caseId, case_, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_UPDATE');
         if (hasPermission !== -1) {
-            var now = dateTime();
+            var now = dateTime().now();
 
             //Convert case to entity
             var caseEntity = new Case(
@@ -307,13 +302,13 @@ var caseController = function (knex) {
                 case_.statusId,
                 case_.fromPartyId,
                 case_.priority,
-                fixDTFormat(case_.caseDate),
-                fixDTFormat(case_.responseRequiredDate),
+                dateTime().fixDTFormat(case_.caseDate),
+                dateTime().fixDTFormat(case_.responseRequiredDate),
                 case_.caseName,
                 case_.description,
                 case_.resolutionId,
                 case_.createdBy,
-                fixDTFormat(case_.createdDate),
+                dateTime().fixDTFormat(case_.createdDate),
                 now
             );
 

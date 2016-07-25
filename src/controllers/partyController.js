@@ -26,7 +26,7 @@ var partyController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new party
      */
     var addParty = function (party, user) {
-        var now = dateTime();
+        var now = dateTime().now();
         // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
         now = now.substring(0,10) + ' ' + now.substring(11,19);
 
@@ -126,7 +126,7 @@ var partyController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateParty = function (partyId, party) {
-        var now = dateTime();
+        var now = dateTime().now();
 
         // Convert the received object into an entity
         var partyEntity = new Party(

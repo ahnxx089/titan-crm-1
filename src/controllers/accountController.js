@@ -25,12 +25,6 @@ var accountController = function (knex) {
     // ==========================================
     //
 
-    // function to strip "T", decimals, and "Z" from dates
-    var fixDTFormat = function(dateTimeString) {
-        var fixed = dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
-        return ( fixed === ' ' ) ? '' : fixed ;
-    };
-
     var addContactMechCallback = function (addContactMechPromises, contactMechEntities, partyId) {
         if (addContactMechPromises.length > 1) {
             var promise = addContactMechPromises.pop();
@@ -64,7 +58,7 @@ var accountController = function (knex) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_CREATE');
         //So only someone with permission CRMSFA_ACCOUNT_CREATE to add a new Account, in this example.
         if (hasPermission !== -1) {
-            var now = dateTime();
+            var now = dateTime().now();
             var contactMechEntities = contactInfoHelper(account);
             // Convert the received object into an entity
             var accountEntity = new Account(
@@ -411,7 +405,7 @@ var accountController = function (knex) {
     var updateAccount = function (accountId, account, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_ACT_UPDATE');
         if (hasPermission !== -1) {
-            var now = dateTime();
+            var now = dateTime().now();
 
             // Convert the received object into an entity
             var accountEntity = new Account(
@@ -421,7 +415,7 @@ var accountController = function (knex) {
                 account.description,
                 account.statusId,
                 account.createdBy,
-                fixDTFormat(account.createdDate),
+                dateTime().fixDTFormat(account.createdDate),
                 now,
                 account.orgName,
                 account.officeSiteName,

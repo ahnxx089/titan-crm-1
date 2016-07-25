@@ -16,19 +16,13 @@ var contactMechController = function (knex) {
     //
     var contactMechData = require('../data/contactMechData')(knex);
 
-    // function to strip "T", decimals, and "Z" from dates
-    var fixDTFormat = function(dateTimeString) {
-        var fixed = dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
-        return ( fixed === ' ' ) ? '' : fixed ;
-    };
-
     /**
      * Add a new contact mechanism
      * @param {Object} contactMech - The new contact mechanism to be added
      * @return {Object} promise - Fulfillment value is id of new party
      */
     var addContactMech = function (contactMech) {
-        var now = dateTime();
+        var now = dateTime().now();
 
         // Convert the received object into an entity
         var contactMechEntity = new ContactMech(
@@ -231,14 +225,14 @@ var contactMechController = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContactMech = function (contactMechId, contactMech) {
-        var now = dateTime();
+        var now = dateTime().now();
 
         var contactMechEntity = new ContactMech(
             contactMechId,
             contactMech.contactMechTypeId,
             contactMech.contactMechPurposeTypeId,
             contactMech.infoString,
-            fixDTFormat(contactMech.createdDate),
+            dateTime().fixDTFormat(contactMech.createdDate),
             now,
             contactMech.countryCode,
             contactMech.areaCode,

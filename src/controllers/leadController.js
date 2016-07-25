@@ -27,11 +27,6 @@ var leadController = function (knex) {
 
     // CONTROLLER METHODS
     //
-    // function to strip "T", decimals, and "Z" from dates
-    var fixDTFormat = function(dateTimeString) {
-        var fixed = dateTimeString.substring(0,10) + ' ' + dateTimeString.substring(11,19);
-        return ( fixed === ' ' ) ? '' : fixed ;
-    };
 
     /**
      * Methods in XXXcontroller.js are called from API layer.
@@ -132,7 +127,7 @@ var leadController = function (knex) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
 
         if (hasPermission !== -1) {
-            var now = dateTime();
+            var now = dateTime().now();
 
             // Contact mechanisms
             var contactMechEntities = contactInfoHelper(lead);
@@ -140,8 +135,7 @@ var leadController = function (knex) {
             var dob;
             if (lead.birthDate) {
                 try {
-                    var birthDate = fixDTFormat(lead.birthDate);
-                    dob = birthDate;
+                    dob = dateTime().fixDTFormat(lead.birthDate);
                 } catch (e) {
                     dob = null;
                 }

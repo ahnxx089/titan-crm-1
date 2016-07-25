@@ -17,7 +17,7 @@ var contactMechData = function (knex) {
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
     var addContactMechToGeneralTable = function (contactMech) {
-        var now = dateTime();
+        var now = dateTime().now();
 
         return knex.insert({
                 contact_mech_type_id: contactMech.contactMechTypeId,
@@ -37,7 +37,7 @@ var contactMechData = function (knex) {
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
     var addContactMechToPostalTable = function (contactMech) {
-        var now = dateTime();
+        var now = dateTime().now();
 
         return knex.insert({
                 contact_mech_id: contactMech.contactMechId,
@@ -66,7 +66,7 @@ var contactMechData = function (knex) {
      * @return {Object} promise - Fulfillment value is id of row inserted
      */
     var addContactMechToTelecomTable = function (contactMech) {
-        var now = dateTime();
+        var now = dateTime().now();
 
         return knex.insert({
                 contact_mech_id: contactMech.contactMechId,
@@ -150,7 +150,7 @@ var contactMechData = function (knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
      */
     var updateContactMech = function (contactMech) {
-        var now = dateTime();
+        var now = dateTime().now();
 
         var telecomNumberFields = {
             country_code: contactMech.countryCode,
@@ -240,7 +240,7 @@ var contactMechData = function (knex) {
     };
 
     var linkContactMechToParty = function (partyId, contactMechId, purposeTypeId) {
-        var now = dateTime();
+        var now = dateTime().now();
 
         return knex.insert({
                 party_id: partyId,
