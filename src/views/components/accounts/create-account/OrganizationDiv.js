@@ -13,6 +13,7 @@ var OrganizationDiv = React.createClass({
 
     render: function () {
         var account = this.props.account;
+
         /* jshint ignore: start */
         return (
             <div>
