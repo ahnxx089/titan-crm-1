@@ -8,8 +8,8 @@
 /* jshint camelcase: false */
 /* jshint maxlen:1000 */
 
-/* TODO: add a method or two for copying a lead's party_supplemental_data values into 
-the newly created entry in that table, then deleting the account-related fields in the new entry. 
+/* TODO: add a method or two for copying a lead's party_supplemental_data values into
+the newly created entry in that table, then deleting the account-related fields in the new entry.
 This is referring to #4 on slide 18.
 */
 var winston = require('winston');
@@ -19,7 +19,7 @@ var accountData = function (knex) {
     var contactMechController = require('../data/contactMechData')(knex);
     var orgData = require('../data/organizationData')(knex);
     var partyData = require('../data/partyData')(knex);
-    
+
     var addAccountParty = function (account) {
         return partyData.addParty(account);
 //        promise.catch(function (error) {
@@ -27,14 +27,12 @@ var accountData = function (knex) {
 //            });
 //        return promise;
     };
-    
+
     var addAccountOrg = function (account) {
         return orgData.addOrganization(account);
     };
-    
+
     var addAccountPartySupplementalData = function (account) {
-        //EMPTY FOR NOW - UNCLEAR ON WHAT MUST GO HERE THAT 
-        //WOULDN'T GO INTO orgData.addOrganization
         return knex.insert({
             party_id: account.partyId,
             parent_party_id: account.parentPartyId,
@@ -53,15 +51,15 @@ var accountData = function (knex) {
             updated_date: account.updatedDate
         }).into('party_supplemental_data');
     };
-    
+
     var addAccountContactMech = function (account) {
         return contactMechController.addContactMech(account);
     };
-    
+
     var addAccountPartyRole = function (account) {
-        
-        //If creating a new account, take the partyId of that account. 
-        //If converting a contact/organization into a lead/account, take the partyId of the newly converted party. 
+
+        //If creating a new account, take the partyId of that account.
+        //If converting a contact/organization into a lead/account, take the partyId of the newly converted party.
         //Then add an entry to the party_role table, using the above partyId value in the party_id column,
         //and "account" as the value in the role_type_id column.
         return knex.insert({
@@ -71,19 +69,19 @@ var accountData = function (knex) {
             updated_date: account.updatedDate
         }).into('party_role');
     };
-    
+
     var addAccountPartyRelationship = function (account, user, contact) {
 
-        //Check if the user is converting a lead 
+        //Check if the user is converting a lead
         //at an organization  into a contact (and thus converting the
         //organization into an account), or creating a new account from scratch.
-        
-        //If it is the first case, then the value of Role_Type_Id_From should be set to "contact". 
-        //Role_Type_Id_To should then be set to "account". From_Date should be set to the datetime when the 
+
+        //If it is the first case, then the value of Role_Type_Id_From should be set to "contact".
+        //Role_Type_Id_To should then be set to "account". From_Date should be set to the datetime when the
         //organization was converted. Party_Id_To should then be set to the new partyId of the account
-        //(which should have been created by addAccountParty above). 
-        
-        //NOTE: right now, no upper-layer functions actually send in a contact 
+        //(which should have been created by addAccountParty above).
+
+        //NOTE: right now, no upper-layer functions actually send in a contact
         //object when calling this function
         if (contact) {
             return knex.insert({
@@ -99,12 +97,12 @@ var accountData = function (knex) {
                 updated_date: account.updatedDate
             }).into('party_relationship');
         }
-            
-        
-        
-        //If it is the second case, then the value of Role_Type_Id_From should be set directly to "account". 
-        //Role_Type_Id_To should then be set to "account_manager". From_Date should be set to the same value 
-        //as Created_Date. Party_Id_To may be set to "admin" or the partyId of the user who made the change, 
+
+
+
+        //If it is the second case, then the value of Role_Type_Id_From should be set directly to "account".
+        //Role_Type_Id_To should then be set to "account_manager". From_Date should be set to the same value
+        //as Created_Date. Party_Id_To may be set to "admin" or the partyId of the user who made the change,
         //if we want to create this functionality. This last bit is optional.
         else {
             return knex.insert({
@@ -122,9 +120,9 @@ var accountData = function (knex) {
         }
     };
 
-    
+
     var addAccount = function (account, user, contact) {
-        //Call all of the previous addAccount___ methods. 
+        //Call all of the previous addAccount___ methods.
         return addAccountParty(account)
             .then(function (accountResults) {
                 account.partyId = parseInt(accountResults[0]);
@@ -145,8 +143,8 @@ var accountData = function (knex) {
                     });
             });
     };
-    
-    /** 
+
+    /**
      * Gets all accounts associated with an owner from database
      * @param {Number} ownerId - This is the party_id of the owner
      * @return {Object} promise - Fulfillment value is a raw data object
@@ -189,9 +187,9 @@ var accountData = function (knex) {
      */
     var getAccountByPhoneNumber = function (phoneNumber) {
         //TELECOM_NUMBER is the value of the contactmechtypeId where we want to join table entries
-        //Is there really a telecom_number table in our titan_crm database? contactData mentions that there 
+        //Is there really a telecom_number table in our titan_crm database? contactData mentions that there
         //is, but I haven't seen one anywhere...
-        
+
         return knex.select('party_supplemental_data.party_id', 'parent_party_id', 'company_name', 'party_supplemental_data.annual_revenue',
             'currency_uom_id', 'party_supplemental_data.num_employees', 'industry_enum_id', 'ownership_enum_id', 'party_supplemental_data.ticker_symbol',
             'important_note', 'primary_postal_address_id', 'primary_telecom_number_id', 'primary_email_id',
@@ -201,7 +199,7 @@ var accountData = function (knex) {
             .innerJoin('party_relationship', 'party_supplemental_data.party_id', 'party_relationship.party_id_from')
             .where('primary_telecom_number_id', phoneNumber);
     };
-    
+
     var getAccountsByIdentity = function (accountId, accountName) {
         var findQuery = knex.select('party.party_id', 'parent_party_id', 'preferred_currency_uom_id', 'description', 'status_id', 'created_by', 'organization.organization_name','party_supplemental_data.company_name', 'party_supplemental_data.annual_revenue',
         'party_supplemental_data.currency_uom_id', 'party_supplemental_data.num_employees', 'party_supplemental_data.industry_enum_id', 'party_supplemental_data.ownership_enum_id', 'party_supplemental_data.ticker_symbol',
@@ -313,7 +311,7 @@ var accountData = function (knex) {
                     });
             });
     };
-    
+
     return {
         addAccount: addAccount,
         getAccountsByOwner: getAccountsByOwner,
@@ -323,7 +321,7 @@ var accountData = function (knex) {
         updateAccount: updateAccount,
         deleteAccount: deleteAccount
     };
-    
+
 
 };
 

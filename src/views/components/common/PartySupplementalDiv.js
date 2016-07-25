@@ -94,8 +94,9 @@ var PartySupplementalDiv = React.createClass({
                             {/* TODO: need to make this really required, rather than setting up in CreateLeadPage */}
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="parentPartyId" placeholder="Parent Account, default 120" onChange={ this.props.onChange } /*value={ this.props.ent.parentPartyId}*/ />
+                                <input type="text" className="form-control" id="parentPartyId" placeholder="Parent Account, default 120" required data-error="Required, integer (up to 11 digits)" onChange={ this.props.onChange } /*value={ this.props.ent.parentPartyId}*/ />
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">

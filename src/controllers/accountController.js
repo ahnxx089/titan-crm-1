@@ -77,7 +77,7 @@ var accountController = function (knex) {
                 account.tickerSymbol,
                 account.comments,
                 account.logoImgURL,
-                account.partyParentId,
+                account.parentPartyId,  //Dinesh replaced:  account.partyParentId,
                 account.industryEnumId,
                 account.ownershipEnumId,
                 account.importantNote,
