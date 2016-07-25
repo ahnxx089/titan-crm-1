@@ -11,10 +11,6 @@ var winston = require('winston');
 var accountApi = function (knex) {
 
     var accountController = require('../controllers/accountController')(knex);
-    var middleware = function (req, res, next) {
-        next();
-    };
-
 
     // API methods
     // ==========================================
