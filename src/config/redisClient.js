@@ -26,6 +26,7 @@ var redisClient = (function () {
     var connectionString = process.env.REDIS_URL || 'redis://localhost:6379';
     var c = redis.createClient(connectionString, {
         retry_strategy: function (options) {
+            console.log('options = ', options);
             if (options.error.code === 'ECONNREFUSED') {
                 // This will suppress the ECONNREFUSED unhandled exception
                 // that results in app crash when redis-server not running

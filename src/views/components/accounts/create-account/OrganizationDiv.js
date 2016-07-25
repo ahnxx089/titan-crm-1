@@ -40,7 +40,7 @@ var OrganizationDiv = React.createClass({
                 <div className="form-group col-md-6">
                     <label className="control-label" htmlFor="logoImgURL">Logo Image URL (required)</label>
                     <div className="">
-                        <input id="logoImgURL" name="logoImgURL" type="url" placeholder="https://samplelogoimage.com" className="form-control input-md" required data-error="Required, format:  https://google.com" onChange={this.props.onChange} value={account.logoImgURL}></input>
+                        <input id="logoImgURL" name="logoImgURL" type="url" placeholder="https://samplelogoimage.com" className="form-control input-md" required data-error="Required, format:  https://yahoo.com" onChange={this.props.onChange} value={account.logoImgURL}></input>
                     </div>
                     <div className="help-block with-errors"></div>
                 </div>
