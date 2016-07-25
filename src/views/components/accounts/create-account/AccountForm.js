@@ -8,7 +8,6 @@
 var React = require('react');
 var OrganizationDiv = require('./OrganizationDiv');
 var PartySupplementalDiv = require('../../common/PartySupplementalDiv');
-var PartyContactDiv = require('../../leads/create-lead/PartyContactDiv');
 var SubmitButton = require('../../common/SubmitButton');
 
 var AccountForm = React.createClass({

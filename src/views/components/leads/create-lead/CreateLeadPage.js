@@ -21,8 +21,8 @@ var CreateLeadPage = React.createClass({
             emptyLead: {
                 partyTypeId: 'PERSON',
                 statusId: 'PARTY_ENABLED',
-                parentPartyId: '120' /* this is added ad hoc */
-                // I (Lucas) am thinking about this. How would a user or a worker know the party id of parent of a lead? That is a party id of a company/organization! 
+                parentPartyId: '' /* For testing, this could be set any valid party id, */
+                // This will have to be overwritten by user, for that input is required 
             },
             dirty: false,
             addedLeadId: ''

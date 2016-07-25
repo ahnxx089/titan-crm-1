@@ -17,7 +17,7 @@ var leadsOwned = [];
 var addedLeadId = ''; 
 // ajax call does not return anything essential. (Actually it returns a jqXHR object, which is a superset of the XMLHTTPRequest object)
 // I must put the useful value in a variable, then retrieve that variable later. 
-// Another workaround is to use callback, or promises, to force execution sync-ly after obtaining jqXHR object. 
+// Another workaround is to use callback, or promises, to force execution async-ly after obtaining jqXHR object. 
 var foundLead = {};
 
 
@@ -65,7 +65,6 @@ LeadsStore.getLeadsByOwner = function() {
     var thisLeadsStore = this;
     
     // jQuery version of ajax
-    
     $.ajax({
         type: 'GET',
         url: '/api/leads/',
@@ -156,7 +155,6 @@ LeadsStore.getAddedLead = function() {
 };
 
 
-//
 // Next two functions are called by FindLeadsPage
 LeadsStore.findLeadById = function(passedId) {
     var thisLeadsStore = this;

@@ -7,9 +7,8 @@
 
 var React = require('react');
 
-//var AddPersonalInfo = require('./AddPersonalInfo');
-var PartyDiv = require('../../common/PartyDiv');
 var PersonDiv = require('./PersonDiv');
+var PartyDiv = require('../../common/PartyDiv');
 var PartySupplementalDiv = require('../../common/PartySupplementalDiv');
 var AddContactMech = require('../../common/AddContactMech');
 var SubmitButton = require('../../common/SubmitButton');
@@ -25,7 +24,7 @@ var AddLeadForm = React.createClass({
         $('#addLeadForm').validator().on('submit', function (e) {
             if (e.isDefaultPrevented()) {
                 console.log('Default is Prevented');
-                // Handle the invalid form
+                // Handle the invalid form: happens when HTML catches invalid input, such as required, data type.
             } else {
                 console.log('Default is not Prevented');
                 // Proceed with form submission if all input data is valid
@@ -38,24 +37,20 @@ var AddLeadForm = React.createClass({
         /* jshint ignore:start */
         return (
             <div>
-                {/*<form>*/} {/* Label B */}
-                <form id="addLeadForm" /* onSubmit={ this.props.onSubmit} */ > 
-
-                    <PartyDiv 
-                        ent={ this.props.lead } 
-                        onChange={ this.props.onChange } />     
+                <form id="addLeadForm" > 
                     <PersonDiv 
                         lead={ this.props.lead } 
                         onChange={ this.props.onChange } />
+                    <PartyDiv 
+                        ent={ this.props.lead } 
+                        onChange={ this.props.onChange } />   
                     <PartySupplementalDiv 
                         ent={ this.props.lead } 
                         onChange={ this.props.onChange } />     
                     <AddContactMech 
                         contact={ this.props.lead } 
                         onChange={ this.props.onChange } />    
-                
                     <SubmitButton />
-                    {/*<SubmitButton onButtonClick={this._onButtonClick} />*/} {/* Label B */}
                 </form>
             </div>
         );

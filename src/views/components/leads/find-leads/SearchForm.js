@@ -19,14 +19,14 @@ var SearchForm = React.createClass({
 
         return (
             <div>
-                {/*<form method="GET" action="/api/leads/" onReset={ this.props.onFormReset }>*/}
                 <form onSubmit={ this.props.onFormSubmit } onReset={ this.props.onFormReset }>
                     <div id="tabs">
-                    {/*<i>Bear with the style, for some days</i>*/}
                       <ul>
                         <li><a href="#tabs-1">Search By ID</a></li>
+            {/*
                         <li><a href="#tabs-2">Search By Identity</a></li>
                         <li><a href="#tabs-3">Search By Phone</a></li>
+            */}
                       </ul>
 
                       <div id="tabs-1">
@@ -50,7 +50,7 @@ var SearchForm = React.createClass({
                             </div>
                         </div>
                       </div>
-
+            {/*
                       <div id="tabs-2">
                         <h3>Coming soon.</h3>
                       </div>
@@ -58,6 +58,7 @@ var SearchForm = React.createClass({
                       <div id="tabs-3">
                         <h3>Coming soon.</h3>
                       </div>
+            */}
                     </div>
 
                     <div className="row">
@@ -71,8 +72,6 @@ var SearchForm = React.createClass({
                     </div>
                 </form>
             </div>
-                
-            
         );
         
         /* jshint ignore:end */

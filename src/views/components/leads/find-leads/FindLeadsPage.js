@@ -92,9 +92,7 @@ var FindLeadsPage = React.createClass({
                             <h1>Find Leads</h1>
                         </div>
                         <div className="panel-body">
-                            <SearchForm 
-//                                onSubmit={ this._findLeads }
-                                
+                            <SearchForm                                 
                                 searchBy={ this.state.searchBy }
                                 onChange={ this.setSearchByState } 
                                 onFormSubmit={ this._findLeads }
