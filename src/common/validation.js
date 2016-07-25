@@ -2,7 +2,7 @@
 // Our own custom validation module.
 // Based on "validator" package.
 //
-// @file:   validation.js
+// @file:    validation.js
 // @authors: Anurag Bhandari <anurag@ofssam.com>
 //           Xiaosiqi Yang <yang4131@umn.edu>
 /////////////////////////////////////////////////
