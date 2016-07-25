@@ -8,14 +8,13 @@
 var React = require('react');
 
 var PersonDiv = React.createClass({
-    // changed class to className, noon June 16
     render: function () {
         /* jshint ignore:start */
         return (
             <div>
                 <div className="row">
                     <div className="col-xs-12">
-                        <h2>Basic Info [PERSON]</h2>
+                        <h2>Person Info </h2>
                     </div>
                 </div>
 
@@ -102,7 +101,4 @@ var PersonDiv = React.createClass({
 
 });
 
-// It is not okay to use double slash // for comments within the render function,
-// at least not after its return statement, OR at least not with HTML tags
-// No             <!-- BASIC PERSON INFO heading -->             style comments either.
 module.exports = PersonDiv;

@@ -1,6 +1,7 @@
 /////////////////////////////////////////////////
 // A party contact info div on Add Lead page.
 // Not used. Use Dinesh's AddContactMech instead. 
+// Will be deleted
 //
 // @file:   PartyContactDiv.js
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
@@ -9,10 +10,10 @@
 var React = require('react');
 
 var PartyContactDiv = React.createClass({
-    // changed class to className, noon June 16
-    // changed input type of three contact mechs to tel, url, email.
+    // Changed input type of three contact mechs to tel, url, email.
     // But React doesn't seem to support them. Will find out.
     // Tel is only supported by Safari browser. 
+    
     render: function () {
         /* jshint ignore:start */
         return (
@@ -225,7 +226,4 @@ var PartyContactDiv = React.createClass({
 
 });
 
-// It is not okay to use double slash // for comments within the render function, 
-// at least not after its return statement, OR at least not with HTML tags
-// No             <!-- BASIC PERSON INFO heading -->             style comments either.
 module.exports = PartyContactDiv;
