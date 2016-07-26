@@ -14,6 +14,7 @@ var LeadsStore = require('../../../stores/LeadsStore');
 var ContactMechEntry = require('../../common/ContactMechRow');
 var CommonStore = require('../../../stores/CommonStore');
 
+// This is needed in local environment
 const timezoneOffset = new Date().getTimezoneOffset(); // 300 in CDT
 
 var LeadDetailPage = React.createClass({
@@ -74,25 +75,20 @@ var LeadDetailPage = React.createClass({
     
     render: function() {
         /* jshint ignore:start */
-        
-//        console.log("location is " + window.location); // something hard to use
-//        var allProps = this.props;
+
         var leadDetails = this.state.leadDetails;
         
-        // TODO: re-modify this time in LeadsStore when first GET them
-        // DONT forget line updated_at time
-        var alreadyChanged = leadDetails.createdDate;
-        var originalInLocal = new Date(alreadyChanged); // Date Object
-        originalInLocal.setMinutes(originalInLocal.getMinutes() - timezoneOffset);
+        // This, as well as modifying the updatedDate, is needed in local environment
+//        var alreadyChanged = leadDetails.createdDate;
+//        var originalInLocal = new Date(alreadyChanged); // Date Object
+//        originalInLocal.setMinutes(originalInLocal.getMinutes() - timezoneOffset);
         
         var contactMechs = leadDetails.partyContactMechs || [];
-//        console.log(leadDetails.partyContactMechs);
-//        console.log(contactMechs.length + "contactMechs.length");
+
         var contactMechsJSX = [];
         for (var i = 0; i < contactMechs.length; i++) {
             contactMechsJSX.push(<ContactMechEntry key={ 'contact_mech_' + i } contactMech={ contactMechs[i]} types={this.state.types} purposeTypes={this.state.purposeTypes} />);
         }
-//        console.log(contactMechsJSX.length);
 
         // The reason it renders differently from ContactDetailPage's render (load empty types and purposeTypes array), 
         // is the difference between getXById in contactController and leadController
@@ -158,14 +154,11 @@ var LeadDetailPage = React.createClass({
                             <div className="row">
                                 <div className="col-xs-12 col-lg-6">
                                     <span className="label label-default">Created Date</span>&nbsp;
-                                    {/* originalInLocal.toString() */}
                                     { leadDetails.createdDate }
-                                    {/* new Date(new Date(leadDetails.createdDate).setMinutes(new Date(leadDetails.createdDate).getMinutes() - 300)).toString() */}
                                 </div>
                                 <div className="col-xs-12 col-lg-6">
-                                    <span className="label label-default">Updated Date (?)</span>&nbsp;
-                                    { leadDetails.createdDate }
-                                    {/* originalInLocal.toString() */}
+                                    <span className="label label-default">Updated Date</span>&nbsp;
+                                    { leadDetails.updatedDate }
                                 </div>
                             </div>
 

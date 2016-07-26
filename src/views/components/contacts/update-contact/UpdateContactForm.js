@@ -11,11 +11,11 @@ var UpdateContactForm = React.createClass({
     getInitialState: function () {
         return {
             contact: {}
-        }
+        };
     },
     componentDidMount: function () {
         var thisUpdateContactForm = this;
-        
+
         $('#updateContact').validator();
     },
     render: function () {
@@ -25,11 +25,12 @@ var UpdateContactForm = React.createClass({
         var onChange = this.props.onChange;
         var currencies = this.props.currencies;
         var currenciesJsx = [];
-        
+
         for (var i=0; i < currencies.length; i++) {
             var uomId = currencies[i].uom_id;
             var label = currencies[i].abbreviation;
-            currenciesJsx.push(<option value={uomId}>{label}</option>);
+            var description = currencies[i].description;
+            currenciesJsx.push(<option value={uomId}>{label} - {description}</option>);
         }
 
         return (
@@ -42,14 +43,14 @@ var UpdateContactForm = React.createClass({
                                 <div className="input-group-addon">
                                     <i className="fa fa-file-text-o" aria-hidden="true"></i>
                                 </div>
-                                <input 
-                                    type="text" 
-                                    className="form-control" 
-                                    id="firstName" 
-                                    value={ contact.firstName || '' } 
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="firstName"
+                                    value={ contact.firstName || '' }
                                     onChange={ onChange }
-                                    pattern="^[A-z0-9]{1,100}$"
-                                    data-error="Hey, look!  A cunstom error!"
+                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
+                                    data-error="Required; max length 100 characters"
                                     required
                                 ></input>
                                 <div className="help-block"></div>
@@ -61,9 +62,21 @@ var UpdateContactForm = React.createClass({
                         <div className="form-group">
                             <label htmlFor="middleName">Middle Name</label>
                             <div className="input-group">
-                                <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="middleName"  value={ contact.middleName || '' } onChange={ onChange }></input>
+                                <div className="input-group-addon">
+                                    <i className="fa fa-file-text-o" aria-hidden="true"></i>
+                                </div>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="middleName"
+                                    value={ contact.middleName || '' }
+                                    onChange={ onChange }
+                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
+                                    data-error="Max length 100 characters"
+                                ></input>
+                                <div className="help-block"></div>
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                 </div>
@@ -73,15 +86,17 @@ var UpdateContactForm = React.createClass({
                         <div className="form-group">
                             <label htmlFor="lastName">Last Name (Required) </label>
                             <div className="input-group">
-                                <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input 
-                                    type="text" 
-                                    className="form-control" 
-                                    id="lastName"  
-                                    value={ contact.lastName || '' } 
+                                <div className="input-group-addon">
+                                    <i className="fa fa-file-text-o" aria-hidden="true"></i>
+                                </div>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="lastName"
+                                    value={ contact.lastName || '' }
                                     onChange={ onChange }
-                                    pattern="^[A-z0-9]{1,100}$"
-                                    data-error="Last Name required (max length 100 characters, alphanumeric only)"
+                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
+                                    data-error="Required; max length 100 characters"
                                     required
                                 ></input>
                                 <div className="help-block"></div>
@@ -93,8 +108,18 @@ var UpdateContactForm = React.createClass({
                         <div className="form-group">
                             <label htmlFor="salutation">Salutation</label>
                             <div className="input-group">
-                                <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="salutation"  value={ contact.salutation || '' } onChange={ onChange }></input>
+                                <div className="input-group-addon">
+                                    <i className="fa fa-file-text-o" aria-hidden="true"></i>
+                                </div>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="salutation"
+                                    value={ contact.salutation || '' }
+                                    onChange={ onChange }
+                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
+                                    data-error="Max length 100 characters"
+                                ></input>
                                 <div className="help-block"></div>
                             </div>
                             <div className="help-block with-errors"></div>
@@ -107,7 +132,9 @@ var UpdateContactForm = React.createClass({
                         <div className="form-group">
                             <label htmlFor="currency">Currency</label>
                             <div className="input-group">
-                                <div className="input-group-addon"><i className="fa fa-usd" aria-hidden="true"></i></div>
+                                <div className="input-group-addon">
+                                    <i className="fa fa-usd" aria-hidden="true"></i>
+                                </div>
                                 <select id="preferredCurrencyUomId" className="form-control" value={ contact.preferredCurrencyUomId} onChange={ onChange }>
                                     <option value={null}></option>
                                     {currenciesJsx}
@@ -133,22 +160,24 @@ var UpdateContactForm = React.createClass({
                         <div className="form-group">
                             <label htmlFor="comments">Comments</label>
                             <div className="input-group">
-                                <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <textarea 
-                                    className="form-control" 
-                                    id="comments" 
-                                    rows="4" 
-                                    value={ contact.comments || '' } 
+                                <div className="input-group-addon">
+                                    <i className="fa fa-file-text-o" aria-hidden="true"></i>
+                                </div>
+                                <textarea
+                                    className="form-control"
+                                    id="comments"
+                                    rows="4"
+                                    value={ contact.comments || '' }
                                     onChange={ onChange }
-                                    pattern="^[?,.;:'!@#$%^&*()_-=+A-z0-9]{1,255}$"
+                                    pattern="^[\x20-\x7E\u00C0-\u00FC]{1,255}$"
+                                    data-error="Max length 255 characters"
                                 >{ contact.comments }</textarea>
-                                <div className="help-block"></div>
                             </div>
                             <div className="help-block with-errors"></div>
                         </div>
                     </div>
                 </div>
-                
+
                 <div className="row">
                     <div className="col-xs-12">
                         <button type="submit" className="btn btn-primary">Update Contact</button>

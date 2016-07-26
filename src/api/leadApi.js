@@ -20,19 +20,19 @@ var leadApi = function (knex) {
     /**
      * Methods in XXXapi.js are called from presentation layer, or by ARC
      * They in turns, stripes the passed params from req, pass params to corresponding functions in leadController
-     * In the end of this flow, res will give the json object back to ARC. 
+     * In the end of this flow, res will give the json object back to ARC.
      * @param {Object} req - The HTTP request
      * @param {Object} res - The HTTP response
      * @return {Object} promise - Fulfillment value is id of new party
      */
     // ==========================================
-    
+
 
     // POST /api/leads
     /**
      * To add a new lead in database
-     * @param {Object} req - The request from presentation layer 
-     * @param {Object} res - The response to presentation layer 
+     * @param {Object} req - The request from presentation layer
+     * @param {Object} res - The response to presentation layer
      */
     var addLead = function (req, res) {
         // lead and user here are striped params from request
@@ -67,24 +67,24 @@ var leadApi = function (knex) {
     // GET /api/leads[/nothing follows]
 
     var getLeadsByOwner = function (req, res) {
-        
+
         var user = req.user;
-        
+
         var redis = redisClient.getClient();
         var cacheKeyName = 'leads_for_party_id_' + req.user.partyId; // unique key
-        
+
         redis.get(cacheKeyName, function (err, result) {
             // IF Data is in the cache
             if (result) {
                 // Convert the cached data string back into JSON before sending out
                 res.json(JSON.parse(result));
-            } 
+            }
             // IF Data is NOT in the cache
             else {
                 //winston.error(err);
-                winston.error('No redis');
+                winston.error('No leads in redis cache');
 
-                var resultForThisUser = leadController.getLeadsByOwner(user); 
+                var resultForThisUser = leadController.getLeadsByOwner(user);
                 if (resultForThisUser === null) {
                     res.json({
                         'message': 'You do not have permission to own or view leads!'
@@ -97,7 +97,7 @@ var leadApi = function (knex) {
                 }
             }
         });
-        
+
     };
 
     // Author: Lucas

@@ -7,8 +7,8 @@
 
 var React = require('react');
 var LeadRow = require('./LeadRow');
-var LeadsStore = require('../../../stores/LeadsStore'); 
-var LeadsActions = require('../../../actions/LeadsActions'); 
+var LeadsStore = require('../../../stores/LeadsStore');
+var LeadsActions = require('../../../actions/LeadsActions');
 
 var MyLeadsPage = React.createClass({
 
@@ -17,12 +17,12 @@ var MyLeadsPage = React.createClass({
             leadsOwned: []
         };
     },
-    
+
     componentDidMount: function () {
-        // Event listener to fire when data retrieved-- 
+        // Event listener to fire when data retrieved--
         // when Store emits,informs this View something happened
         LeadsStore.addGetDataListener(this._onGetByOwner);
-        
+
         // Call the async function to get my leads
         LeadsActions.getLeadsByOwner();
     },
@@ -39,13 +39,15 @@ var MyLeadsPage = React.createClass({
             leadsOwned: LeadsStore.getLeadsOwned()
         });
         // Convert the My Leads HTML table into a nice looking jQuery DataTable
-        $('#myLeadsTable').DataTable();
+        $('#myLeadsTable').DataTable({
+            'order': [[ 0, 'desc']]
+        });
     },
 
     render: function () {
 
-        /* jshint ignore:start */        
-        var leads = this.state.leadsOwned;        
+        /* jshint ignore:start */
+        var leads = this.state.leadsOwned;
         var leadsJSX = [];
 
         for (var i = 0; i < leads.length; i++) {

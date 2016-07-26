@@ -28,7 +28,7 @@ var contactApi = function (knex) {
 
         var resultsForThisUser = contactController.addContact(contact, user);
 
-        /* Intepret the possible outcomes from the controller layer:
+        /* Interpret the possible outcomes from the controller layer:
             1.  User does not have permission to add a Contact
             2.  User does have permission, but supplied data is not validated
             3.  User does have permission, and a promise is returned
@@ -75,7 +75,7 @@ var contactApi = function (knex) {
                 // Data is NOT in the cache
                 else {
                     // Log the error
-                    winston.error('No redis');
+                    winston.error('No contacts in redis cache');
                     // Get contacts from the database
                     var resultsForThisUser = contactController.getContactsByOwner(req.user);
                     // IF ELSE block interprets controller returning an object or null

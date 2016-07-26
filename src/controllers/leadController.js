@@ -16,31 +16,32 @@ var _ = require('lodash');
 var Lead = require('../entities/lead');
 var ContactMech = require('../entities/contactMech');
 var contactInfoHelper = require('../controllers/helpers/contactInfoHelper');
-
+var dateTime = require('../common/dateTime');
 
 var leadController = function (knex) {
     // Get a reference to data layer module, and contactMechController
-    // 
+    //
     var leadData = require('../data/leadData')(knex);
     var contactMechData = require('../data/contactMechData')(knex);
     var contactMechController = require('../controllers/contactMechController')(knex);
-    
+
     // CONTROLLER METHODS
     //
+
     /**
      * Methods in XXXcontroller.js are called from API layer.
-     * They take care of assembling lead entities using params given from API layer. 
-     * They pass the finished entity to leadData where they are inserted. 
-     * They call functions in Data layer to query based on the creteria. 
-     * They assemble lead entities using columns given from data layer, and return them. 
-     * 
+     * They take care of assembling lead entities using params given from API layer.
+     * They pass the finished entity to leadData where they are inserted.
+     * They call functions in Data layer to query based on the creteria.
+     * They assemble lead entities using columns given from data layer, and return them.
+     *
      */
     // ==========================================
 
-    
+
     // Author: Lucas
     /**
-     * Update three contact info fields in party_supplemental_data table, upon the creation of a lead 
+     * Update three contact info fields in party_supplemental_data table, upon the creation of a lead
      * Link this column to party_contact_mech.contact_mech_id
      * @param {Number} partyId - Unique id of the party (grandparent of lead)
      * @param {Object} contactMechId - Unique id of the contact mechanism of the lead
@@ -50,7 +51,7 @@ var leadController = function (knex) {
     var updatePSD = function (partyId, contactMechId, purposeTypeId) {
         var promise = leadData.updatePSD(partyId, contactMechId, purposeTypeId)
             .then(function (result) {
-                return result; // 1 here means 1 row was updated. 
+                return result; // 1 here means 1 row was updated.
             });
 
         // Trying new arrow function in ES6
@@ -59,8 +60,8 @@ var leadController = function (knex) {
         });
         return promise;
     };
-    
-    
+
+
     /**
      * For each promise delivered by contactMechController.addContactMech(),
      * create entry in party_contact_mech table
@@ -110,12 +111,12 @@ var leadController = function (knex) {
             });
         }
     };
-    
-    
+
+
     // Author: Lucas
     /**
-     * Create a new lead entity, validate, pass it to leadData to create a new lead if valid. Otherwise return errors. 
-     * When leadData finished adding this lead, it will return a promise. If error, log the error. 
+     * Create a new lead entity, validate, pass it to leadData to create a new lead if valid. Otherwise return errors.
+     * When leadData finished adding this lead, it will return a promise. If error, log the error.
      * @param {Object} lead - The new lead (from API layer) to be added
      * @param {Object} user - The current logged-in user entity
      * @return {Object} promise - Fulfillment value is id of new lead
@@ -124,33 +125,34 @@ var leadController = function (knex) {
      */
     var addLead = function (lead, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_LEAD_CREATE');
-        var now = (new Date()).toISOString();
 
         if (hasPermission !== -1) {
+            var now = dateTime().now();
+
             // Contact mechanisms
-            var contactMechEntities = contactInfoHelper(lead); 
-            
+            var contactMechEntities = contactInfoHelper(lead);
+
             var dob;
             if (lead.birthDate) {
                 try {
-                    dob = new Date(lead.birthDate).toISOString();
+                    dob = dateTime().fixDTFormat(lead.birthDate);
                 } catch (e) {
                     dob = null;
                 }
             } else {
                 dob = null;
             }
-            
+
             var leadEntity = new Lead(
                 // put dummy data here when testing, eg, null and birthDate
                 // Single quotes are must.
-                
+
                 null, // lead.partyId, auto_incremented in DB
-                'PERSON', // lead.partyTypeId, 
+                'PERSON', // lead.partyTypeId,
                 lead.currencyUomId,
                 lead.description,
                 'PARTY_ENABLED', // lead.statusId,
-                user.userId, 
+                user.userId,
                 now,
                 now,
                 // for party
@@ -158,7 +160,7 @@ var leadController = function (knex) {
                 lead.firstName,
                 lead.middleName,
                 lead.lastName,
-                dob, 
+                dob,
                 lead.comments,
                 // for person
                 lead.parentPartyId,
@@ -172,7 +174,7 @@ var leadController = function (knex) {
                 lead.importantNote,
                 // for party_supplemental_data (partially). The rest three attributes will be done at updatePSD
 
-                'LEAD' //lead.roleTypeId. 
+                'LEAD' //lead.roleTypeId.
 
             );
 
@@ -182,14 +184,14 @@ var leadController = function (knex) {
                 // Pass on the entity to be added to the data layer
                 // insert new lead, get the promise first
                 var promise = leadData.addLead(leadEntity);
-                
+
                 // code block below: to add contactMech
                 var addContactMechPromises = [];
                 var mechPromise;
                 for (var i = 0; i < contactMechEntities.length; i++) {
                     mechPromise = contactMechController.addContactMech(contactMechEntities[i]);
                     // return type of mechPromise can be a promise, or an array (validationErrors)
-                    
+
                     if(mechPromise instanceof Array) {
                         // the condition is same as (mechPromise.constructor === Array)
                         return mechPromise;
@@ -203,12 +205,12 @@ var leadController = function (knex) {
                         });
                     }
                 }
-                
+
                 promise.catch(function (error) {
                     winston.error(error);
                 });
-                
-                
+
+
                 if (addContactMechPromises.length > 0) {
                     // there should not be any potential errors in here
                     return promise.then(function (partyId) {
@@ -229,7 +231,7 @@ var leadController = function (knex) {
 
     // Author: Lucas
     /**
-     * Gets all leads created by owner 
+     * Gets all leads created by owner
      * @param {Object} user - Passed user object. DIFFERENT FROM userId, which is a number, of logged-in user (owner)
      * @return {Object} promise - Fulfillment value is an array of lead entities
      */
@@ -272,9 +274,9 @@ var leadController = function (knex) {
                             leads[i].important_note,
 
                             leads[i].role_type_id
-                            
-                            // because this does not JOIN with contactMech related relations, some fields are not present 
-                            
+
+                            // because this does not JOIN with contactMech related relations, some fields are not present
+
                         );
                         leadEntities.push(lead);
                     }
@@ -377,7 +379,7 @@ var leadController = function (knex) {
             return null;
         }
     };
-    
+
 
     return {
         // left is returnName, right is defedName

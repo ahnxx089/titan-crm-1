@@ -9,6 +9,7 @@
 
 var winston = require('winston');
 var Person = require('../entities/person');
+var dateTime = require('../common/dateTime');
 
 var personController = function (knex) {
     // Get a reference to data layer module
@@ -18,6 +19,7 @@ var personController = function (knex) {
     // CONTROLLER METHODS
     // ==========================================
     //
+
     /**
      * Add a new person
      * @param {Object} person - The new person to be added
@@ -25,9 +27,7 @@ var personController = function (knex) {
      * @return {Object} promise - Fulfillment value is id of new person
      */
     var addPerson = function (person, user) {
-        var now = (new Date()).toISOString();
-        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
-        now = now.substring(0,10) + ' ' + now.substring(11,19);
+        var now = dateTime().now();
 
         // Convert the received object into an entity
         var personEntity = new Person(
@@ -43,7 +43,7 @@ var personController = function (knex) {
             person.firstName,
             person.middleName,
             person.lastName,
-            person.birthDate,
+            dateTime().fixDTFormat(person.birthDate),
             person.comments
         );
         // Validate the data before going ahead

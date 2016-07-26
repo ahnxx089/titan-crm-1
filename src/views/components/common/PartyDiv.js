@@ -1,5 +1,6 @@
 /////////////////////////////////////////////////
 // A party info div on Add XX page.
+// Currently only used in AddLeadForm.js
 //
 // @file:   PartyDiv.js
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
@@ -42,7 +43,6 @@ var PartyDiv = React.createClass({
     },
     
     
-    
     render: function () {
         
         /* jshint ignore:start */
@@ -65,7 +65,7 @@ var PartyDiv = React.createClass({
             <div>
                 <div className="row">
                     <div className="col-xs-12">
-                        <h2>Basic Info [PARTY]</h2>
+                        <h2>Party Info </h2>
                     </div>
                 </div>
             {/* ent stands for entity, either a lead or account */}
@@ -92,38 +92,7 @@ var PartyDiv = React.createClass({
                         </div>
                     </div>
                 </div>
-
-                {/*<div className="row">
                 
-                    <div className="col-lg-6 col-xs-12">
-                        <div className="form-group">
-                            <label htmlFor="partyTypeId">Party Type Id *</label>
-                            <div className="input-group">
-                                <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <select id="partyTypeId" className="form-control" required>
-                                 <option value="PERSON">PERSON</option>
-                                 <option value="ORGANIZATION">Organization</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="col-lg-6 col-xs-12">
-                        <div className="form-group">
-                            <label htmlFor="statusId">Status *</label>
-                            <div className="input-group">
-                                <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <select id="statusId" className="form-control" onChange={ this.props.onChange} value={this.props.ent.statusId} required >
-                                    <option disabled value=''> -- select an option -- </option>
-                                    <option value="PARTY_ENABLED">ENABLED</option>
-                                    <option value="PARTY_DISABLED">DISABLED</option>
-                                    <option value="PTYLEAD_CONVERTED">CONVERTED</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>*/} {/* End of row div */}
             </div>
         );
         /* jshint ignore:end */

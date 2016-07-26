@@ -100,7 +100,6 @@ var CreateContactPage = React.createClass({
     },
 
     render: function (){
-
         /* jshint ignore:start */
         return (
             <div>

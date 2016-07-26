@@ -6,6 +6,7 @@
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
+var dateTime = require('../common/dateTime');
 
 var partyData = function(knex) {
 
@@ -53,9 +54,7 @@ var partyData = function(knex) {
      * @return {Object} promise - Fulfillment value is number of rows updated
     */
     var updateParty = function(party) {
-        var now = (new Date()).toISOString();
-        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
-        now = now.substring(0,10) + ' ' + now.substring(11,19);
+        var now = dateTime().now();
 
         return knex('party')
             .where({party_id: party.partyId})

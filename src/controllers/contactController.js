@@ -13,6 +13,7 @@ var winston = require('winston');
 var Contact = require('../entities/contact');
 var ContactMech = require('../entities/contactMech');
 var _ = require('lodash');
+var dateTime = require('../common/dateTime');
 
 var contactController = function (knex) {
     // Get a reference to data layer module
@@ -72,9 +73,7 @@ var contactController = function (knex) {
         // Check user's security permission to add contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_CREATE');
         if (hasPermission !== -1) {
-            var now = (new Date()).toISOString();
-            // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
-            now = now.substring(0,10) + ' ' + now.substring(11,19);
+            var now = dateTime().now();
 
             // Convert the received objects into entities (protect the data layer)
             //
@@ -173,7 +172,6 @@ var contactController = function (knex) {
 
             if (validationErrors.length === 0) {
                 // Pass on the entities with info to be added to the data layer
-                console.log('\nAttempting to POST contactEntity = ', contactEntity);
                 var promise = contactData.addContact(contactEntity, user);
 
                 var addContactMechPromises = [];
@@ -216,6 +214,7 @@ var contactController = function (knex) {
         // Check user's security permission to own contacts
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_VIEW');
         if (hasPermission !== -1) {
+
             var promise = contactData.getContactById(contactId)
                 .then(function (contacts) {
                     var contactEntity;
@@ -377,8 +376,8 @@ var contactController = function (knex) {
             var extend = function (obj, src) {
                 for (var key in src) {
                     if (src.hasOwnProperty(key)) {
-                        obj[key] = src[key]
-                    };
+                        obj[key] = src[key];
+                    }
                 }
                 return obj;
             };
@@ -456,11 +455,10 @@ var contactController = function (knex) {
      */
     var updateContact = function (contactId, contact, user) {
         var hasPermission = _.indexOf(user.securityPermissions, 'CRMSFA_CONTACT_UPDATE');
-        var now = (new Date()).toISOString();
-        // remove "T" and decimals and "Z" from UTC_TIMESTAMP();
-        now = now.substring(0,10) + ' ' + now.substring(11,19);
 
         if (hasPermission !== -1) {
+
+            var now = dateTime().now();
             //Convert contact to entity
             var contactEntity = new Contact(
                 contactId,
@@ -469,13 +467,13 @@ var contactController = function (knex) {
                 contact.description,
                 contact.statusId,
                 contact.createdBy,
-                contact.createdDate,
+                dateTime().fixDTFormat(contact.createdDate),
                 now,
                 contact.salutation,
                 contact.firstName,
                 contact.middleName,
                 contact.lastName,
-                contact.birthDate,
+                dateTime().fixDTFormat(contact.birthDate),
                 contact.comments
             );
 

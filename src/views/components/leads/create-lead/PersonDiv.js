@@ -8,14 +8,13 @@
 var React = require('react');
 
 var PersonDiv = React.createClass({
-    // changed class to className, noon June 16
     render: function () {
         /* jshint ignore:start */
         return (
             <div>
                 <div className="row">
                     <div className="col-xs-12">
-                        <h2>Basic Info [PERSON]</h2>
+                        <h2>Person Info </h2>
                     </div>
                 </div>
 
@@ -28,14 +27,18 @@ var PersonDiv = React.createClass({
                                 <input type="text" className="form-control" id="salutation" placeholder="Salutation" onChange={ this.props.onChange } value={ this.props.lead.salutation} />
                             </div>
                         </div>
-                    </div>                
+                    </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
                             <label htmlFor="firstName">First Name *</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="firstName" placeholder="First Name" maxlength="100" onChange={ this.props.onChange } value={ this.props.lead.firstName} required /> 
+                                <input type="text" className="form-control" id="firstName" placeholder="First Name"
+                                pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
+                                data-error="Required; max length 100 characters"
+                                onChange={ this.props.onChange } value={ this.props.lead.firstName} required />
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                 </div>
@@ -46,8 +49,12 @@ var PersonDiv = React.createClass({
                             <label htmlFor="middleName">Middle Name</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="middleName" placeholder="Middle Name" maxlength="80" onChange={ this.props.onChange } value={ this.props.lead.middleName} />
+                                <input type="text" className="form-control" id="middleName" placeholder="Middle Name"
+                                pattern="^[\x20-\x7E\u00C0-\u00FC]{1,80}$"
+                                data-error="Required; max length 80 characters"
+                                onChange={ this.props.onChange } value={ this.props.lead.middleName} />
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
@@ -55,8 +62,12 @@ var PersonDiv = React.createClass({
                             <label htmlFor="lastName">Last Name *</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
-                                <input type="text" className="form-control" id="lastName" placeholder="Last Name" maxlength="100" onChange={ this.props.onChange } value={ this.props.lead.lastName} required/>
+                                <input type="text" className="form-control" id="lastName" placeholder="Last Name"
+                                pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
+                                data-error="Required; max length 100 characters"
+                                onChange={ this.props.onChange } value={ this.props.lead.lastName} required/>
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                 </div>
@@ -83,14 +94,11 @@ var PersonDiv = React.createClass({
                     </div>
                 </div>
             </div>
-            
+
         );
         /* jshint ignore:end */
     }
 
 });
 
-// It is not okay to use double slash // for comments within the render function, 
-// at least not after its return statement, OR at least not with HTML tags
-// No             <!-- BASIC PERSON INFO heading -->             style comments either.
 module.exports = PersonDiv;

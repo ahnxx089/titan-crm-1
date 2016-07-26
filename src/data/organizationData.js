@@ -7,11 +7,13 @@
 
 /* jshint camelcase: false */
 var winston = require('winston');
+var dateTime = require('../common/dateTime');
 
 var orgData = function (knex) {
-    
+
+
     /**
-     * Add a new organization in database  
+     * Add a new organization in database
      *
      * @param {Object} organization - The new organization entity to be added
      * @return {Object} promise - Fulfillment value is id of row inserted
@@ -33,9 +35,6 @@ var orgData = function (knex) {
     };
 
 
-    
-        
-
     /**
      * Gets all organizations from database
      * @return {Object} promise - Fulfillment value is an array of raw data objects
@@ -54,7 +53,7 @@ var orgData = function (knex) {
             .from('organization')
             .where({party_id: id});
     };
-    
+
 
     /**
      * Update an organization in database
@@ -72,7 +71,7 @@ var orgData = function (knex) {
                 ticker_symbol: organization.tickerSymbol,
                 comments: organization.comments,
                 logo_image_url: organization.logoImgURL,
-                updated_date: (new Date()).toISOString()
+                updated_date: dateTime()
             });
      };
 
@@ -93,10 +92,10 @@ var orgData = function (knex) {
         updateOrganization: updateOrganization,
         deleteOrganization: deleteOrganization
     };
-    
-    
+
+
 };
-    
+
 
 
 module.exports = orgData;

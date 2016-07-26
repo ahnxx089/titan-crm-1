@@ -11,10 +11,6 @@ var winston = require('winston');
 var accountApi = function (knex) {
 
     var accountController = require('../controllers/accountController')(knex);
-    var middleware = function (req, res, next) {
-        next();
-    };
-
 
     // API methods
     // ==========================================
@@ -49,10 +45,10 @@ var accountApi = function (knex) {
     var getAccounts = function (req, res) {
         //If nothing is specified in the query string, use getAccountsByOwner as the default
         if (Object.keys(req.query).length === 0) {
-            //Since we are retrieving a data list that would be both accessed frequently and changed rarely, implementing caching here is preferred for performance optimization. 
+            //Since we are retrieving a data list that would be both accessed frequently and changed rarely, implementing caching here is preferred for performance optimization.
             //First we check whether the data being requested is already in the cache. If it is, we send it along.
-            //If it isn't in the cache, then we proceed to calling the controller layer for the normal process, and then we end by copying that data into the cache. 
-            //We only implement redis caching for the getByOwner method here, because search requests for specific accounts would not be made nearly as frequently as requests for My Accounts. 
+            //If it isn't in the cache, then we proceed to calling the controller layer for the normal process, and then we end by copying that data into the cache.
+            //We only implement redis caching for the getByOwner method here, because search requests for specific accounts would not be made nearly as frequently as requests for My Accounts.
             var redis = redisClient.getClient();
             //create a unique key for this cache
             var cacheKeyName = 'accounts_for_partyId_' + req.user.partyId;
@@ -62,7 +58,7 @@ var accountApi = function (knex) {
                     res.json(JSON.parse(result));
                 }
                 else {
-                    winston.error('No redis');
+                    winston.error('No accounts in redis cache');
                     //Proceed with calling the controller layer as normal.
                     var resultsForThisUser = accountController.getAccountsByOwner(req.user);
                     // IF ELSE block interprets controller returning an object or null
@@ -76,11 +72,11 @@ var accountApi = function (knex) {
                             redis.setex(cacheKeyName, 60, JSON.stringify(accounts));
                             res.json(accounts);
                         });
-                        
+
                     }
                 }
             });
-            
+
         }
         //If query strings are non-empty, use getAccountsByIdentity
 
@@ -100,7 +96,7 @@ var accountApi = function (knex) {
                 });
             }
         }
-        // Get Account By Identity 
+        // Get Account By Identity
         else if (req.query.hasOwnProperty('accountId') || req.query.hasOwnProperty('accountName')) {
             var resultForThisAccount =
                 accountController.getAccountsByIdentity(req.query, req.user);

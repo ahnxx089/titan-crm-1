@@ -121,8 +121,7 @@ var AddContactMech = React.createClass({
                                     id="webAddress"
                                     placeholder="www.google.com"
                                     pattern="^[._-=+A-z0-9]{1,255}$"
-                                    maxlength="255"
-                                    data-error="(max length 255 characters)"
+                                    data-error="Max length 255 characters"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.webAddress } />
                             </div>
@@ -152,7 +151,7 @@ var AddContactMech = React.createClass({
                                     id="countryCode"
                                     placeholder="1"
                                     max="9999999999"
-                                    data-error="(max length 10 digits)"
+                                    data-error="Max length 10 digits"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.countryCode } />
                             </div>
@@ -171,7 +170,7 @@ var AddContactMech = React.createClass({
                                     id="areaCode"
                                     placeholder="202"
                                     max="9999999999"
-                                    data-error="(max length 10 digits)"
+                                    data-error="Max length 10 digits"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.areaCode } />
                             </div>
@@ -243,7 +242,7 @@ var AddContactMech = React.createClass({
                                     id="toName"
                                     placeholder="Jane Doe"
                                     pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
-                                    data-error="(max length 100 characters)"
+                                    data-error="Max length 100 characters"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.toName }/>
                             </div>
@@ -262,7 +261,7 @@ var AddContactMech = React.createClass({
                                     id="attnName"
                                     placeholder="Jane Doe"
                                     pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
-                                    data-error="(max length 100 characters)"
+                                    data-error="Max length 100 characters"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.attnName }/>
                             </div>
@@ -284,7 +283,7 @@ var AddContactMech = React.createClass({
                                     id="address1"
                                     placeholder="123 Anywhere Lane"
                                     pattern="^[\x20-\x7E\u00C0-\u00FC]{1,255}$"
-                                    data-error="(max length 255 characters)"
+                                    data-error="Max length 255 characters"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.address1 }/>
                             </div>
@@ -303,7 +302,7 @@ var AddContactMech = React.createClass({
                                     id="address2"
                                     placeholder="Suite #100"
                                     pattern="^[\x20-\x7E\u00C0-\u00FC]{1,255}$"
-                                    data-error="(max length 255 characters)"
+                                    data-error="Max length 255 characters"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.address2 }/>
                             </div>
@@ -325,7 +324,7 @@ var AddContactMech = React.createClass({
                                     id="city"
                                     placeholder="My Town"
                                     pattern="^[\x20-\x7E\u00C0-\u00FC]{1,100}$"
-                                    maxlength="100" data-error="(max length 100 characters)"
+                                    data-error="Max length 100 characters"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.city }/>
                             </div>
@@ -364,7 +363,7 @@ var AddContactMech = React.createClass({
                                     id="zipOrPostalCode"
                                     placeholder="12345-6789"
                                     pattern="^[-\d ]{1,20}$"
-                                    data-error="(max length 20 digits)"
+                                    data-error="Max length 20 digits"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.zipOrPostalCode }/>
                             </div>
@@ -403,7 +402,7 @@ var AddContactMech = React.createClass({
                                     id="directions"
                                     placeholder=""
                                     pattern="^[\x20-\x7E\u00C0-\u00FC]{1,255}$"
-                                    data-error="(max length 255 characters)"
+                                    data-error="Max length 255 characters"
                                     onChange={ this.props.onChange }
                                     value={ this.props.contact.directions }/>
                             </div>
