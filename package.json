@@ -2,9 +2,6 @@
   "name": "titan-crm",
   "version": "1.0.0",
   "description": "Enterprise-grade customer relationship management application",
-  "engines": {
-    "node": "6.3.0"
-  },
   "main": "app.js",
   "scripts": {
     "test": "./node_modules/.bin/jasmine-node test",
