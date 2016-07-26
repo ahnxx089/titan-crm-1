@@ -424,7 +424,7 @@ var accountController = function (knex) {
                 account.tickerSymbol,
                 account.comments,
                 account.logoImgURL,
-                account.partyParentId, // Note from Lucas: this could be wrong
+                account.parentPartyId,
                 account.industryEnumId,
                 account.ownershipEnumId,
                 account.importantNote,
