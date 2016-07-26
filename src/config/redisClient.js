@@ -23,41 +23,27 @@ var redisClient = (function () {
 
     // Attempt to create a new instance of an actual redis client
     //
+    // For the Azure-deployed app, REDIS_URL is defined; locally it is not.
     var connectionString = process.env.REDIS_URL || 'redis://localhost:6379';
 
-    /* COMMENTED OUT IN FAVOR OF TRYING OUT THE IF-ELSE BLOCK BELOW
-    var c = redis.createClient(connectionString, {
-        retry_strategy: function (options) {
-            console.log('options = ', options);
-            if (options.error.code === 'ECONNREFUSED') {
-                // This will suppress the ECONNREFUSED unhandled exception
-                // that results in app crash when redis-server not running
-                return;
-            }
-        }
-    });
-    */
+    /* Running locally without redis-server crashes the app unless redis.createClient()
+        is passed function retry_strategy, in which options.error.code is tested.
+        On the Azure-deploy, however, options.error.code is null and leads to recurring
+        error:
 
-    /* This if-else block is a trial to deal with this regularly occurring error
-        in the Azure deploy:
+            Application has thrown an uncaught exception and is terminated:
+                TypeError: Cannot read property 'code' of null
+                at Object.redis.createClient.retry_strategy (D:\home\site\wwwroot\src\config\redisClient.js:29:30)
 
-        Application has thrown an uncaught exception and is terminated:
-            TypeError: Cannot read property 'code' of null
-            at Object.redis.createClient.retry_strategy (D:\home\site\wwwroot\src\config\redisClient.js:29:30)
-
-        Locally, when the redis-server is not running, the "options" object in retry_strategy has
-        options.error.code, but it doesn't on Azure app...
+        This if-else block handles the situation differently for Azure vs. local
      */
     var c;
-
-    // if-else block to allow for running the app locally without redis-server
     if (process.env.REDIS_URL) {
-        // assumes deployed app will have a redis server running
+        // assumes Azure-deployed app will have a redis server running always
         c = redis.createClient(connectionString);
     } else {
         c = redis.createClient(connectionString, {
             retry_strategy: function (options) {
-                console.log('options = ', options);
                 if (options.error.code === 'ECONNREFUSED') {
                     // This will suppress the ECONNREFUSED unhandled exception
                     // that results in app crash when redis-server not running locally
@@ -66,7 +52,6 @@ var redisClient = (function () {
             }
         });
     }
-
 
     // Set the "client" variable to the actual redis client instance
     // once a connection is established with the Redis server
