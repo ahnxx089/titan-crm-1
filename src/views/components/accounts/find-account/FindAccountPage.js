@@ -8,7 +8,7 @@
 var React = require('react');
 var ReactRouter = require('react-router');
 
-var FindAccountForm = require('./FindAccountForm'); 
+var FindAccountForm = require('./FindAccountForm');
 var AccountsStore = require('../../../stores/AccountsStore');
 var AccountsActions = require('../../../actions/AccountsActions');
 
@@ -33,7 +33,7 @@ var FindAccountPage = React.createClass({
         
     },
     
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         // avoids console error, accompanies function call in componentDidMount
         
         AccountsStore.removeListener('getByIdentity', this._onFindedAccount);
@@ -58,7 +58,7 @@ var FindAccountPage = React.createClass({
 
     _resetForm: function (event) {
         this.setState({
-            idField: { accountId: '' }, 
+            idField: { accountId: '' },
             nameField: { accountName: ''},
             contactsFound: null
         });
@@ -77,10 +77,10 @@ var FindAccountPage = React.createClass({
             accountName: accountName
         };
 
-        if (partyId.length > 0){
+        if (accountId.length > 0) {
             AccountsActions.getAccountById(accountId);
         }
-        if  (accountName.length > 0) {
+        if (accountName.length > 0) {
             AccountsActions.getAccountsByIdentity(identity);
         }
     },
@@ -95,18 +95,18 @@ var FindAccountPage = React.createClass({
     
     
     
-    render: function (){
+    render: function () {
         
-        /* jshint ignore:start */  
+        /* jshint ignore:start */
         
         var accounts = this.state.accountsOwned;
         var accountsJSX = [];
         // for a result from initiating action getAccountssByIdentity(identity)
         
-        if ( Object.prototype.toString.call(accounts) === '[object Object]' ){
+        if (Object.prototype.toString.call(accounts) === '[object Object]') {
             // when search by Id turns up no result, the returned object lacks a partyId, 
             // so this prevents an empty row from rendering
-            if (accounts.hasOwnProperty('accountId')){
+            if (accounts.hasOwnProperty('accountId')) {
                 accountsJSX.push(<AccountRow key={ 'account_0' } account={ accounts }/>);
             }
         }
