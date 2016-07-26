@@ -18,7 +18,7 @@ var FindAccountPage = React.createClass({
         Find By accountID  --> accountsfield.partyId,
         Find By accountName --> namefield. accountName
     */
-    getInitialState: function() {
+    getInitialState: function () {
         return {
             accountsOwned: null
         };
@@ -125,7 +125,7 @@ var FindAccountPage = React.createClass({
                                 <h1>Find Account</h1>
                             </div>
                             <div className="panel-body">
-                            <SearchForm
+                            <FindAccountForm
                                 idField={ this.state.idField }
                                 nameField={ this.state.nameField }
                                 onIdFieldChange={ this.setIdFieldState }
