@@ -97,7 +97,7 @@ var HomePage = React.createClass({
 
                 <div className="row">
 
-                    <div className="col-lg-3 col-xs-12">
+                    <div className="col-lg-3 col-md-6 col-xs-12">
                         <Link to={ '/cp/leads/my-leads/'} id="homePageLinks">
                             <div className="well" id="homePageLeads">
                                 <div className="row">
@@ -112,7 +112,7 @@ var HomePage = React.createClass({
                         </Link>
                     </div>
 
-                    <div className="col-lg-3 col-xs-12">
+                    <div className="col-lg-3 col-md-6 col-xs-12">
                         <Link to={ '/cp/contacts/my-contacts/'} id="homePageLinks">
                             <div className="well" id="homePageContacts">
                                 <div className="row">
@@ -127,7 +127,7 @@ var HomePage = React.createClass({
                         </Link>
                     </div>
 
-                    <div className="col-lg-3 col-xs-12">
+                    <div className="col-lg-3 col-md-6 col-xs-12">
                         <Link to={ '/cp/accounts/my-accounts/'} id="homePageLinks">
                             <div className="well" id="homePageAccts">
                                 <div className="row">
@@ -142,7 +142,7 @@ var HomePage = React.createClass({
                         </Link>
                     </div>
 
-                    <div className="col-lg-3 col-xs-12">
+                    <div className="col-lg-3 col-md-6 col-xs-12">
                         <Link to={ '/cp/quotes/my-quotes/'} id="homePageLinks">
                             <div className="well" id="homePageQuotes">
                                 <div className="row">
