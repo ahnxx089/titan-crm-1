@@ -41,7 +41,7 @@ var MyAccountsPage = React.createClass({
             accountsOwned: AccountsStore.getAccountsOwned()
         });
         //Here we convert the HTML table for My Accounts into a jQuery
-        //DataTable for a smoother UI experience
+        //DataTable for a smoother UI experience (ordered descending by partyId)
         $('#myAccountsTable').DataTable({
             'order': [[1, 'desc']]
         });
