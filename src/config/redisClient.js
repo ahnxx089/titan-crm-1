@@ -39,7 +39,8 @@ var redisClient = (function () {
      */
     var c;
     if (process.env.REDIS_URL) {
-        // assumes Azure-deployed app will have a redis server running always
+        // assumes Azure-deployed app will have a redis server running always;
+        // no retry_strategy function supplied.
         c = redis.createClient(connectionString);
     } else {
         c = redis.createClient(connectionString, {
