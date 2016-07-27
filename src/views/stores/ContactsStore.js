@@ -206,7 +206,7 @@ ContactsStore.getContactsByPhoneNumber = function(phoneNumber) {
 
     // an empty search box comes in as empty string, keep as empty string;
     // if not empty then clean off any whitespaces (reminder: cannot not send empty string to validation.sanitizeInput,
-    // which returns null in that case, which would make e.g. var lastName = null instead of = '' )
+    // which returns null in that case, which would make e.g. var contactNumber = null instead of = '' )
     var contactNumber = (phoneNumber.contactNumber === '' ? '' : validation.sanitizeInput(phoneNumber.contactNumber));
     var countryCode   = (phoneNumber.countryCode   === '' ? '' : validation.sanitizeInput(phoneNumber.countryCode  ));
     var areaCode      = (phoneNumber.areaCode      === '' ? '' : validation.sanitizeInput(phoneNumber.areaCode     ));

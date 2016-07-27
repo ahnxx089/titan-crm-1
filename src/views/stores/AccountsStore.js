@@ -146,7 +146,7 @@ AccountsStore.getAccountsByIdentity = function(identity) {
     
     // an empty search box for first or last name comes in as empty string, keep as empty string;
     // if not empty then clean off any whitespaces (reminder: cannot not send empty string to validation.sanitizeInput,
-    // which returns null in that case, which would make e.g. var lastName = null instead of = '' )
+    // which returns null in that case, which would make e.g. var accountId = null instead of = '' )
     var accountId = (identity.accountId === '' ? '' : validation.sanitizeInput(identity.accountId));
     var accountName = (identity.accountName === '' ? '' : validation.sanitizeInput(identity.accountName));
 

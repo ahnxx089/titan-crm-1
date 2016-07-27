@@ -21,7 +21,7 @@ var ContactDetailPage = React.createClass({
             types: [],
             purposeTypes: [],
             accounts: [],
-            case: []
+            cases: []
         };
     },
     componentDidMount: function () {
@@ -155,23 +155,7 @@ var ContactDetailPage = React.createClass({
                             </tbody>
                         </table>
                     </div>
-                    <div className="panel panel-info">
-                        <div className="panel-heading">
-                            <h3 className="panel-title">Cases</h3>
-                        </div>
-                        <table id="contactsTable" className='table'>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>???</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
 
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
         );

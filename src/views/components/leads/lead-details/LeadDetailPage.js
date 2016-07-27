@@ -264,23 +264,6 @@ var LeadDetailPage = React.createClass({
 
                             </tbody>
                         </table>
-                    </div>
-                    <div className="panel panel-info">
-                        <div className="panel-heading">
-                            <h3 className="panel-title">Cases</h3>
-                        </div>
-                        <table id="contactsTable" className='table'>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>???</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
                     </div> {/* End of panel-info for the last table */}
 
                 </div> {/* End of panel-default */}
