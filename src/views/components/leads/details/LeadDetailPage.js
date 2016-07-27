@@ -77,7 +77,7 @@ var LeadDetailPage = React.createClass({
         /* jshint ignore:start */
 
         var leadDetails = this.state.leadDetails;
-        
+
         // This, as well as modifying the updatedDate, is needed in local environment
 //        var alreadyChanged = leadDetails.createdDate;
 //        var originalInLocal = new Date(alreadyChanged); // Date Object
@@ -89,7 +89,7 @@ var LeadDetailPage = React.createClass({
         for (var i = 0; i < contactMechs.length; i++) {
             contactMechsJSX.push(<ContactMechEntry key={ 'contact_mech_' + i } contactMech={ contactMechs[i]} types={this.state.types} purposeTypes={this.state.purposeTypes} />);
         }
-
+            
         // The reason it renders differently from ContactDetailPage's render (load empty types and purposeTypes array), 
         // is the difference between getXById in contactController and leadController
         return (

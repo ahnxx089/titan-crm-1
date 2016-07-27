@@ -364,7 +364,6 @@ var leadController = function (knex) {
                             leads[0].role_type_id,
                             //
                             partyContactMechs
-
                         );
                     }
                     return leadEntity;

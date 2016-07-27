@@ -121,11 +121,11 @@ var PartySupplementalDiv = React.createClass({
                                         { accountPartiesJSX }
                                 </select>
                             </div>
+                            {/* The next line will display error messages. See http://1000hz.github.io/bootstrap-validator/ */}
                             <div className="help-block with-errors"></div>
                         </div>
                     </div>
                     
-                                  
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
                             <label htmlFor="companyName">Company Name</label>

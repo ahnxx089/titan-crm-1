@@ -20,14 +20,13 @@ var ContactMech = require('../entities/contactMech');
 
 // not all specified parameters in presentation layer are passed to or used here in this constructor
 
-function Lead
-    (partyId, /*PK, SHARED #1 */
+function Lead(partyId, /*PK, SHARED #1 */
     partyTypeId, /*FK #2, party_type.party_type_id, in this case a PERSON */
     currencyUomId, /*FK #3, uom.uom_id */
     description,
     statusId, /*FK #4, status_item.status_id */
     createdBy, /*FK #5, user_login.user_login_id */
-    createdDate, 
+    createdDate,
     updatedDate, /* SHARED 6,7 */
     // for Party
 
@@ -38,8 +37,10 @@ function Lead
     industryEnumId, /*FK */ ownershipEnumId, /*FK */ tickerSymbol, importantNote,
     // for party_supplemental_data. 
 
-    roleTypeId /*FK, role_type.role_type, in this case a LEAD */
+    roleTypeId, /*FK, role_type.role_type, in this case a LEAD */
     // for party_role
+    
+    partyContactMechs
 
 ) {
     Person.call(this, partyId, partyTypeId, currencyUomId, description,
@@ -55,10 +56,9 @@ function Lead
     this.ownershipEnumId = ownershipEnumId;
     this.tickerSymbol = tickerSymbol;
     this.importantNote = importantNote;
-
     this.roleTypeId = roleTypeId;
+    this.partyContactMechs = partyContactMechs;
 }
-
 
 // Inherit from Person (and automatically implictly from Party)
 Lead.prototype = Object.create(Person.prototype);
