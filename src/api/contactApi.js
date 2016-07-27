@@ -86,8 +86,8 @@ var contactApi = function (knex) {
                     } else {
                         resultsForThisUser.then(function (contacts) {
                             // Cache the data as a JSON string;
-                            // set it to expire after 60 secs
-                            redis.setex(cacheKeyName, 60, JSON.stringify(contacts));
+                            // set it to expire after 30 secs
+                            redis.setex(cacheKeyName, 30, JSON.stringify(contacts));
                             res.json(contacts);
                         });
                     }

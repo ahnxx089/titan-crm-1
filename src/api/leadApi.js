@@ -91,7 +91,7 @@ var leadApi = function (knex) {
                     });
                 } else {
                     resultForThisUser.then(function (leads) {
-                        redis.setex(cacheKeyName, 60, JSON.stringify(leads));
+                        redis.setex(cacheKeyName, 30, JSON.stringify(leads));
                         res.json(leads);
                     });
                 }

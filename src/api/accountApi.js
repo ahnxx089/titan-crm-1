@@ -69,7 +69,7 @@ var accountApi = function (knex) {
                     }
                     else {
                         resultsForThisUser.then(function (accounts) {
-                            redis.setex(cacheKeyName, 60, JSON.stringify(accounts));
+                            redis.setex(cacheKeyName, 30, JSON.stringify(accounts));
                             res.json(accounts);
                         });
 

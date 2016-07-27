@@ -240,8 +240,8 @@ var quoteApi = function (knex) {
                     else {
                         resultsForThisUser.then(function (quotes) {
                             // Cache the data as a JSON string;
-                            // set it to expire after 60 secs
-                            redis.setex(cacheKeyName, 60, JSON.stringify(quotes));
+                            // set it to expire after 30 secs
+                            redis.setex(cacheKeyName, 30, JSON.stringify(quotes));
                             res.json(quotes);
                         });
                     }
