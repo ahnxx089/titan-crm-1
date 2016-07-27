@@ -142,16 +142,17 @@ var PartySupplementalDiv = React.createClass({
                 <div className="row">
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label htmlFor="annualRevenue">Annual revenue</label>
+                            <label htmlFor="annualRevenue">Annual revenue (required)</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-money" aria-hidden="true"></i></div>
                                 <input type="number" className="form-control" id="annualRevenue" placeholder="Annual revenue" onChange={ this.props.onChange } value={ this.props.ent.annualRevenue} />
                             </div>
+                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label htmlFor="numEmployees">Number of Employees</label>
+                            <label htmlFor="numEmployees">Number of Employees (required)</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-file-text-o" aria-hidden="true"></i></div>
                                 <input type="number" className="form-control" id="numEmployees" placeholder="Number of Employees" onChange={ this.props.onChange } value={ this.props.ent.numEmployees} />
