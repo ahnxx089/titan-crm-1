@@ -43,7 +43,7 @@ var MyAccountsPage = React.createClass({
         //Here we convert the HTML table for My Accounts into a jQuery
         //DataTable for a smoother UI experience
         $('#myAccountsTable').DataTable({
-            'order': [[0, 'desc']]
+            'order': [[1, 'desc']]
         });
     },
 
@@ -59,8 +59,8 @@ var MyAccountsPage = React.createClass({
             /* jshint ignore: start */
             <div className="container">
                 <div className="panel panel-default">
-                    <div className="panel-heading">   
-                        <h2>My Accounts</h2>  
+                    <div className="panel-heading">
+                        <h2>My Accounts</h2>
                     </div>
                     <div className="panel-body">
                         <AccountTable accounts={accountsList} />

@@ -36,22 +36,22 @@ var PartySupplementalDiv = React.createClass({
         CommonStore.removeListener('getSalesChannels', this._onGetSalesChannels);
         CommonStore.removeListener('getAccountParties', this._onGetAccountParties);
     },
-    
+
     _onGetOwnerships: function () {
         this.setState({
             ownershipsObjArray: CommonStore.getOwnershipsObjArray()
         });
     },
-    
+
     _onGetSalesChannels: function () {
         this.setState({
             salesChannelsObjArray: CommonStore.getSalesChannelsObjArray()
         });
     },
-    
+
     _onGetAccountParties: function () {
-        this.setState({ 
-            accountPartiesObjArray: CommonStore.getAccountPartiesObjArray() 
+        this.setState({
+            accountPartiesObjArray: CommonStore.getAccountPartiesObjArray()
         });
     },
 
@@ -74,7 +74,7 @@ var PartySupplementalDiv = React.createClass({
         for (var i = 0; i < salesChannels.length; i++) {
             salesChannelsJSX.push(<IndustryOption key={ 'salesChannel_' + i } salesChannel={ salesChannels[i] }/>);
         }
-        
+
         var accountParties = this.state.accountPartiesObjArray;
         var accountPartiesJSX = [];
         var noAccountParty = { party_id: null };
@@ -92,7 +92,7 @@ var PartySupplementalDiv = React.createClass({
                 </div>
 
                 <div className="row">
-                    
+
                     {/*
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
@@ -105,15 +105,14 @@ var PartySupplementalDiv = React.createClass({
                         </div>
                     </div>
                     */}
-                    
-                    
+
+
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
-                            <label htmlFor="parentPartyId">Parent Account * </label>
+                            <label htmlFor="parentPartyId">Parent Account</label>
                             <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-bars" aria-hidden="true"></i></div>
                                 <select
-                                    required
                                     className="form-control"
                                     id="parentPartyId"
                                     onChange={ this.props.onChange }
@@ -121,11 +120,10 @@ var PartySupplementalDiv = React.createClass({
                                         { accountPartiesJSX }
                                 </select>
                             </div>
-                            <div className="help-block with-errors"></div>
                         </div>
                     </div>
-                    
-                                  
+
+
                     <div className="col-lg-6 col-xs-12">
                         <div className="form-group">
                             <label htmlFor="companyName">Company Name</label>
