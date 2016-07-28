@@ -67,7 +67,6 @@ var quoteController = function (knex) {
             }
             if (validationErrors.length === 0) {
                 // Pass on the entity to be added to the data layer
-                console.log('\nAttempting to POST quoteEntity = ', quoteEntity);
                 var promise = quoteData.addQuote(quoteEntity)
                     .then(function (quoteId) {
                         return quoteId; //quoteData.addQuoteRole(quoteId);
