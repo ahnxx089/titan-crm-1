@@ -69,7 +69,7 @@ var quoteController = function (knex) {
                 // Pass on the entity to be added to the data layer
                 var promise = quoteData.addQuote(quoteEntity)
                     .then(function (quoteId) {
-                        return quoteId; //quoteData.addQuoteRole(quoteId);
+                        return quoteId;
                     });
                 promise.catch(function (error) {
                     winston.error(error);
