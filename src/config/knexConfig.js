@@ -15,7 +15,8 @@ var knexConfig = function() {
             pool: {
                 min: 2,
                 max: 10,
-                idleTimeout: 5 * 1000
+                idleTimeout: 5 * 1000,
+                syncInterval: 5 * 1000
             }
         });
     };
