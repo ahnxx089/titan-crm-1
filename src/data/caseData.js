@@ -75,7 +75,7 @@ var caseData = function (knex) {
                             .insert({
                                 case_id: cid,
                                 party_id: case_.fromPartyId,
-                                role_type_id: 'CONTACT',
+                                role_type_id: 'CONTACT', // see file history using git for more details
                                 created_date: case_.createdDate,
                                 updated_date: case_.updatedDate
                             }).then(function () {
