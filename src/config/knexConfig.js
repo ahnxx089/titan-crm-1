@@ -15,9 +15,7 @@ var knexConfig = function() {
             pool: {
                 min: 2,
                 max: 10,
-                ping: function (resource, callback) {
-                    resource.ping(callback);
-                }
+                syncInterval: 1*1000
             }
         });
     };
