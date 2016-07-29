@@ -12,15 +12,6 @@ var knexConfig = function() {
         return knex({
             client: 'mysql',
             connection: process.env.TITANCRM_DB_URL || 'mysql://root:@localhost/titan_crm',
-            pool: {
-                ping: function(connection, callback) {
-                    connection.query({text: 'SELECT 1 = 1'}, [], callback);
-                },
-                min: 2,
-                max: 10,
-                idleTimeout: 5 * 1000,
-                syncInterval: 5 * 1000
-            }
         });
     };
 
