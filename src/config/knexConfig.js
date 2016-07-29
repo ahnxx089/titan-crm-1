@@ -14,8 +14,7 @@ var knexConfig = function() {
             connection: process.env.TITANCRM_DB_URL || 'mysql://root:@localhost/titan_crm',
             pool: {
                 min: 2,
-                max: 10,
-                syncInterval: 1*1000
+                max: 15
             }
         });
     };
