@@ -86,13 +86,13 @@ Organization.prototype.validateForUpdate = function () {
 
 Organization.prototype.validateOrgName = function(isRequired) {
     this.orgName = validation.sanitizeInput(this.orgName);
-    var validationResult = validation.validateString(this.orgName, isRequired, 90, 'orgName');
+    var validationResult = validation.validateString(this.orgName, isRequired, 100, 'orgName');
     return validationResult;
 };
 
 Organization.prototype.validateOfficeSiteName = function(isRequired) {
     this.officeSiteName = validation.sanitizeInput(this.officeSiteName);
-    var validationResult = validation.validateString(this.officeSiteName, isRequired, 40, 'officeSiteName');
+    var validationResult = validation.validateString(this.officeSiteName, isRequired, 100, 'officeSiteName');
     return validationResult;
 };
 
@@ -118,20 +118,20 @@ Organization.prototype.validateNumEmployees = function(isRequired) {
 
 Organization.prototype.validateTickerSymbol = function(isRequired) {
     this.tickerSymbol = validation.sanitizeInput(this.tickerSymbol);
-    var validationResult = validation.validateString(this.tickerSymbol, isRequired, 100, 'tickerSymbol');
+    var validationResult = validation.validateString(this.tickerSymbol, isRequired, 10, 'tickerSymbol');
     return validationResult;
 };
 
 Organization.prototype.validateComments = function(isRequired) {
     this.comments = validation.sanitizeInput(this.comments);
-    var validationResult = validation.validateString(this.comments, isRequired, 100, 'comments');
+    var validationResult = validation.validateString(this.comments, isRequired, 255, 'comments');
     return validationResult;
 };
 
 //Consider creating a new validation method for URLs in common/validation.js so that you can validate as URL here
 Organization.prototype.validateLogoImgURL = function(isRequired) {
     this.logoImgURL = validation.sanitizeInput(this.logoImgURL);
-    var validationResult = validation.validateString(this.logoImgURL, isRequired, 100, 'logoImgURL');
+    var validationResult = validation.validateString(this.logoImgURL, isRequired, 255, 'logoImgURL');
     return validationResult;
 };
 
