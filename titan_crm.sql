@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: us-cdbr-azure-northcentral-b.cloudapp.net
--- Generation Time: Jul 27, 2016 at 02:39 AM
+-- Generation Time: Jul 30, 2016 at 04:56 AM
 -- Server version: 5.5.45-log
 -- PHP Version: 5.6.20
 
@@ -935,7 +935,27 @@ INSERT INTO `contact_mech` (`contact_mech_id`, `contact_mech_type_id`, `info_str
 (701, 'EMAIL_ADDRESS', 'john@gmail.com', '2016-07-25 17:14:14', '2016-07-25 17:14:14'),
 (711, 'EMAIL_ADDRESS', 'ts@gmail.com', '2016-07-25 18:24:29', '2016-07-25 18:24:29'),
 (721, 'EMAIL_ADDRESS', 'hu.shih@china.gov', '2016-07-25 22:05:44', '2016-07-25 22:05:44'),
-(731, 'WEB_ADDRESS', 'www.china.gov', '2016-07-25 22:05:44', '2016-07-25 22:05:44');
+(731, 'WEB_ADDRESS', 'www.china.gov', '2016-07-25 22:05:44', '2016-07-25 22:05:44'),
+(732, 'TELECOM_NUMBER', NULL, '2016-07-27 03:43:01', '2016-07-27 03:43:01'),
+(741, 'WEB_ADDRESS', 'www.republic.gov/jedi', '2016-07-27 03:43:01', '2016-07-27 03:43:01'),
+(751, 'EMAIL_ADDRESS', 'anakin@jedi.org', '2016-07-27 03:43:01', '2016-07-27 03:43:01'),
+(761, 'EMAIL_ADDRESS', 'betsy@ross.com', '2016-07-27 05:56:30', '2016-07-27 05:56:30'),
+(771, 'WEB_ADDRESS', 'www.flags.com', '2016-07-27 05:56:30', '2016-07-27 05:56:30'),
+(781, 'TELECOM_NUMBER', NULL, '2016-07-27 05:56:30', '2016-07-27 05:56:30'),
+(791, 'EMAIL_ADDRESS', 'john@gmail.com', '2016-07-27 20:22:11', '2016-07-27 20:22:11'),
+(792, 'WEB_ADDRESS', 'www.visit-andorra.com', '2016-07-28 00:08:26', '2016-07-28 00:08:26'),
+(801, 'EMAIL_ADDRESS', 'juan.valdez@andorra.gov', '2016-07-28 00:08:26', '2016-07-28 00:08:26'),
+(802, 'POSTAL_ADDRESS', NULL, '2016-07-28 00:08:26', '2016-07-28 00:08:26'),
+(811, 'TELECOM_NUMBER', NULL, '2016-07-28 00:08:26', '2016-07-28 00:08:26'),
+(821, 'EMAIL_ADDRESS', 'penny@pos-prods.com', '2016-07-28 00:11:32', '2016-07-28 00:11:32'),
+(831, 'WEB_ADDRESS', 'www.stay-positive.com', '2016-07-28 00:11:32', '2016-07-28 00:11:32'),
+(841, 'TELECOM_NUMBER', NULL, '2016-07-28 00:11:32', '2016-07-28 00:11:32'),
+(851, 'POSTAL_ADDRESS', NULL, '2016-07-28 00:11:32', '2016-07-28 00:11:32'),
+(852, 'EMAIL_ADDRESS', 'penny@pos-prods.com', '2016-07-28 00:11:42', '2016-07-28 00:11:42'),
+(861, 'TELECOM_NUMBER', NULL, '2016-07-28 00:11:42', '2016-07-28 00:11:42'),
+(871, 'POSTAL_ADDRESS', NULL, '2016-07-28 00:11:42', '2016-07-28 00:11:42'),
+(881, 'WEB_ADDRESS', 'www.stay-positive.com', '2016-07-28 00:11:42', '2016-07-28 00:11:42'),
+(891, 'EMAIL_ADDRESS', 'democracy@in.america', '2016-07-28 21:47:42', '2016-07-28 21:47:42');
 
 -- --------------------------------------------------------
 
@@ -2302,12 +2322,12 @@ INSERT INTO `note_data` (`note_id`, `note_name`, `note_info`, `note_date_time`, 
 CREATE TABLE `organization` (
   `party_id` int(11) NOT NULL,
   `organization_name` varchar(100) NOT NULL,
-  `office_site_name` varchar(100) NOT NULL,
-  `annual_revenue` decimal(18,2) NOT NULL,
-  `num_employees` decimal(20,0) NOT NULL,
-  `ticker_symbol` varchar(10) NOT NULL,
-  `comments` varchar(255) NOT NULL,
-  `logo_image_url` varchar(255) NOT NULL,
+  `office_site_name` varchar(100) DEFAULT NULL,
+  `annual_revenue` decimal(18,2) DEFAULT NULL,
+  `num_employees` decimal(20,0) DEFAULT NULL,
+  `ticker_symbol` varchar(10) DEFAULT NULL,
+  `comments` varchar(255) DEFAULT NULL,
+  `logo_image_url` varchar(255) DEFAULT NULL,
   `created_date` datetime NOT NULL,
   `updated_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -2326,7 +2346,13 @@ INSERT INTO `organization` (`party_id`, `organization_name`, `office_site_name`,
 (471, 'Acme Advantage', 'Home office', '10000000.00', '50', 'ACA', 'Acme has an advantage', 'https://acme.com', '2016-07-25 05:30:07', '2016-07-25 05:30:07'),
 (481, 'Acme Advantage', 'Home office', '10000000.00', '50', 'ACA', 'Acme has an advantage', 'https://acme.com', '2016-07-25 05:30:26', '2016-07-25 05:30:26'),
 (491, 'Acme Advantage', 'Home office', '10000000.00', '89', 'ACA', 'Acme has the advantage!', 'https://acme.com', '2016-07-25 06:24:13', '2016-07-25 06:24:13'),
-(501, 'Electronics Excellence', 'Headquarters', '22529435.00', '100', 'EEX', 'EE Excels', 'https://ee.com', '2016-07-25 06:26:34', '2016-07-25 06:26:34');
+(501, 'Electronics Excellence', 'Headquarters', '22529435.00', '100', 'EEX', 'EE Excels', 'https://ee.com', '2016-07-25 06:26:34', '2016-07-25 06:26:34'),
+(601, 'Positive Products', 'Headquarters', '23000000.00', '450', 'PPR', 'They keep it positive', 'https://positive-products.com', '2016-07-27 05:35:56', '2016-07-27 05:35:56'),
+(611, 'Mighty Management Services Division', 'Home office', '3400000.00', '12', 'MMSD', NULL, 'https://mm.com', '2016-07-27 05:38:32', '2016-07-27 05:38:32'),
+(621, 'Wally''s Working Widgets', 'Factory', '590000000.00', '234', 'WWW', 'Their widgets always work-- so the ones we ship them better work!', 'https://wally-works.com', '2016-07-27 05:41:31', '2016-07-27 05:41:31'),
+(671, 'Microsoft', 'Microsoft Redmond Campus', '93580000000.00', '118584', 'MSFT', 'This is a sample account for Microsoft', 'http://fullhdpictures.com/wp-content/uploads/2016/01/Microsoft-Logo-HD.jpg', '2016-07-27 15:22:26', '2016-07-27 15:22:26'),
+(731, 'Apple', 'Apple Campus', '233715000000.00', '115000', 'AAPL', 'This is a sample account for Apple', 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg', '2016-07-27 15:41:49', '2016-07-27 15:41:49'),
+(771, 'fdsa', 'site', '50.00', '3', NULL, NULL, NULL, '2016-07-27 16:09:23', '2016-07-27 16:09:23');
 
 -- --------------------------------------------------------
 
@@ -2574,7 +2600,39 @@ INSERT INTO `party` (`party_id`, `party_type_id`, `preferred_currency_uom_id`, `
 (531, 'PERSON', 'BRR', NULL, 'PARTY_ENABLED', 'admin', '2016-07-25 14:59:27', '2016-07-25 14:59:27'),
 (541, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', 'admin', '2016-07-25 17:14:14', '2016-07-25 17:14:14'),
 (551, 'PERSON', NULL, NULL, 'PARTY_ENABLED', 'leadOwnerABC', '2016-07-25 18:24:29', '2016-07-25 18:24:29'),
-(561, 'PERSON', 'CNY', NULL, 'PARTY_ENABLED', 'admin', '2016-07-25 22:05:44', '2016-07-25 22:05:44');
+(561, 'PERSON', 'CNY', NULL, 'PARTY_ENABLED', 'admin', '2016-07-25 22:05:44', '2016-07-25 22:05:44'),
+(571, 'PERSON', NULL, 'This is a jedi master from the republic', 'PARTY_ENABLED', 'leadOwnerABC', '2016-07-27 03:43:01', '2016-07-27 03:43:01'),
+(581, 'PERSON', NULL, NULL, 'PARTY_ENABLED', 'leadOwnerABC', '2016-07-27 03:44:11', '2016-07-27 03:44:11'),
+(591, 'PERSON', NULL, 'user_login_id=testerABC', 'PARTY_ENABLED', NULL, '2016-07-27 05:08:42', '2016-07-27 05:08:42'),
+(601, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'admin', '2016-07-27 05:35:56', '2016-07-27 05:35:56'),
+(611, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'testerABC', '2016-07-27 05:38:32', '2016-07-27 05:38:32'),
+(621, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'testerABC', '2016-07-27 05:41:31', '2016-07-27 05:41:31'),
+(631, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', 'testerABC', '2016-07-27 05:56:30', '2016-07-27 05:56:30'),
+(641, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-27 15:20:17', '2016-07-27 15:20:17'),
+(651, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-27 15:20:07', '2016-07-27 15:20:07'),
+(661, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-27 15:21:06', '2016-07-27 15:21:06'),
+(671, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-27 15:22:26', '2016-07-27 15:22:26'),
+(681, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-27 15:39:47', '2016-07-27 15:39:47'),
+(691, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-27 15:40:49', '2016-07-27 15:40:49'),
+(701, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-27 15:41:16', '2016-07-27 15:41:16'),
+(711, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-27 15:41:21', '2016-07-27 15:41:21'),
+(721, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-27 15:41:41', '2016-07-27 15:41:41'),
+(731, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-27 15:41:49', '2016-07-27 15:41:49'),
+(741, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', 'leadOwnerABC', '2016-07-27 16:07:47', '2016-07-27 16:07:47'),
+(751, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'leadOwnerABC', '2016-07-27 16:08:09', '2016-07-27 16:08:09'),
+(761, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'leadOwnerABC', '2016-07-27 16:08:21', '2016-07-27 16:08:21'),
+(771, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'leadOwnerABC', '2016-07-27 16:09:23', '2016-07-27 16:09:23'),
+(781, 'PERSON', NULL, NULL, 'PARTY_ENABLED', 'leadOwnerABC', '2016-07-27 16:10:56', '2016-07-27 16:10:56'),
+(791, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', 'admin', '2016-07-27 20:22:11', '2016-07-27 20:22:11'),
+(801, 'PERSON', 'ADP', NULL, 'PARTY_ENABLED', 'testerABC', '2016-07-28 00:08:26', '2016-07-28 00:08:26'),
+(802, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', 'testerABC', '2016-07-28 00:11:32', '2016-07-28 00:11:32'),
+(811, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', 'testerABC', '2016-07-28 00:11:42', '2016-07-28 00:11:42'),
+(821, 'PERSON', 'EUR', NULL, 'PARTY_ENABLED', 'testerABC', '2016-07-28 21:47:42', '2016-07-28 21:47:42'),
+(831, 'PERSON', 'USD', NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-30 00:47:46', '2016-07-30 00:47:46'),
+(841, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-30 00:59:14', '2016-07-30 00:59:14'),
+(851, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-30 00:58:57', '2016-07-30 00:58:57'),
+(861, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-30 00:59:24', '2016-07-30 00:59:24'),
+(871, 'ORGANIZATION', NULL, NULL, 'PARTY_ENABLED', 'contactOwnerABC', '2016-07-30 00:59:44', '2016-07-30 00:59:44');
 
 -- --------------------------------------------------------
 
@@ -2751,7 +2809,23 @@ INSERT INTO `party_contact_mech` (`party_id`, `contact_mech_id`, `contact_mech_p
 (541, 701, 'PRIMARY_EMAIL', '2016-07-25 17:14:15', NULL, NULL, NULL, '2016-07-25 17:14:15', '2016-07-25 17:14:15'),
 (551, 711, 'PRIMARY_EMAIL', '2016-07-25 18:24:30', NULL, NULL, NULL, '2016-07-25 18:24:30', '2016-07-25 18:24:30'),
 (561, 721, 'PRIMARY_EMAIL', '2016-07-25 22:05:44', NULL, NULL, NULL, '2016-07-25 22:05:44', '2016-07-25 22:05:44'),
-(561, 731, 'PRIMARY_WEB_URL', '2016-07-25 22:05:44', NULL, NULL, NULL, '2016-07-25 22:05:44', '2016-07-25 22:05:44');
+(561, 731, 'PRIMARY_WEB_URL', '2016-07-25 22:05:44', NULL, NULL, NULL, '2016-07-25 22:05:44', '2016-07-25 22:05:44'),
+(571, 732, 'PRIMARY_PHONE', '2016-07-27 03:43:01', NULL, NULL, NULL, '2016-07-27 03:43:01', '2016-07-27 03:43:01'),
+(571, 741, 'PRIMARY_WEB_URL', '2016-07-27 03:43:01', NULL, NULL, NULL, '2016-07-27 03:43:01', '2016-07-27 03:43:01'),
+(571, 751, 'PRIMARY_EMAIL', '2016-07-27 03:43:11', NULL, NULL, NULL, '2016-07-27 03:43:11', '2016-07-27 03:43:11'),
+(631, 761, 'PRIMARY_EMAIL', '2016-07-27 05:56:30', NULL, NULL, NULL, '2016-07-27 05:56:30', '2016-07-27 05:56:30'),
+(631, 771, 'PRIMARY_WEB_URL', '2016-07-27 05:56:30', NULL, NULL, NULL, '2016-07-27 05:56:30', '2016-07-27 05:56:30'),
+(631, 781, 'PRIMARY_PHONE', '2016-07-27 05:56:30', NULL, NULL, NULL, '2016-07-27 05:56:30', '2016-07-27 05:56:30'),
+(791, 791, 'PRIMARY_EMAIL', '2016-07-27 20:22:12', NULL, NULL, NULL, '2016-07-27 20:22:12', '2016-07-27 20:22:12'),
+(801, 792, 'PRIMARY_WEB_URL', '2016-07-28 00:08:26', NULL, NULL, NULL, '2016-07-28 00:08:26', '2016-07-28 00:08:26'),
+(801, 801, 'PRIMARY_EMAIL', '2016-07-28 00:08:27', NULL, NULL, NULL, '2016-07-28 00:08:27', '2016-07-28 00:08:27'),
+(801, 802, 'PRIMARY_LOCATION', '2016-07-28 00:08:26', NULL, NULL, NULL, '2016-07-28 00:08:26', '2016-07-28 00:08:26'),
+(801, 811, 'PRIMARY_PHONE', '2016-07-28 00:08:26', NULL, NULL, NULL, '2016-07-28 00:08:26', '2016-07-28 00:08:26'),
+(811, 852, 'PRIMARY_EMAIL', '2016-07-28 00:11:42', NULL, NULL, NULL, '2016-07-28 00:11:42', '2016-07-28 00:11:42'),
+(811, 861, 'PRIMARY_PHONE', '2016-07-28 00:11:42', NULL, NULL, NULL, '2016-07-28 00:11:42', '2016-07-28 00:11:42'),
+(811, 871, 'PRIMARY_LOCATION', '2016-07-28 00:11:42', NULL, NULL, NULL, '2016-07-28 00:11:42', '2016-07-28 00:11:42'),
+(811, 881, 'PRIMARY_WEB_URL', '2016-07-28 00:11:42', NULL, NULL, NULL, '2016-07-28 00:11:42', '2016-07-28 00:11:42'),
+(821, 891, 'PRIMARY_EMAIL', '2016-07-28 21:47:42', NULL, NULL, NULL, '2016-07-28 21:47:42', '2016-07-28 21:47:42');
 
 -- --------------------------------------------------------
 
@@ -2925,7 +2999,17 @@ INSERT INTO `party_relationship` (`party_id_from`, `party_id_to`, `role_type_id_
 (351, 2, 'CONTACT', 'PERSON_ROLE', '2016-07-25 01:50:46', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-07-25 01:50:46', '2016-07-25 04:54:48'),
 (491, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-07-25 06:24:13', NULL, NULL, 'RESPONSIBLE_FOR', '2016-07-25 06:24:13', '2016-07-25 06:24:13'),
 (501, 2, 'ACCOUNT', 'PERSON_ROLE', '2016-07-25 06:26:34', NULL, NULL, 'RESPONSIBLE_FOR', '2016-07-25 06:26:34', '2016-07-25 06:26:34'),
-(541, 3, 'CONTACT', 'PERSON_ROLE', '2016-07-25 17:14:14', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-07-25 17:14:14', '2016-07-25 17:14:14');
+(541, 3, 'CONTACT', 'PERSON_ROLE', '2016-07-25 17:14:14', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-07-25 17:14:14', '2016-07-25 17:14:14'),
+(601, 591, 'ACCOUNT', 'PERSON_ROLE', '2016-07-27 05:35:56', NULL, NULL, 'RESPONSIBLE_FOR', '2016-07-27 05:35:56', '2016-07-27 05:35:56'),
+(611, 591, 'ACCOUNT', 'PERSON_ROLE', '2016-07-27 05:38:32', NULL, NULL, 'RESPONSIBLE_FOR', '2016-07-27 05:38:32', '2016-07-27 05:38:32'),
+(621, 591, 'ACCOUNT', 'PERSON_ROLE', '2016-07-27 05:41:31', NULL, NULL, 'RESPONSIBLE_FOR', '2016-07-27 05:41:31', '2016-07-27 05:41:31'),
+(671, 13, 'ACCOUNT', 'PERSON_ROLE', '2016-07-27 15:22:26', NULL, NULL, 'RESPONSIBLE_FOR', '2016-07-27 15:22:26', '2016-07-27 15:22:26'),
+(731, 13, 'ACCOUNT', 'PERSON_ROLE', '2016-07-27 15:41:49', NULL, NULL, 'RESPONSIBLE_FOR', '2016-07-27 15:41:49', '2016-07-27 15:41:49'),
+(771, 17, 'ACCOUNT', 'PERSON_ROLE', '2016-07-27 16:09:23', NULL, NULL, 'RESPONSIBLE_FOR', '2016-07-27 16:09:23', '2016-07-27 16:09:23'),
+(791, 2, 'CONTACT', 'PERSON_ROLE', '2016-07-27 20:22:11', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-07-27 20:22:11', '2016-07-27 20:22:11'),
+(802, 3, 'CONTACT', 'PERSON_ROLE', '2016-07-28 00:11:32', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-07-28 00:11:32', '2016-07-28 00:11:32'),
+(811, 591, 'CONTACT', 'PERSON_ROLE', '2016-07-28 00:11:42', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-07-28 00:11:42', '2016-07-28 00:11:42'),
+(821, 591, 'CONTACT', 'PERSON_ROLE', '2016-07-28 21:47:42', NULL, 'PARTY_ENABLED', 'RESPONSIBLE_FOR', '2016-07-28 21:47:42', '2016-07-28 21:47:42');
 
 -- --------------------------------------------------------
 
@@ -3141,7 +3225,25 @@ INSERT INTO `party_role` (`party_id`, `role_type_id`, `created_date`, `updated_d
 (531, 'LEAD', '2016-07-25 14:59:27', '2016-07-25 14:59:27'),
 (541, 'CONTACT', '2016-07-25 17:14:14', '2016-07-25 17:14:14'),
 (551, 'LEAD', '2016-07-25 18:24:29', '2016-07-25 18:24:29'),
-(561, 'LEAD', '2016-07-25 22:05:44', '2016-07-25 22:05:44');
+(561, 'LEAD', '2016-07-25 22:05:44', '2016-07-25 22:05:44'),
+(571, 'LEAD', '2016-07-27 03:43:01', '2016-07-27 03:43:01'),
+(581, 'LEAD', '2016-07-27 03:44:11', '2016-07-27 03:44:11'),
+(591, 'PERSON_ROLE', '2016-07-28 00:30:34', '2016-07-28 00:30:34'),
+(601, 'ACCOUNT', '2016-07-27 05:35:56', '2016-07-27 05:35:56'),
+(611, 'ACCOUNT', '2016-07-27 05:38:32', '2016-07-27 05:38:32'),
+(621, 'ACCOUNT', '2016-07-27 05:41:31', '2016-07-27 05:41:31'),
+(631, 'LEAD', '2016-07-27 05:56:30', '2016-07-27 05:56:30'),
+(671, 'ACCOUNT', '2016-07-27 15:22:26', '2016-07-27 15:22:26'),
+(731, 'ACCOUNT', '2016-07-27 15:41:49', '2016-07-27 15:41:49'),
+(741, 'LEAD', '2016-07-27 16:07:47', '2016-07-27 16:07:47'),
+(771, 'ACCOUNT', '2016-07-27 16:09:23', '2016-07-27 16:09:23'),
+(781, 'LEAD', '2016-07-27 16:10:56', '2016-07-27 16:10:56'),
+(791, 'CONTACT', '2016-07-27 20:22:11', '2016-07-27 20:22:11'),
+(801, 'LEAD', '2016-07-28 00:08:26', '2016-07-28 00:08:26'),
+(802, 'CONTACT', '2016-07-28 00:11:32', '2016-07-28 00:11:32'),
+(811, 'CONTACT', '2016-07-28 00:11:42', '2016-07-28 00:11:42'),
+(821, 'CONTACT', '2016-07-28 21:47:42', '2016-07-28 21:47:42'),
+(831, 'LEAD', '2016-07-30 00:47:46', '2016-07-30 00:47:46');
 
 -- --------------------------------------------------------
 
@@ -3151,7 +3253,7 @@ INSERT INTO `party_role` (`party_id`, `role_type_id`, `created_date`, `updated_d
 
 CREATE TABLE `party_supplemental_data` (
   `party_id` int(11) NOT NULL,
-  `parent_party_id` int(11) NOT NULL,
+  `parent_party_id` int(11) DEFAULT NULL,
   `company_name` varchar(100) DEFAULT NULL,
   `annual_revenue` decimal(18,2) DEFAULT NULL,
   `currency_uom_id` varchar(20) DEFAULT NULL,
@@ -3191,7 +3293,20 @@ INSERT INTO `party_supplemental_data` (`party_id`, `parent_party_id`, `company_n
 (521, 135, NULL, NULL, 'USD', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2016-07-25 14:56:59', '2016-07-25 14:56:59'),
 (531, 154, NULL, NULL, 'BRR', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2016-07-25 14:59:27', '2016-07-25 14:59:27'),
 (551, 23, 'big machine', '9999999.00', NULL, '4', NULL, NULL, NULL, NULL, NULL, NULL, 711, '2016-07-25 18:24:29', '2016-07-25 18:24:29'),
-(561, 172, 'Peking University', '0.00', 'CNY', '25000', 'IND_NON_PROFIT', 'OWN_PUBLIC_CORP', 'PKU', 'Disciple of John Dewey', NULL, NULL, 721, '2016-07-25 22:05:44', '2016-07-25 22:05:44');
+(561, 172, 'Peking University', '0.00', 'CNY', '25000', 'IND_NON_PROFIT', 'OWN_PUBLIC_CORP', 'PKU', 'Disciple of John Dewey', NULL, NULL, 721, '2016-07-25 22:05:44', '2016-07-25 22:05:44'),
+(571, 501, '501 Legion', '10000.00', NULL, '800', 'IND_NON_PROFIT', 'OWN_PUBLIC_CORP', 'JDMS', NULL, NULL, 732, 751, '2016-07-27 03:43:01', '2016-07-27 03:43:01'),
+(581, 491, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2016-07-27 03:44:11', '2016-07-27 03:44:11'),
+(601, NULL, NULL, '23000000.00', NULL, '450', 'IND_FINANCE', 'OWN_CCORP', 'PPR', NULL, NULL, NULL, NULL, '2016-07-27 05:35:56', '2016-07-27 05:35:56'),
+(611, NULL, NULL, '3400000.00', NULL, '12', 'IND_GEN_SERVICES', 'OWN_PARTNERSHIP', 'MMSD', NULL, NULL, NULL, NULL, '2016-07-27 05:38:32', '2016-07-27 05:38:32'),
+(621, NULL, NULL, '590000000.00', NULL, '234', 'IND_MANUFACTURING', 'OWN_PUBLIC_CORP', 'WWW', NULL, NULL, NULL, NULL, '2016-07-27 05:41:31', '2016-07-27 05:41:31'),
+(631, 171, 'Flag Emporium', '3423423.00', 'USD', '32', 'IND_MANUFACTURING', 'OWN_LLC_LLP', 'FLAG', NULL, NULL, 781, 761, '2016-07-27 05:56:30', '2016-07-27 05:56:30'),
+(671, NULL, NULL, '93580000000.00', NULL, '118584', 'IND_SOFTWARE', 'OWN_CCORP', 'MSFT', NULL, NULL, NULL, NULL, '2016-07-27 15:22:26', '2016-07-27 15:22:26'),
+(731, NULL, NULL, '233715000000.00', NULL, '115000', 'IND_HARDWARE', NULL, 'AAPL', NULL, NULL, NULL, NULL, '2016-07-27 15:41:49', '2016-07-27 15:41:49'),
+(741, 501, NULL, NULL, 'USD', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2016-07-27 16:07:47', '2016-07-27 16:07:47'),
+(771, NULL, NULL, '50.00', NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2016-07-27 16:09:23', '2016-07-27 16:09:23'),
+(781, 172, NULL, '200.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2016-07-27 16:10:56', '2016-07-27 16:10:56'),
+(801, 731, NULL, NULL, 'ADP', NULL, NULL, NULL, NULL, NULL, 802, 811, 801, '2016-07-28 00:08:26', '2016-07-28 00:08:26'),
+(831, 172, 'Sample Company', NULL, 'USD', '4', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2016-07-30 00:47:46', '2016-07-30 00:47:46');
 
 -- --------------------------------------------------------
 
@@ -3415,7 +3530,18 @@ INSERT INTO `person` (`party_id`, `salutation`, `first_name`, `middle_name`, `la
 (531, 'Pelé', 'Edson', NULL, 'Arantes do Nascimento', '1940-10-23 00:00:00', NULL, '2016-07-25 14:59:27', '2016-07-25 14:59:27'),
 (541, 'Mr.', 'John', 'Andrew', 'Smith', '2016-07-25 00:00:00', NULL, '2016-07-25 17:14:14', '2016-07-25 17:14:14'),
 (551, NULL, 'taylor', 'm', 'swift', '1989-12-13 00:00:00', NULL, '2016-07-25 18:24:29', '2016-07-25 18:24:29'),
-(561, 'Mr.', 'Shih', NULL, 'Hu', '1891-12-17 00:00:00', NULL, '2016-07-25 22:05:44', '2016-07-25 22:05:44');
+(561, 'Mr.', 'Shih', NULL, 'Hu', '1891-12-17 00:00:00', NULL, '2016-07-25 22:05:44', '2016-07-25 22:05:44'),
+(571, 'Darth Vader', 'Anakin', NULL, 'Skywalker', '1234-09-04 00:00:00', 'I''m Luke''s father.', '2016-07-27 03:43:01', '2016-07-27 03:43:01'),
+(581, NULL, 'dc', NULL, 'vgtb', NULL, NULL, '2016-07-27 03:44:11', '2016-07-27 03:44:11'),
+(631, 'Ms.', 'Betsy', NULL, 'Ross', '1955-02-04 00:00:00', NULL, '2016-07-27 05:56:30', '2016-07-27 05:56:30'),
+(741, NULL, 'Who', NULL, 'ever', NULL, NULL, '2016-07-27 16:07:47', '2016-07-27 16:07:47'),
+(781, NULL, 'Tom', NULL, 'Smith', NULL, NULL, '2016-07-27 16:10:56', '2016-07-27 16:10:56'),
+(791, 'Mr.', 'John', NULL, 'Smith', NULL, NULL, '2016-07-27 20:22:11', '2016-07-27 20:22:11'),
+(801, 'Mr.', 'Juan', NULL, 'Valdez', '1982-02-04 00:00:00', NULL, '2016-07-28 00:08:26', '2016-07-28 00:08:26'),
+(802, 'Ms.', 'Penny', NULL, 'Marshall', NULL, NULL, '2016-07-28 00:11:32', '2016-07-28 00:11:32'),
+(811, 'Ms.', 'Penny', NULL, 'Marshall', NULL, NULL, '2016-07-28 00:11:42', '2016-07-28 00:11:42'),
+(821, 'Marquis', 'Alexis', NULL, 'de Tocqueville', '1805-07-29 00:00:00', NULL, '2016-07-28 21:47:42', '2016-07-28 21:47:42'),
+(831, 'Ms', 'Joanne', NULL, 'Sampler', NULL, 'An example of a lead.', '2016-07-30 00:47:46', '2016-07-30 00:47:46');
 
 -- --------------------------------------------------------
 
@@ -3618,7 +3744,10 @@ INSERT INTO `postal_address` (`contact_mech_id`, `to_name`, `attn_name`, `addres
 (597, 'Rebecca Thatcher', 'Becky Thatcher', '1 Main Street', NULL, 'Ask for Judge Thatcher''s house, everyone knows where it is!', 'Hannibal', '12345', 'USA', 'MO', '2016-07-15 00:34:16', '2016-07-15 00:34:16'),
 (602, 'James Potter', 'James Potter', '123 Sunset Blvd', NULL, NULL, 'Godrics Hollow', '234234', 'ITA', 'CO-COR', '2016-07-21 20:29:24', '2016-07-21 20:29:24'),
 (607, 'Lily Evans', 'Lily Evans', '70 Seventh St', 'Suite 7', NULL, 'Miami', '99999', 'USA', 'FL', '2016-07-22 05:49:21', '2016-07-22 05:49:21'),
-(611, 'Susan B. Anthony', 'Susan B. Anthony', '2614 McKinley St NE', NULL, NULL, 'Minneapolis', '55418', 'USA', 'MN', '2016-07-22 12:22:06', '2016-07-22 12:22:06');
+(611, 'Susan B. Anthony', 'Susan B. Anthony', '2614 McKinley St NE', NULL, NULL, 'Minneapolis', '55418', 'USA', 'MN', '2016-07-22 12:22:06', '2016-07-22 12:22:06'),
+(802, 'Juan Valdez', 'Juan Valdez', '999 Main St.', NULL, NULL, 'Andorra Town', '00000', 'AND', NULL, '2016-07-28 00:08:26', '2016-07-28 00:08:26'),
+(851, 'Penny Marshall', 'Penny Marshall', '872 Kilgore Ave.', 'Suite 25', NULL, 'Halverton', '12345', 'CAN', 'BC', '2016-07-28 00:11:32', '2016-07-28 00:11:32'),
+(871, 'Penny Marshall', 'Penny Marshall', '872 Kilgore Ave.', 'Suite 25', NULL, 'Halverton', '12345', 'CAN', 'BC', '2016-07-28 00:11:42', '2016-07-28 00:11:42');
 
 -- --------------------------------------------------------
 
@@ -3891,7 +4020,15 @@ INSERT INTO `quote` (`quote_id`, `quote_type_id`, `party_id`, `issue_date`, `sta
 (26, 'PRODUCT_QUOTE', 2, '2016-07-21 18:17:43', 'QUOTE_CREATED', 'USD', 'IND_GEN_SERVICES', '2016-07-21 18:17:43', '2016-07-21 18:17:43', 'manual from phpMyAdmin', NULL, NULL, 2, '2016-07-21 18:17:43', '2016-07-21 18:17:43'),
 (27, 'PRODUCT_QUOTE', 171, '2016-07-22 06:06:51', 'QUOTE_CREATED', 'HKD', 'IND_PRESS', '2016-07-28 00:00:00', '2016-09-09 00:00:00', 'Printing Press parts', NULL, 191, 2, '2016-07-21 20:06:51', '2016-07-25 01:53:58'),
 (31, 'PRODUCT_QUOTE', 172, '2016-07-23 02:10:01', 'QUOTE_CREATED', 'KMF', 'IND_MANUFACTURING', '2016-07-22 00:00:00', '2016-08-26 00:00:00', 'Widgets for factory overhaul', NULL, 61, 2, '2016-07-23 02:10:01', '2016-07-23 14:57:32'),
-(41, 'PRODUCT_QUOTE', 491, '2016-07-25 00:00:00', 'QUOTE_CREATED', 'GBP', 'IND_HARDWARE', '2016-07-25 00:00:00', '2016-10-14 00:00:00', 'Widgets for new install', NULL, 125, 2, '2016-07-25 17:15:01', '2016-07-25 22:36:15');
+(41, 'PRODUCT_QUOTE', 491, '2016-07-25 00:00:00', 'QUOTE_CREATED', 'GBP', 'IND_HARDWARE', '2016-07-25 00:00:00', '2016-10-14 00:00:00', 'Widgets for new install', NULL, 125, 2, '2016-07-25 17:15:01', '2016-07-25 22:36:15'),
+(51, 'PRODUCT_QUOTE', 601, '2016-07-28 00:14:30', 'QUOTE_CREATED', 'USD', 'IND_MANUFACTURING', '2016-07-27 00:00:00', '2016-10-27 00:00:00', 'Widgets for new line of positron emitters', NULL, 811, 591, '2016-07-28 00:14:30', '2016-07-28 00:14:30'),
+(61, 'PRODUCT_QUOTE', 601, '2016-07-28 00:15:10', 'QUOTE_CREATED', 'USD', 'IND_MANUFACTURING', '2016-07-27 00:00:00', '2016-10-27 00:00:00', 'Widgets for new line of positron emitters', NULL, 811, 591, '2016-07-28 00:15:10', '2016-07-28 00:15:10'),
+(71, 'PRODUCT_QUOTE', 611, '2016-07-28 00:21:26', 'QUOTE_CREATED', 'FKP', 'IND_HARDWARE', '2016-07-27 00:00:00', '2016-08-19 00:00:00', 'Monitors', NULL, 811, 591, '2016-07-28 00:21:26', '2016-07-28 00:21:26'),
+(72, 'PRODUCT_QUOTE', 601, '2016-07-28 00:26:18', 'QUOTE_CREATED', 'PLZ', 'IND_MEDIA', '2016-07-27 00:00:00', '2016-08-19 00:00:00', 'Newspapers', NULL, 811, 2, '2016-07-28 00:26:18', '2016-07-28 00:26:18'),
+(81, 'PRODUCT_QUOTE', 601, '2016-07-28 00:31:39', 'QUOTE_CREATED', 'ARA', 'IND_MANUFACTURING', '2016-07-27 00:00:00', NULL, 'widgets', NULL, 811, 591, '2016-07-28 00:31:39', '2016-07-28 15:45:39'),
+(91, 'PRODUCT_QUOTE', 731, '2016-07-28 21:50:16', 'QUOTE_CREATED', 'MGF', 'IND_MANUFACTURING', '2016-07-28 00:00:00', '2016-08-19 00:00:00', 'Parts', NULL, 262, 2, '2016-07-28 21:50:16', '2016-07-28 21:50:16'),
+(101, 'PRODUCT_QUOTE', 601, '2016-07-28 21:50:56', 'QUOTE_CREATED', 'HNL', 'IND_INSURANCE', '2016-07-28 00:00:00', '2016-09-09 00:00:00', 'insurance', NULL, 123, 2, '2016-07-28 21:50:56', '2016-07-28 21:50:56'),
+(111, 'PRODUCT_QUOTE', 611, '2016-07-28 21:52:34', 'QUOTE_CREATED', 'KIS', 'IND_RETAIL', '2016-07-28 00:00:00', '2016-08-05 00:00:00', 'Retail items', NULL, 126, 2, '2016-07-28 21:52:34', '2016-07-28 21:52:34');
 
 -- --------------------------------------------------------
 
@@ -3949,7 +4086,8 @@ INSERT INTO `quote_item` (`quote_id`, `quote_item_seq_id`, `product_id`, `quanti
 (24, '2', 'testProd2', NULL, NULL, NULL, '2016-07-29 00:00:00', 'comment', NULL, NULL, '2016-07-05 23:12:34', '2016-07-05 23:12:34'),
 (27, '1', 'laser cutter', NULL, NULL, NULL, '2016-07-15 00:00:00', 'test parts', NULL, NULL, '2016-07-21 20:19:07', '2016-07-25 01:54:20'),
 (31, '1', 'cardboard boxes', NULL, NULL, NULL, '2016-07-29 00:00:00', 'minimum 55K needed', NULL, NULL, '2016-07-23 02:10:19', '2016-07-23 23:50:59'),
-(31, '2', 'widgets', NULL, NULL, NULL, '2016-07-30 00:00:00', 'need more widgets', NULL, NULL, '2016-07-24 13:26:13', '2016-07-25 16:24:13');
+(31, '2', 'widgets', NULL, NULL, NULL, '2016-07-30 00:00:00', 'need more widgets', NULL, NULL, '2016-07-24 13:26:13', '2016-07-25 16:24:13'),
+(81, '1', 'widgets', NULL, NULL, NULL, '2016-07-29 00:00:00', NULL, NULL, NULL, '2016-07-28 01:42:01', '2016-07-28 01:42:01');
 
 -- --------------------------------------------------------
 
@@ -4038,7 +4176,12 @@ INSERT INTO `quote_role` (`quote_id`, `party_id`, `role_type_id`, `created_date`
 (24, 2, 'PERSON_ROLE', '2016-07-05 23:11:02', '2016-07-05 23:11:02'),
 (27, 2, 'PERSON_ROLE', '2016-07-21 20:06:51', '2016-07-21 20:06:51'),
 (31, 2, 'PERSON_ROLE', '2016-07-23 02:10:01', '2016-07-23 02:10:01'),
-(41, 2, 'PERSON_ROLE', '2016-07-25 17:15:01', '2016-07-25 17:15:01');
+(41, 2, 'PERSON_ROLE', '2016-07-25 17:15:01', '2016-07-25 17:15:01'),
+(72, 2, 'PERSON_ROLE', '2016-07-28 00:26:18', '2016-07-28 00:26:18'),
+(81, 591, 'PERSON_ROLE', '2016-07-28 00:31:39', '2016-07-28 00:31:39'),
+(91, 2, 'PERSON_ROLE', '2016-07-28 21:50:16', '2016-07-28 21:50:16'),
+(101, 2, 'PERSON_ROLE', '2016-07-28 21:50:56', '2016-07-28 21:50:56'),
+(111, 2, 'PERSON_ROLE', '2016-07-28 21:52:34', '2016-07-28 21:52:34');
 
 -- --------------------------------------------------------
 
@@ -4794,7 +4937,12 @@ INSERT INTO `telecom_number` (`contact_mech_id`, `country_code`, `area_code`, `c
 (612, '1', '212', '555-8234', 'Susan', '2016-07-22 12:22:06', '2016-07-22 12:22:06'),
 (615, '1', '212', '555-3224', 'Lizzy', '2016-07-22 12:26:23', '2016-07-22 12:26:23'),
 (661, '1', '352', '555-8823', NULL, '2016-07-23 03:26:57', '2016-07-23 03:26:57'),
-(681, '1', '352', '555-2342', NULL, '2016-07-23 03:27:49', '2016-07-23 03:27:49');
+(681, '1', '352', '555-2342', NULL, '2016-07-23 03:27:49', '2016-07-23 03:27:49'),
+(732, '2', '75', '7033', 'An', '2016-07-27 03:43:01', '2016-07-27 03:43:01'),
+(781, '1', '202', '555-2342', NULL, '2016-07-27 05:56:30', '2016-07-27 05:56:30'),
+(811, '4', '444', '555-4444', 'Juan', '2016-07-28 00:08:26', '2016-07-28 00:08:26'),
+(841, '1', '823', '555-0223', 'Penny', '2016-07-28 00:11:32', '2016-07-28 00:11:32'),
+(861, '1', '823', '555-0223', 'Penny', '2016-07-28 00:11:42', '2016-07-28 00:11:42');
 
 -- --------------------------------------------------------
 
@@ -5154,7 +5302,7 @@ INSERT INTO `user_login` (`user_login_id`, `password`, `password_hint`, `enabled
 ('acctOwnerABC', '$2a$08$lhP4sYwN1vux1iTOSXckEelmCJN47ifl40rgwiwgRaPjISjzwL1ci', NULL, 1, NULL, 11, '2016-05-25 11:01:22', '2016-05-25 11:01:22'),
 ('acctOwnerDEF', '$2a$08$c13ijYX1S4JFRWCc9X32.e1xtjP1MSuJSup8oi7DNXsHsPt7z0UXO', NULL, 1, NULL, 12, '2016-05-25 11:05:11', '2016-05-25 11:05:11'),
 ('admin', '$2a$10$A1QQckgQ/hhfvxWTT3vxluuZQ/EepyF570eBxxH7xd3qOCpmjGSbC', NULL, 1, NULL, 2, '2016-05-13 01:16:35', '2016-05-13 01:16:35'),
-('contactOwnerABC', '$2a$08$iTaPqQ/4W8LSDNBDT18opegvSxo4kWC8SjWNojHP/lhN7eOSTYHJu', NULL, 1, NULL, 13, '2016-05-25 11:07:11', '2016-05-25 11:07:11'),
+('contactOwnerABC', '$2a$08$DjNy.ZBVEIBuY5zJ6PUcXerbJ7Pmfpk0iPPr56NoLdQ0yVShfnsEu', NULL, 1, NULL, 13, '2016-05-25 11:07:11', '2016-05-25 11:07:11'),
 ('contactOwnerDEF', '$2a$08$H/jGQdzkk1YrMJh92vtZH.sblwGrgnbOpKYhwxrHmdaFRe7h6E4/q', NULL, 1, NULL, 14, '2016-05-25 11:11:12', '2016-05-25 11:11:12'),
 ('crmsfaContactTasksABC', '$2a$08$CB.AAzCvAM7ghsIgD9HurePO3BsLDAJ0tBGIPHLhv9ijyay1E24O2', NULL, 1, NULL, 15, '2016-05-25 11:14:33', '2016-05-25 11:14:33'),
 ('crmsfaContactTasksDEF', '$2a$08$uqe3rKbDeVzAeSzQhP6RVuxKsnss0EJUuW0rsba7J/laB2p1vylmK', NULL, 1, NULL, 16, '2016-05-25 11:17:03', '2016-05-25 11:17:03'),
@@ -5165,6 +5313,7 @@ INSERT INTO `user_login` (`user_login_id`, `password`, `password_hint`, `enabled
 ('mrQuoteUnquote', '$2a$08$1/nJhCSD6bkTK0YbJD9T2OTYJ9ocJ9.HlUGIuqtEeie4yi3pfuLbS', NULL, 1, NULL, 100, '2016-06-01 20:50:16', '2016-06-01 20:50:16'),
 ('partyAdminABC', '$2a$08$pUshY95nXvnDW/5/aB3KReIYIUjo7AiVDXoxK4/AYjIKPjRF33ms2', NULL, 1, NULL, 5, '2016-05-25 10:54:19', '2016-05-25 10:54:19'),
 ('partyAdminDEF', '$2a$08$vUx4jjmAf74hlcB5WvM6Lu.usTZTtgSLrRhMM.rK90yK9AyPPolV2', NULL, 1, NULL, 7, '2016-05-25 10:57:29', '2016-05-25 10:57:29'),
+('testerABC', '$2a$08$1Nijsn1O3/ZWvKxijvdEIO3wEWmjPI5N3hLL4fwyjG4ZyDiDHrulG', NULL, 1, NULL, 591, '2016-07-27 05:18:45', '2016-07-27 05:18:45'),
 ('testGuy', '$2a$08$1f1p9BGm/lrtwidq1SVRw.fVbQ2TSqr3vSO9IAShbcn.DHXvZ41N2', NULL, 1, NULL, 78, '2016-05-31 01:39:28', '2016-05-31 01:39:28');
 
 -- --------------------------------------------------------
@@ -5195,9 +5344,12 @@ INSERT INTO `user_login_security_group` (`user_login_id`, `permission_group_id`,
 ('admin', 'CRMSFA_QUOTE_TASKS', '2016-06-22 02:44:02', NULL, '2016-06-22 02:44:02', '2016-06-22 02:44:02'),
 ('admin', 'FULLADMIN', '2016-05-01 00:00:00', '2016-12-31 00:00:00', '2016-05-19 01:16:54', '2016-05-19 01:16:54'),
 ('admin', 'LEAD_OWNER', '2016-06-26 19:06:48', NULL, '2016-06-26 19:06:48', '2016-06-26 19:06:48'),
+('contactOwnerABC', 'ACCOUNT_OWNER', '2016-07-27 03:36:32', NULL, '2016-07-27 03:36:32', '2016-07-27 03:36:32'),
 ('contactOwnerABC', 'CONTACT_OWNER', '2016-05-25 11:59:00', NULL, '2016-05-25 11:59:00', '2016-05-25 11:59:00'),
 ('contactOwnerABC', 'CRMSFA_CASE_TASKS', '2016-05-29 13:42:50', NULL, '2016-05-29 13:42:50', '2016-05-29 13:42:50'),
 ('contactOwnerABC', 'CRMSFA_CONTACT_TASKS', '2016-05-30 02:02:49', NULL, '2016-05-30 02:02:49', '2016-05-30 02:02:49'),
+('contactOwnerABC', 'CRMSFA_LEAD_TASKS', '2016-07-27 03:37:18', NULL, '2016-07-27 03:37:18', '2016-07-27 03:37:18'),
+('contactOwnerABC', 'CRMSFA_QUOTE_TASKS', '2016-07-27 03:37:39', NULL, '2016-07-27 03:37:39', '2016-07-27 03:37:39'),
 ('contactOwnerDEF', 'CONTACT_OWNER', '2016-05-25 11:59:22', NULL, '2016-05-25 11:59:22', '2016-05-25 11:59:22'),
 ('crmsfaContactTasksABC', 'CRMSFA_CASE_TASKS', '2016-05-30 01:30:00', NULL, '2016-05-30 01:30:00', '2016-05-30 01:30:00'),
 ('crmsfaContactTasksABC', 'CRMSFA_CONTACT_TASKS', '2016-05-25 12:00:15', NULL, '2016-05-25 12:00:15', '2016-05-25 12:00:15'),
@@ -5213,6 +5365,11 @@ INSERT INTO `user_login_security_group` (`user_login_id`, `permission_group_id`,
 ('mrQuoteUnquote', 'CRMSFA_QUOTE_TASKS', '2016-06-01 20:50:44', NULL, '2016-06-01 20:50:44', '2016-06-01 20:50:44'),
 ('partyAdminABC', 'PARTYADMIN', '2016-05-25 12:02:15', NULL, '2016-05-25 12:02:15', '2016-05-25 12:02:15'),
 ('partyAdminDEF', 'PARTYADMIN', '2016-05-25 12:02:32', NULL, '2016-05-25 12:02:32', '2016-05-25 12:02:32'),
+('testerABC', 'ACCOUNT_OWNER', '2016-07-27 05:27:22', NULL, '2016-07-27 05:27:22', '2016-07-27 05:27:22'),
+('testerABC', 'CONTACT_OWNER', '2016-07-27 05:27:22', NULL, '2016-07-27 05:27:22', '2016-07-27 05:27:22'),
+('testerABC', 'CRMSFA_LEAD_TASKS', '2016-07-27 05:28:54', NULL, '2016-07-27 05:28:54', '2016-07-27 05:28:54'),
+('testerABC', 'CRMSFA_QUOTE_TASKS', '2016-07-27 05:28:54', NULL, '2016-07-27 05:28:54', '2016-07-27 05:28:54'),
+('testerABC', 'LEAD_OWNER', '2016-07-27 07:43:34', NULL, '2016-07-27 07:43:34', '2016-07-27 07:43:34'),
 ('testGuy', 'CRMSFA_CONTACT_TASKS', '2016-05-31 01:46:32', NULL, '2016-05-31 01:46:32', '2016-05-31 01:46:32');
 
 --
@@ -5631,7 +5788,7 @@ ALTER TABLE `case_status`
 -- AUTO_INCREMENT for table `contact_mech`
 --
 ALTER TABLE `contact_mech`
-  MODIFY `contact_mech_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=741;
+  MODIFY `contact_mech_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=901;
 --
 -- AUTO_INCREMENT for table `note_data`
 --
@@ -5641,12 +5798,12 @@ ALTER TABLE `note_data`
 -- AUTO_INCREMENT for table `party`
 --
 ALTER TABLE `party`
-  MODIFY `party_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=571;
+  MODIFY `party_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=881;
 --
 -- AUTO_INCREMENT for table `quote`
 --
 ALTER TABLE `quote`
-  MODIFY `quote_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `quote_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 --
 -- Constraints for dumped tables
 --
