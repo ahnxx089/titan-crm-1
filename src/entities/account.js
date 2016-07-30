@@ -103,7 +103,7 @@ Account.prototype.validateOwnershipEnumId = function(isRequired) {
 
 Account.prototype.validateImportantNote = function(isRequired) {
     this.importantNote = validation.sanitizeInput(this.importantNote);
-    var validationResult = validation.validateString(this.importantNote, isRequired, 20, 'importantNote');
+    var validationResult = validation.validateString(this.importantNote, isRequired, 255, 'importantNote');
     return validationResult;
 };
 
