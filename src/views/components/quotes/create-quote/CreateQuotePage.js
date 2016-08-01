@@ -89,7 +89,7 @@ var CreateQuotePage = React.createClass({
                 <div className="container">
                     <div className="panel panel-default">
                         <div className="panel-heading panel-heading-custom">
-                            <h1>Create Quote</h1>
+                            <h2>Create Quote</h2>
                         </div>
                         <div className="panel-body">
                             <AddQuoteForm

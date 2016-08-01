@@ -103,14 +103,16 @@ var CreateContactPage = React.createClass({
         /* jshint ignore:start */
         return (
             <div>
-                <div className="panel panel-default">
-                    <div className="panel-heading panel-heading-custom">
-                        <h1>Create Contact</h1>
-                    </div>
-                    <div className="panel-body">
-                        <AddContactForm contact={ this.state.contact }
-                            onChange={ this.setContactState }
-                            onFormSubmit={ this._addContact } />
+                <div className="container" >
+                    <div className="panel panel-default">
+                        <div className="panel-heading panel-heading-custom">
+                            <h2>Create Contact</h2>
+                        </div>
+                        <div className="panel-body">
+                            <AddContactForm contact={ this.state.contact }
+                                onChange={ this.setContactState }
+                                onFormSubmit={ this._addContact } />
+                        </div>
                     </div>
                 </div>
             </div>
