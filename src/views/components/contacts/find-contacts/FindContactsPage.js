@@ -162,7 +162,7 @@ var FindContactsPage = React.createClass({
                     {/* First panel: holds Search Form */}
                     <div className="panel panel-default">
                         <div className="panel-heading panel-heading-custom">
-                            <h1>Find Contacts</h1>
+                            <h2>Find Contacts</h2>
                         </div>
                         <div className="panel-body">
                             <SearchForm

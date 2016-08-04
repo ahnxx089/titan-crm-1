@@ -90,7 +90,7 @@ var UpdateQuotePage = React.createClass({
                 <div className="container">
                     <div className="panel panel-default">
                         <div className="panel-heading panel-heading-custom">
-                            <h1>Update Quote #{ this.state.quote.quoteId }</h1>
+                            <h2>Update Quote #{ this.state.quote.quoteId }</h2>
                         </div>
                         <div className="panel-body">
                             <UpdateQuoteForm

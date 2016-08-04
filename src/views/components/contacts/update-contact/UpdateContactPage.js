@@ -94,7 +94,7 @@ var UpdateContactPage = React.createClass({
                 </Link>
                 <div className="panel panel-default">
                     <div className="panel-heading panel-heading-custom">
-                        <h1>Update Contact</h1>
+                        <h2>Update Contact</h2>
                     </div>
                     <div className="panel-body">
                         <UpdateContactForm

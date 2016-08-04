@@ -12,33 +12,33 @@ var LeadsStore = require('../../../stores/LeadsStore');
 var LeadsActions = require('../../../actions/LeadsActions');
 
 var FindLeadsPage = React.createClass({
-    
+
     getInitialState: function() {
         return {
             searchBy: { partyId: '' },
             leadFoundById: []
         };
     },
-    
+
     componentDidMount: function() {
         LeadsStore.addGetDataListener(this._onGetById);
     },
-    
+
     componentWillUnmount: function() {
         LeadsStore.removeListener('getData', this._onGetById);
     },
-    
-    
+
+
     setSearchByState: function(event) {
         var field = event.target.id;
         var value = event.target.value;
         this.state.searchBy[ field ] = value;
-        this.setState( {searchBy: this.state.searchBy} );       
+        this.setState( {searchBy: this.state.searchBy} );
     },
-    
-    
+
+
     _resetForm: function(){
-        this.setState({ 
+        this.setState({
             searchBy: { partyId: '' },
             leadFoundById: []
         });
@@ -49,7 +49,7 @@ var FindLeadsPage = React.createClass({
         event.preventDefault();
         LeadsActions.getLeadById(this.state.searchBy.partyId); // send out an action
     },
-    
+
     // Native HTML Form onSubmit version (has no event arg)
 //    _findLeads: function() {
 //        console.log('find leads 2');
@@ -58,7 +58,7 @@ var FindLeadsPage = React.createClass({
 
     _onGetById: function() {
         var result = LeadsStore.getLeadFound();
-        
+
         // If it's is an error, eg. permission error, non-existing lead, add it to ErrorBox
 //        if (Object.keys(result).length === 0 && result.constructor === Object) {
         if(result.constructor === String) {
@@ -73,8 +73,8 @@ var FindLeadsPage = React.createClass({
             });
         }
     },
-    
-    
+
+
     render: function() {
         /* jshint ignore:start */
 
@@ -85,23 +85,23 @@ var FindLeadsPage = React.createClass({
         return(
             <div>
                 <div className="container">
-                    
+
                     {/* First panel: holds Search Form */}
                     <div className="panel panel-default">
                         <div className="panel-heading panel-heading-custom">
-                            <h1>Find Leads</h1>
+                            <h2>Find Leads</h2>
                         </div>
                         <div className="panel-body">
-                            <SearchForm                                 
+                            <SearchForm
                                 searchBy={ this.state.searchBy }
-                                onChange={ this.setSearchByState } 
+                                onChange={ this.setSearchByState }
                                 onFormSubmit={ this._findLeads }
-                                onFormReset={ this._resetForm } 
+                                onFormReset={ this._resetForm }
                                 // should have at least a space between */ and the next /
                                 />
                         </div>
                     </div>
-                    
+
                     {/* Second panel:  holds Table with results */}
                     <div className="panel panel-default">
                         <div className="panel-heading panel-heading-custom">
@@ -126,7 +126,7 @@ var FindLeadsPage = React.createClass({
                             </table>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         );

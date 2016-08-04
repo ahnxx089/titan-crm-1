@@ -56,7 +56,7 @@ var ContactDetailPage = React.createClass({
                 </Link>
                 <div className="panel panel-default">
                     <div className="panel-heading panel-heading-custom">
-                        <h1>View Contact</h1>
+                        <h2>View Contact</h2>
                     </div>
 
 

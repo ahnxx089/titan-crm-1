@@ -100,7 +100,7 @@ var LeadDetailPage = React.createClass({
 
                 <div className="panel panel-default">
                     <div className="panel-heading panel-heading-custom">
-                            <h1>View Lead</h1>
+                            <h2>View Lead</h2>
                     </div>
 
                     <div className="panel panel-info">

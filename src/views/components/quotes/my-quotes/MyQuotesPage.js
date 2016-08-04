@@ -56,7 +56,7 @@ var MyQuotesPage = React.createClass({
                 <div className="container">
                     <div className="panel panel-default">
                         <div className="panel-heading panel-heading-custom">
-                            <h1>My Quotes</h1>
+                            <h2>My Quotes</h2>
                         </div>
                         <div className="panel-body">
                             <table id="myQuotesTable" className='table'>
