@@ -135,7 +135,8 @@ var ContactDetailPage = React.createClass({
                         </div>
                         <ContactMechTable contactMechs={ contactMechs } />
                     </div>
-                    <div className="panel panel-info">
+
+                   {/* <div className="panel panel-info">
                         <div className="panel-heading">
                             <h3 className="panel-title">Accounts</h3>
                         </div>
@@ -154,7 +155,7 @@ var ContactDetailPage = React.createClass({
 
                             </tbody>
                         </table>
-                    </div>
+                    </div> */}
 
                 </div>
             </div>

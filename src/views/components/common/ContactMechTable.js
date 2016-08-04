@@ -23,7 +23,7 @@ var ContactMechTable = React.createClass({
         //get types crossref table
         CommonStore.addGetContactMechTypesListener(this._onGetTypes);
         CommonStore.getContactMechTypes();
-        
+
         //get purpose types crossref table
         CommonStore.addGetContactMechPurposeTypesListener(this._onGetPurposeTypes);
         CommonStore.getContactMechPurposeTypes();
@@ -45,12 +45,12 @@ var ContactMechTable = React.createClass({
     render: function () {
         var contactMechs = this.props.contactMechs || [];
         var contactMechsJSX = [];
-        
+
          /* jshint ignore:start */
         for (var i = 0; i < contactMechs.length; i++) {
             contactMechsJSX.push(<ContactMechRow key={ 'contact_mech_' + i } contactMech={ contactMechs[i]} types={this.state.types} purposeTypes={this.state.purposeTypes} />);
         }
-       
+
         return (
             <table id="contactMechsTable" className='table'>
                 <thead>
@@ -58,7 +58,7 @@ var ContactMechTable = React.createClass({
                         <th>Contact Type</th>
                         <th>Contact Information</th>
                         <th>Purpose</th>
-                        <th>Actions</th>
+                        {/* <th>Actions</th> */}
                     </tr>
                 </thead>
                 <tbody>

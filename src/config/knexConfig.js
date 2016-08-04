@@ -11,7 +11,7 @@ var knexConfig = function() {
     var getConfig = function() {
         return knex({
             client: 'mysql',
-            connection: process.env.TITANCRM_DB_URL || 'mysql://root:@localhost/titan_crm',
+            connection: process.env.TITANCRM_DB_URL || 'mysql://root:@localhost/titan_crm'
         });
     };
 
