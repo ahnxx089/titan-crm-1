@@ -14,7 +14,7 @@ var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt-nodejs');
 
 var authController = function (knex) {
-    
+
     // Private key for token-based authentication
     var authSecret = 'ee883743d3290276a650a274c6ef432a5692348f'; // SHA-1 hash for "CustomerIsKing"
 
@@ -23,7 +23,7 @@ var authController = function (knex) {
      * @param {Object} userId - User Id of the user to verify
      * @param {Object} password - Password of the user to verify
      * @param {Object} res - API's response object, needed because of an async call
-     * @return {Object} authResult - The verification result (plus token if verification is successful) 
+     * @return {Object} authResult - The verification result (plus token if verification is successful)
      */
     var verifyLoginCredentials = function (userId, password, res) {
         // Validate the received inputs
@@ -82,13 +82,25 @@ var authController = function (knex) {
             // Verify the received token
             jwt.verify(token, authSecret, function (err, decoded) {
                 if (err) {
-                    winston.error(err);
-                    return res.json({
-                        success: false,
-                        message: 'Failed to authenticate token.'
-                    });
+
+                    // if error due to token expiration, note that in response message
+                    if ( err.name === 'TokenExpiredError' ) {
+                        return res.json({
+                            success: false,
+                            message: 'Token has expired, login again.'
+                        });
+                    }
+                    // log all other errors & return "failed to authenticate" message
+                    else {
+                        winston.error(err);
+                        return res.json({
+                            success: false,
+                            message: 'Failed to authenticate token.'
+                        });
+                    }
+
                 } else {
-                    // If everything is good, save to request for use in other routes
+                    // Token is unexpired & authenticated, save to request for use in other routes
                     req.user = decoded;
                     next();
                 }
@@ -100,7 +112,6 @@ var authController = function (knex) {
                 success: false,
                 message: 'No token provided.'
             });
-
         }
     };
 
