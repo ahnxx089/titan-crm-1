@@ -7,6 +7,8 @@
 
 var React = require('react');
 var withRouter = require('react-router').withRouter;
+var CommonStore = require('../../../stores/CommonStore');
+var CommonActions = require('../../../actions/CommonActions');
 
 var UpdateQuoteForm = require('./UpdateQuoteForm');
 var QuotesStore = require('../../../stores/QuotesStore');
@@ -23,6 +25,11 @@ var UpdateQuotePage = React.createClass({
         };
     },
 
+    componentWillMount: function () {
+        CommonStore.addGetTokenValidityListener(this._onGetTokenValidity);
+        CommonActions.getTokenValidity();
+    },
+
     componentDidMount: function() {
         QuotesStore.addGetDataListener(this._onGetQuote);
         QuotesStore.addPutDataListener(this._onUpdatedQuote);
@@ -32,6 +39,13 @@ var UpdateQuotePage = React.createClass({
     componentWillUnmount: function() {
         QuotesStore.removeListener('getData', this._onGetQuote);
         QuotesStore.removeListener('putData', this._onUpdatedQuote);
+    },
+
+    _onGetTokenValidity: function (){
+        // if user's token is expired, redirect to login page.
+        if ( CommonStore.getTokenMockMessage().tokenExpired === true ){
+            this.props.router.replace('/login');
+        }
     },
 
     _onGetQuote: function () {

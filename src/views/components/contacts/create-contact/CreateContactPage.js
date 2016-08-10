@@ -7,6 +7,8 @@
 
 var React = require('react');
 var withRouter = require('react-router').withRouter;
+var CommonStore = require('../../../stores/CommonStore');
+var CommonActions = require('../../../actions/CommonActions');
 
 var AddContactForm = require('./AddContactForm');
 var ContactsStore = require('../../../stores/ContactsStore');
@@ -48,6 +50,11 @@ var CreateContactPage = React.createClass({
         };
     },
 
+    componentWillMount: function () {
+        CommonStore.addGetTokenValidityListener(this._onGetTokenValidity);
+        CommonActions.getTokenValidity();
+    },
+
     componentDidMount: function() {
         // register with Store as a listener for emit of new party_id of the added Contact
         ContactsStore.addedContactListener(this._onAddedContact);
@@ -57,6 +64,13 @@ var CreateContactPage = React.createClass({
         // make sure to stop listening before unmounting, so that if/when mounted again
         // in the future, not adding more and more listeners . . .
         ContactsStore.removeListener('change', this._onAddedContact);
+    },
+
+    _onGetTokenValidity: function (){
+        // if user's token is expired, redirect to login page.
+        if ( CommonStore.getTokenMockMessage().tokenExpired === true ){
+            this.props.router.replace('/login');
+        }
     },
 
     setContactState: function(event) {
@@ -122,5 +136,6 @@ var CreateContactPage = React.createClass({
 });
 
 // when doing the usual module.exports, wrap CreateContactPage in with.router in order to have
-// property this.props.router.replace to do the redirect to MyContactsPage upon submitting form data
+// property this.props.router.replace to do the redirect to MyContactsPage upon submitting form data,
+// or to Login page if token is expired
 module.exports = withRouter(CreateContactPage);

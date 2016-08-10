@@ -6,8 +6,11 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
-var QuotePanelBody = require('./QuotePanelBody');
+var withRouter = require('react-router').withRouter;
+var CommonStore = require('../../../stores/CommonStore');
+var CommonActions = require('../../../actions/CommonActions');
 
+var QuotePanelBody = require('./QuotePanelBody');
 var QuotesStore = require('../../../stores/QuotesStore');
 var QuotesActions = require('../../../actions/QuotesActions');
 
@@ -24,6 +27,11 @@ var QuotesDetailsPage = React.createClass({
         };
     },
 
+    componentWillMount: function () {
+        CommonStore.addGetTokenValidityListener(this._onGetTokenValidity);
+        CommonActions.getTokenValidity();
+    },
+
     componentDidMount: function () {
         QuotesStore.addGetDataListener(this._onGetQuote);
         QuotesStore.addGetQuoteItemsListener(this._onGetQuoteItems);
@@ -34,6 +42,13 @@ var QuotesDetailsPage = React.createClass({
     componentWillUnmount: function () {
         QuotesStore.removeListener('getData', this._onGetQuote);
         QuotesStore.removeListener('getQuoteItems', this._onGetQuoteItems);
+    },
+
+    _onGetTokenValidity: function (){
+        // if user's token is expired, redirect to login page.
+        if ( CommonStore.getTokenMockMessage().tokenExpired === true ){
+            this.props.router.replace('/login');
+        }
     },
 
     _onGetQuote: function () {
@@ -64,4 +79,6 @@ var QuotesDetailsPage = React.createClass({
 
 });
 
-module.exports = QuotesDetailsPage;
+// when doing the usual module.exports, wrap this component in withRouter in order to have
+// property this.props.router.replace to do the redirect to Login page if token is expired
+module.exports = withRouter(QuotesDetailsPage);

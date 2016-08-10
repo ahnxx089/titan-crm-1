@@ -68,6 +68,9 @@ var commonDataController = function (knex) {
             case 'contactMechPurposeType':
                 promise = commonData.getContactMechPurposeType();
                 break;
+            case 'tokenMockMessage':
+                promise = commonData.getTokenMockMessage();
+                break;
             default:
                 // A new promise that returns empty array as its fulfillment value
                 promise = new Promise(function(resolve, reject) {

@@ -87,7 +87,8 @@ var authController = function (knex) {
                     if ( err.name === 'TokenExpiredError' ) {
                         return res.json({
                             success: false,
-                            message: 'Token has expired, login again.'
+                            tokenExpired: true,
+                            message: 'Token has expired.  Login again.'
                         });
                     }
                     // log all other errors & return "failed to authenticate" message

@@ -68,6 +68,12 @@ var CommonActions = {
         TitanDispatcher.dispatch({
             actionType: CommonConstants.GET_ALL_OWNERSHIPS
         });
+    },
+
+    getTokenValidity: function () {
+        TitanDispatcher.dispatch({
+            actionType: CommonConstants.GET_TOKEN_VALIDITY
+        });
     }
 };
 

@@ -13,6 +13,9 @@ var ContactMechTable = require('../../common/ContactMechTable');
 var ContactsStore = require('../../../stores/ContactsStore');
 var ContactsActions = require('../../../actions/ContactsActions');
 
+var CommonStore = require('../../../stores/CommonStore');
+var CommonActions = require('../../../actions/CommonActions');
+
 var ContactDetailPage = React.createClass({
     getInitialState: function () {
         return {
@@ -23,6 +26,10 @@ var ContactDetailPage = React.createClass({
             accounts: [],
             cases: []
         };
+    },
+    componentWillMount: function () {
+        CommonStore.addGetTokenValidityListener(this._onGetTokenValidity);
+        CommonActions.getTokenValidity();
     },
     componentDidMount: function () {
         //get contact
@@ -38,6 +45,12 @@ var ContactDetailPage = React.createClass({
         ContactsStore.removeListener('getData', this._onGetContact);
         //CommonStore.removeListener('getContactMechTypes', this._onGetTypes);
         //CommonStore.removeListener('getContactMechPurposeTypes', this._onGetPurposeTypes);
+    },
+    _onGetTokenValidity: function (){
+        // if user's token is expired, redirect to login page.
+        if ( CommonStore.getTokenMockMessage().tokenExpired === true ){
+            this.props.router.replace('/login');
+        }
     },
     _onGetContact: function (event) {
         return this.setState({
@@ -164,4 +177,6 @@ var ContactDetailPage = React.createClass({
     }
 });
 
-module.exports = withRouter(ContactDetailPage);
+// when doing the usual module.exports, wrap this component in withRouter in order to have
+// property this.props.router.replace to do the redirect to Login page if token is expired
+ module.exports = withRouter(ContactDetailPage);
