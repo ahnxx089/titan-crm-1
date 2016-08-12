@@ -34,7 +34,21 @@ var CreateAccountPage = React.createClass({
                 importantNote: '',
                 description: '',//TODO: Add in an input field for this
                 logoImgURL: '',
-                contactMech: '' //TODO: Replace with what people are using to initialize contact mech fields
+                emailAddress: '',
+                webAddress: '',
+                countryCode: '',
+                areaCode: '',
+                contactNumber: '',
+                askForName: '',
+                toName: '',
+                attnName: '',
+                address1: '',
+                address2: '',
+                directions: '',
+                city: '',
+                stateProvinceGeoId: '',
+                zipOrPostalCode: '',
+                countryGeoId: ''
             },
             addedAccountPartyId: '',
             dirty: false
