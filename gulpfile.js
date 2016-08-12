@@ -82,6 +82,7 @@ gulp.task('build', ['style', 'jsx2js'], function () {
 
 // Gulp task to monitor the app server
 // and restart it when changes in code are detected
+// (But see below for Production builds)
 gulp.task('serve', ['style', 'jsx2js'], function () {
     var options = {
         script: 'app.js',
@@ -97,6 +98,32 @@ gulp.task('serve', ['style', 'jsx2js'], function () {
             tasks.push('jsx2js');
             return tasks;
         }*/
+    };
+    return nodemon(options)
+        .on('restart', function (changedFiles) {
+            console.log('Restarting...');
+        });
+});
+
+/**
+ * For production:  When building the app for production, use task "gulp produce" below instead
+ * to use the production build of React, which skips development warnings and is faster.
+ * See https://fb.me/react-minification for more details.
+ */
+gulp.task('set-production-env', function (){
+    return process.env.NODE_ENV = 'production';
+});
+
+// Gulp task to monitor the app server
+// and restart it when changes in code are detected
+gulp.task('produce', ['style', 'jsx2js', 'set-production-env'], function () {
+    var options = {
+        script: 'app.js',
+        delayTime: 1,
+        env: {
+            'PORT': 5000
+        },
+        watch: jsFiles
     };
     return nodemon(options)
         .on('restart', function (changedFiles) {
