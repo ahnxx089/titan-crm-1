@@ -12,6 +12,7 @@ var AccountsActions = require('../../../actions/AccountsActions');
 var DetailsHeading = require('./DetailsHeading');
 var MainInfoDiv = require('./MainInfoDiv');
 var ContactInfoDiv = require('./ContactInfoDiv');
+var ContactMechTable = require('../../common/ContactMechTable');
 
 var AccountDetailsPage = React.createClass({
     getInitialState: function () {
@@ -41,16 +42,18 @@ var AccountDetailsPage = React.createClass({
 
         var account = this.state.account;
         var contactMechs = account.contactMechs || [];
-
+        console.log(contactMechs);
         return (
             /* jshint ignore: start */
             <div className="container" id="container">
-                <div className="row">
-                    <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <div className="panel panel-default">
+                    <div className="col-sm-9 col-md-10 main"> 
+            {/*<div className="panel-heading panel-heading-custom">*/}
                         <h1 className="page-header">Account Details</h1>
                         <DetailsHeading account={account} />
                         <MainInfoDiv account={account}/>
                         <ContactInfoDiv contactMechs={contactMechs}/>
+                        <ContactMechTable contactMechs={contactMechs} />
                     </div>
                 </div>
             </div>

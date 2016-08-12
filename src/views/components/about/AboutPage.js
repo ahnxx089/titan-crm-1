@@ -44,7 +44,7 @@ var AboutPage = React.createClass({
                     <div className="col-xs-10 col-lg-10">
                         <h3>Eric Brichetto</h3>
                         <p>
-                            Eric earned his Bachelor degree in Physics from St. Olaf College in Northfield, MN.
+                            I graduated with my Bachelor's degree in Physics from St. Olaf College in Northfield, MN. In that program, I developed various scripts in Python for simulating planetary motion, atomic behavior, and electromagnetic systems. I also co-developed a gaming application in C++. I am now applying the analytical skills from physics to push into software development, which is one of my passions. I do independent research on technology policy-related topics in my spare time, which has allowed me to interview several former and current members of the White House science advisory staff. I'm also an up-and-coming part-time freelancer in Magento website development. 
                         </p>
                     </div>
                 </div>
