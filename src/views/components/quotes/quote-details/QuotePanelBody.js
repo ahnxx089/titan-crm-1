@@ -46,7 +46,7 @@ var QuotePanelBody = React.createClass({
 
                 {/* Panel Heading & Body:  the Quote Details */}
                 <div className="panel-heading panel-heading-custom">
-                    <h1>Details: Quote #{ this.props.quote.quoteId }</h1>
+                    <h2>Details: Quote #{ this.props.quote.quoteId }</h2>
                 </div>
                 <div className="panel-body">
 

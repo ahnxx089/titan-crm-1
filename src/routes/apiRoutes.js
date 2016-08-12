@@ -23,11 +23,9 @@ var router = function (knex) {
     // ==========================================
     // Makes sure all requests to our APIs are authenticated
     apiRouter.use(function (req, res, next) {
-        //if(req.url !== '/authenticate') {
         // Authenticate the request
         var authController = require('../controllers/authController')(knex);
         authController.authenticateRequest(req, res, next);
-        //}
     });
 
 
@@ -52,32 +50,30 @@ var router = function (knex) {
         .get(partyApi.getPartyById)
         .put(partyApi.updateParty)
         .delete(partyApi.deleteParty);
-    
-    
-    // PERSONS -- TEMPORARILY ADDED BY DINESH,
-    // DOES NOT NEED TO BE USED IF NOT WANTED
+
+
+    // PERSONS
     // ==========================================
     var personApi = require('../api/personApi')(knex);
     apiRouter.route('/persons')
         .post(personApi.addPerson);
-    
-    
+
+
     // Author: Xiaosiqi Yang
     var leadApi = require('../api/leadApi')(knex);
     apiRouter.route('/leads')
-        .post(leadApi.addLead) 
+        .post(leadApi.addLead)
         .get(leadApi.getLeadsByOwner);
     apiRouter.route('/leads/:id')
         .get(leadApi.getLeadById);
-        
-    
+
 
     // CONTACTS
     // ==========================================
     var contactApi = require('../api/contactApi')(knex);
     //
     // NOTE: all GET methods except getContactById are reached
-    // on the single route http://localhost:5000/api/contacts 
+    // on the single route http://localhost:5000/api/contacts
     //
     apiRouter.route('/contacts')
         .get(contactApi.getContacts)
@@ -86,8 +82,9 @@ var router = function (knex) {
         .get(contactApi.getContactById)
         .put(contactApi.updateContact)
         .delete(contactApi.deleteContact);
-    
-    // Accounts
+
+
+    // ACCOUNTS
     // ==========================================
     var accountApi = require('../api/accountApi')(knex);
     apiRouter.route('/accounts')
@@ -99,16 +96,13 @@ var router = function (knex) {
         .delete(accountApi.deleteAccount);
 
 
-    
     // CASES
     // ==========================================
-    //
     //
     // NOTE: all GET methods except getCaseById are reached
     // on the single route http://localhost:5000/api/cases
     //
-    var caseApi = require('../api/caseApi')(knex); 
-    
+    var caseApi = require('../api/caseApi')(knex);
     apiRouter.route('/cases')
         .get(caseApi.getCases)
         .post(caseApi.addCase);
@@ -117,16 +111,15 @@ var router = function (knex) {
         .put(caseApi.updateCase)
         .delete(caseApi.deleteCase);
 
-    
+
     // QUOTES
     // ==========================================
     //
     // NOTE: all GET methods except getQuoteById are reached
     // on the single route http://localhost:5000/api/quotes
     // That includes findQuotes since it is a GET method
-    //    
-    var quoteApi = require('../api/quoteApi')(knex); 
-    
+    //
+    var quoteApi = require('../api/quoteApi')(knex);
     apiRouter.route('/quotes')
         .get(quoteApi.getQuotes)
         .post(quoteApi.addQuote)
@@ -138,13 +131,12 @@ var router = function (knex) {
 
     // COMMON DATA
     // ==========================================
-    //    
-    var commonDataApi = require('../api/commonDataApi')(knex); 
-    
+    //
+    var commonDataApi = require('../api/commonDataApi')(knex);
     apiRouter.route('/common-data')
         .get(commonDataApi.getCommonData);
-    
-    
+
+
     return apiRouter;
 };
 

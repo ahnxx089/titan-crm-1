@@ -30,6 +30,7 @@ var productsObjArray = [];
 var ownershipsObjArray = [];
 var contactMechTypeArray = [];
 var contactMechPurposeTypeArray = [];
+var mockMessage = '';
 
 
 // STORE as EVENT EMITTER
@@ -137,6 +138,14 @@ CommonStore.addGetContactMechPurposeTypesListener = function (listener) {
 
 CommonStore.emitGetContactMechPurposeTypes = function() {
     this.emit('getContactMechPurposeTypes');
+};
+
+CommonStore.addGetTokenValidityListener = function (listener) {
+    this.on('getTokenValidity', listener);
+};
+
+CommonStore.emitGetTokenValidity = function () {
+    this.emit('getTokenValidity');
 };
 
 // BUSINESS LOGIC
@@ -381,6 +390,30 @@ CommonStore.getPurposeTypeArray = function() {
     return contactMechPurposeTypeArray;
 };
 
+CommonStore.getTokenValidity = function() {
+    // This function's sole purpose is to make a GET request so that the user's
+    // token is examined by authController.js (middleware in apiRoutes.js).
+    // The actual returned message is not important.
+    var thisCommonStore = this;
+    $.ajax({
+        type: 'GET',
+        url: '/api/common-data?type=tokenMockMessage',
+        headers: { 'x-access-token': Cookies.get('titanAuthToken') },
+        success: function(message) {
+            mockMessage = message;
+            thisCommonStore.emitGetTokenValidity();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+};
+
+CommonStore.getTokenMockMessage = function() {
+    return mockMessage;
+};
+
+
 // LINK BETWEEN DISPATCHER AND STORE
 //-----------------------------------------------
 TitanDispatcher.register(function(action) {
@@ -432,6 +465,10 @@ TitanDispatcher.register(function(action) {
         }
         case CommonConstants.GET_CONTACT_MECH_PURPOSE_TYPES: {
             CommonStore.getContactMechPurposeTypes();
+            break;
+        }
+        case CommonConstants.GET_TOKEN_VALIDITY: {
+            CommonStore.getTokenValidity();
             break;
         }
     }

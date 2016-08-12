@@ -26,6 +26,10 @@ var UpdateContactPage = React.createClass({
             error: null
         };
     },
+    componentWillMount: function () {
+        CommonStore.addGetTokenValidityListener(this._onGetTokenValidity);
+        CommonActions.getTokenValidity();
+    },
     componentDidMount: function () {
         ContactsStore.addGetDataListener(this._onGetContact);
         ContactsActions.getContactById(this.state.contactId);
@@ -40,6 +44,12 @@ var UpdateContactPage = React.createClass({
         ContactsStore.removeListener('getData', this._onGetContact);
         CommonStore.removeListener('getAllCurrencies', this._onGetCurrencies);
         ContactsStore.removeListener('putData', this._onUpdateContact);
+    },
+    _onGetTokenValidity: function (){
+        // if user's token is expired, redirect to login page.
+        if ( CommonStore.getTokenMockMessage().tokenExpired === true ){
+            this.props.router.replace('/login');
+        }
     },
     setContactState: function (event) {
         var contact = this.state.contact;
@@ -94,7 +104,7 @@ var UpdateContactPage = React.createClass({
                 </Link>
                 <div className="panel panel-default">
                     <div className="panel-heading panel-heading-custom">
-                        <h1>Update Contact</h1>
+                        <h2>Update Contact</h2>
                     </div>
                     <div className="panel-body">
                         <UpdateContactForm
@@ -111,4 +121,6 @@ var UpdateContactPage = React.createClass({
     }
 });
 
+// when doing the usual module.exports, wrap this component in withRouter in order to have
+// property this.props.router.replace to do the redirect to Login page if token is expired
 module.exports = withRouter(UpdateContactPage);

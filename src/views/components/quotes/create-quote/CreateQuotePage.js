@@ -7,6 +7,8 @@
 
 var React = require('react');
 var withRouter = require('react-router').withRouter;
+var CommonStore = require('../../../stores/CommonStore');
+var CommonActions = require('../../../actions/CommonActions');
 
 var AddQuoteForm = require('./AddQuoteForm');
 var QuotesStore = require('../../../stores/QuotesStore');
@@ -33,12 +35,24 @@ var CreateQuotePage = React.createClass({
         };
     },
 
+    componentWillMount: function () {
+        CommonStore.addGetTokenValidityListener(this._onGetTokenValidity);
+        CommonActions.getTokenValidity();
+    },
+
     componentDidMount: function() {
         QuotesStore.addedQuoteListener(this._onAddedQuote);
     },
 
     componentWillUnmount: function() {
         QuotesStore.removeListener('addedQuote', this._onAddedQuote);
+    },
+
+    _onGetTokenValidity: function (){
+        // if user's token is expired, redirect to login page.
+        if ( CommonStore.getTokenMockMessage().tokenExpired === true ){
+            this.props.router.replace('/login');
+        }
     },
 
     setQuoteState: function(event) {
@@ -89,7 +103,7 @@ var CreateQuotePage = React.createClass({
                 <div className="container">
                     <div className="panel panel-default">
                         <div className="panel-heading panel-heading-custom">
-                            <h1>Create Quote</h1>
+                            <h2>Create Quote</h2>
                         </div>
                         <div className="panel-body">
                             <AddQuoteForm

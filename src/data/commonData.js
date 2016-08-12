@@ -125,6 +125,11 @@ var commonData = function (knex) {
             .from('contact_mech_purpose_type');
     };
 
+    var getTokenMockMessage = function () {
+        // this returns an empty set, this is a mock function only
+        return knex.select('party_id').from('party').where('party_id',0);
+    };
+
     return {
         getAllCurrencies: getAllCurrencies,
         getAllStatesOrProvinces: getAllStatesOrProvinces,
@@ -137,7 +142,8 @@ var commonData = function (knex) {
         getProducts: getProducts,
         getOwnerships: getOwnerships,
         getContactMechType: getContactMechType,
-        getContactMechPurposeType: getContactMechPurposeType
+        getContactMechPurposeType: getContactMechPurposeType,
+        getTokenMockMessage: getTokenMockMessage
     };
 };
 

@@ -26,14 +26,14 @@ var LeadDetailPage = React.createClass({
             purposeTypes: []
         };
     },
-    
+
     componentDidMount: function () {
-        // Event listener to fire when data retrieved-- 
+        // Event listener to fire when data retrieved--
         // when Store emits,informs this View something happened
         LeadsStore.addGetDataListener(this._onGetOneLead);
         // Call the async function to get my leads
         LeadsActions.getLeadById(this.state.leadId);
-        
+
         //get types and purpose types crossref table
         CommonStore.addGetContactMechTypesListener(this._onGetTypes);
         CommonStore.getContactMechTypes();
@@ -47,12 +47,12 @@ var LeadDetailPage = React.createClass({
         CommonStore.removeListener('getContactMechTypes', this._onGetTypes);
         CommonStore.removeListener('getContactMechPurposeTypes', this._onGetPurposeTypes);
     },
-    
+
 //    _getLeadDetails: function() {
 //        var leadId = this.state.leadId;
 //        LeadsActions.getLeadById(leadId);
 //    },
-    
+
     // Listener to Store's getDate event. Once received, re-render
     // No need to check validation or update error box
     _onGetOneLead: function() {
@@ -61,7 +61,7 @@ var LeadDetailPage = React.createClass({
             leadDetails: result
         });
     },
-    
+
     _onGetTypes: function (event) {
         this.setState({
             types: CommonStore.getTypeArray()
@@ -72,7 +72,7 @@ var LeadDetailPage = React.createClass({
             purposeTypes: CommonStore.getPurposeTypeArray()
         });
     },
-    
+
     render: function() {
         /* jshint ignore:start */
 
@@ -82,25 +82,25 @@ var LeadDetailPage = React.createClass({
 //        var alreadyChanged = leadDetails.createdDate;
 //        var originalInLocal = new Date(alreadyChanged); // Date Object
 //        originalInLocal.setMinutes(originalInLocal.getMinutes() - timezoneOffset);
-        
+
         var contactMechs = leadDetails.partyContactMechs || [];
 
         var contactMechsJSX = [];
         for (var i = 0; i < contactMechs.length; i++) {
             contactMechsJSX.push(<ContactMechEntry key={ 'contact_mech_' + i } contactMech={ contactMechs[i]} types={this.state.types} purposeTypes={this.state.purposeTypes} />);
         }
-            
-        // The reason it renders differently from ContactDetailPage's render (load empty types and purposeTypes array), 
+
+        // The reason it renders differently from ContactDetailPage's render (load empty types and purposeTypes array),
         // is the difference between getXById in contactController and leadController
         return (
             <div>
                 <Link to="/cp/leads/my-leads" className="btn btn-primary">
                     <span className="fa fa-arrow-left"></span> Back
                 </Link>
-                
+
                 <div className="panel panel-default">
                     <div className="panel-heading panel-heading-custom">
-                            <h1>View Lead</h1>
+                            <h2>View Lead</h2>
                     </div>
 
                     <div className="panel panel-info">
@@ -236,7 +236,7 @@ var LeadDetailPage = React.createClass({
                                     <th>Contact Type</th>
                                     <th>Contact Information</th>
                                     <th>Purpose</th>
-                                    <th>Actions</th>
+                                    {/* <th>Actions</th> */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -245,6 +245,7 @@ var LeadDetailPage = React.createClass({
                         </table>
                     </div>
 
+                    {/* Commenting out empty Account panel
                     <div className="panel panel-info">
                         <div className="panel-heading">
                             <h3 className="panel-title">Accounts</h3>
@@ -264,7 +265,7 @@ var LeadDetailPage = React.createClass({
 
                             </tbody>
                         </table>
-                    </div> {/* End of panel-info for the last table */}
+                    </div>                     End of panel-info for the last table */}
 
                 </div> {/* End of panel-default */}
             </div>

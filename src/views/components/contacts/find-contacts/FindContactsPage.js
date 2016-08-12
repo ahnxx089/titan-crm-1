@@ -6,6 +6,10 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
+var withRouter = require('react-router').withRouter;
+var CommonStore = require('../../../stores/CommonStore');
+var CommonActions = require('../../../actions/CommonActions');
+
 var SearchForm = require('./SearchForm');
 var ContactRowWithPhone = require('./ContactRowWithPhone');
 var ContactsStore = require('../../../stores/ContactsStore');
@@ -27,6 +31,11 @@ var FindContactsPage = React.createClass({
         };
     },
 
+    componentWillMount: function () {
+        CommonStore.addGetTokenValidityListener(this._onGetTokenValidity);
+        CommonActions.getTokenValidity();
+    },
+
     componentDidMount: function () {
         ContactsStore.addGetDataListener(this._onGetById);
         ContactsStore.addGetByIdentityListener(this._onGetByIdentity);
@@ -37,6 +46,13 @@ var FindContactsPage = React.createClass({
         ContactsStore.removeListener('getData', this._onGetById);
         ContactsStore.removeListener('getByIdentity', this._onGetByIdentity);
         ContactsStore.removeListener('getByPhoneNumber', this._onGetByPhoneNumber);
+    },
+
+    _onGetTokenValidity: function (){
+        // if user's token is expired, redirect to login page.
+        if ( CommonStore.getTokenMockMessage().tokenExpired === true ){
+            this.props.router.replace('/login');
+        }
     },
 
     // saves numbers typed in "Find By ID #" and resets other states to empty
@@ -145,8 +161,8 @@ var FindContactsPage = React.createClass({
                 contactsJSX.push(<ContactRowWithPhone key={ 'contact_0' } contact={ contacts }/>);
             }
         }
-// Note from Lucas & Dukjin: possible conflicting key when i=0. (no big deal though)
-// Consider removing i++ in loop def, and writing <... contact={ contacts[i]} key={ 'contact_' + ++i } /> in the push. (not verified)
+        // Note from Lucas & Dukjin: possible conflicting key when i=0. (no big deal though)
+        // Consider removing i++ in loop def, and writing <... contact={ contacts[i]} key={ 'contact_' + ++i } /> in the push. (not verified)
         // for a result from initiating action ContactsActions.getContactsByIdentity(identity)
         //  or a result from initiating action ContactsActions.getContactsByPhoneNumber(phoneNumber)
         if ( Object.prototype.toString.call(contacts) === '[object Array]' ){
@@ -162,7 +178,7 @@ var FindContactsPage = React.createClass({
                     {/* First panel: holds Search Form */}
                     <div className="panel panel-default">
                         <div className="panel-heading panel-heading-custom">
-                            <h1>Find Contacts</h1>
+                            <h2>Find Contacts</h2>
                         </div>
                         <div className="panel-body">
                             <SearchForm
@@ -211,4 +227,6 @@ var FindContactsPage = React.createClass({
 
 });
 
-module.exports = FindContactsPage;
+// when doing the usual module.exports, wrap this component in withRouter in order to have
+// property this.props.router.replace to do the redirect to Login page if token is expired
+module.exports = withRouter(FindContactsPage);
