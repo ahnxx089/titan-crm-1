@@ -111,7 +111,8 @@ gulp.task('serve', ['style', 'jsx2js'], function () {
  * See https://fb.me/react-minification for more details.
  */
 gulp.task('set-production-env', function (){
-    return process.env.NODE_ENV = 'production';
+    process.env.NODE_ENV = 'production';
+    return process.env.NODE_ENV;
 });
 
 // Gulp task to monitor the app server
