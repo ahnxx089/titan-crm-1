@@ -11,6 +11,9 @@ var withRouter = require('react-router').withRouter;
 var AddLeadForm = require('./AddLeadForm');
 var LeadsStore = require('../../../stores/LeadsStore');
 var LeadsActions = require('../../../actions/LeadsActions');
+var CommonStore = require('../../../stores/CommonStore');
+var CommonActions = require('../../../actions/CommonActions');
+
 
 // As long as this var (component name) matches the one used in the last line (module.exports), it is good.
 // Since the project is browserified, other components refer this component by its path, not by its component name
@@ -31,6 +34,11 @@ var CreateLeadPage = React.createClass({
 
     // Look at https://facebook.github.io/react/docs/component-specs.html for lifecycle functions
 
+    componentWillMount: function () {
+        CommonStore.addGetTokenValidityListener(this._onGetTokenValidity);
+        CommonActions.getTokenValidity();
+    },
+
     componentDidMount: function () {
         // Event listener to fire when data retrieved--
         // when Store emits,informs this View something happened
@@ -43,6 +51,12 @@ var CreateLeadPage = React.createClass({
         LeadsStore.removeListener('addedLead', this._onAddedLead);
     },
 
+    _onGetTokenValidity: function (){
+        // if user's token is expired, redirect to login page.
+        if ( CommonStore.getTokenMockMessage().tokenExpired === true ){
+            this.props.router.replace('/login');
+        }
+    },
 
     // listener function
     _onAddedLead: function() {
@@ -119,6 +133,5 @@ var CreateLeadPage = React.createClass({
     }
 });
 
-//module.exports = CreateLeadPage;
-//See LoginPage, Header and CreateContactPage for more detail
+
 module.exports = withRouter(CreateLeadPage);
