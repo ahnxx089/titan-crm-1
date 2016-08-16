@@ -7,7 +7,7 @@
 
 var partyApi = function (knex) {
     
-    // Get a reference to data layer module
+    // Get a reference to controller layer module
     //
     var partyController = require('../controllers/partyController')(knex);
     

@@ -11,7 +11,7 @@ var winston = require('winston');
 
 var leadApi = function (knex) {
 
-    // Get a reference to data layer module
+    // Get a reference to controller layer module
     var leadController = require('../controllers/leadController')(knex);
 
 
