@@ -6,9 +6,14 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
+var withRouter = require('react-router').withRouter;
+
 var LeadRow = require('./LeadRow');
 var LeadsStore = require('../../../stores/LeadsStore');
 var LeadsActions = require('../../../actions/LeadsActions');
+var CommonStore = require('../../../stores/CommonStore');
+var CommonActions = require('../../../actions/CommonActions');
+
 
 var MyLeadsPage = React.createClass({
 
@@ -18,9 +23,14 @@ var MyLeadsPage = React.createClass({
         };
     },
 
+    componentWillMount: function () {
+        CommonStore.addGetTokenValidityListener(this._onGetTokenValidity);
+        CommonActions.getTokenValidity();
+    },
+
     componentDidMount: function () {
         // Event listener to fire when data retrieved--
-        // when Store emits,informs this View something happened
+        // when Store emits, informs this View something happened
         LeadsStore.addGetDataListener(this._onGetByOwner);
 
         // Call the async function to get my leads
@@ -30,6 +40,13 @@ var MyLeadsPage = React.createClass({
     componentWillUnmount: function() {
         // Avoids console error
         LeadsStore.removeListener('getData', this._onGetByOwner);
+    },
+
+    _onGetTokenValidity: function (){
+        // if user's token is expired, redirect to login page.
+        if ( CommonStore.getTokenMockMessage().tokenExpired === true ){
+            this.props.router.replace('/login');
+        }
     },
 
     // An event registered with the store-- fires when emitGet()
@@ -89,4 +106,4 @@ var MyLeadsPage = React.createClass({
     }
 });
 
-module.exports = MyLeadsPage;
+module.exports = withRouter(MyLeadsPage);
