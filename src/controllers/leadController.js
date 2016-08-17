@@ -19,7 +19,8 @@ var contactInfoHelper = require('../controllers/helpers/contactInfoHelper');
 var dateTime = require('../common/dateTime');
 
 var leadController = function (knex) {
-    // Get a reference to data layer module, and contactMechController
+
+    // Get references to data layer modules, and contactMechController
     //
     var leadData = require('../data/leadData')(knex);
     var contactMechData = require('../data/contactMechData')(knex);

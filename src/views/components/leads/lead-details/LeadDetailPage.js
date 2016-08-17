@@ -13,6 +13,8 @@ var LeadsActions = require('../../../actions/LeadsActions');
 var LeadsStore = require('../../../stores/LeadsStore');
 var ContactMechEntry = require('../../common/ContactMechRow');
 var CommonStore = require('../../../stores/CommonStore');
+var CommonActions = require('../../../actions/CommonActions');
+
 
 // This is needed in local environment
 const timezoneOffset = new Date().getTimezoneOffset(); // 300 in CDT
@@ -27,6 +29,20 @@ var LeadDetailPage = React.createClass({
         };
     },
 
+    componentWillMount: function () {
+        CommonStore.addGetTokenValidityListener(this._onGetTokenValidity);
+        CommonActions.getTokenValidity();
+
+        //get types and purpose types crossref table 
+        //This implementation skips the dispatcher step because it does not need to, further it's because these types to be retrieved are static and will not change
+        //It can be, however changed to take advantage of dispatcher, to harmonize with other listeners
+        //TODO: add functions in CommonActions that does the same thing. Then call them from here, to replace 2nd and 4th line below. 
+        CommonStore.addGetContactMechTypesListener(this._onGetTypes);
+        CommonStore.getContactMechTypes();
+        CommonStore.addGetContactMechPurposeTypesListener(this._onGetPurposeTypes);
+        CommonStore.getContactMechPurposeTypes();
+    },
+
     componentDidMount: function () {
         // Event listener to fire when data retrieved--
         // when Store emits,informs this View something happened
@@ -34,11 +50,9 @@ var LeadDetailPage = React.createClass({
         // Call the async function to get my leads
         LeadsActions.getLeadById(this.state.leadId);
 
-        //get types and purpose types crossref table
-        CommonStore.addGetContactMechTypesListener(this._onGetTypes);
-        CommonStore.getContactMechTypes();
-        CommonStore.addGetContactMechPurposeTypesListener(this._onGetPurposeTypes);
-        CommonStore.getContactMechPurposeTypes();
+        // Future TODO: use ContactMechTable instead of ContactMechRow (aka ContactMechEntry), 
+        // to rid of the following four listeners, and to avoid lower-level work (assembling rows into tables)
+
     },
 
     componentWillUnmount: function() {
@@ -46,6 +60,13 @@ var LeadDetailPage = React.createClass({
         LeadsStore.removeListener('getData', this._onGetOneLead);
         CommonStore.removeListener('getContactMechTypes', this._onGetTypes);
         CommonStore.removeListener('getContactMechPurposeTypes', this._onGetPurposeTypes);
+    },
+
+    _onGetTokenValidity: function (){
+        // if user's token is expired, redirect to login page.
+        if ( CommonStore.getTokenMockMessage().tokenExpired === true ){
+            this.props.router.replace('/login');
+        }
     },
 
 //    _getLeadDetails: function() {
@@ -244,28 +265,6 @@ var LeadDetailPage = React.createClass({
                             </tbody>
                         </table>
                     </div>
-
-                    {/* Commenting out empty Account panel
-                    <div className="panel panel-info">
-                        <div className="panel-heading">
-                            <h3 className="panel-title">Accounts</h3>
-                        </div>
-                        <table id="AccountsTable" className='table'>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Account Name</th>
-                                    <th>Site Name</th>
-                                    <th>Parent ID</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-                    </div>                     End of panel-info for the last table */}
 
                 </div> {/* End of panel-default */}
             </div>

@@ -13,7 +13,7 @@ var redisClient = require('../config/redisClient');
 var winston = require('winston');
 
 var quoteApi = function (knex) {
-    // Get a reference to data layer module
+    // Get a reference to controller layer module
     //
     var quoteController = require('../controllers/quoteController')(knex);
 

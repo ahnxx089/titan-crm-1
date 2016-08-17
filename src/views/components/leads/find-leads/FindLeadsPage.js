@@ -6,10 +6,15 @@
 /////////////////////////////////////////////////
 
 var React = require('react');
+var withRouter = require('react-router').withRouter;
+
 var SearchForm = require('./SearchForm');
 var LeadRow = require('../my-leads/LeadRow');
 var LeadsStore = require('../../../stores/LeadsStore');
 var LeadsActions = require('../../../actions/LeadsActions');
+var CommonStore = require('../../../stores/CommonStore');
+var CommonActions = require('../../../actions/CommonActions');
+
 
 var FindLeadsPage = React.createClass({
 
@@ -18,6 +23,11 @@ var FindLeadsPage = React.createClass({
             searchBy: { partyId: '' },
             leadFoundById: []
         };
+    },
+
+    componentWillMount: function () {
+        CommonStore.addGetTokenValidityListener(this._onGetTokenValidity);
+        CommonActions.getTokenValidity();
     },
 
     componentDidMount: function() {
@@ -36,6 +46,12 @@ var FindLeadsPage = React.createClass({
         this.setState( {searchBy: this.state.searchBy} );
     },
 
+    _onGetTokenValidity: function (){
+        // if user's token is expired, redirect to login page.
+        if ( CommonStore.getTokenMockMessage().tokenExpired === true ){
+            this.props.router.replace('/login');
+        }
+    },
 
     _resetForm: function(){
         this.setState({
@@ -135,4 +151,4 @@ var FindLeadsPage = React.createClass({
 
 });
 
-module.exports = FindLeadsPage;
+module.exports = withRouter(FindLeadsPage);

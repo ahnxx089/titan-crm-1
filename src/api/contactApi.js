@@ -14,7 +14,7 @@ var winston = require('winston');
 
 var contactApi = function (knex) {
 
-    // Get a reference to data layer module
+    // Get a reference to controller layer module
     //
     var contactController = require('../controllers/contactController')(knex);
 

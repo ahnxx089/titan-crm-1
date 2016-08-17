@@ -7,7 +7,7 @@
 
 var userApi = function (knex) {
     
-    // Get a reference to data layer module
+    // Get a reference to controller layer module
     //
     var userController = require('../controllers/userController')(knex);
     
