@@ -16,7 +16,7 @@ var ContactMechTable = React.createClass({
     getInitialState: function () {
         return {
             types: [],
-            purposeTypes: [],
+            purposeTypes: []
         };
     },
     componentDidMount: function () {
@@ -43,6 +43,7 @@ var ContactMechTable = React.createClass({
         });
     },
     render: function () {
+        
         var contactMechs = this.props.contactMechs || [];
         var contactMechsJSX = [];
 
@@ -62,6 +63,7 @@ var ContactMechTable = React.createClass({
                     </tr>
                 </thead>
                 <tbody>
+                    
                     { contactMechsJSX }
                 </tbody>
             </table>
@@ -69,5 +71,6 @@ var ContactMechTable = React.createClass({
         /* jshint ignore:end */
     }
 });
+
 
 module.exports = withRouter(ContactMechTable);
