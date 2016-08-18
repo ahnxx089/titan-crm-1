@@ -1,5 +1,6 @@
 /////////////////////////////////////////////////
 // A person info div on Add Lead page.
+// Currently only used in AddLeadForm.js
 //
 // @file:   PersonDiv.js
 // @author: Xiaosiqi Yang <yang4131@umn.edu>
