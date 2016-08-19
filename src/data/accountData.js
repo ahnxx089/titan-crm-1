@@ -3,6 +3,7 @@
 //
 // @file:   accountData.js
 // @author: Eric Brichetto <brichett13@gmail.com>
+//          DukJin Ahn <ahnxx089@gmail.com>
 /////////////////////////////////////////////////
 
 /* jshint camelcase: false */
