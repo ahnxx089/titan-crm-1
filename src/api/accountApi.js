@@ -3,6 +3,7 @@
 //
 // @file:   accountApi.js
 // @author: Eric Brichetto <brichett13@gmail.com>
+//          DukJin Ahn <ahnxx089@gamil.com>
 /////////////////////////////////////////////////
 
 /* jshint shadow:true */
